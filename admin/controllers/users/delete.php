@@ -48,7 +48,9 @@ if (empty($user)) {
 $statement = $connect->prepare('DELETE FROM users WHERE user_id = :id');
 $statement->execute(array('id' => $id));
 
+add_message("Usuario eliminado correctamente.", "success");
 header('Location: ' . $_SERVER['HTTP_REFERER']);
+exit();
 
 
 

@@ -47,12 +47,13 @@ if (empty($user)) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
-  $user_name          = cleardata($_POST['user_name']);
-  $user_email         = cleardata($_POST['user_email']);
-  $user_role          = cleardata($_POST['user_role']);
-  $user_status        = cleardata($_POST['user_status']);
-  $user_password      = cleardata($_POST['user_password']);
-  $user_password_save = cleardata($_POST['user_password_save']);
+  $user_id       = decrypt(cleardata($_POST['user_id']));
+  $user_name     = cleardata($_POST['user_name']);
+  $user_email    = cleardata($_POST['user_email']);
+  $user_role     = cleardata($_POST['user_role']);
+  $user_status   = cleardata($_POST['user_status']);
+  $user_password = cleardata($_POST['user_password']);
+  // $user_password_save = cleardata($_POST['user_password_save']);
 
   // Validar el nombre de usuario (mínimo 4 caracteres)
   if (strlen($user_name) < 4) {
@@ -79,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $query     = "SELECT * FROM users WHERE user_email = :user_email AND user_id != :user_id";
     $statement = $connect->prepare($query);
     $statement->bindParam(':user_email', $user_email);
-    $statement->bindParam(':user_id', $user_id);
+    $statement->bindParam(':user_id', $id);
     $statement->execute();
     $result = $statement->fetch(PDO::FETCH_OBJ);
 
@@ -89,10 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   // Contraseña
-  if (empty($password)) {
-    $user_password = $password_save;
+  if (strlen($user_password) < 6) {
+    add_message("La contraseña debe tener al menos 6 caracteres.", "danger");
   } else {
-    $user_password = encrypt($password);
+    $user_password = encrypt($user_password);
   }
 
   // Validar selected
@@ -107,26 +108,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Si no hay mensajes de error, proceder con la inserción
   if (!has_error_messages()) {
+    $query = "UPDATE users 
+              SET 
+              user_name = :user_name, 
+              user_email = :user_email, 
+              user_role = :user_role, 
+              user_status = :user_status, 
+              user_password = :user_password, 
+              user_updated = CURRENT_TIME 
+              WHERE 
+              user_id = :user_id";
+    $stmt  = $connect->prepare($query);
+    $stmt->bindParam(':user_name', $user_name);
+    $stmt->bindParam(':user_email', $user_email);
+    $stmt->bindParam(':user_role', $user_role);
+    $stmt->bindParam(':user_status', $user_status);
+    $stmt->bindParam(':user_password', $user_password);
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->execute();
 
-    // Preparar la consulta SQL para la inserción
-    $query     = "UPDATE users SET user_id = :user_id, user_name = :user_name, user_email = :user_email, user_status = :user_status, user_password = :user_password, user_updated = CURRENT_TIME WHERE user_id = :user_id";
-    $statement = $connect->prepare($query);
-
-    // Enlazar los parámetros
-    $statement->bindParam(':user_id', $user_id);
-    $statement->bindParam(':user_name', $user_name);
-    $statement->bindParam(':user_email', $user_email);
-    $statement->bindParam(':user_status', $user_status);
-    $statement->bindParam(':user_password', $user_password);
-
-    // Ejecutar la consulta de inserción
-    if ($statement->execute()) {
-      add_message("El nuevo usuario se insertó correctamente.", "success");
-      header("Location: list.php");
-      exit();
-    } else {
-      add_message("Hubo un error al intentar insertar el nuevo usuario.", "danger");
-    }
+    add_message("Usuario se actualizo correctamente", "success");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
   }
 }
 

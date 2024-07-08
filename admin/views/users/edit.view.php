@@ -7,6 +7,8 @@
   <div class="card-body">
     <form id="formNewUser" enctype="multipart/form-data" action="" method="post">
 
+    <input type="hidden" name="user_id" value="<?= encrypt($user->user_id) ?>">
+
       <div class="mb-3">
         <label>Name</label>
         <input type="text" name="user_name" class="form-control" value="<?= $user->user_name ?>" required>

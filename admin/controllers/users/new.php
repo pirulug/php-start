@@ -71,12 +71,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $hashed_password = encrypt($password);
 
     // Preparar la consulta SQL para la inserción
-    $query     = "INSERT INTO users (user_name, user_email, user_status, user_password, user_updated) VALUES (:user_name, :user_email, :user_status, :user_password, CURRENT_TIME)";
+    $query     = "INSERT INTO users (user_name, user_email, user_role, user_status, user_password, user_updated) VALUES (:user_name, :user_email, :user_role, :user_status, :user_password, CURRENT_TIME)";
     $statement = $connect->prepare($query);
 
     // Enlazar los parámetros
     $statement->bindParam(':user_name', $user_name);
     $statement->bindParam(':user_email', $user_email);
+    $statement->bindParam(':user_role', $user_role);
     $statement->bindParam(':user_status', $user_status);
     $statement->bindParam(':user_password', $hashed_password);
 
@@ -97,7 +98,7 @@ $theme_title = "Usuario nuevo";
 $theme_path  = "user-add";
 // $theme_scripts = ["js/clear.js"];
 // $theme_styles = ["pages/dashboard.css"];
-include BASE_DIR_ADMIN_VIEW . "/users/add.view.php";
+include BASE_DIR_ADMIN_VIEW . "/users/new.view.php";
 /* ================================= */
 
 

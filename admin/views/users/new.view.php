@@ -42,9 +42,11 @@
         <label class="control-label">Status</label>
         <select class="form-select" name="user_status" required>
           <option value="0">- Seleccionar -</option>
-          <option value="1" <?= isset($_POST['user_status']) && $_POST['user_status'] == 1 ? 'selected' : '' ?>>Activo
+          <option value="1" <?= isset($_POST['user_status']) && $_POST['user_status'] == 1 ? 'selected' : '' ?>>
+            Activo
           </option>
-          <option value="2" <?= isset($_POST['user_status']) && $_POST['user_status'] == 2 ? 'selected' : '' ?>>Inactivo
+          <option value="2" <?= isset($_POST['user_status']) && $_POST['user_status'] == 2 ? 'selected' : '' ?>>
+            Inactivo
           </option>
         </select>
       </div>

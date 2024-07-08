@@ -45,7 +45,8 @@
                 <a href="edit.php?id=<?= encrypt($user->user_id) ?>" class="btn btn-success">
                   <i class="fa fa-pen"></i>
                 </a>
-                <a href="delete.php?id=<?= encrypt($user->user_id) ?>" class="btn btn-danger">
+                <a href="delete.php?id=<?= encrypt($user->user_id) ?>" class="btn btn-danger"
+                  onClick="return confirm('¿Quieres eliminar?')">
                   <i class="fa fa-trash"></i>
                 </a>
               </td>

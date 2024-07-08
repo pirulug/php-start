@@ -1,6 +1,6 @@
 <?php
 
-$user_session = get_user_session_information($connect);
+// $user_session = get_user_session_information($connect);
 
 $menuItems = [
   [
@@ -18,7 +18,7 @@ $menuItems = [
       [
         'title' => 'Nuevo Usuario',
         'path'  => 'user-add',
-        'link'  => 'users/add.php'
+        'link'  => 'users/new.php'
       ],
       [
         'title' => 'Lista de usuario',
