@@ -2,19 +2,8 @@
 
 require_once "../../core.php";
 
-if (!isset($_SESSION['user_name'])) {
-  add_message("no inició session", "danger");
-  header('Location: ' . APP_URL . '/admin/controllers/login.php');
-  exit();
-}
-
-$check_access = check_access($connect);
-
-if ($check_access['user_role'] != 1 && $check_access['user_role'] != 0) {
-  add_message("No eres administrador", "danger");
-  header('Location: ' . APP_URL . '/');
-  exit();
-} 
+// Session Manager
+$check_access = $sessionManager->checkUserAccess();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos

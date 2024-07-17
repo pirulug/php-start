@@ -2,7 +2,7 @@
 
 /*--------------------------------------------------
 | Author       : Pirulug
-| Author URI   : https://pirulug.github.io
+| Author URI   : https://github.com/pirulug
 ----------------------------------------------------*/
 
 // Configuración de la base de datos

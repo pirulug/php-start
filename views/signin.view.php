@@ -5,11 +5,11 @@
   <form method="POST">
     <div class="mb-3">
       <label class="form-label">Usuario</label>
-      <input class="form-control" type="text" name="user_name" placeholder="Usuario" value="test" required />
+      <input class="form-control" type="text" name="user_name" placeholder="Usuario" value="user" required />
     </div>
     <div class="mb-3">
       <label class="form-label">Contraseña</label>
-      <input class="form-control" type="password" name="user_password" placeholder="Contraseña" value="test"
+      <input class="form-control" type="password" name="user_password" placeholder="Contraseña" value="user123"
         required />
       <!-- <small><a href="/auth-reset-password.html">Forgot password?</a></small> -->
     </div>

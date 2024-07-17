@@ -1,6 +1,8 @@
 <?php require __DIR__ . "/partials/top.partial.php"; ?>
 <?php require __DIR__ . "/partials/navbar.partial.php"; ?>
 
+<?php display_messages(); ?>
+
 <div class="container">
   <div class="page-header" id="banner">
     <div class="text-center">

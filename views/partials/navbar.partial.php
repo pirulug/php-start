@@ -56,13 +56,11 @@ if (isset($_SESSION["user_name"])) {
   }
 } else {
   $menuItems = [
-    ['title' => 'Help', 'link' => '/'],
-    ['title' => 'Blog', 'link' => '/'],
+    ['title' => 'Admin', 'link' => APP_URL . '/admin'],
     [
       'title'    => 'Auth', 'link' => '#', 'dropdown' => true, 'items' => [
         ['title' => 'Login', 'link' => 'signin.php'],
         ['title' => 'Register', 'link' => 'signup.php'],
-        ['title' => 'Salir', 'link' => 'signout.php'],
         // ['divider' => true]
       ]
     ]
