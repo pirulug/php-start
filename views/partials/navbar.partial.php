@@ -68,14 +68,16 @@ if (isset($_SESSION["user_name"])) {
 }
 
 
-
-
-
 ?>
 
 <div class="navbar navbar-expand-lg fixed-top bg-body">
   <div class="container">
-    <a class="navbar-brand" href="/"><?= APP_NAME ?></a>
+    <a class="navbar-brand" href="<?= APP_NAME ?>">
+      <img id="logo-ligth" src="<?= $brand->st_whitelogo ?? "https://dummyimage.com/320x71/000/fff.jpg" ?>"
+        alt="Logo Light" class="logo-light" height="40">
+      <img id="logo-dark" src="<?= $brand->st_darklogo ?? "https://dummyimage.com/320x71/fff/000.jpg" ?>"
+        alt="Logo Dark" class="logo-dark d-none" height="40">
+    </a>
     <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
       aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>

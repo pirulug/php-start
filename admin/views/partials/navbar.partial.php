@@ -26,7 +26,25 @@ $menuItems = [
         'link'  => 'users/list.php'
       ],
     ]
-  ]
+    ],
+  [
+    'title'     => 'Configuración',
+    'path'      => 'settings',
+    'icon'      => 'settings',
+    'collapsed' => true,
+    'items'     => [
+      [
+        'title' => 'General',
+        'path'  => 'general',
+        'link'  => 'settings/general.php'
+      ],
+      [
+        'title' => 'Brand',
+        'path'  => 'brand',
+        'link'  => 'settings/brand.php'
+      ],
+    ]
+    ],
 ];
 ?>
 

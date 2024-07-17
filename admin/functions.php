@@ -24,8 +24,8 @@ function cleardata($data) {
   return $data;
 }
 
-function get_user_session_information($connect){
-  $sentence = $connect->query("SELECT * FROM users WHERE user_name = '".$_SESSION['user_name']."' LIMIT 1");
+function get_user_session_information($connect) {
+  $sentence = $connect->query("SELECT * FROM users WHERE user_name = '" . $_SESSION['user_name'] . "' LIMIT 1");
   $sentence = $sentence->fetch(PDO::FETCH_OBJ);
   return ($sentence) ? $sentence : false;
 }
@@ -246,15 +246,36 @@ function has_error_messages() {
 // Gravatar
 /* --------------- */
 
-function getGravatar( $email, $s = 150, $d = 'mp', $r = 'g', $img = false, $atts = array() ) {
+function getGravatar($email, $s = 150, $d = 'mp', $r = 'g', $img = false, $atts = array()) {
   $url = 'https://www.gravatar.com/avatar/';
-  $url .= md5( strtolower( trim( $email ) ) );
+  $url .= md5(strtolower(trim($email)));
   $url .= "?s=$s&d=$d&r=$r";
-  if ( $img ) {
-      $url = '<img src="' . $url . '"';
-      foreach ( $atts as $key => $val )
-          $url .= ' ' . $key . '="' . $val . '"';
-      $url .= ' />';
+  if ($img) {
+    $url = '<img src="' . $url . '"';
+    foreach ($atts as $key => $val)
+      $url .= ' ' . $key . '="' . $val . '"';
+    $url .= ' />';
   }
   return $url;
+}
+
+/**
+ * Cargar imagenes
+ */
+
+function uploadSiteImage($fieldName, $savedValue, $uploadsPath) {
+  if (empty($_FILES[$fieldName]['name'])) {
+    return $savedValue;
+  } else {
+    $imageFile       = explode(".", $_FILES[$fieldName]["name"]);
+    $renameFile      = '.' . end($imageFile);
+    $uploadDirectory = $uploadsPath;
+
+    if (!file_exists($uploadDirectory)) {
+      mkdir($uploadDirectory, 0777, true);
+    }
+
+    move_uploaded_file($_FILES[$fieldName]['tmp_name'], $uploadDirectory . $fieldName . $renameFile);
+    return '/uploads/site/' . $fieldName . $renameFile;
+  }
 }

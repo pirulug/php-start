@@ -16,3 +16,7 @@ if (!$connect) {
 if (isset($_SESSION["user_name"])) {
   $user_session = get_user_session_information($connect);
 }
+
+// Obetener los logos
+$querySelect = "SELECT * FROM brand";
+$brand       = $connect->query($querySelect)->fetch(PDO::FETCH_OBJ);

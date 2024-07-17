@@ -7,6 +7,7 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
   <title><?= $pageTitle ?? "" ?> | <?= APP_NAME ?? "Start Php" ?></title>
+  <link rel="icon" type="image/png" href="<?= $brand->st_favicon ?>">
   <!-- Css Bootstrap-->
   <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/app.css" />
   <link rel="stylesheet" href="<?= APP_URL ?>/assets/css/prism.css" />
