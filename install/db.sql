@@ -1,3 +1,8 @@
+--
+-- USERS
+--
+
+
 CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `user_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
@@ -14,3 +19,16 @@ INSERT INTO `users` (`user_name`, `user_email`, `user_password`, `user_role`, `u
 ('superadmin', 'superadmin@admin.com', 'SFU0SkJ0YUlCc1dURVZFZCt5blNKQT09', 0, 1, '2024-07-07 17:52:46', '2024-07-07 17:16:51'),
 ('admin', 'admin@admin.com', 'S0VNV1lxa25wNW11N2JvS1lyS1BGUT09', 1, 1, '2024-07-07 21:56:58', '2024-07-07 15:41:13'),
 ('user', 'user@user.com', 'QzJNRnVNVHJwb0lCWGFadTBFYlNjQT09', 2, 1, '2024-07-07 21:58:40', '2024-07-07 19:24:50');
+
+--
+-- BRAND
+--
+
+CREATE TABLE `brand` (
+  `st_favicon` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'favicon.png',
+  `st_whitelogo` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'whitelogo.png',
+  `st_darklogo` varchar(150) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'darklogo.png'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci ROW_FORMAT=COMPACT;
+
+INSERT INTO `brand` (`st_favicon`, `st_whitelogo`, `st_darklogo`) VALUES
+('/uploads/site/st_favicon.png', '/uploads/site/st_whitelogo.png', '/uploads/site/st_darklogo.png');
