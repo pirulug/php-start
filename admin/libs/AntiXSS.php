@@ -6,9 +6,9 @@ class AntiXSS {
     '/<script\b[^>]*>(.*?)<\/script>/is'                => '', // Remover scripts
     '/<iframe\b[^>]*>(.*?)<\/iframe>/is'                => '', // Remover iframes
     '/<object\b[^>]*>(.*?)<\/object>/is'                => '', // Remover objects
-    '/<embed\b[^>]*>(.*?)<\/embed>/is'                  => '',   // Remover embeds
+    '/<embed\b[^>]*>(.*?)<\/embed>/is'                  => '', // Remover embeds
     '/<applet\b[^>]*>(.*?)<\/applet>/is'                => '', // Remover applets
-    '/<form\b[^>]*>(.*?)<\/form>/is'                    => '',     // Remover forms
+    '/<form\b[^>]*>(.*?)<\/form>/is'                    => '', // Remover forms
     '/<img\b[^>]*src=["\']?javascript:[^"\']*["\']?/is' => '', // Remover img con javascript
     '/<img\b[^>]*>/is'                                  => '', // Remover todas las imágenes (opcional, según necesidades)
   ];
