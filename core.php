@@ -10,6 +10,7 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 require_once "config.php";
+require_once "libs/AccessControl.php";
 require_once "libs/Encryption.php";
 require_once "functions.php";
 
@@ -24,6 +25,9 @@ if (!$connect) {
 if (isset($_SESSION["user_name"])) {
   $user_session = get_user_session_information($connect);
 }
+
+// Access Control
+$accessControl = new AccessControl();
 
 // Encryption
 $encryption = new Encryption();
