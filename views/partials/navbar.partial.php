@@ -9,34 +9,34 @@ if (isset($_SESSION["user_name"])) {
     [
       'title' => 'Dashboard',
       'link'  => APP_URL . "/admin/controllers/dashboard.php",
-      'roles' => [0, 1] // Acceso para superadmin, admin y usuario
+      'roles' => [0, 1]
     ],
     [
       'title' => 'Admin',
       'link'  => APP_URL . "/admin",
-      'roles' => [0, 1, 2] // Acceso para superadmin, admin y usuario
+      'roles' => [0, 1, 2] 
     ],
     [
       'title'    => $user_session->user_name,
       'link'     => '#',
       'dropdown' => true,
-      'roles'    => [0, 1, 2], // Acceso para superadmin, admin y usuario
+      'roles'    => [0, 1, 2], 
       'items'    => [
         [
           'title' => 'Perfil',
           'link'  => 'profile.php',
-          'roles' => [0, 1, 2] // Acceso para todos los roles
+          'roles' => [0, 1, 2] 
         ],
         [
           'title' => 'Favoritos',
           'link'  => 'favorites.php',
-          'roles' => [0, 1] // Acceso para superadmin y admin
+          'roles' => [0, 1] 
         ],
         ['divider' => true],
         [
           'title' => 'Salir',
           'link'  => 'signout.php',
-          'roles' => [0, 1, 2] // Acceso para todos los roles
+          'roles' => [0, 1, 2]
         ],
       ]
     ]
@@ -48,7 +48,7 @@ if (isset($_SESSION["user_name"])) {
       'title'    => 'Auth',
       'link'     => '#',
       'dropdown' => true,
-      'roles'    => [], // No es necesario un rol específico para ver este menú
+      'roles'    => [],
       'items'    => [
         ['title' => 'Login', 'link' => 'signin.php', 'roles' => []],
         ['title' => 'Register', 'link' => 'signup.php', 'roles' => []],
@@ -56,7 +56,6 @@ if (isset($_SESSION["user_name"])) {
     ]
   ];
 }
-
 
 ?>
 
