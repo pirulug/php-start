@@ -7,23 +7,27 @@ $menuItems = [
     'title' => 'Dashboard',
     'path'  => 'dashboard',
     'icon'  => 'sliders',
-    'link'  => 'dashboard.php'
+    'link'  => 'dashboard.php',
+    'roles' => [0, 1]
   ],
   [
     'title'     => 'Usuarios',
     'path'      => 'users',
     'icon'      => 'users',
     'collapsed' => true,
+    'roles'     => [0, 1],
     'items'     => [
       [
         'title' => 'Nuevo Usuario',
         'path'  => 'user-new',
-        'link'  => 'users/new.php'
+        'link'  => 'users/new.php',
+        'roles' => [0, 1]
       ],
       [
         'title' => 'Lista de usuario',
         'path'  => 'user-list',
-        'link'  => 'users/list.php'
+        'link'  => 'users/list.php',
+        'roles' => [0, 1]
       ],
     ]
   ],
@@ -32,20 +36,25 @@ $menuItems = [
     'path'      => 'settings',
     'icon'      => 'settings',
     'collapsed' => true,
+    'roles'     => [0],
     'items'     => [
       [
         'title' => 'General',
         'path'  => 'general',
-        'link'  => 'settings/general.php'
+        'link'  => 'settings/general.php',
+        'roles' => [0]
       ],
       [
         'title' => 'Brand',
         'path'  => 'brand',
-        'link'  => 'settings/brand.php'
+        'link'  => 'settings/brand.php',
+        'roles' => [0]
       ],
     ]
   ],
 ];
+
+$role = $_SESSION['user_role'];
 ?>
 
 <nav class="sidebar js-sidebar" id="sidebar">
@@ -55,32 +64,36 @@ $menuItems = [
     </a>
     <ul class="sidebar-nav">
       <?php foreach ($menuItems as $item): ?>
-        <?php if (isset($item['collapsed']) && $item['collapsed']): ?>
+        <?php if ($accessControl->hasAccess($item['roles'], $role)): // Verificar acceso al ítem principal ?>
+          <?php if (isset($item['collapsed']) && $item['collapsed']): ?>
 
-          <li class="sidebar-item <?= in_array($theme_path, array_column($item['items'], 'path')) ? 'active' : '' ?>">
-            <a class="sidebar-link <?= in_array($theme_path, array_column($item['items'], 'path')) ? '' : 'collapsed' ?>"
-              data-bs-target="#<?= $item['path'] ?>" data-bs-toggle="collapse">
-              <i class="align-middle" data-feather="<?= $item['icon'] ?>"></i>
-              <span class="align-middle"><?= $item['title'] ?></span>
-            </a>
-            <ul
-              class="sidebar-dropdown list-unstyled collapse <?= in_array($theme_path, array_column($item['items'], 'path')) ? 'show' : '' ?>"
-              id="<?= $item['path'] ?>" data-bs-parent="#sidebar">
-              <?php foreach ($item['items'] as $subItem): ?>
-                <li class="sidebar-item <?= $theme_path == $subItem['path'] ? "active" : "" ?>">
-                  <a class="sidebar-link"
-                    href="<?= APP_URL . "/admin/controllers/" . $subItem['link'] ?>"><?= $subItem['title'] ?></a>
-                </li>
-              <?php endforeach; ?>
-            </ul>
-          </li>
-        <?php else: ?>
-          <li class="sidebar-item <?= $theme_path == $item['path'] ? "active" : "" ?>">
-            <a class="sidebar-link" href="<?= APP_URL . "/admin/controllers/" . $item['link'] ?>">
-              <i class="align-middle" data-feather="<?= $item['icon'] ?>"></i>
-              <span class="align-middle"><?= $item['title'] ?></span>
-            </a>
-          </li>
+            <li class="sidebar-item <?= in_array($theme_path, array_column($item['items'], 'path')) ? 'active' : '' ?>">
+              <a class="sidebar-link <?= in_array($theme_path, array_column($item['items'], 'path')) ? '' : 'collapsed' ?>"
+                data-bs-target="#<?= $item['path'] ?>" data-bs-toggle="collapse">
+                <i class="align-middle" data-feather="<?= $item['icon'] ?>"></i>
+                <span class="align-middle"><?= $item['title'] ?></span>
+              </a>
+              <ul
+                class="sidebar-dropdown list-unstyled collapse <?= in_array($theme_path, array_column($item['items'], 'path')) ? 'show' : '' ?>"
+                id="<?= $item['path'] ?>" data-bs-parent="#sidebar">
+                <?php foreach ($item['items'] as $subItem): ?>
+                  <?php if ($accessControl->hasAccess($subItem['roles'], $role)): // Verificar acceso a los sub ítems ?>
+                    <li class="sidebar-item <?= $theme_path == $subItem['path'] ? "active" : "" ?>">
+                      <a class="sidebar-link"
+                        href="<?= APP_URL . "/admin/controllers/" . $subItem['link'] ?>"><?= $subItem['title'] ?></a>
+                    </li>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              </ul>
+            </li>
+          <?php else: ?>
+            <li class="sidebar-item <?= $theme_path == $item['path'] ? "active" : "" ?>">
+              <a class="sidebar-link" href="<?= APP_URL . "/admin/controllers/" . $item['link'] ?>">
+                <i class="align-middle" data-feather="<?= $item['icon'] ?>"></i>
+                <span class="align-middle"><?= $item['title'] ?></span>
+              </a>
+            </li>
+          <?php endif; ?>
         <?php endif; ?>
       <?php endforeach; ?>
     </ul>
