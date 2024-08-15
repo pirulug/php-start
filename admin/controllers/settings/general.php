@@ -17,5 +17,5 @@ $theme_title = "General";
 $theme_path  = "general";
 // $theme_scripts = ["pages/dashboard.js"];
 // $theme_styles = ["pages/dashboard.css"];
-include BASE_DIR_ADMIN_VIEW . "/settings/general.view.php";
+include BASE_DIR_ADMIN . "/views/settings/general.view.php";
 /* ================================= */

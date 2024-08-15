@@ -17,5 +17,5 @@ $theme_title = "Dashboard";
 $theme_path  = "dashboard";
 // $theme_scripts = ["pages/dashboard.js"];
 // $theme_styles = ["pages/dashboard.css"];
-include BASE_DIR_ADMIN_VIEW . "/dashboard.view.php";
+include BASE_DIR_ADMIN . "/views/dashboard.view.php";
 /* ================================= */

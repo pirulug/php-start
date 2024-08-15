@@ -48,5 +48,5 @@ $theme_title = "Lista de usuarios";
 $theme_path  = "user-list";
 // $theme_scripts = ["pages/dashboard.js"];
 // $theme_styles = ["pages/dashboard.css"];
-include BASE_DIR_ADMIN_VIEW . "/login.view.php";
+include BASE_DIR_ADMIN . "/views/login.view.php";
 /* ================================= */

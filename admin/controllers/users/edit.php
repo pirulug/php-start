@@ -132,7 +132,7 @@ $theme_title = "Editar usuario";
 $theme_path  = "user-add";
 // $theme_scripts = ["js/clear.js"];
 // $theme_styles = ["pages/dashboard.css"];
-include BASE_DIR_ADMIN_VIEW . "/users/edit.view.php";
+include BASE_DIR_ADMIN . "/views/users/edit.view.php";
 /* ================================= */
 
 

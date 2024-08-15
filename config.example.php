@@ -18,12 +18,11 @@ const APP_URL = "URL_WEB"; // Sin "/" al final de la url
 // Directorio Base
 const BASE_DIR = __DIR__;
 const BASE_DIR_ADMIN = __DIR__ . "/admin";
-const BASE_DIR_ADMIN_VIEW = __DIR__ . "/admin/views";
 
 // Claves
-const METHOD = "AES-256-CBC";
-const SECRET_KEY = '$STARTPHP@2024PIRU';
-const SECRET_IV = '456232132132432234132';
+const ENCRYPT_METHOD = "AES-256-CBC";
+const ENCRYPT_KEY = '$STARTPHP@2024PIRU';
+const ENCRYPT_IV = '456232132132432234132';
 
 // Configuración de la zona horaria
 date_default_timezone_set("America/Lima");

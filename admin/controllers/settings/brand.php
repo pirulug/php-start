@@ -45,5 +45,5 @@ $theme_title = "Brand";
 $theme_path  = "brand";
 // $theme_scripts = ["pages/dashboard.js"];
 // $theme_styles = ["pages/dashboard.css"];
-include BASE_DIR_ADMIN_VIEW . "/settings/brand.view.php";
+include BASE_DIR_ADMIN . "/views/settings/brand.view.php";
 /* ================================= */

@@ -93,7 +93,7 @@ $theme_title = "Usuario nuevo";
 $theme_path  = "user-new";
 // $theme_scripts = ["js/clear.js"];
 // $theme_styles = ["pages/dashboard.css"];
-include BASE_DIR_ADMIN_VIEW . "/users/new.view.php";
+include BASE_DIR_ADMIN . "/views/users/new.view.php";
 /* ================================= */
 
 
