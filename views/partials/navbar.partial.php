@@ -1,67 +1,57 @@
 <?php
 
+$role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : null;
+
 if (isset($_SESSION["user_name"])) {
   $check_access = check_access($connect);
 
-  if ($check_access['user_role'] == 1 || $check_access['user_role'] == 0) {
-    $menuItems = [
-      [
-        'title' => 'Dashboard',
-        'link'  => APP_URL . "/admin/controllers/dashboard.php"
-      ],
-      [
-        'title'    => $user_session->user_name,
-        'link'     => '#',
-        'dropdown' => true,
-        'items'    => [
-          [
-            'title' => 'Perfil',
-            'link'  => 'profile.php'
-          ],
-          [
-            'title' => 'Favoritos',
-            'link'  => 'favorites.php'
-          ],
-          ['divider' => true],
-          [
-            'title' => 'Salir',
-            'link'  => 'signout.php'
-          ],
-        ]
+  $menuItems = [
+    [
+      'title' => 'Dashboard',
+      'link'  => APP_URL . "/admin/controllers/dashboard.php",
+      'roles' => [0, 1] // Acceso para superadmin, admin y usuario
+    ],
+    [
+      'title' => 'Admin',
+      'link'  => APP_URL . "/admin",
+      'roles' => [0, 1, 2] // Acceso para superadmin, admin y usuario
+    ],
+    [
+      'title'    => $user_session->user_name,
+      'link'     => '#',
+      'dropdown' => true,
+      'roles'    => [0, 1, 2], // Acceso para superadmin, admin y usuario
+      'items'    => [
+        [
+          'title' => 'Perfil',
+          'link'  => 'profile.php',
+          'roles' => [0, 1, 2] // Acceso para todos los roles
+        ],
+        [
+          'title' => 'Favoritos',
+          'link'  => 'favorites.php',
+          'roles' => [0, 1] // Acceso para superadmin y admin
+        ],
+        ['divider' => true],
+        [
+          'title' => 'Salir',
+          'link'  => 'signout.php',
+          'roles' => [0, 1, 2] // Acceso para todos los roles
+        ],
       ]
-    ];
-  } else {
-    $menuItems = [
-      [
-        'title'    => $user_session->user_name,
-        'link'     => '#',
-        'dropdown' => true,
-        'items'    => [
-          [
-            'title' => 'Perfil',
-            'link'  => 'profile.php'
-          ],
-          [
-            'title' => 'Favoritos',
-            'link'  => 'favorites.php'
-          ],
-          ['divider' => true],
-          [
-            'title' => 'Salir',
-            'link'  => 'signout.php'
-          ],
-        ]
-      ]
-    ];
-  }
+    ]
+  ];
 } else {
   $menuItems = [
-    ['title' => 'Admin', 'link' => APP_URL . '/admin'],
+    ['title' => 'Admin', 'link' => APP_URL . '/admin', 'roles' => []],
     [
-      'title'    => 'Auth', 'link' => '#', 'dropdown' => true, 'items' => [
-        ['title' => 'Login', 'link' => 'signin.php'],
-        ['title' => 'Register', 'link' => 'signup.php'],
-        // ['divider' => true]
+      'title'    => 'Auth',
+      'link'     => '#',
+      'dropdown' => true,
+      'roles'    => [], // No es necesario un rol específico para ver este menú
+      'items'    => [
+        ['title' => 'Login', 'link' => 'signin.php', 'roles' => []],
+        ['title' => 'Register', 'link' => 'signup.php', 'roles' => []],
       ]
     ]
   ];
@@ -88,28 +78,35 @@ if (isset($_SESSION["user_name"])) {
           <a class="nav-link" href="/">Inicio</a>
         </li>
         <?php foreach ($menuItems as $item): ?>
-          <?php if (isset($item['dropdown']) && $item['dropdown']): ?>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="<?= $item['link'] ?>" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                <?= $item['title'] ?>
-              </a>
-              <ul class="dropdown-menu">
-                <?php foreach ($item['items'] as $subItem): ?>
-                  <?php if (isset($subItem['divider']) && $subItem['divider']): ?>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                  <?php else: ?>
-                    <li><a class="dropdown-item" href="<?= $subItem['link'] ?>"><?= $subItem['title'] ?></a></li>
-                  <?php endif; ?>
-                <?php endforeach; ?>
-              </ul>
-            </li>
-          <?php else: ?>
-            <li class="nav-item">
-              <a class="nav-link" href="<?= $item['link'] ?>"><?= $item['title'] ?></a>
-            </li>
+          <?php
+          // Verificar si el ítem tiene roles definidos y si el usuario tiene acceso
+          if (!isset($item['roles']) || empty($item['roles']) || $accessControl->hasAccess($item['roles'], $role)):
+            ?>
+            <?php if (isset($item['dropdown']) && $item['dropdown']): ?>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="<?= $item['link'] ?>" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <?= $item['title'] ?>
+                </a>
+                <ul class="dropdown-menu">
+                  <?php foreach ($item['items'] as $subItem): ?>
+                    <?php
+                    // Verificar si el sub ítem tiene roles definidos y si el usuario tiene acceso
+                    if (isset($subItem['divider']) && $subItem['divider']): ?>
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+                    <?php elseif (!isset($subItem['roles']) || empty($subItem['roles']) || $accessControl->hasAccess($subItem['roles'], $role)): ?>
+                      <li><a class="dropdown-item" href="<?= $subItem['link'] ?>"><?= $subItem['title'] ?></a></li>
+                    <?php endif; ?>
+                  <?php endforeach; ?>
+                </ul>
+              </li>
+            <?php else: ?>
+              <li class="nav-item">
+                <a class="nav-link" href="<?= $item['link'] ?>"><?= $item['title'] ?></a>
+              </li>
+            <?php endif; ?>
           <?php endif; ?>
         <?php endforeach; ?>
       </ul>
