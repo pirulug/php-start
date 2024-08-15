@@ -14,23 +14,23 @@ if (isset($_SESSION["user_name"])) {
     [
       'title' => 'Admin',
       'link'  => APP_URL . "/admin",
-      'roles' => [0, 1, 2] 
+      'roles' => [0, 1, 2]
     ],
     [
       'title'    => $user_session->user_name,
       'link'     => '#',
       'dropdown' => true,
-      'roles'    => [0, 1, 2], 
+      'roles'    => [0, 1, 2],
       'items'    => [
         [
           'title' => 'Perfil',
           'link'  => 'profile.php',
-          'roles' => [0, 1, 2] 
+          'roles' => [0, 1, 2]
         ],
         [
           'title' => 'Favoritos',
           'link'  => 'favorites.php',
-          'roles' => [0, 1] 
+          'roles' => [0, 1]
         ],
         ['divider' => true],
         [
