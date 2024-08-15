@@ -2,8 +2,15 @@
 
 require_once "../../core.php";
 
-// Session Manager
-$check_access = $sessionManager->checkUserAccess();
+if (!isUserLoggedIn()) {
+  header('Location: ' . APP_URL . '/admin/controllers/login.php');
+  exit();
+}
+
+if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
+  header("Location: " . APP_URL . "/admin/controllers/dashboard.php");
+  exit();
+}
 
 // Si no tine id
 if (!isset($_GET["id"]) || $_GET["id"] == "") {
@@ -12,7 +19,7 @@ if (!isset($_GET["id"]) || $_GET["id"] == "") {
   exit();
 }
 
-$id = decrypt($_GET["id"]);
+$id = $encryption->decrypt($_GET["id"]);
 
 if (!is_numeric($id)) {
   add_message("El id no encontrado.", "danger");
@@ -34,7 +41,7 @@ if (empty($user)) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
-  $user_id       = decrypt(cleardata($_POST['user_id']));
+  $user_id       = $encryption->decrypt(cleardata($_POST['user_id']));
   $user_name     = cleardata($_POST['user_name']);
   $user_email    = cleardata($_POST['user_email']);
   $user_role     = cleardata($_POST['user_role']);
@@ -80,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (strlen($user_password) < 6) {
     add_message("La contraseña debe tener al menos 6 caracteres.", "danger");
   } else {
-    $user_password = encrypt($user_password);
+    $user_password = $encryption->encrypt($user_password);
   }
 
   // Validar selected

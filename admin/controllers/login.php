@@ -2,7 +2,7 @@
 
 require_once "../core.php";
 
-if (isset($_SESSION['user_name'])) {
+if (isUserLoggedIn()) {
   header('Location: ' . APP_URL . '/admin/controllers/dashboard.php');
   exit();
 }
@@ -10,7 +10,7 @@ if (isset($_SESSION['user_name'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_name     = htmlspecialchars(strtolower($_POST['user_name']), ENT_QUOTES, 'UTF-8');
   $user_password = cleardata($_POST['user_password']);
-  $password      = encrypt($user_password);
+  $password      = $encryption->encrypt($user_password);
 
   try {
     $connect;
@@ -24,12 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $stmt->bindParam(':user_password', $password, PDO::PARAM_STR);
   $stmt->execute();
 
-  $result_login = $stmt->fetch();
+  $result_login = $stmt->fetch(PDO::FETCH_OBJ);
 
   if ($result_login !== false) {
     $_SESSION['signedin']  = true;
-    $_SESSION['user_name'] = $user_name;
-    $_SESSION['user_name'] = $result_login['user_name'];
+    $_SESSION['user_id']   = $result_login->user_id;
+    $_SESSION['user_role'] = $result_login->user_role;
+    $_SESSION['user_name'] = $result_login->user_name;
 
 
     add_message("Datos correctos", "success");

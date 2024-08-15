@@ -2,8 +2,15 @@
 
 require_once "../../core.php";
 
-// Session Manager
-$check_access = $sessionManager->checkUserAccess();
+if (!isUserLoggedIn()) {
+  header('Location: ' . APP_URL . '/admin/controllers/login.php');
+  exit();
+}
+
+if (!$accessControl->hasAccess([0], $_SESSION['user_role'])) {
+  header("Location: " . APP_URL . "/admin/controllers/dashboard.php");
+  exit();
+}
 
 /* ========== Theme config ========= */
 $theme_title = "General";

@@ -1,6 +1,6 @@
 <?php
 
-if(!file_exists("config.php")){
+if (!file_exists("config.php")) {
   header("Location: install/");
   exit();
 }
@@ -10,6 +10,7 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 require_once "config.php";
+require_once "libs/Encryption.php";
 require_once "functions.php";
 
 // Conectar BD
@@ -23,6 +24,9 @@ if (!$connect) {
 if (isset($_SESSION["user_name"])) {
   $user_session = get_user_session_information($connect);
 }
+
+// Encryption
+$encryption = new Encryption();
 
 // Obetener los logos
 $querySelect = "SELECT * FROM brand";

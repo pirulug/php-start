@@ -2,14 +2,21 @@
 
 require_once "../../core.php";
 
-// Session Manager
-$check_access = $sessionManager->checkUserAccess();
+if (!isUserLoggedIn()) {
+  header('Location: ' . APP_URL . '/admin/controllers/login.php');
+  exit();
+}
+
+if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
+  header("Location: " . APP_URL . "/admin/controllers/dashboard.php");
+  exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
   $user_name   = cleardata($_POST['user_name']);
   $user_email  = cleardata($_POST['user_email']);
-  $user_role = cleardata($_POST['user_role']);
+  $user_role   = cleardata($_POST['user_role']);
   $user_status = cleardata($_POST['user_status']);
   $password    = cleardata($_POST['user_password']);
 
@@ -57,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Si no hay mensajes de error, proceder con la inserción
   if (!has_error_messages()) {
-    $hashed_password = encrypt($password);
+    $hashed_password = $encryption->encrypt($password);
 
     // Preparar la consulta SQL para la inserción
     $query     = "INSERT INTO users (user_name, user_email, user_role, user_status, user_password, user_updated) VALUES (:user_name, :user_email, :user_role, :user_status, :user_password, CURRENT_TIME)";
@@ -81,10 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
-
 /* ========== Theme config ========= */
 $theme_title = "Usuario nuevo";
-$theme_path  = "user-add";
+$theme_path  = "user-new";
 // $theme_scripts = ["js/clear.js"];
 // $theme_styles = ["pages/dashboard.css"];
 include BASE_DIR_ADMIN_VIEW . "/users/new.view.php";

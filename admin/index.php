@@ -2,19 +2,24 @@
 
 require 'core.php';
 
-// Session Manager
-$sessionManager = new SessionManager($connect);
+if ($_SESSION['signedin'] == true) {
 
-if ($sessionManager->isUserLoggedIn()) {
-  $check_access = $sessionManager->getUserRole();
-
-  if ($check_access['user_role'] == 0) {
-    $sessionManager->redirectWithMessage('/admin/controllers/dashboard.php', 'Super Administrador', 'success');
-  } elseif ($check_access['user_role'] == 1) {
-    $sessionManager->redirectWithMessage('/admin/controllers/dashboard.php', 'Administrador', 'success');
+  if ($_SESSION["user_role"] == 0) {
+    header("Location: " . APP_URL . "/admin/controllers/dashboard.php");
+    add_message("Super Administrador", "success");
+    exit();
+  } elseif ($_SESSION["user_role"] == 1) {
+    header("Location: " . APP_URL . "/admin/controllers/dashboard.php");
+    add_message("Administrador", "success");
+    exit();
   } else {
-    $sessionManager->redirectWithMessage('/', 'No eres administrador', 'danger');
+    header("Location: " . APP_URL);
+    add_message("No eres administrador", "danger");
+    exit();
   }
+  
 } else {
-  $sessionManager->redirectWithMessage('/admin/controllers/login.php', 'No inició sesión', 'danger');
+  header("Location: " . APP_URL . "/admin/controllers/login.php");
+  add_message("No inició sesión", "danger");
+  exit();
 }

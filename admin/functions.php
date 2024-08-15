@@ -1,6 +1,6 @@
 <?php
 
-require BASE_DIR_ADMIN . "/libs/AntiXSS.php";
+require BASE_DIR . "/libs/AntiXSS.php";
 
 if (session_status() == PHP_SESSION_NONE) {
   session_start();
@@ -22,6 +22,10 @@ function cleardata($data) {
   $antiXss = new AntiXSS();
   $data    = $antiXss->clean($data);
   return $data;
+}
+
+function isUserLoggedIn(): bool {
+  return isset($_SESSION['signedin']) && $_SESSION['signedin'] === true;
 }
 
 function get_user_session_information($connect) {

@@ -1,0 +1,23 @@
+# Proteger el archivo .htaccess
+<Files ".htaccess">
+    Require all denied
+</Files>
+
+# Evitar la exploración de directorios
+Options -Indexes
+
+# Evitar el acceso directo a los archivos .view.php
+<FilesMatch "\.view\.php$">
+    Require all denied
+</FilesMatch>
+
+# Proteger los archivos de configuración de PHP (por ejemplo, config.php, settings.php, etc.)
+<FilesMatch "(config.php|config.example.php)$">
+    Require all denied
+</FilesMatch>
+
+# Evitar el acceso a archivos sensibles (ej. README, LICENSE, etc.)
+<FilesMatch "^(README|LICENSE|CHANGELOG|UPGRADE).*$">
+    Require all denied
+</FilesMatch>
+

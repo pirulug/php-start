@@ -2,8 +2,15 @@
 
 require_once "../../core.php";
 
-// Session Manager
-$check_access = $sessionManager->checkUserAccess();
+if (!isUserLoggedIn()) {
+  header('Location: ' . APP_URL . '/admin/controllers/login.php');
+  exit();
+}
+
+if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
+  header("Location: " . APP_URL . "/admin/controllers/dashboard.php");
+  exit();
+}
 
 // Comprobaciones
 if (!isset($_GET["id"]) || $_GET["id"] == "") {
@@ -12,7 +19,7 @@ if (!isset($_GET["id"]) || $_GET["id"] == "") {
   exit();
 }
 
-$id = decrypt($_GET["id"]);
+$id = $encryption->decrypt($_GET["id"]);
 
 if (!is_numeric($id)) {
   add_message("El id no encontrado.", "danger");

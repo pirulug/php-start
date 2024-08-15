@@ -26,11 +26,3 @@ class AntiXSS {
     return $input;
   }
 }
-
-// Ejemplo de uso
-// $antiXSS = new AntiXSS();
-
-// $user_input = "<script>alert('XSS');</script><b>Texto seguro</b><img src='javascript:alert(1)'>";
-// $safe_input = $antiXSS->clean($user_input);
-
-// echo $safe_input; // Salida segura

@@ -1,6 +1,6 @@
 <?php
 
-require BASE_DIR_ADMIN . "/libs/AntiXSS.php";
+require BASE_DIR . "/libs/AntiXSS.php";
 
 if (!isset($_SESSION)) {
   session_start();
@@ -34,19 +34,19 @@ function get_user_session_information($connect) {
 // Encrypt & Decript
 /* ------------------ */
 
-function encrypt($string): string {
-  $key       = hash('sha256', SECRET_KEY);
-  $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
-  $encrypted = openssl_encrypt($string, METHOD, $key, 0, $iv);
-  return base64_encode($encrypted);
-}
+// function encrypt($string): string {
+//   $key       = hash('sha256', SECRET_KEY);
+//   $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
+//   $encrypted = openssl_encrypt($string, METHOD, $key, 0, $iv);
+//   return base64_encode($encrypted);
+// }
 
-function decrypt($string) {
-  $key       = hash('sha256', SECRET_KEY);
-  $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
-  $decrypted = openssl_decrypt(base64_decode($string), METHOD, $key, 0, $iv);
-  return $decrypted;
-}
+// function decrypt($string) {
+//   $key       = hash('sha256', SECRET_KEY);
+//   $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
+//   $decrypted = openssl_decrypt(base64_decode($string), METHOD, $key, 0, $iv);
+//   return $decrypted;
+// }
 
 
 /* --------------- */

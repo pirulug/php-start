@@ -17,7 +17,7 @@ $menuItems = [
     'items'     => [
       [
         'title' => 'Nuevo Usuario',
-        'path'  => 'user-add',
+        'path'  => 'user-new',
         'link'  => 'users/new.php'
       ],
       [
@@ -26,7 +26,7 @@ $menuItems = [
         'link'  => 'users/list.php'
       ],
     ]
-    ],
+  ],
   [
     'title'     => 'Configuración',
     'path'      => 'settings',
@@ -44,7 +44,7 @@ $menuItems = [
         'link'  => 'settings/brand.php'
       ],
     ]
-    ],
+  ],
 ];
 ?>
 

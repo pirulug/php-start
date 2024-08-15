@@ -2,15 +2,22 @@
 
 require_once "../../core.php";
 
-// Session Manager
-$check_access = $sessionManager->checkUserAccess();
+if (!isUserLoggedIn()) {
+  header('Location: ' . APP_URL . '/admin/controllers/login.php');
+  exit();
+}
+
+if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
+  header("Location: " . APP_URL . "/admin/controllers/dashboard.php");
+  exit();
+}
 
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $page   = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit  = 10;
 $offset = ($page - 1) * $limit;
 
-$currentUserId = $check_access['user_id'];
+$currentUserId = $_SESSION['user_id'];
 
 // Condiciones adicionales dinámicas
 $searchColumns = ['user_name', 'user_email'];

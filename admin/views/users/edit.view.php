@@ -7,7 +7,7 @@
   <div class="card-body">
     <form id="formNewUser" enctype="multipart/form-data" action="" method="post">
 
-    <input type="hidden" name="user_id" value="<?= encrypt($user->user_id) ?>">
+    <input type="hidden" name="user_id" value="<?= $encryption->encrypt($user->user_id) ?>">
 
       <div class="mb-3">
         <label>Name</label>
@@ -21,7 +21,7 @@
 
       <div class="mb-3">
         <label>Password</label>
-        <input class="form-control" type="text" name="user_password" value="<?= decrypt($user->user_password) ?>">
+        <input class="form-control" type="text" name="user_password" value="<?= $encryption->decrypt($user->user_password) ?>">
       </div>
 
       <div class="mb-3">
