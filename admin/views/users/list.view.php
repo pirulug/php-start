@@ -10,7 +10,7 @@
         <button class="btn btn-primary" type="submit">Buscar</button>
       </div>
     </form>
-    <div class="table-responsibe">
+    <div class="table-responsive">
       <table class="table">
         <thead>
           <tr>
