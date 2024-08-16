@@ -45,6 +45,18 @@ $menuItems = [
         'roles' => [0]
       ],
       [
+        'title' => 'ADS',
+        'path'  => 'ads',
+        'link'  => 'settings/ads.php',
+        'roles' => [0]
+      ],
+      [
+        'title' => 'SMTP',
+        'path'  => 'smtp',
+        'link'  => 'settings/smtp.php',
+        'roles' => [0]
+      ],
+      [
         'title' => 'Brand',
         'path'  => 'brand',
         'link'  => 'settings/brand.php',
