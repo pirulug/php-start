@@ -15,19 +15,12 @@
   <link rel="icon" type="image/png" sizes="16x16" href="i<?= APP_URL ?>/admin/assets/mg/favicon/favicon-16x16.png" />
   <link rel="manifest" href="<?= APP_URL ?>/admin/assets/img/favicon/site.webmanifest" />
 
-  <!-- Css Bootstrap-->
+  <!-- Css -->
   <link rel="stylesheet" href="<?= APP_URL ?>/admin/assets/css/fontawesome.css" />
   <link rel="stylesheet" href="<?= APP_URL ?>/admin/assets/css/app.css" />
 
-  <?php
-  if (isset($theme_styles)) {
-    foreach ($theme_styles as $style) {
-      echo "<link rel=\"stylesheet\" href=\"{$style}\">";
-    }
-  } else {
-    echo "<!-- No Styles -->";
-  }
-  ?>
+  <!-- Block Style -->
+  <?php block("style"); ?>
 </head>
 
 <body>

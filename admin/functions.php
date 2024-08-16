@@ -35,22 +35,48 @@ function get_user_session_information($connect) {
 }
 
 /* ------------------ */
+// Manejo de Block
+/* ------------------ */
+// Array global para almacenar bloques de contenido
+$blocks = [];
+
+// Función para iniciar un bloque
+function blockStart($name) {
+  global $blocks;
+  ob_start();
+}
+
+// Función para finalizar un bloque
+function blockEnd($name) {
+  global $blocks;
+  $blocks[$name] = ob_get_clean();
+}
+
+// Función para imprimir un bloque
+function block($name) {
+  global $blocks;
+  if (isset($blocks[$name])) {
+    echo $blocks[$name];
+  }
+}
+
+/* ------------------ */
 // Encrypt & Decript
 /* ------------------ */
 
-function encrypt($string): string {
-  $key       = hash('sha256', SECRET_KEY);
-  $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
-  $encrypted = openssl_encrypt($string, METHOD, $key, 0, $iv);
-  return base64_encode($encrypted);
-}
+// function encrypt($string): string {
+//   $key       = hash('sha256', SECRET_KEY);
+//   $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
+//   $encrypted = openssl_encrypt($string, METHOD, $key, 0, $iv);
+//   return base64_encode($encrypted);
+// }
 
-function decrypt($string) {
-  $key       = hash('sha256', SECRET_KEY);
-  $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
-  $decrypted = openssl_decrypt(base64_decode($string), METHOD, $key, 0, $iv);
-  return $decrypted;
-}
+// function decrypt($string) {
+//   $key       = hash('sha256', SECRET_KEY);
+//   $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
+//   $decrypted = openssl_decrypt(base64_decode($string), METHOD, $key, 0, $iv);
+//   return $decrypted;
+// }
 
 
 /* --------------- */
