@@ -60,31 +60,12 @@ function block($name) {
   }
 }
 
-/* ------------------ */
-// Encrypt & Decript
-/* ------------------ */
-
-// function encrypt($string): string {
-//   $key       = hash('sha256', SECRET_KEY);
-//   $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
-//   $encrypted = openssl_encrypt($string, METHOD, $key, 0, $iv);
-//   return base64_encode($encrypted);
-// }
-
-// function decrypt($string) {
-//   $key       = hash('sha256', SECRET_KEY);
-//   $iv        = substr(hash('sha256', SECRET_IV), 0, 16);
-//   $decrypted = openssl_decrypt(base64_decode($string), METHOD, $key, 0, $iv);
-//   return $decrypted;
-// }
-
-
 /* --------------- */
 // Paginador
 /* --------------- */
 
 
-function getPaginatedResults($table, $searchColumns, $searchTerm, $additionalConditions, $limit, $offset, $connect) {
+function getPaginatedResults($table, $searchColumns, $searchTerm, $additionalConditions, $limit, $offset, $connect, $orderColumn = 'id', $orderDirection = 'DESC') {
   $searchTerm = "%$searchTerm%";
   $query      = "SELECT * FROM $table 
             WHERE (";
@@ -105,7 +86,7 @@ function getPaginatedResults($table, $searchColumns, $searchTerm, $additionalCon
     $query .= " AND " . $condition['sql'];
   }
 
-  $query .= " LIMIT :limit OFFSET :offset";
+  $query .= "  ORDER BY $orderColumn $orderDirection LIMIT :limit OFFSET :offset";
 
   $stmt = $connect->prepare($query);
   $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
