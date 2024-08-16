@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
   <meta name="description" content="" />
   <meta name="author" content="" />
+
   <!-- Primary Meta Tags-->
   <title><?= $theme_title ?> | <?= APP_NAME ?></title>
 
@@ -18,6 +19,18 @@
   <!-- Css -->
   <link rel="stylesheet" href="<?= APP_URL ?>/admin/assets/css/fontawesome.css" />
   <link rel="stylesheet" href="<?= APP_URL ?>/admin/assets/css/app.css" />
+
+  <!--  -->
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem("theme");
+      const prefersDarkScheme = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      const theme = storedTheme || (prefersDarkScheme ? "dark" : "light");
+      document.documentElement.setAttribute("data-bs-theme", theme);
+    })();
+  </script>
 
   <!-- Block Style -->
   <?php block("style"); ?>
