@@ -17,6 +17,9 @@ $page   = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $limit  = 10;
 $offset = ($page - 1) * $limit;
 
+$orderColumn    = 'user_id';
+$orderDirection = 'DESC';
+
 $currentUserId = $_SESSION['user_id'];
 
 // Condiciones adicionales dinámicas
@@ -40,7 +43,8 @@ $additionalConditions = [
 $total_results = getTotalResults('users', $searchColumns, $search, $additionalConditions, $connect);
 $total_pages   = ceil($total_results / $limit);
 
-$users = getPaginatedResults('users', $searchColumns, $search, $additionalConditions, $limit, $offset, $connect);
+$users = getPaginatedResults('users', $searchColumns, $search, $additionalConditions, $limit, $offset, $connect, $orderColumn, $orderDirection);
+
 
 /* ========== Theme config ========= */
 $theme_title = "Lista de usuarios";
