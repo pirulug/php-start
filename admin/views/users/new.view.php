@@ -8,25 +8,25 @@
     <form id="formNewUser" enctype="multipart/form-data" action="" method="post">
 
       <div class="mb-3">
-        <label>Name</label>
+        <label class="form-label">Name</label>
         <input type="text" name="user_name" class="form-control"
           value="<?= isset($_POST['user_name']) ? htmlspecialchars($_POST['user_name']) : '' ?>" required>
       </div>
 
       <div class="mb-3">
-        <label>Email</label>
+        <label class="form-label">Email</label>
         <input type="text" name="user_email" class="form-control"
           value="<?= isset($_POST['user_email']) ? htmlspecialchars($_POST['user_email']) : '' ?>" required>
       </div>
 
       <div class="mb-3">
-        <label>Password</label>
+        <label class="form-label">Password</label>
         <input class="form-control" type="text" name="user_password"
           value="<?= isset($_POST['user_password']) ? htmlspecialchars($_POST['user_password']) : '' ?>">
       </div>
 
       <div class="mb-3">
-        <label class="control-label">Role</label>
+        <label class="form-label">Role</label>
         <select class="form-select" name="user_role" required>
           <option value="0">- Seleccionar -</option>
           <option value="1" <?= isset($_POST['user_role']) && $_POST['user_role'] == 1 ? 'selected' : '' ?>>
@@ -39,7 +39,7 @@
       </div>
 
       <div class="mb-3">
-        <label class="control-label">Status</label>
+        <label class="form-label">Status</label>
         <select class="form-select" name="user_status" required>
           <option value="0">- Seleccionar -</option>
           <option value="1" <?= isset($_POST['user_status']) && $_POST['user_status'] == 1 ? 'selected' : '' ?>>
