@@ -1,17 +1,18 @@
 <?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
+
 <?php display_messages(); ?>
 
 <div class="card">
   <div class="card-body">
     <form method="GET" action="">
-      <div class="input-group">
+      <div class="input-group mb-3">
         <input class="form-control" type="text" name="search" value="<?= htmlspecialchars($search) ?>">
         <button class="btn btn-primary" type="submit">Buscar</button>
       </div>
     </form>
     <div class="table-responsive">
-      <table class="table">
+      <table class="table table-hover table-bordered align-middle">
         <thead>
           <tr>
             <th>Usuario</th>
@@ -41,10 +42,10 @@
                 <?php endif; ?>
               </td>
               <td>
-                <a href="edit.php?id=<?= $encryption->encrypt($user->user_id) ?>" class="btn btn-success">
+                <a href="edit.php?id=<?= $encryption->encrypt($user->user_id) ?>" class="btn btn-sm btn-success">
                   <i class="fa fa-pen"></i>
                 </a>
-                <a href="delete.php?id=<?= $encryption->encrypt($user->user_id) ?>" class="btn btn-danger"
+                <a href="delete.php?id=<?= $encryption->encrypt($user->user_id) ?>" class="btn btn-sm btn-danger"
                   onClick="return confirm('¿Quieres eliminar?')">
                   <i class="fa fa-trash"></i>
                 </a>
