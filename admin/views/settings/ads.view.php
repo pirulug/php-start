@@ -28,7 +28,7 @@
                 <?php endif; ?>
               </td>
               <td>
-                <a href="<?= APP_URL ?>/admin/controllers/settings/ads_edit.php?id=<?= $ad->id ?>" class="btn btn-success">
+                <a href="<?= SITE_URL ?>/admin/controllers/settings/ads_edit.php?id=<?= $ad->id ?>" class="btn btn-success">
                   <i class="fa fa-edit"></i>
                 </a>
               </td>

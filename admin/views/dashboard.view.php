@@ -1,5 +1,5 @@
 <?php blockStart("script"); ?>
-<script src="<?= APP_URL ?>/admin/assets/js/chartjs.js"></script>
+<script src="<?= SITE_URL ?>/admin/assets/js/chartjs.js"></script>
 <script>
   const ctx = document
     .getElementById("chartjs-dashboard-line")

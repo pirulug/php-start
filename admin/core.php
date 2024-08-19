@@ -26,4 +26,4 @@ if (isset($_SESSION["user_name"])) {
 $accessControl = new AccessControl();
 
 // Encryption
-$encryption = new Encryption();
+$encryption = new Encryption(ENCRYPT_METHOD, SECRET_KEY, SECRET_IV);

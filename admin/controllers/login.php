@@ -3,7 +3,7 @@
 require_once "../core.php";
 
 if (isUserLoggedIn()) {
-  header('Location: ' . APP_URL . '/admin/controllers/dashboard.php');
+  header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
   exit();
 }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     add_message("Datos correctos", "success");
-    header('Location: ' . APP_URL . '/admin/controllers/dashboard.php');
+    header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
     exit();
   } else {
     add_message("incorrect login data or access denied", "danger");
@@ -46,7 +46,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 /* ========== Theme config ========= */
 $theme_title = "Lista de usuarios";
 $theme_path  = "user-list";
-// $theme_scripts = ["pages/dashboard.js"];
-// $theme_styles = ["pages/dashboard.css"];
 include BASE_DIR_ADMIN . "/views/login.view.php";
 /* ================================= */

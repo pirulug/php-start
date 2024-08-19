@@ -8,12 +8,12 @@ if (isset($_SESSION["user_name"])) {
   $menuItems = [
     [
       'title' => 'Dashboard',
-      'link'  => APP_URL . "/admin/controllers/dashboard.php",
+      'link'  => SITE_URL . "/admin/controllers/dashboard.php",
       'roles' => [0, 1]
     ],
     [
       'title' => 'Admin',
-      'link'  => APP_URL . "/admin",
+      'link'  => SITE_URL . "/admin",
       'roles' => [0, 1, 2]
     ],
     [
@@ -43,7 +43,7 @@ if (isset($_SESSION["user_name"])) {
   ];
 } else {
   $menuItems = [
-    ['title' => 'Admin', 'link' => APP_URL . '/admin', 'roles' => []],
+    ['title' => 'Admin', 'link' => SITE_URL . '/admin', 'roles' => []],
     [
       'title'    => 'Auth',
       'link'     => '#',
@@ -61,7 +61,7 @@ if (isset($_SESSION["user_name"])) {
 
 <div class="navbar navbar-expand-lg fixed-top bg-body">
   <div class="container">
-    <a class="navbar-brand" href="<?= APP_NAME ?>">
+    <a class="navbar-brand" href="<?= SITE_NAME ?>">
       <img id="logo-ligth" src="<?= $brand->st_whitelogo ?? "https://dummyimage.com/320x71/000/fff.jpg" ?>"
         alt="Logo Light" class="logo-light" height="40">
       <img id="logo-dark" src="<?= $brand->st_darklogo ?? "https://dummyimage.com/320x71/fff/000.jpg" ?>"

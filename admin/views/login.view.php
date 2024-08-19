@@ -5,7 +5,7 @@
     <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
       <div class="d-table-cell align-middle">
         <div class="text-center mt-4">
-          <h1 class="h2"><?= APP_NAME ?></h1>
+          <h1 class="h2"><?= SITE_NAME ?></h1>
           <p class="lead">Inicie sessión</p>
         </div>
         <div class="card">
@@ -15,13 +15,13 @@
               <form method="POST">
                 <div class="mb-3">
                   <label class="form-label">Usuario</label>
-                  <input class="form-control" type="text" name="user_name" placeholder="Usuario" value="superadmin"
+                  <input class="form-control" type="text" name="user_name" placeholder="Usuario" value="admin"
                     required />
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Contraseña</label>
                   <input class="form-control" type="password" name="user_password" placeholder="Contraseña"
-                    value="superadmin123" required />
+                    value="admin123" required />
                   <!-- <small><a href="/auth-reset-password.html">Forgot password?</a></small> -->
                 </div>
                 <div>

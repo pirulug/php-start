@@ -92,7 +92,7 @@ $role = $_SESSION['user_role'];
                   <?php if ($accessControl->hasAccess($subItem['roles'], $role)): // Verificar acceso a los sub ítems ?>
                     <li class="sidebar-item <?= $theme_path == $subItem['path'] ? "active" : "" ?>">
                       <a class="sidebar-link"
-                        href="<?= APP_URL . "/admin/controllers/" . $subItem['link'] ?>"><?= $subItem['title'] ?></a>
+                        href="<?= SITE_URL . "/admin/controllers/" . $subItem['link'] ?>"><?= $subItem['title'] ?></a>
                     </li>
                   <?php endif; ?>
                 <?php endforeach; ?>
@@ -100,7 +100,7 @@ $role = $_SESSION['user_role'];
             </li>
           <?php else: ?>
             <li class="sidebar-item <?= $theme_path == $item['path'] ? "active" : "" ?>">
-              <a class="sidebar-link" href="<?= APP_URL . "/admin/controllers/" . $item['link'] ?>">
+              <a class="sidebar-link" href="<?= SITE_URL . "/admin/controllers/" . $item['link'] ?>">
                 <i class="align-middle" data-feather="<?= $item['icon'] ?>"></i>
                 <span class="align-middle"><?= $item['title'] ?></span>
               </a>
@@ -121,7 +121,7 @@ $role = $_SESSION['user_role'];
     <div class="navbar-collapse collapse">
       <ul class="navbar-nav navbar-align">
         <li class="nav-item">
-          <a class="nav-link" href="<?= APP_URL ?>">
+          <a class="nav-link" href="<?= SITE_URL ?>">
             <i class="fa fa-eye"></i>
             Ver sitio
           </a>
@@ -190,7 +190,7 @@ $role = $_SESSION['user_role'];
               Help Center
             </a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="<?= APP_URL ?>/admin/controllers/logout.php">
+            <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/logout.php">
               <i class="align-middle me-1" data-feather="log-out"></i>
               Log out
             </a>

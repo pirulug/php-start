@@ -8,17 +8,17 @@
   <meta name="author" content="" />
 
   <!-- Primary Meta Tags-->
-  <title><?= $theme_title ?> | <?= APP_NAME ?></title>
+  <title><?= $theme_title ?> | <?= SITE_NAME ?></title>
 
   <!-- Favicon-->
-  <link rel="apple-touch-icon" sizes="180x180" href="<?= APP_URL ?>/admin/assets/img/favicon/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="<?= APP_URL ?>/admin/assets/img/favicon/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="i<?= APP_URL ?>/admin/assets/mg/favicon/favicon-16x16.png" />
-  <link rel="manifest" href="<?= APP_URL ?>/admin/assets/img/favicon/site.webmanifest" />
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= SITE_URL ?>/admin/assets/img/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="<?= SITE_URL ?>/admin/assets/img/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="i<?= SITE_URL ?>/admin/assets/mg/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="<?= SITE_URL ?>/admin/assets/img/favicon/site.webmanifest" />
 
   <!-- Css -->
-  <link rel="stylesheet" href="<?= APP_URL ?>/admin/assets/css/fontawesome.css" />
-  <link rel="stylesheet" href="<?= APP_URL ?>/admin/assets/css/app.css" />
+  <link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/fontawesome.css" />
+  <link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/app.css" />
 
   <!--  -->
   <script>

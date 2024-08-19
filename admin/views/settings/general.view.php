@@ -1,9 +1,9 @@
 <?php blockStart("style"); // Block ?>
-<link rel="stylesheet" href="<?= APP_URL ?>/admin/assets/css/tagify.css">
+<link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/tagify.css">
 <?php blockEnd("style"); ?>
 
 <?php blockStart("script"); // Block ?>
-<script src="<?= APP_URL ?>/admin/assets/js/tagify.js"></script>
+<script src="<?= SITE_URL ?>/admin/assets/js/tagify.js"></script>
 <script>
   const input = document.getElementById('tag-input');
   new Tagify(input);

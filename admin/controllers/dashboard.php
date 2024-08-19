@@ -3,12 +3,12 @@
 require_once "../core.php";
 
 if (empty($_SESSION['user_id'])) {
-  header("Location: " . APP_URL . "/admin/controllers/login.php");
+  header("Location: " . SITE_URL . "/admin/controllers/login.php");
   exit();
 }
 
 if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
-  header("Location: " . APP_URL);
+  header("Location: " . SITE_URL);
   exit();
 }
 
