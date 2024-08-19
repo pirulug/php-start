@@ -172,7 +172,7 @@ $role = $_SESSION['user_role'];
             <span><?= $user_session->user_name ?></span>
           </a>
           <div class="dropdown-menu dropdown-menu-end">
-            <a class="dropdown-item" href="pages-profile.html">
+            <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/user/profile.php">
               <i class="align-middle me-1" data-feather="user"></i>
               Profile
             </a>
@@ -181,7 +181,7 @@ $role = $_SESSION['user_role'];
               Analytics
             </a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="pages-settings.html">
+            <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/user/profile.php">
               <i class="align-middle me-1" data-feather="settings"></i>
               Settings &amp; Privacy
             </a>
