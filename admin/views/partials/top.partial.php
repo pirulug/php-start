@@ -18,6 +18,7 @@
 
   <!-- Css -->
   <link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/fontawesome.css" />
+  <link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/toastifyjs.css" />
   <link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/app.css" />
 
   <!--  -->

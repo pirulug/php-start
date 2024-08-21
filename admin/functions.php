@@ -29,7 +29,7 @@ function isUserLoggedIn(): bool {
 }
 
 function get_user_session_information($connect) {
-  $sentence = $connect->query("SELECT * FROM users WHERE user_name = '" . $_SESSION['user_name'] . "' LIMIT 1");
+  $sentence = $connect->query("SELECT * FROM users WHERE user_id = '" . $_SESSION['user_id'] . "' LIMIT 1");
   $sentence = $sentence->fetch(PDO::FETCH_OBJ);
   return ($sentence) ? $sentence : false;
 }
@@ -193,65 +193,6 @@ function renderPagination($offset, $limit, $total_results, $page, $search, $tota
       </div>';
 }
 
-/* --------------- */
-// Mensajes
-/* --------------- */
-
-function add_message($message, $type = 'success') {
-  if (!isset($_SESSION['messages'])) {
-    $_SESSION['messages'] = [];
-  }
-  $_SESSION['messages'][] = ['message' => $message, 'type' => $type];
-}
-
-function display_messages() {
-  if (isset($_SESSION['messages']) && !empty($_SESSION['messages'])) {
-    $messages         = $_SESSION['messages'];
-    $success_messages = [];
-    $danger_messages  = [];
-
-    foreach ($messages as $msg) {
-      if ($msg['type'] == 'danger') {
-        $danger_messages[] = $msg['message'];
-      } else {
-        $success_messages[] = $msg['message'];
-      }
-    }
-
-    if (!empty($danger_messages)) {
-      echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'><ul class='mb-0'>";
-      foreach ($danger_messages as $message) {
-        echo "<li>$message</li>";
-      }
-      echo "</ul>
-      <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>
-      </div>";
-    }
-
-    if (!empty($success_messages)) {
-      echo "<div class='alert alert-success alert-dismissible fade show' role='alert'><ul class='mb-0'>";
-      foreach ($success_messages as $message) {
-        echo "<li>$message</li>";
-      }
-      echo "</ul>
-      <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>
-      </div>";
-    }
-
-    unset($_SESSION['messages']);
-  }
-}
-
-function has_error_messages() {
-  if (isset($_SESSION['messages'])) {
-    foreach ($_SESSION['messages'] as $msg) {
-      if ($msg['type'] == 'danger') {
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
 /* --------------- */
 // Gravatar

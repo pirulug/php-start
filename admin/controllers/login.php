@@ -33,11 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_name'] = $result_login->user_name;
 
 
-    add_message("Datos correctos", "success");
+    $messageHandler->addMessage("Datos correctos", "success");
     header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
     exit();
   } else {
-    add_message("incorrect login data or access denied", "danger");
+    $messageHandler->addMessage("incorrect login data or access denied", "danger");
   }
 
 }

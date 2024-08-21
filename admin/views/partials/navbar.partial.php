@@ -172,22 +172,14 @@ $role = $_SESSION['user_role'];
             <span><?= $user_session->user_name ?></span>
           </a>
           <div class="dropdown-menu dropdown-menu-end">
-            <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/user/profile.php">
+            <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/account/profile.php">
               <i class="align-middle me-1" data-feather="user"></i>
               Profile
             </a>
-            <a class="dropdown-item" href="#">
-              <i class="align-middle me-1" data-feather="pie-chart"></i>
-              Analytics
-            </a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/user/profile.php">
+            <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/account/settings.php">
               <i class="align-middle me-1" data-feather="settings"></i>
               Settings &amp; Privacy
-            </a>
-            <a class="dropdown-item" href="#">
-              <i class="align-middle me-1" data-feather="help-circle"></i>
-              Help Center
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/logout.php">
@@ -204,3 +196,6 @@ $role = $_SESSION['user_role'];
     <div class="mb-3">
       <h1 class="h3 d-inline align-middle"><?= $theme_title ?? "" ?></h1>
     </div>
+
+    <!-- Mostrar los mensajes de Bootstrap -->
+    <?= $messageHandler->displayMessages(); ?>

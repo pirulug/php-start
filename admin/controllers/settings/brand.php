@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $statement->bindParam(':st_darklogo', $st_darklogo);
   $statement->execute();
 
-  add_message("Se actualizo las imagenes de manera correcta", "success");
+  $messageHandler->addMessage("Se actualizo las imagenes de manera correcta", "success");
   header('Location: ' . $_SERVER['HTTP_REFERER']);
   exit();
 }

@@ -8,6 +8,7 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/functions.php';
 require_once BASE_DIR . '/libs/AccessControl.php';
 require_once BASE_DIR . '/libs/Encryption.php';
+require_once BASE_DIR . '/libs/MessageHandler.php';
 
 // Conectar BD
 $connect = connect();
@@ -27,3 +28,6 @@ $accessControl = new AccessControl();
 
 // Encryption
 $encryption = new Encryption(ENCRYPT_METHOD, SECRET_KEY, SECRET_IV);
+
+// Mensajes
+$messageHandler = new MessageHandler();

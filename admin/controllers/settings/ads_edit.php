@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $stmt->bindParam(":id", $id);
   $stmt->execute();
 
-  add_message("Actualizado de manera correcta","success");
+  $messageHandler->addMessage("Actualizado de manera correcta","success");
   header('Location: ./ads.php');
   exit();
 }

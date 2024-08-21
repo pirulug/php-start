@@ -8,25 +8,25 @@ if (isset($_SESSION['signedin'])) {
 
     if ($_SESSION["user_role"] == 0) {
       header("Location: " . SITE_URL . "/admin/controllers/dashboard.php");
-      add_message("Super Administrador", "success");
+      $messageHandler->addMessage("Super Administrador", "success");
       exit();
     } elseif ($_SESSION["user_role"] == 1) {
       header("Location: " . SITE_URL . "/admin/controllers/dashboard.php");
-      add_message("Administrador", "success");
+      $messageHandler->addMessage("Administrador", "success");
       exit();
     } else {
       header("Location: " . SITE_URL);
-      add_message("No eres administrador", "danger");
+      $messageHandler->addMessage("No eres administrador", "danger");
       exit();
     }
 
   } else {
     header("Location: " . SITE_URL . "/admin/controllers/login.php");
-    // add_message("No inició sesión", "danger");
+    // $messageHandler->addMessage("No inició sesión", "danger");
     exit();
   }
 } else {
   header("Location: " . SITE_URL . "/admin/controllers/login.php");
-  // add_message("No inició sesión", "danger");
+  // $messageHandler->addMessage("No inició sesión", "danger");
   exit();
 }

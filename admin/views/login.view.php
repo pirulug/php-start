@@ -10,7 +10,7 @@
         </div>
         <div class="card">
           <div class="card-body">
-            <?php display_messages(); ?>
+            <?php $messageHandler->displayMessages(); ?>
             <div class="m-sm-3">
               <form method="POST">
                 <div class="mb-3">

@@ -14,7 +14,7 @@ if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
 
 // Si no tine id
 if (!isset($_GET["id"]) || $_GET["id"] == "") {
-  add_message("Tienes que tener un id.", "danger");
+  $messageHandler->addMessage("Tienes que tener un id.", "danger");
   header("Location: list.php");
   exit();
 }
@@ -22,7 +22,7 @@ if (!isset($_GET["id"]) || $_GET["id"] == "") {
 $id = $encryption->decrypt($_GET["id"]);
 
 if (!is_numeric($id)) {
-  add_message("El id no encontrado.", "danger");
+  $messageHandler->addMessage("El id no encontrado.", "danger");
   header("Location: list.php");
   exit();
 }
@@ -34,7 +34,7 @@ $user = $stmt->fetch(PDO::FETCH_OBJ);
 
 
 if (empty($user)) {
-  add_message("Usuario no encontrado.", "danger");
+  $messageHandler->addMessage("Usuario no encontrado.", "danger");
   header("Location: list.php");
   exit();
 }
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Validar el nombre de usuario (mínimo 4 caracteres)
   if (strlen($user_name) < 4) {
-    add_message("El nombre de usuario debe tener al menos 4 caracteres.", "danger");
+    $messageHandler->addMessage("El nombre de usuario debe tener al menos 4 caracteres.", "danger");
   } else {
     // Verificar si el nombre de usuario ya existe en la base de datos
     $query     = "SELECT * FROM users WHERE user_name = :user_name AND user_id != :user_id";
@@ -62,13 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $statement->fetch(PDO::FETCH_OBJ);
 
     if (!empty($result)) {
-      add_message("El nombre de usuario ya está en uso.", "danger");
+      $messageHandler->addMessage("El nombre de usuario ya está en uso.", "danger");
     }
   }
 
   // Validar el formato y la unicidad del email
   if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
-    add_message("El email ingresado no es válido.", "danger");
+    $messageHandler->addMessage("El email ingresado no es válido.", "danger");
   } else {
     // Verificar si el email ya está registrado en la base de datos
     $query     = "SELECT * FROM users WHERE user_email = :user_email AND user_id != :user_id";
@@ -79,29 +79,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $statement->fetch(PDO::FETCH_OBJ);
 
     if (!empty($result)) {
-      add_message("El correo electrónico ya está registrado.", "danger");
+      $messageHandler->addMessage("El correo electrónico ya está registrado.", "danger");
     }
   }
 
   // Contraseña
   if (strlen($user_password) < 6) {
-    add_message("La contraseña debe tener al menos 6 caracteres.", "danger");
+    $messageHandler->addMessage("La contraseña debe tener al menos 6 caracteres.", "danger");
   } else {
     $user_password = $encryption->encrypt($user_password);
   }
 
   // Validar selected
   if (!in_array($user_role, [1, 2])) {
-    add_message("Seleccionar rol.", "danger");
+    $messageHandler->addMessage("Seleccionar rol.", "danger");
   }
 
   // Validar selected
   if (!in_array($user_status, [1, 2])) {
-    add_message("Seleccionar estatus.", "danger");
+    $messageHandler->addMessage("Seleccionar estatus.", "danger");
   }
 
   // Si no hay mensajes de error, proceder con la inserción
-  if (!has_error_messages()) {
+  if (!$messageHandler->hasMessagesOfType('danger')) {
     $query = "UPDATE users 
               SET 
               user_name = :user_name, 
@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
 
-    add_message("Usuario se actualizo correctamente", "success");
+    $messageHandler->addMessage("Usuario se actualizo correctamente", "success", "toast");
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
   }

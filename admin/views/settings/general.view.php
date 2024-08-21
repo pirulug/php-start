@@ -13,7 +13,7 @@
 <?php require BASE_DIR . "/admin/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR . "/admin/views/partials/navbar.partial.php"; ?>
 
-<?php display_messages(); ?>
+
 
 <div class="card">
   <div class="card-body">

@@ -1,7 +1,7 @@
 <?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
 
-<?php display_messages(); ?>
+
 
 <div class="card mb-3">
   <div class="card-body">

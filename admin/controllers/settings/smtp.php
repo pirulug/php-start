@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $stmt->execute();
 
-  add_message('Se actualizo de manera correcta', 'success');
+  $messageHandler->addMessage('Se actualizo de manera correcta', 'success');
   header("Refresh:0");
   exit();
 }
