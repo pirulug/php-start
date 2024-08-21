@@ -12,6 +12,7 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once "config.php";
 require_once "libs/AccessControl.php";
 require_once "libs/Encryption.php";
+require_once "libs/MessageHandler.php";
 require_once "functions.php";
 
 // Conectar BD
@@ -31,6 +32,9 @@ $accessControl = new AccessControl();
 
 // Encryption
 $encryption = new Encryption();
+
+// Mensajes
+$messageHandler = new MessageHandler();
 
 // Obetener los logos
 $querySelect = "SELECT * FROM brand";

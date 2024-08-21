@@ -149,3 +149,6 @@ if (isset($_SESSION["user_name"])) {
     </ul>
   </div>
 </div>
+
+<!-- Mostrar los mensajes de Bootstrap -->
+<?= $messageHandler->displayMessages(); ?>
