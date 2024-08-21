@@ -6,7 +6,7 @@ CREATE TABLE `ads` (
   `status` tinyint NOT NULL DEFAULT '1',
   `position` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 INSERT INTO `ads` (id, title, subtitle, content, status, position) VALUES ('1', 'Header', '(Appears on all pages right under the nav bar)', '&lt;div &gt;\r\n&lt;a href=&quot;#&quot;&gt;\r\n&lt;img src=&quot;https://dummyimage.com/200x400/bababa/ebecf5.jpg&quot;/&gt;\r\n&lt;/a&gt;\r\n&lt;/div&gt;', '1', 'header');
 INSERT INTO `ads` (id, title, subtitle, content, status, position) VALUES ('2', 'Footer', '(Appears on all pages right before the footer)', '&lt;div &gt;\r\n&lt;a href=&quot;#&quot;&gt;\r\n&lt;img src=&quot;https://wicombit.com/demo/banner.jpg&quot;/&gt;\r\n&lt;/a&gt;\r\n&lt;/div&gt;', '1', 'footer');
@@ -52,7 +52,7 @@ CREATE TABLE `users` (
   `user_updated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `user_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- -INSERT INTO `users` (user_id, user_name, user_email, user_password, user_role, user_status, user_updated, user_created) VALUES ('1', 'superadmin', 'superadmin@admin.com', 'SFU0SkJ0YUlCc1dURVZFZCt5blNKQT09', '0', '1', '2024-07-07 17:52:46', '2024-07-07 17:16:51');
 -- -INSERT INTO `users` (user_id, user_name, user_email, user_password, user_role, user_status, user_updated, user_created) VALUES ('2', 'admin', 'admin@admin.com', 'S0VNV1lxa25wNW11N2JvS1lyS1BGUT09', '1', '1', '2024-07-07 21:56:58', '2024-07-07 15:41:13');
