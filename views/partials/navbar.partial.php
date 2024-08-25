@@ -150,5 +150,7 @@ if (isset($_SESSION["user_name"])) {
   </div>
 </div>
 
-<!-- Mostrar los mensajes de Bootstrap -->
-<?= $messageHandler->displayMessages(); ?>
+<div class="container">
+  <!-- Mostrar los mensajes de Bootstrap -->
+  <?= $messageHandler->displayMessages(); ?>
+</div>
