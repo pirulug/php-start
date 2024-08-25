@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_name'] = $result_login->user_name;
 
 
+    $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
     $messageHandler->addMessage("Datos correctos", "success");
     header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
     exit();
@@ -41,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
 }
+
+// echo $encryption->encrypt("admin123");
 
 
 /* ========== Theme config ========= */
