@@ -8,20 +8,14 @@ if (isUserLoggedIn()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $user_name     = htmlspecialchars(strtolower($_POST['user_name']), ENT_QUOTES, 'UTF-8');
-  $user_password = cleardata($_POST['user_password']);
-  $password      = $encryption->encrypt($user_password);
-
-  try {
-    $connect;
-  } catch (PDOException $e) {
-    echo "Error: ." . $e->getMessage();
-  }
+  $user_name     = cleardata($_POST['user-name']);
+  $user_password = $encryption->encrypt(cleardata($_POST['user-password']));
+  $remember_me   = $_POST['remember-me'];
 
   $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password AND user_status = 1 AND user_role IN (0, 1)";
   $stmt  = $connect->prepare($query);
   $stmt->bindParam(':user_name', $user_name, PDO::PARAM_STR);
-  $stmt->bindParam(':user_password', $password, PDO::PARAM_STR);
+  $stmt->bindParam(':user_password', $user_password, PDO::PARAM_STR);
   $stmt->execute();
 
   $result_login = $stmt->fetch(PDO::FETCH_OBJ);
@@ -32,6 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_role'] = $result_login->user_role;
     $_SESSION['user_name'] = $result_login->user_name;
 
+    if (isset($remember_me)) {
+      setcookie('loggin', $encryption->encrypt($result_login->user_id), time() + (86400 * 30), "/");
+    }
 
     $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
     $messageHandler->addMessage("Datos correctos", "success");
@@ -42,9 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
 }
-
-// echo $encryption->encrypt("admin123");
-
 
 /* ========== Theme config ========= */
 $theme_title = "Lista de usuarios";
