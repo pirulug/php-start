@@ -15,19 +15,19 @@
               <form method="POST">
                 <div class="mb-3">
                   <label class="form-label">Usuario</label>
-                  <input class="form-control" type="text" name="user_name" placeholder="Usuario" value="admin"
+                  <input class="form-control" type="text" name="user-name" placeholder="Usuario" value="admin"
                     required />
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Contraseña</label>
-                  <input class="form-control" type="password" name="user_password" placeholder="Contraseña"
+                  <input class="form-control" type="password" name="user-password" placeholder="Contraseña"
                     value="admin123" required />
                   <!-- <small><a href="/auth-reset-password.html">Forgot password?</a></small> -->
                 </div>
                 <div>
                   <div class="form-check align-items-center">
-                    <input class="form-check-input" id="customControlInline" type="checkbox" value="remember-me"
-                      name="remember-me" checked="" />
+                    <input class="form-check-input" id="customControlInline" type="checkbox" name="remember-me"
+                      checked />
                     <label class="form-check-label text-small" for="customControlInline">
                       Recordar
                     </label>
