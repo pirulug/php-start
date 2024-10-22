@@ -12,8 +12,8 @@ const DB_USER = "USER_DB";
 const DB_PASS = "PASS_DB";
 
 // Configuración de la aplicación
-const APP_NAME = "Start PHP";
-const APP_URL = "URL_WEB"; // Sin "/" al final de la url
+const SITE_NAME = "Start PHP";
+const SITE_URL = "URL_WEB"; // Sin "/" al final de la url
 
 // Directorio Base
 const BASE_DIR = __DIR__;

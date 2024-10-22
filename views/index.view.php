@@ -2,10 +2,10 @@
 <?php require __DIR__ . "/partials/navbar.partial.php"; ?>
 
 <div class="container">
-  <div class="page-header" id="banner">
+  <div class="dvh-100 d-flex justify-content-center align-items-center">
     <div class="text-center">
-      <h1 class="display-1">PiruUI</h1>
-      <p class="lead">Un estilo de Pirulug.</p>
+      <h1 class="display-1 fw-bold"><?= SITE_NAME ?></h1>
+      <p class="lead">Un sitio php para poder comenzar.</p>
     </div>
   </div>
 </div>
