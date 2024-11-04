@@ -57,4 +57,3 @@ CREATE TABLE `users` (
 -- -INSERT INTO `users` (user_id, user_name, user_email, user_password, user_role, user_status, user_updated, user_created) VALUES ('1', 'superadmin', 'superadmin@admin.com', 'SFU0SkJ0YUlCc1dURVZFZCt5blNKQT09', '0', '1', '2024-07-07 17:52:46', '2024-07-07 17:16:51');
 -- -INSERT INTO `users` (user_id, user_name, user_email, user_password, user_role, user_status, user_updated, user_created) VALUES ('2', 'admin', 'admin@admin.com', 'S0VNV1lxa25wNW11N2JvS1lyS1BGUT09', '1', '1', '2024-07-07 21:56:58', '2024-07-07 15:41:13');
 -- -INSERT INTO `users` (user_id, user_name, user_email, user_password, user_role, user_status, user_updated, user_created) VALUES ('3', 'user', 'user@user.com', 'QzJNRnVNVHJwb0lCWGFadTBFYlNjQT09', '2', '1', '2024-08-14 23:59:27', '2024-07-07 19:24:50');
-

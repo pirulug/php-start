@@ -1,8 +1,6 @@
 <?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
 
-
-
 <div class="card">
   <div class="card-body">
     <form method="GET" action="">
@@ -42,13 +40,17 @@
                 <?php endif; ?>
               </td>
               <td>
-                <a href="edit.php?id=<?= $encryption->encrypt($user->user_id) ?>" class="btn btn-sm btn-success">
+
+                <a href="edit.php?id=<?= $encryption->encrypt($user->user_id) ?>" class="btn btn-sm btn-success"
+                  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Editar">
                   <i class="fa fa-pen"></i>
                 </a>
                 <a href="delete.php?id=<?= $encryption->encrypt($user->user_id) ?>" class="btn btn-sm btn-danger"
+                  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Eliminar"
                   onClick="return confirm('¿Quieres eliminar?')">
                   <i class="fa fa-trash"></i>
                 </a>
+
               </td>
             </tr>
           <?php endforeach; ?>

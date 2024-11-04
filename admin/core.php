@@ -15,7 +15,7 @@ require_once BASE_DIR . '/libs/UserLog.php';
 $connect = connect();
 
 if (!$connect) {
-  header('Location: ' . APP_URL . '/admin/controller/error.php');
+  header('Location: ' . SITE_URL . '/admin/controller/error.php');
   exit();
 }
 
