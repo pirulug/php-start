@@ -99,3 +99,25 @@ class FileUpload {
     $this->maxFileSize = $maxSize;
   }
 }
+
+/*
+<form action="upload.php" method="POST" enctype="multipart/form-data">
+    <input type="file" name="fileToUpload">
+    <input type="submit" value="Subir Archivo" name="submit">
+</form>
+
+require_once 'FileUpload.php';
+
+$fileUpload = new FileUpload();
+
+// Subir archivo desde el formulario
+if (isset($_FILES['fileToUpload'])) {
+    $result = $fileUpload->uploadFromLocal($_FILES['fileToUpload']);
+    echo $result['message'];
+}
+
+// Subir archivo desde una url
+$url = 'https://example.com/somefile.pdf';
+$result = $fileUpload->uploadFromUrl($url);
+echo $result['message'];
+*/

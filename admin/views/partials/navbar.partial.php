@@ -72,7 +72,7 @@ $role = $_SESSION['user_role'];
 <nav class="sidebar js-sidebar" id="sidebar">
   <div class="sidebar-content js-simplebar">
     <a class="sidebar-brand" href="index.html">
-      <span class="sidebar-brand-text align-middle">AdminPiru</span>
+      <span class="sidebar-brand-text align-middle"><?= SITE_NAME ?></span>
     </a>
     <ul class="sidebar-nav">
       <?php foreach ($menuItems as $item): ?>

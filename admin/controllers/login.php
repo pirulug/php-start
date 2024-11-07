@@ -7,6 +7,34 @@ if ($accessControl->is_user_logged_in()) {
   exit();
 }
 
+// Verificar si existe la cookie 'psloggin' y si es válida
+if (isset($_COOKIE['psloggin'])) {
+  $user_id = $encryption->decrypt($_COOKIE['psloggin']);
+
+  // Consultar si el usuario existe y está activo
+  $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1 AND user_role IN (1, 2)";
+  $stmt  = $connect->prepare($query);
+  $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+  $stmt->execute();
+
+  $result_cookie = $stmt->fetch(PDO::FETCH_OBJ);
+
+  if ($result_cookie !== false) {
+    // Establecer la sesión del usuario
+    $_SESSION['signedin']  = true;
+    $_SESSION['user_id']   = $result_cookie->user_id;
+    $_SESSION['user_role'] = $result_cookie->user_role;
+    $_SESSION['user_name'] = $result_cookie->user_name;
+
+    $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " ingresó automáticamente con cookie.");
+    header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
+    exit();
+  } else {
+    // Si la cookie es inválida, eliminarla
+    setcookie('loggin', '', time() - 3600, "/");
+  }
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_name     = cleardata($_POST['user-name']);
   $user_password = $encryption->encrypt(cleardata($_POST['user-password']));
@@ -27,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_name'] = $result_login->user_name;
 
     if (isset($remember_me)) {
-      setcookie('loggin', $encryption->encrypt($result_login->user_id), time() + (86400 * 30), "/");
+      setcookie('psloggin', $encryption->encrypt($result_login->user_id), time() + (86400 * 30), "/");
     }
 
     $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
