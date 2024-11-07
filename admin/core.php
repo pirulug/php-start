@@ -8,13 +8,15 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/functions.php';
 
 // Libs
+require_once BASE_DIR . '/libs/Database.php';
 require_once BASE_DIR . '/libs/AccessControl.php';
 require_once BASE_DIR . '/libs/Encryption.php';
 require_once BASE_DIR . '/libs/MessageHandler.php';
 require_once BASE_DIR . '/libs/UserLog.php';
 
 // Conectar BD
-$connect = connect();
+$db      = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASS);
+$connect = $db->getConnection();
 
 if (!$connect) {
   header('Location: ' . SITE_URL . '/admin/controller/error.php');
