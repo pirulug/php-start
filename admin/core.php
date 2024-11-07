@@ -12,7 +12,7 @@ require_once BASE_DIR . '/libs/Database.php';
 require_once BASE_DIR . '/libs/AccessControl.php';
 require_once BASE_DIR . '/libs/Encryption.php';
 require_once BASE_DIR . '/libs/MessageHandler.php';
-require_once BASE_DIR . '/libs/UserLog.php';
+require_once BASE_DIR . '/libs/Log.php';
 
 // Conectar BD
 $db      = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASS);
@@ -38,4 +38,4 @@ $encryption = new Encryption(ENCRYPT_METHOD, SECRET_KEY, SECRET_IV);
 $messageHandler = new MessageHandler();
 
 // User log
-$log = new UserLog($connect);
+$log = new Log($connect, BASE_DIR."/log/actions.log");

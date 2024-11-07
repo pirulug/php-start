@@ -6,12 +6,6 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 
-// function connect() {
-//   $connection = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8', DB_USER, DB_PASS);
-//   $connection->exec("SET CHARACTER SET utf8");
-//   return $connection;
-// }
-
 function check_access($connect) {
   $sentence = $connect->query("SELECT * FROM users WHERE user_name = '" . $_SESSION['user_name'] . "' AND user_status = 1 LIMIT 1");
   $row      = $sentence->fetch(PDO::FETCH_ASSOC);
