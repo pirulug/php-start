@@ -19,7 +19,7 @@ require_once "functions.php";
 $connect = connect();
 
 if (!$connect) {
-  header('Location: ' . APP_URL . '/admin/controller/error.php');
+  header('Location: ' . SITE_URL . '/admin/controller/error.php');
   exit();
 }
 
@@ -31,7 +31,7 @@ if (isset($_SESSION["user_name"])) {
 $accessControl = new AccessControl();
 
 // Encryption
-$encryption = new Encryption();
+$encryption = new Encryption(ENCRYPT_METHOD, SECRET_KEY, SECRET_IV);
 
 // Mensajes
 $messageHandler = new MessageHandler();

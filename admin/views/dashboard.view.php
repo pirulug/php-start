@@ -90,8 +90,6 @@
 <?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
 
-
-
 <div class="row g-4">
   <div class="col-sm-6 col-xl-3">
     <div class="card border-left-primary mb-3">

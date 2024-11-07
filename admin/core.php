@@ -6,6 +6,8 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/functions.php';
+
+// Libs
 require_once BASE_DIR . '/libs/AccessControl.php';
 require_once BASE_DIR . '/libs/Encryption.php';
 require_once BASE_DIR . '/libs/MessageHandler.php';

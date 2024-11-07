@@ -2,15 +2,8 @@
 
 require_once "../../core.php";
 
-if (!isUserLoggedIn()) {
-  header('Location: ' . SITE_URL . '/admin/controllers/login.php');
-  exit();
-}
-
-if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
-  header("Location: " . SITE_URL . "/admin/controllers/dashboard.php");
-  exit();
-}
+$accessControl->require_login(SITE_URL_ADMIN . "/controllers/login.php");
+$accessControl->check_access([1, 2], SITE_URL . "/404.php");
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -40,11 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Verificar que las nuevas contraseñas no estén vacías y coincidan
   // if (!$messageHandler->hasMessagesOfType('danger')) {
-    if (empty($newPassword) || empty($confirmPassword)) {
-      $messageHandler->addMessage("El campo de nueva contraseña no puede estar vacío.", "danger");
-    } elseif ($newPassword !== $confirmPassword) {
-      $messageHandler->addMessage("La nueva contraseña y la confirmación no coinciden.", "danger");
-    }
+  if (empty($newPassword) || empty($confirmPassword)) {
+    $messageHandler->addMessage("El campo de nueva contraseña no puede estar vacío.", "danger");
+  } elseif ($newPassword !== $confirmPassword) {
+    $messageHandler->addMessage("La nueva contraseña y la confirmación no coinciden.", "danger");
+  }
   // }
 
   // Actualizar la contraseña si no hay errores

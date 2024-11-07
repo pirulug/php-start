@@ -2,15 +2,7 @@
 
 require_once "../../core.php";
 
-if (!isUserLoggedIn()) {
-  header('Location: ' . SITE_URL . '/admin/controllers/login.php');
-  exit();
-}
-
-if (!$accessControl->hasAccess([0, 1], $_SESSION['user_role'])) {
-  header("Location: " . SITE_URL . "/admin/controllers/dashboard.php");
-  exit();
-}
+$accessControl->check_access([1, 2]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos

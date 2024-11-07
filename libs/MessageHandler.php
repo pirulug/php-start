@@ -106,6 +106,12 @@ class MessageHandler {
     return false;
   }
 
+  // Verificar si existen mensajes
+  public function hasMessages() {
+    return isset($_SESSION['messages']) && !empty($_SESSION['messages']);
+  }
+
+
   // Obtener el color de fondo basado en el tipo de Toastify
   private function getBackgroundColor($type) {
     $colors = [
@@ -183,7 +189,7 @@ if ($messageHandler->hasMessagesOfType('dark')) {
 
 // Mostrar los mensajes de Bootstrap
 // $messageHandler->displayMessages();
-    
+
 // Mostrar las notificaciones Toastify
 // $messageHandler->displayToasts();
 

@@ -59,7 +59,7 @@ if (isset($_SESSION["user_name"])) {
 
 ?>
 
-<div class="navbar navbar-expand-lg fixed-top bg-body">
+<nav class="navbar navbar-expand-lg bg-body">
   <div class="container">
     <a class="navbar-brand" href="<?= SITE_NAME ?>">
       <img id="logo-ligth" src="<?= $brand->st_whitelogo ?? "https://dummyimage.com/320x71/000/fff.jpg" ?>"
@@ -148,9 +148,10 @@ if (isset($_SESSION["user_name"])) {
       </li>
     </ul>
   </div>
-</div>
+</nav>
 
-<div class="container">
-  <!-- Mostrar los mensajes de Bootstrap -->
-  <?= $messageHandler->displayMessages(); ?>
-</div>
+<?php if ($messageHandler->hasMessages()): ?>
+  <div class="container ">
+    <?= $messageHandler->displayMessages(); ?>
+  </div>
+<?php endif; ?>

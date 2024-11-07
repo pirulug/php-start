@@ -8,26 +8,26 @@ $menuItems = [
     'path'  => 'dashboard',
     'icon'  => 'sliders',
     'link'  => 'dashboard.php',
-    'roles' => [0, 1]
+    'roles' => [1, 2]
   ],
   [
     'title'     => 'Usuarios',
     'path'      => 'users',
     'icon'      => 'users',
     'collapsed' => true,
-    'roles'     => [0, 1],
+    'roles'     => [1, 2],
     'items'     => [
       [
         'title' => 'Nuevo Usuario',
         'path'  => 'user-new',
         'link'  => 'users/new.php',
-        'roles' => [0, 1]
+        'roles' => [1, 2]
       ],
       [
         'title' => 'Lista de usuario',
         'path'  => 'user-list',
         'link'  => 'users/list.php',
-        'roles' => [0, 1]
+        'roles' => [1, 2]
       ],
     ]
   ],
@@ -36,31 +36,31 @@ $menuItems = [
     'path'      => 'settings',
     'icon'      => 'settings',
     'collapsed' => true,
-    'roles'     => [0],
+    'roles'     => [1],
     'items'     => [
       [
         'title' => 'General',
         'path'  => 'general',
         'link'  => 'settings/general.php',
-        'roles' => [0]
+        'roles' => [1]
       ],
       [
         'title' => 'ADS',
         'path'  => 'ads',
         'link'  => 'settings/ads.php',
-        'roles' => [0]
+        'roles' => [1]
       ],
       [
         'title' => 'SMTP',
         'path'  => 'smtp',
         'link'  => 'settings/smtp.php',
-        'roles' => [0]
+        'roles' => [1]
       ],
       [
         'title' => 'Brand',
         'path'  => 'brand',
         'link'  => 'settings/brand.php',
-        'roles' => [0]
+        'roles' => [1]
       ],
     ]
   ],

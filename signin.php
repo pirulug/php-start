@@ -2,10 +2,17 @@
 
 require_once "core.php";
 
+if (isset($_SESSION['signedin']) && $_SESSION['signedin']) {
+  header("Location: index.php");
+  exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_name     = htmlspecialchars(strtolower($_POST['user_name']), ENT_QUOTES, 'UTF-8');
   $user_password = cleardata($_POST['user_password']);
   $password      = $encryption->encrypt($user_password);
+
+  // echo $password;
 
   try {
     $connect;
@@ -27,9 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_role'] = $result_login->user_role;
     $_SESSION['user_name'] = $result_login->user_name;
 
-
     add_message("Datos correctos", "success");
-    header('Location: ' . APP_URL);
+    header('Location: ' . SITE_URL . "/404.php");
     exit();
   } else {
     add_message("incorrect login data or access denied", "danger");

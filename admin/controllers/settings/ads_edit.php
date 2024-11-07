@@ -2,6 +2,9 @@
 
 require_once "../../core.php";
 
+$accessControl->require_login(SITE_URL_ADMIN . "/controllers/login.php");
+$accessControl->check_access([1], SITE_URL . "/404.php");
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $id      = cleardata($_POST['id']);
   $content = cleardata($_POST['content']);
