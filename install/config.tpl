@@ -14,19 +14,19 @@
 | Author        : Pirulug
 | Author URI    : https://github.com/pirulug
 | Project       : PhpInstaller
-| Version       : 0.0.1
+| Version       : 0.0.0
 | License       : MIT
 ---------------------------------------------------------------------*/
 
 // Configuración de la base de datos
-const DB_HOST = "HOST_DB";
-const DB_NAME = "NAME_DB";
-const DB_USER = "USER_DB";
-const DB_PASS = "PASS_DB";
+const DB_HOST = "<DB_HOST>";
+const DB_NAME = "<DB_NAME>";
+const DB_USER = "<DB_USER>";
+const DB_PASS = "<DB_PASSWORD>";
 
 // Configuración de la aplicación
-const SITE_NAME = "Start PHP";
-const SITE_URL = "URL_WEB"; // Sin "/" al final de la url
+const SITE_NAME = "<SITE_NAME>";
+const SITE_URL = "<SITE_URL>";
 const SITE_URL_ADMIN = SITE_URL . "/admin";
 
 // Directorio Base
@@ -35,8 +35,8 @@ const BASE_DIR_ADMIN = __DIR__ . "/admin";
 
 // Claves
 const ENCRYPT_METHOD = "AES-256-CBC";
-const ENCRYPT_KEY = '$STARTPHP@2024PIRU';
-const ENCRYPT_IV = '456232132132432234132';
+const SECRET_KEY = '<SECRET_KEY>';
+const SECRET_IV = '<SECRET_IV>';
 
 // Configuración de la zona horaria
 date_default_timezone_set("America/Lima");

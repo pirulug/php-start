@@ -4,7 +4,7 @@
 </Files>
 
 # Evitar la exploración de directorios
-# Options -Indexes
+Options -Indexes
 
 # Evitar el acceso directo a los archivos .view.php
 <FilesMatch "\.view\.php$">
