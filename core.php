@@ -13,6 +13,7 @@ require_once "config.php";
 require_once "libs/AccessControl.php";
 require_once "libs/Encryption.php";
 require_once "libs/MessageHandler.php";
+require_once "libs/Log.php";
 require_once "functions.php";
 
 // Conectar BD
@@ -39,3 +40,6 @@ $messageHandler = new MessageHandler();
 // Obetener los logos
 $querySelect = "SELECT * FROM brand";
 $brand       = $connect->query($querySelect)->fetch(PDO::FETCH_OBJ);
+
+// User log
+$log = new Log($connect, BASE_DIR."/log/actions.log");

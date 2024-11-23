@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" class="h-100">
 
 <head>
   <meta charset="utf-8" />
@@ -12,7 +12,8 @@
   <!-- <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/prism.css" /> -->
   <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/fontawesome.css" />
   <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/bootstrapicons.css" />
+  <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/toastifyjs.css" />
   <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/piruui.css" />
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">

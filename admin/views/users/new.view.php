@@ -28,12 +28,12 @@
       <div class="mb-3">
         <label class="form-label">Role</label>
         <select class="form-select" name="user_role" required>
-          <option value="0">- Seleccionar -</option>
-          <option value="1" <?= isset($_POST['user_role']) && $_POST['user_role'] == 1 ? 'selected' : '' ?>>
+          <option value="">- Seleccionar -</option>
+          <option value="2" <?= isset($_POST['user_role']) && $_POST['user_role'] == 2 ? 'selected' : '' ?>>
             Administrador
           </option>
-          <option value="2" <?= isset($_POST['user_role']) && $_POST['user_role'] == 2 ? 'selected' : '' ?>>
-            Suscriptor
+          <option value="3" <?= isset($_POST['user_role']) && $_POST['user_role'] == 3 ? 'selected' : '' ?> selected>
+            Usuario
           </option>
         </select>
       </div>
@@ -42,7 +42,7 @@
         <label class="form-label">Status</label>
         <select class="form-select" name="user_status" required>
           <option value="0">- Seleccionar -</option>
-          <option value="1" <?= isset($_POST['user_status']) && $_POST['user_status'] == 1 ? 'selected' : '' ?>>
+          <option value="1" <?= isset($_POST['user_status']) && $_POST['user_status'] == 1 ? 'selected' : '' ?> selected>
             Activo
           </option>
           <option value="2" <?= isset($_POST['user_status']) && $_POST['user_status'] == 2 ? 'selected' : '' ?>>

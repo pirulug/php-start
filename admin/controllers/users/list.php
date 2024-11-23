@@ -19,7 +19,7 @@ $searchColumns = ['user_name', 'user_email'];
 
 $additionalConditions = [
   [
-    'sql'   => 'user_role != 0',
+    'sql'   => 'user_role != 1',
     'param' => null,
     'value' => null,
     'type'  => null,

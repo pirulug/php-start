@@ -121,7 +121,7 @@ $role = $_SESSION['user_role'];
     <div class="navbar-collapse collapse">
       <ul class="navbar-nav navbar-align">
         <li class="nav-item">
-          <a class="nav-link" href="<?= SITE_URL ?>">
+          <a class="nav-link" href="<?= SITE_URL ?>" target="_blank">
             <i class="fa fa-eye"></i>
             Ver sitio
           </a>

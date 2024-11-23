@@ -9,34 +9,34 @@ if (isset($_SESSION["user_name"])) {
     [
       'title' => 'Dashboard',
       'link'  => SITE_URL . "/admin/controllers/dashboard.php",
-      'roles' => [0, 1]
+      'roles' => [1, 2]
     ],
     [
       'title' => 'Admin',
       'link'  => SITE_URL . "/admin",
-      'roles' => [0, 1, 2]
+      'roles' => [1, 2, 3]
     ],
     [
       'title'    => $user_session->user_name,
       'link'     => '#',
       'dropdown' => true,
-      'roles'    => [0, 1, 2],
+      'roles'    => [1, 2, 3],
       'items'    => [
         [
           'title' => 'Perfil',
           'link'  => 'profile.php',
-          'roles' => [0, 1, 2]
+          'roles' => [1, 2, 3]
         ],
         [
           'title' => 'Favoritos',
           'link'  => 'favorites.php',
-          'roles' => [0, 1]
+          'roles' => [1, 2]
         ],
         ['divider' => true],
         [
           'title' => 'Salir',
           'link'  => 'signout.php',
-          'roles' => [0, 1, 2]
+          'roles' => [1, 2, 3]
         ],
       ]
     ]
@@ -111,47 +111,30 @@ if (isset($_SESSION["user_name"])) {
       </ul>
     </div>
     <ul class="navbar-nav">
-      <li class="nav-item dropdown">
-        <a class="nav-link py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
-          aria-expanded="false" data-bs-toggle="dropdown">
-          <span class="theme-icon-active mr-1" id="bd-theme-icon">
-            <i class="bi bi-sun"></i>
-          </span>
-          <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
-          <li>
-            <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="light"
-              aria-pressed="false">
-              <i class="bi bi-sun opacity-50 me-2"></i>
-              Light
-              <i class="pr-check bi bi-check-lg ms-auto d-none"></i>
-            </button>
-          </li>
-          <li>
-            <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="dark"
-              aria-pressed="false">
-              <i class="bi bi-moon opacity-50 me-2"></i>
-              Dark
-              <i class="pr-check bi bi-check-lg ms-auto d-none"></i>
-            </button>
-          </li>
-          <li>
-            <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="auto"
-              aria-pressed="true">
-              <i class="bi bi-circle-half opacity-50 me-2"></i>
-              Auto
-              <i class="pr-check bi bi-check-lg ms-auto d-none"></i>
-            </button>
-          </li>
-        </ul>
-      </li>
+      <button class="nav-link py-2 d-flex align-items-center" id="bd-theme-toggle" type="button"><span
+          class="theme-icon-active mr-1" id="bd-theme-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" class="feather feather-sun">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </span>
+      </button>
     </ul>
   </div>
 </nav>
 
-<?php if ($messageHandler->hasMessages()): ?>
-  <div class="container ">
-    <?= $messageHandler->displayMessages(); ?>
-  </div>
-<?php endif; ?>
+<main class="flex-shrink-0">
+
+  <?php if ($messageHandler->hasMessages()): ?>
+    <div class="container ">
+      <?= $messageHandler->displayMessages(); ?>
+    </div>
+  <?php endif; ?>

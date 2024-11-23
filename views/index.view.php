@@ -2,7 +2,7 @@
 <?php require __DIR__ . "/partials/navbar.partial.php"; ?>
 
 <div class="container">
-  <div class="dvh-100 d-flex justify-content-center align-items-center">
+  <div class="d-flex justify-content-center align-items-center">
     <div class="text-center">
       <h1 class="display-1 fw-bold"><?= SITE_NAME ?></h1>
       <p class="lead">Un sitio php para poder comenzar.</p>

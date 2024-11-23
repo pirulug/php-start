@@ -35,24 +35,6 @@
               value="<?= $user->user_email ?>" required>
           </div>
           <input type="hidden" name="id" value="<?= $user->user_id ?>">
-          <!-- <div class="mb-3">
-            <label for="phone" class="form-label">Teléfono</label>
-            <input type="number" name="phone" id="phone" class="form-control" placeholder="Tu teléfono"
-              value="">
-          </div>
-          <div class="mb-3">
-            <label for="birthday" class="form-label">Cumpleaños</label>
-            <input type="date" name="birthday" id="birthday" class="form-control" placeholder="Tu Cumpleaños">
-          </div>
-          <div class="mb-3">
-            <label for="gender" class="form-label">Genero</label>
-            <select name="gender" id="gender" class="form-select">
-              <option value="">- Seleccionar -</option>
-              <option value="1">Masculino</option>
-              <option value="2">Femenino</option>
-              <option value="3">Prefiero no decir</option>
-            </select>
-          </div> -->
           <button type="submit" class="btn btn-primary">Guardar Cambios</button>
         </form>
       </div>
@@ -60,7 +42,7 @@
   </div>
 </div>
 
-<div class="card mb-3">
+<div class="card">
   <div class="card-header">
     <h5 class="card-title">Actividades</h5>
   </div>
@@ -71,7 +53,7 @@
           width="36" height="36">
         <div class="flex-grow-1">
           <small class="float-end text-navy"><?= tiempoDesdeCambio($log->timestamp) ?></small>
-          <strong><?= $log->user_name ?></strong>
+          <!-- <strong><?= $log->user_name ?></strong> -->
           <?= $log->description ?>
           <br>
           <small class="text-muted"><?= $log->timestamp ?></small>

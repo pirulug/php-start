@@ -56,7 +56,7 @@ CREATE TABLE `users` (
   `user_name` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
   `user_password` varchar(255) NOT NULL,
-  `user_role` tinyint(1) NOT NULL DEFAULT 2,
+  `user_role` tinyint(1) NOT NULL DEFAULT 3,
   `user_status` tinyint(1) NOT NULL DEFAULT 1,
   `user_updated` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `user_created` datetime NOT NULL DEFAULT current_timestamp(),
