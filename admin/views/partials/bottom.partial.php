@@ -6,7 +6,7 @@
 <script src="<?= SITE_URL ?>/admin/assets/js/piruadmin.js"></script>
 
 <!-- Block Script -->
-<?php block("script"); ?>
+<?php $theme->block("script"); ?>
 
 <!-- Mostrar las notificaciones Toastify -->
 <?= $messageHandler->displayToasts(); ?>

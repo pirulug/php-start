@@ -34,7 +34,7 @@
   </script>
 
   <!-- Block Style -->
-  <?php block("style"); ?>
+  <?php $theme->block("style"); ?>
 </head>
 
 <body>

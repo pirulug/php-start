@@ -5,9 +5,10 @@
   <div class="row">
     <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
       <div class="card">
+        <div class="card-header">
+          <h2 class="card-title m-0 fs-2">Login</h2>
+        </div>
         <div class="card-body">
-
-
           <form method="POST">
             <div class="mb-3">
               <label class="form-label">Usuario</label>

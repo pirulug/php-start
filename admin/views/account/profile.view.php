@@ -5,7 +5,7 @@
   <div class="col-md-3 col-xl-4">
     <div class="card mb-3">
       <div class="card-body text-center">
-        <img class="img-fluid rounded-circle mb-2" src="<?= getGravatar($user_session->user_email) ?>"
+        <img class="img-fluid rounded-circle mb-2" src="<?= get_gravatar($user_session->user_email) ?>"
           alt="Christina Mason" width="128" height="128">
         <h5 class="card-title mb-0 text-uppercase"><?= $user->user_name ?></h5>
         <h6 class="text-muted mb-0">
@@ -49,7 +49,7 @@
   <div class="card-body">
     <?php foreach ($log->getLogsByUser($user->user_id) as $log): ?>
       <div class="d-flex align-items-start">
-        <img class="rounded-circle me-2" src="<?= getGravatar($log->user_email) ?>" alt="<?= $log->user_name ?>"
+        <img class="rounded-circle me-2" src="<?= get_gravatar($log->user_email) ?>" alt="<?= $log->user_name ?>"
           width="36" height="36">
         <div class="flex-grow-1">
           <small class="float-end text-navy"><?= tiempoDesdeCambio($log->timestamp) ?></small>

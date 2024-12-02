@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 class AntiXSS {
-  // Lista de patrones y reemplazos
-  private $patterns = [
+  /**
+   * Lista de patrones y reemplazos
+   * Usar array estático para evitar redefinirlos en cada instancia.
+   */
+  private static array $patterns = [
     '/<script\b[^>]*>(.*?)<\/script>/is'                => '', // Remover scripts
     '/<iframe\b[^>]*>(.*?)<\/iframe>/is'                => '', // Remover iframes
     '/<object\b[^>]*>(.*?)<\/object>/is'                => '', // Remover objects
@@ -13,16 +18,24 @@ class AntiXSS {
     '/<img\b[^>]*>/is'                                  => '', // Remover todas las imágenes (opcional, según necesidades)
   ];
 
-  // Función principal para limpiar el contenido
-  public function clean($input) {
-    // Aplicar la función htmlspecialchars
-    $input = htmlspecialchars($input, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+  /**
+   * Limpia el contenido de entradas maliciosas.
+   * 
+   * @param string $input Contenido a limpiar.
+   * @return string Contenido limpio.
+   */
+  public function clean(string $input): string {
+    // Aplicar htmlspecialchars para evitar inyección básica
+    $sanitized = htmlspecialchars($input, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 
-    // Aplicar los patrones de limpieza
-    foreach ($this->patterns as $pattern => $replacement) {
-      $input = preg_replace($pattern, $replacement, $input);
+    // Aplicar patrones de limpieza
+    foreach (self::$patterns as $pattern => $replacement) {
+      // Solo aplicar si el patrón coincide
+      if (preg_match($pattern, $sanitized)) {
+        $sanitized = preg_replace($pattern, $replacement, $sanitized);
+      }
     }
-
-    return $input;
+    
+    return $sanitized;
   }
 }

@@ -1,8 +1,6 @@
 <?php require BASE_DIR . "/admin/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR . "/admin/views/partials/navbar.partial.php"; ?>
 
-
-
 <div class="card">
   <div class="card-body">
     <form enctype="multipart/form-data" action="" method="post">

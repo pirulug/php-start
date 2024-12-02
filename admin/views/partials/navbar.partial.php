@@ -167,7 +167,7 @@ $role = $_SESSION['user_role'];
             <i class="align-middle" data-feather="user"></i>
           </a>
           <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-            <img class="avatar img-fluid rounded me-1" src="<?= getGravatar($user_session->user_email) ?>"
+            <img class="avatar img-fluid rounded me-1" src="<?= get_gravatar($user_session->user_email) ?>"
               alt="Charles Hall" />
             <span><?= $user_session->user_name ?></span>
           </a>

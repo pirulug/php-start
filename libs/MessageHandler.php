@@ -7,7 +7,13 @@ class MessageHandler {
     }
   }
 
-  // Agregar un mensaje con opción de tipo de notificación
+  /**
+   * Agregar un mensaje con opción de tipo de notificación
+   * @param mixed $message Añade el mensaje
+   * @param mixed $type success | danger | primary ...
+   * @param mixed $method bootstrap | toasts
+   * @return void
+   */
   public function addMessage($message, $type = 'success', $method = 'bootstrap') {
     if ($method === 'toast') {
       $this->addToast($message, $type);

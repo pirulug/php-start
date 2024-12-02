@@ -1,94 +1,130 @@
-<?php blockStart("script"); ?>
+<?php $theme->blockStart("script"); ?>
 <script src="<?= SITE_URL ?>/admin/assets/js/chartjs.js"></script>
 <script>
-  const ctx = document
-    .getElementById("chartjs-dashboard-line")
-    .getContext("2d");
+  const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
   //- const labels = Utils.months({count: 7});
   const myChart = new Chart(ctx, {
-    type: "line",
+    type: 'line',
     data: {
-      labels: [
-        "Ene",
-        "Feb",
-        "Mar",
-        "Abr",
-        "May",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Set",
-        "Oct",
-        "Nov",
-        "Dic",
-      ],
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', "Jul", "Ago", "Set", "Oct", "Nov", "Dic"],
       datasets: [
         {
-          label: "Total de Visitas",
-          borderColor: "#ff0055",
-          backgroundColor: [
-            "rgba(215, 227, 244, 1)",
-            "rgba(215, 227, 244, 0)",
-          ],
+          label: 'Buys',
+          borderColor: '#ff0055',
+          backgroundColor: ["rgba(215, 227, 244, 1)", "rgba(215, 227, 244, 0)"],
           data: [
-            1000, 500, 48254, 4554, 85555, 364564, 457878, 45455, 2, 100,
-            1545, 95454,
-          ],
+            0,
+            20,
+            30,
+            60,
+            50,
+            80,
+            70,
+            20,
+            30,
+            90,
+            80,
+            70
+          ]
         },
-      ],
+        {
+          label: 'Sales',
+          borderColor: '#e67e22',
+          backgroundColor: ["rgba(215, 227, 244, 1)", "rgba(215, 227, 244, 0)"],
+          data: [
+            0,
+            90,
+            30,
+            10,
+            20,
+            70,
+            10,
+            60,
+            50,
+            80,
+            70,
+            80
+          ]
+        }
+      ]
     },
     options: {
       scales: {
         y: {
-          beginAtZero: true,
-        },
-      },
-    },
+          beginAtZero: true
+        }
+      }
+    }
   });
+
 
   // Bar chart
   new Chart(document.getElementById("chartjs-dashboard-bar"), {
     type: "bar",
     data: {
-      labels: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dic",
-      ],
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dic"],
       datasets: [
         {
-          label: "This year",
-          backgroundColor: window.theme.primary,
-          borderColor: window.theme.primary,
-          hoverBackgroundColor: window.theme.primary,
-          hoverBorderColor: window.theme.primary,
-          data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-          barPercentage: 0.75,
-          categoryPercentage: 0.5,
+          label: "USA",
+          backgroundColor: "#9b59b6",
+          data: [80, 79, 76, 99, 55, 62, 48, 4, 55, 73, 45, 60],
+          barPercentage: .75,
+          categoryPercentage: .5
         },
-      ],
+        {
+          label: "UK",
+          backgroundColor: "#e67e22",
+          data: [73, 55, 45, 76, 48, 55, 62, 80, 79, 4, 60, 99],
+          barPercentage: .75,
+          categoryPercentage: .5
+        },
+        {
+          label: "PEN",
+          backgroundColor: "#3498db",
+          data: [48, 73, 4, 99, 79, 80, 62, 60, 76, 55, 55, 45],
+          barPercentage: .75,
+          categoryPercentage: .5
+        },
+      ]
     },
     options: {
       maintainAspectRatio: false,
       legend: {
-        display: false,
+        display: false
       },
-    },
+    }
   });
 </script>
-<?php blockEnd("script"); ?>
+<?php $theme->blockEnd("script"); ?>
 
 <?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
+
+<?php
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
+
+//   $file      = $_FILES['uploaded_file']; // Asegúrate de usar el nombre correcto del input
+//   $uploadDir = BASE_DIR . '/upload/';
+
+//   $result = upload_file($file, $uploadDir, [
+//     'allowedTypes' => ['mp3'],
+//     'maxSize'      => 10 * 1024 * 1024,
+//   ]);
+
+//   if ($result['success']) {
+//     echo $result["message"] . $result['file_name'] . "<br>" . $result["file_path"];
+//   } else {
+//     echo 'Error: ' . $result['message'];
+//   }
+// }
+?>
+
+<!-- <form action="" method="post" enctype="multipart/form-data">
+  <label for="uploaded_file">Selecciona una imagen PNG:</label>
+  <input type="file" name="uploaded_file" id="uploaded_file" accept="audio/*">
+  <button type="submit">Subir y Optimizar</button>
+</form> -->
+
 
 <div class="row g-4">
   <div class="col-sm-6 col-xl-3">
@@ -188,12 +224,11 @@
         <h5 class="card-title mb-0">Real-Time</h5>
       </div>
       <div class="card-body px-4">
-        <canvas id="chartjs-dashboard-bar" style="height: 350px"></canvas>
+        <canvas id="chartjs-dashboard-bar"></canvas>
       </div>
     </div>
   </div>
 </div>
-
 
 <div class="card flex-fill overflow-hidden">
   <div class="card-header">
@@ -273,8 +308,6 @@
     </div>
   </div>
 </div>
-
-
 
 <?php require BASE_DIR_ADMIN . "/views/partials/footer.partial.php"; ?>
 <?php require BASE_DIR_ADMIN . "/views/partials/bottom.partial.php"; ?>

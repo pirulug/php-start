@@ -10,14 +10,16 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 require_once "config.php";
-require_once "libs/AccessControl.php";
-require_once "libs/Encryption.php";
-require_once "libs/MessageHandler.php";
-require_once "libs/Log.php";
 require_once "functions.php";
 
+// Libs
+foreach (glob(BASE_DIR . '/libs/*.php') as $file) {
+  require_once $file;
+}
+
 // Conectar BD
-$connect = connect();
+$db      = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASS);
+$connect = $db->getConnection();
 
 if (!$connect) {
   header('Location: ' . SITE_URL . '/admin/controller/error.php');
@@ -42,4 +44,4 @@ $querySelect = "SELECT * FROM brand";
 $brand       = $connect->query($querySelect)->fetch(PDO::FETCH_OBJ);
 
 // User log
-$log = new Log($connect, BASE_DIR."/log/actions.log");
+$log = new Log($connect, BASE_DIR . "/log/actions.log");

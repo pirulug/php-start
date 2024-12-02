@@ -1,4 +1,4 @@
-<?php blockStart("script"); ?>
+<?php $theme->blockStart("script"); ?>
 <script>
   document.getElementById('testMail').addEventListener('click', function (event) {
     event.preventDefault();
@@ -33,7 +33,7 @@
       });
   });
 </script>
-<?php blockEnd("script"); ?>
+<?php $theme->blockEnd("script"); ?>
 
 <?php require BASE_DIR . "/admin/views/partials/top.partial.php"; ?>
 <?php require BASE_DIR . "/admin/views/partials/navbar.partial.php"; ?>

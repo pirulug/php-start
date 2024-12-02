@@ -2,5 +2,7 @@
 
 require_once "core.php";
 
-$pageTitle="Home";
-include "views/index.view.php";
+$accessControl->check_access([1, 2, 3], SITE_URL);
+
+$pageTitle = "Home";
+include "views/profile.view.php";

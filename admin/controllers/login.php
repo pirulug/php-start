@@ -31,7 +31,7 @@ if (isset($_COOKIE['psloggin'])) {
     exit();
   } else {
     // Si la cookie es inválida, eliminarla
-    setcookie('loggin', '', time() - 3600, "/");
+    setcookie('psloggin', '', time() - 3600, "/");
   }
 }
 
