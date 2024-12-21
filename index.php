@@ -11,8 +11,6 @@ if ($_SERVER['REQUEST_URI'] == "/index.php") {
 $request = trim($_SERVER['REQUEST_URI'], '/');
 $request = explode('?', $request)[0];
 
-
-
 switch ($request) {
   case '':
     extract(setPageMetaData());
@@ -35,6 +33,7 @@ switch ($request) {
     break;
 
   case 'profile':
+    $accessControl->check_access([1, 2, 3], SITE_URL);
     extract(setPageMetaData("Perfil", $request));
     include 'controllers/profile.php';
     break;
