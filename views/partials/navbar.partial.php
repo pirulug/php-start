@@ -50,8 +50,8 @@ if (isset($_SESSION["user_name"])) {
       'dropdown' => true,
       'roles'    => [],
       'items'    => [
-        ['title' => 'Login', 'link' => 'signin.php', 'roles' => []],
-        ['title' => 'Register', 'link' => 'signup.php', 'roles' => []],
+        ['title' => 'Login', 'link' => $url->signin(), 'roles' => []],
+        ['title' => 'Register', 'link' => $url->signup(), 'roles' => []],
       ]
     ]
   ];
@@ -72,7 +72,7 @@ if (isset($_SESSION["user_name"])) {
     </button>
     <div class="offcanvas offcanvas-start" id="navbarResponsive">
       <div class="offcanvas-header">
-        <a class="navbar-brand" href="<?= SITE_NAME ?>">
+        <a class="navbar-brand" href="<?= $url->home() ?>">
           <img id="logo-ligth" src="<?= $brand->st_whitelogo ?>" alt="Logo Light" class="logo-light" height="40">
           <img id="logo-dark" src="<?= $brand->st_darklogo ?>" alt="Logo Dark" class="logo-dark d-none" height="40">
         </a>
@@ -81,7 +81,7 @@ if (isset($_SESSION["user_name"])) {
       <div class="offcanvas-body">
         <ul class="navbar-nav align-items-lg-center justify-content-end flex-grow-1 pe-1">
           <li class="nav-item">
-            <a class="nav-link" href="/">Inicio</a>
+            <a class="nav-link" href="<?= $url->home() ?>">Inicio</a>
           </li>
           <?php foreach ($menuItems as $item): ?>
             <?php
@@ -142,16 +142,13 @@ if (isset($_SESSION["user_name"])) {
               </a>
               <ul class="dropdown-menu">
                 <li>
-                  <a class="dropdown-item" href="profile.php">Perfil</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="favorites.php">Favorito</a>
+                  <a class="dropdown-item" href="<?= $url->profile() ?>">Perfil</a>
                 </li>
                 <li>
                   <hr class="dropdown-divider">
                 </li>
                 <li>
-                  <a class="dropdown-item" href="signout.php">Salir</a>
+                  <a class="dropdown-item" href="<?= $url->signout() ?>">Salir</a>
                 </li>
               </ul>
             </li>

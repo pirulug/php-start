@@ -21,3 +21,10 @@ Options -Indexes
     Require all denied
 </FilesMatch>
 
+# Habilitar reescritura
+RewriteEngine On
+
+# Reescribir todas las peticiones al archivo index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L]

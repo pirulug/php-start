@@ -59,3 +59,6 @@ $settings = $connect->query("SELECT * FROM settings")->fetch(PDO::FETCH_OBJ);
 
 // User log
 $log = new Log($connect, BASE_DIR . "/log/actions.log");
+
+// URL Helper
+$url = new UrlHelper(SITE_URL);
