@@ -11,6 +11,7 @@ function upload_file($file, $uploadDir, $options = []) {
     'maxSize'      => 5 * 1024 * 1024, // 5MB
     'fileName'     => null // Nombre generado automáticamente
   ];
+  
   $options        = array_merge($defaultOptions, $options);
 
   // Verificar si se subió el archivo
