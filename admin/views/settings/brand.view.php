@@ -14,8 +14,7 @@
               <input class="form-control" type="file" name="st_favicon">
             </td>
             <td class="w-50">
-              <img src="<?= $brand->st_favicon ?? "https://dummyimage.com/128x128/000/fff.jpg" ?>" alt="favicon"
-                height="128">
+              <img src="<?= SITE_URL . "/uploads/site/favicons/" . $favicon ?>" alt="favicon" height="128">
             </td>
           </tr>
           <tr>
