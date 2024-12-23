@@ -33,12 +33,12 @@ if (empty($user)) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
-  $user_id       = $encryption->decrypt(cleardata($_POST['user_id']));
-  $user_name     = cleardata($_POST['user_name']);
-  $user_email    = cleardata($_POST['user_email']);
-  $user_role     = cleardata($_POST['user_role']);
-  $user_status   = cleardata($_POST['user_status']);
-  $user_password = cleardata($_POST['user_password']);
+  $user_id       = $encryption->decrypt(clear_data($_POST['user_id']));
+  $user_name     = clear_data($_POST['user_name']);
+  $user_email    = clear_data($_POST['user_email']);
+  $user_role     = clear_data($_POST['user_role']);
+  $user_status   = clear_data($_POST['user_status']);
+  $user_password = clear_data($_POST['user_password']);
   // $user_password_save = cleardata($_POST['user_password_save']);
 
   // Validar el nombre de usuario (mínimo 4 caracteres)
@@ -121,9 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 /* ========== Theme config ========= */
 $theme_title = "Editar usuario";
-$theme_path  = "user-add";
-// $theme_scripts = ["js/clear.js"];
-// $theme_styles = ["pages/dashboard.css"];
+$theme_path  = "user-new";
 include BASE_DIR_ADMIN . "/views/users/edit.view.php";
 /* ================================= */
 

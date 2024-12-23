@@ -13,38 +13,31 @@ $request = explode('?', $request)[0];
 
 switch ($request) {
   case '':
-    extract(setPageMetaData());
-    include 'controllers/index.php';
+    include 'pages/index.php';
     break;
 
   case 'signin':
-    extract(setPageMetaData("Iniciar Sesion", $request));
-    include 'controllers/signin.php';
+    include 'pages/signin.php';
     break;
 
   case 'signup':
-    extract(setPageMetaData("Registrate", $request));
-    include 'controllers/signup.php';
+    include 'pages/signup.php';
     break;
 
   case 'signout':
-    extract(setPageMetaData("Salir", $request));
-    include 'controllers/signout.php';
+    include 'pages/signout.php';
     break;
 
   case 'profile':
     $accessControl->check_access([1, 2, 3], SITE_URL);
-    extract(setPageMetaData("Perfil", $request));
-    include 'controllers/profile.php';
+    include 'pages/profile.php';
     break;
 
   case '404':
-    extract(setPageMetaData("404", $request));
-    include 'controllers/404.php';
+    include 'pages/404.php';
     break;
 
   default:
-    extract(setPageMetaData("404", $request));
-    include 'controllers/404.php';
+    include 'pages/404.php';
     break;
 }

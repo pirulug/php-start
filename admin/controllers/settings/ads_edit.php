@@ -6,9 +6,9 @@ $accessControl->require_login(SITE_URL_ADMIN . "/controllers/login.php");
 $accessControl->check_access([1], SITE_URL . "/404.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $id      = cleardata($_POST['id']);
-  $content = cleardata($_POST['content']);
-  $status  = cleardata($_POST['status']);
+  $id      = clear_data($_POST['id']);
+  $content = clear_data($_POST['content']);
+  $status  = clear_data($_POST['status']);
 
   $query = "UPDATE ads SET content = :content, status = :status WHERE id = :id";
   $stmt  = $connect->prepare($query);

@@ -6,11 +6,11 @@ $accessControl->require_login(SITE_URL_ADMIN . "/controllers/login.php");
 $accessControl->check_access([1], SITE_URL . "/404.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $st_smtphost     = cleardata($_POST['st_smtphost']);
-  $st_smtpemail    = cleardata($_POST['st_smtpemail']);
-  $st_smtppassword = cleardata($_POST['st_smtppassword']);
-  $st_smtpport     = cleardata($_POST['st_smtpport']);
-  $st_smtpencrypt  = cleardata($_POST['st_smtpencrypt']);
+  $st_smtphost     = clear_data($_POST['st_smtphost']);
+  $st_smtpemail    = clear_data($_POST['st_smtpemail']);
+  $st_smtppassword = clear_data($_POST['st_smtppassword']);
+  $st_smtpport     = clear_data($_POST['st_smtpport']);
+  $st_smtpencrypt  = clear_data($_POST['st_smtpencrypt']);
 
   $query = "UPDATE smtp SET
               st_smtphost = :st_smtphost,

@@ -36,8 +36,8 @@ if (isset($_COOKIE['psloggin'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $user_name     = cleardata($_POST['user-name']);
-  $user_password = $encryption->encrypt(cleardata($_POST['user-password']));
+  $user_name     = clear_data($_POST['user-name']);
+  $user_password = $encryption->encrypt(clear_data($_POST['user-password']));
   $remember_me   = $_POST['remember-me'];
 
   $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password AND user_status = 1 AND user_role IN (1, 2)";

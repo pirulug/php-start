@@ -12,14 +12,12 @@ function check_access($connect) {
   return $row;
 }
 
-function cleardata($data) {
-  $antiXss = new AntiXSS();
-  $data    = $antiXss->clean($data);
-  return $data;
-}
-
-function isUserLoggedIn(): bool {
-  return isset($_SESSION['signedin']) && $_SESSION['signedin'] === true;
+function clear_data($data) {
+  static $antiXss = null;
+  if ($antiXss === null) {
+    $antiXss = new AntiXSS();
+  }
+  return $antiXss->clean($data);
 }
 
 function get_user_session_information($connect) {

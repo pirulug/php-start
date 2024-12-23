@@ -4,7 +4,7 @@
 // Paginador
 /* --------------- */
 
-function getPaginatedResults($table, $searchColumns, $searchTerm, $additionalConditions, $limit, $offset, $connect) {
+function getPaginatedResults($table, $searchColumns, $searchTerm, $additionalConditions, $limit, $offset, $connect, $orderColumn = 'id', $orderDirection = 'ASC') {
   $searchTerm = "%$searchTerm%";
   $query      = "SELECT * FROM $table 
             WHERE (";

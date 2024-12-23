@@ -36,7 +36,7 @@ if (isset($_COOKIE['psloggin'])) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_name     = htmlspecialchars(strtolower($_POST['user_name']), ENT_QUOTES, 'UTF-8');
-  $user_password = cleardata($_POST['user_password']);
+  $user_password = clear_data($_POST['user_password']);
   $password      = $encryption->encrypt($user_password);
   $remember_me   = $_POST['remember-me'];
 
@@ -76,5 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-$pageTitle = "Login";
+$page_title       = "SigIn | " . $settings->st_sitename;
+$page_description = $settings->st_description;
+$page_keywords    = $settings->st_keywords;
+
+$og_title       = $page_title;
+$og_description = $page_description;
+$og_image       = SITE_URL . "/assets/img/logo-vertical.png";
+$og_url         = SITE_URL . "/signin";
+
 include "views/signin.view.php";

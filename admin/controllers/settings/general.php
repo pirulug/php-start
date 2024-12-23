@@ -6,8 +6,8 @@ $accessControl->require_login(SITE_URL_ADMIN . "/controllers/login.php");
 $accessControl->check_access([1], SITE_URL . "/404.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $st_sitename    = cleardata($_POST['st_sitename']);
-  $st_description = cleardata($_POST['st_description']);
+  $st_sitename    = clear_data($_POST['st_sitename']);
+  $st_description = clear_data($_POST['st_description']);
 
   $st_keywords = json_decode($_POST['st_keywords'], true);
 
@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $st_keywords_imploded = '';
   }
 
-  $st_facebook  = cleardata($_POST['st_facebook']);
-  $st_twitter   = cleardata($_POST['st_twitter']);
-  $st_instagram = cleardata($_POST['st_instagram']);
-  $st_youtube   = cleardata($_POST['st_youtube']);
+  $st_facebook  = clear_data($_POST['st_facebook']);
+  $st_twitter   = clear_data($_POST['st_twitter']);
+  $st_instagram = clear_data($_POST['st_instagram']);
+  $st_youtube   = clear_data($_POST['st_youtube']);
 
   $query = "UPDATE settings SET
         st_sitename = :st_sitename,

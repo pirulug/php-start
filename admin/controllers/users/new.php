@@ -6,11 +6,11 @@ $accessControl->check_access([1, 2]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
-  $user_name   = cleardata($_POST['user_name']);
-  $user_email  = cleardata($_POST['user_email']);
-  $user_role   = cleardata($_POST['user_role']);
-  $user_status = cleardata($_POST['user_status']);
-  $password    = cleardata($_POST['user_password']);
+  $user_name   = clear_data($_POST['user_name']);
+  $user_email  = clear_data($_POST['user_email']);
+  $user_role   = clear_data($_POST['user_role']);
+  $user_status = clear_data($_POST['user_status']);
+  $password    = clear_data($_POST['user_password']);
 
   // Validar el nombre de usuario (mínimo 4 caracteres)
   if (strlen($user_name) < 4) {
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   // Validar selected
-  if (!in_array($user_role, [1, 2])) {
+  if (!in_array($user_role, [2,3])) {
     $messageHandler->addMessage("Seleccionar rol.", "danger");
   }
 
@@ -83,8 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 /* ========== Theme config ========= */
 $theme_title = "Usuario nuevo";
 $theme_path  = "user-new";
-// $theme_scripts = ["js/clear.js"];
-// $theme_styles = ["pages/dashboard.css"];
 include BASE_DIR_ADMIN . "/views/users/new.view.php";
 /* ================================= */
 
