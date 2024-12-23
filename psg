@@ -339,10 +339,11 @@ if (php_sapi_name() == "cli") {
           'config.php',
           'psg.php',
           '.gitignore',
-          'readme.md',
+          'README.md',
           '.htaccess',
           '.nginx',
           'install',
+          'LICENSE',
           basename(__FILE__)
         ];
 
