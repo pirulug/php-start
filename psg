@@ -260,6 +260,57 @@ function createViewFiles($dir, $table, $columns) {
 
 }
 
+function zipProject($source, $destination, $ignored = []) {
+  if (!extension_loaded('zip') || !file_exists($source)) {
+    return false;
+  }
+
+  $destinationDir = dirname($destination);
+  if (!file_exists($destinationDir)) {
+    if (!mkdir($destinationDir, 0777, true)) {
+      return false; // Error al crear el directorio
+    }
+  }
+
+  // Crear el archivo ZIP
+  $zip = new ZipArchive();
+  if (!$zip->open($destination, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
+    return false;
+  }
+
+  $source = realpath($source);
+  if ($source === false) {
+    return false; // Error en la resolución de la ruta
+  }
+
+  // Recursión para agregar archivos
+  $files = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
+    RecursiveIteratorIterator::LEAVES_ONLY
+  );
+
+  foreach ($files as $file) {
+    $filePath     = $file->getRealPath();
+    $relativePath = substr($filePath, strlen($source) + 1);
+
+    // Verificar si el archivo debe ser ignorado
+    $skip = false;
+    foreach ($ignored as $ignore) {
+      // Comprobar si el archivo o directorio actual está en la lista de exclusión
+      if (strpos($filePath, $source . DIRECTORY_SEPARATOR . $ignore) === 0) {
+        $skip = true;
+        break;
+      }
+    }
+
+    if (!$skip) {
+      $zip->addFile($filePath, $relativePath);
+    }
+  }
+
+  return $zip->close();
+}
+
 // Comprobar si el script se ejecuta desde la línea de comandos
 if (php_sapi_name() == "cli") {
   if (isset($argv[1])) {
@@ -277,7 +328,38 @@ if (php_sapi_name() == "cli") {
           echo "Por favor, proporciona el nombre de la tabla después de '-g'.\n";
         }
         break;
+      case '-z':
+        $sourceDir = __DIR__; // Ruta a la raíz de tu proyecto
+        $zipFile = __DIR__ . '/_up/demo.pfinteractive.net.pe.zip'; // Ruta donde se creará el archivo ZIP
 
+        // Archivos y carpetas a excluir
+        $ignoredFiles = [
+          '.git',
+          '_up',
+          'config.php',
+          'psg.php',
+          '.gitignore',
+          'readme.md',
+          '.htaccess',
+          '.nginx',
+          'install',
+          basename(__FILE__)
+        ];
+
+        if (zipProject($sourceDir, $zipFile, $ignoredFiles)) {
+          echo "Proyecto comprimido exitosamente en: $zipFile";
+        } else {
+          echo "Error al comprimir el proyecto.";
+        }
+        break;
+      case '-h':
+        echo "Uso: php psg [opción] [tabla]\n";
+        echo "Opciones:\n";
+        echo "  -l\tListar las tablas de la base de datos.\n";
+        echo "  -g\tGenerar el CRUD y las vistas para una tabla específica.\n";
+        echo "  -z\tComprimir el proyecto en un archivo ZIP.\n";
+        break;
+        
       default:
         echo "Parámetro no reconocido. Usa '-l' para listar las tablas o '-g [tabla]' para generar el CRUD y las vistas.\n";
     }
@@ -287,4 +369,3 @@ if (php_sapi_name() == "cli") {
 } else {
   echo "Este script debe ejecutarse desde la línea de comandos.\n";
 }
-?>
