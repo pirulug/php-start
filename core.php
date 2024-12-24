@@ -68,4 +68,4 @@ $url = new UrlHelper(SITE_URL);
 
 // Visit Counter
 $visitCounter = new VisitCounter($connect);
-$visitCounter->register_visit($_SERVER['REQUEST_URI']);
+// $visitCounter->register_visit($_SERVER['REQUEST_URI']);
