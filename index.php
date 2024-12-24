@@ -13,31 +13,38 @@ $request = explode('?', $request)[0];
 
 switch ($request) {
   case '':
+    $visitCounter->register_visit("Home");
     include 'pages/index.php';
     break;
 
   case 'signin':
+    $visitCounter->register_visit("Sign in");
     include 'pages/signin.php';
     break;
 
   case 'signup':
+    $visitCounter->register_visit("Sign up");
     include 'pages/signup.php';
     break;
 
   case 'signout':
+    $visitCounter->register_visit("Sign out");
     include 'pages/signout.php';
     break;
 
   case 'profile':
     $accessControl->check_access([1, 2, 3], SITE_URL);
+    $visitCounter->register_visit("Profile");
     include 'pages/profile.php';
     break;
 
   case '404':
+    $visitCounter->register_visit("404");
     include 'pages/404.php';
     break;
 
   default:
+    $visitCounter->register_visit("404");
     include 'pages/404.php';
     break;
 }
