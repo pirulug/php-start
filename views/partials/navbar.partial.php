@@ -62,8 +62,10 @@ if (isset($_SESSION["user_name"])) {
 <nav class="navbar navbar-expand-lg bg-body">
   <div class="container">
     <a class="navbar-brand" href="<?= SITE_URL ?>">
-      <img id="logo-ligth" src="<?= $brand->st_whitelogo ?>" alt="Logo Light" class="logo-light" height="40">
-      <img id="logo-dark" src="<?= $brand->st_darklogo ?>" alt="Logo Dark" class="logo-dark d-none" height="40">
+      <img class="brand-logo-ligth" src="<?= $url->logo($brand->st_whitelogo) ?>" alt="Logo Light" class="logo-light"
+        height="40">
+      <img class="brand-logo-dark" src="<?= $url->logo($brand->st_darklogo) ?>" alt="Logo Dark" class="logo-dark d-none"
+        height="40">
     </a>
     <button class="navbar-toggler me-1 ms-auto" type="button" data-bs-toggle="offcanvas"
       data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
@@ -73,8 +75,10 @@ if (isset($_SESSION["user_name"])) {
     <div class="offcanvas offcanvas-start" id="navbarResponsive">
       <div class="offcanvas-header">
         <a class="navbar-brand" href="<?= $url->home() ?>">
-          <img id="logo-ligth" src="<?= $brand->st_whitelogo ?>" alt="Logo Light" class="logo-light" height="40">
-          <img id="logo-dark" src="<?= $brand->st_darklogo ?>" alt="Logo Dark" class="logo-dark d-none" height="40">
+          <img class="brand-logo-ligth" src="<?= $url->logo($brand->st_whitelogo) ?>" alt="Logo Light"
+            class="logo-light" height="40">
+          <img class="brand-logo-dark" src="<?= $url->logo($brand->st_darklogo) ?>" alt="Logo Dark"
+            class="logo-dark d-none" height="40">
         </a>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
@@ -182,7 +186,7 @@ if (isset($_SESSION["user_name"])) {
 <main class="flex-shrink-0">
 
   <?php if ($messageHandler->hasMessages()): ?>
-    <div class="container ">
+    <div class="floating-message">
       <?= $messageHandler->displayMessages(); ?>
     </div>
   <?php endif; ?>

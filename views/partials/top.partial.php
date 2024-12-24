@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="<?= $url->css("bootstrapicons.css") ?>" />
   <link rel="stylesheet" href="<?= $url->css("toastifyjs.css") ?>" />
   <link rel="stylesheet" href="<?= $url->css("piruui.css") ?>" />
+  <link rel="stylesheet" href="<?= $url->css("extra.css") ?>" />
 </head>
 
 <body class="d-flex flex-column h-100">
