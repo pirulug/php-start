@@ -20,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $upWhiteLogoSave = $_POST['st_whitelogo_save'];
   $upDarkLogoSave  = $_POST['st_darklogo_save'];
 
-  // Obtener datos
-  // $brand = $connect->query("SELECT * FROM brand")->fetch(PDO::FETCH_OBJ);
-
   // Favicon
   if ($upFavicon['size'] > 0) {
     $uploadPathFavicon = BASE_DIR . '/uploads/site/favicons/';
