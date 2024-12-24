@@ -40,3 +40,6 @@ $messageHandler = new MessageHandler();
 
 // User log
 $log = new Log($connect, BASE_DIR . "/log/actions.log");
+
+// Visit Counter
+$visitCounter = new VisitCounter($connect);

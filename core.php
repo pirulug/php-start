@@ -26,6 +26,9 @@ if (!$connect) {
   exit();
 }
 
+// Template Engine
+$theme = new TemplateEngine();
+
 if (isset($_SESSION["user_name"])) {
   $user_session = get_user_session_information($connect);
 }
@@ -62,3 +65,7 @@ $log = new Log($connect, BASE_DIR . "/log/actions.log");
 
 // URL Helper
 $url = new UrlHelper(SITE_URL);
+
+// Visit Counter
+$visitCounter = new VisitCounter($connect);
+$visitCounter->register_visit($_SERVER['REQUEST_URI']);

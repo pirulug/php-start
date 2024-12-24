@@ -62,6 +62,12 @@ $menuItems = [
         'link'  => 'settings/brand.php',
         'roles' => [1]
       ],
+      [
+        'title' => 'Estadística',
+        'path'  => 'statistics',
+        'link'  => 'settings/statistics.php',
+        'roles' => [1]
+      ],
     ]
   ],
 ];
