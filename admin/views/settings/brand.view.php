@@ -10,7 +10,7 @@
             <td class="w-50">
               <label class="form-label" for="">FAVICON</label>
               <p>Recommended Size: <b>128 x 128 Pixels</b></p>
-              <input class="form-control" type="hidden" value="<?= $brand->st_favicon ?>" name="st_favicon_save">
+              <input class="form-control" type="hidden" value='<?= $brand->st_favicon ?>' name="st_favicon_save">
               <input class="form-control" type="file" name="st_favicon">
             </td>
             <td class="w-50">
@@ -36,7 +36,7 @@
               <input class="form-control" type="file" name="st_darklogo">
             </td>
             <td class="w-50 bg-white">
-              <img src="<?= SITE_URL . "/uploads/site/" . $brand->st_darklogo ?>" ?>" alt="darklogo"
+              <img src="<?= SITE_URL . "/uploads/site/" . $brand->st_darklogo ?>" alt="darklogo"
               height="71">
             </td>
           </tr>

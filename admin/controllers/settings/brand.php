@@ -16,6 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $upWhiteLogo = $_FILES['st_whitelogo'];
   $upDarkLogo  = $_FILES['st_darklogo'];
 
+  $upFaviconSave   = $_POST['st_favicon_save'];
+  $upWhiteLogoSave = $_POST['st_whitelogo_save'];
+  $upDarkLogoSave  = $_POST['st_darklogo_save'];
+
+  // Obtener datos
+  // $brand = $connect->query("SELECT * FROM brand")->fetch(PDO::FETCH_OBJ);
+
   // Favicon
   if ($upFavicon['size'] > 0) {
     $uploadPathFavicon = BASE_DIR . '/uploads/site/favicons/';
@@ -41,64 +48,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       "favicon"                => "favicon.ico",
       "webmanifest"            => "site.webmanifest"
     ], JSON_UNESCAPED_SLASHES);
+  } else {
+    $st_favicon = $upFaviconSave;
   }
 
   // Dark logo
   $uploadPathLogo = BASE_DIR . '/uploads/site/';
 
   if ($upWhiteLogo['size'] > 0) {
-    $whitelogo    = upload_image($upWhiteLogo, $uploadPathLogo, ['convertTo' => 'webp', 'fileName' => 'st_whitelogo']);
+    $whitelogo    = upload_image($upWhiteLogo, $uploadPathLogo, ['convertTo' => 'webp', 'prefix' => "st_logo_light_"]);
     $st_whitelogo = $whitelogo['file_name'];
+
+    // Eliminar logo anterior
+    unlink($uploadPathLogo . $brand->st_whitelogo);
+  } else {
+    $st_whitelogo = $upWhiteLogoSave;
   }
 
   if ($upDarkLogo['size'] > 0) {
-    $darkLogo    = upload_image($upDarkLogo, $uploadPathLogo, ['convertTo' => 'webp', 'fileName' => 'st_darklogo']);
+    $darkLogo    = upload_image($upDarkLogo, $uploadPathLogo, ['convertTo' => 'webp', 'prefix' => "st_logo_dark_"]);
     $st_darklogo = $darkLogo['file_name'];
+
+    // Eliminar logo anterior
+    unlink($uploadPathLogo . $brand->st_darklogo);
+  } else {
+    $st_darklogo = $upDarkLogoSave;
   }
 
-  // Variables
-  $fields = [];
-  $params = [];
-
-  if ($upFavicon['size'] > 0) {
-    $fields[]              = "st_favicon = :st_favicon";
-    $params[':st_favicon'] = $st_favicon;
-  }
-  if ($upWhiteLogo['size'] > 0) {
-    $fields[]                = "st_whitelogo = :st_whitelogo";
-    $params[':st_whitelogo'] = $st_whitelogo;
-  }
-  if ($upDarkLogo['size'] > 0) {
-    $fields[]               = "st_darklogo = :st_darklogo";
-    $params[':st_darklogo'] = $st_darklogo;
-  }
-
-  // Si no hay campos para actualizar, termina el script
-  if (empty($fields)) {
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
-    $messageHandler->addMessage('No hay datos para actualizar.', 'warning');
-    exit();
-  }
-
-  // Construcción de la consulta
-  $query = "UPDATE brand SET " . implode(", ", $fields);
-
-  // Preparar y ejecutar la consulta
-  $stmt = $connect->prepare($query);
-
-  foreach ($params as $key => $value) {
-    $stmt->bindValue($key, $value);
-  }
+  // Actualizar datos
+  $queryUpdate = "UPDATE brand SET st_favicon = :st_favicon, st_whitelogo = :st_whitelogo, st_darklogo = :st_darklogo";
+  $stmt        = $connect->prepare($queryUpdate);
+  $stmt->bindParam(':st_favicon', $st_favicon);
+  $stmt->bindParam(':st_whitelogo', $st_whitelogo);
+  $stmt->bindParam(':st_darklogo', $st_darklogo);
 
   if ($stmt->execute()) {
-    echo "Actualización exitosa.";
+    $messageHandler->addMessage("Se actualizo las imagenes de manera correcta", "success");
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit();
   } else {
-    var_dump($stmt->errorInfo());
+    $messageHandler->addMessage("Ocurrio un error al actualizar las imagenes: " . $stmt->errorInfo(), "danger");
   }
-
-  $messageHandler->addMessage("Se actualizo las imagenes de manera correcta", "success");
-  header('Location: ' . $_SERVER['HTTP_REFERER']);
-  exit();
 }
 
 // Obtener datos

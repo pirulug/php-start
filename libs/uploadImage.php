@@ -8,6 +8,7 @@ function upload_image($file, $uploadDir, $options = []) {
     "convertTo" => null,                               // Convertir a: null, "jpg", "png", "webp"
     "optimize" => 7,                                   // Calidad (0 a 10)
     "fileName" => null,                                // Nombre del archivo personalizado
+    "prefix" => "img_",                                    // Prefijo para el nombre del archivo
     "resize" => []                                     // Tamaños a redimensionar (ejemplo: ['small' => [150, 150], 'medium' => [300, 300]])
   ];
   $settings = array_merge($defaults, $options);
@@ -39,7 +40,7 @@ function upload_image($file, $uploadDir, $options = []) {
   }
 
   // Generar un nombre único para el archivo si no se proporciona uno
-  $fileName = $settings['fileName'] ? $settings['fileName'] : uniqid("img_", true);
+  $fileName = $settings['fileName'] ? $settings['fileName'] : uniqid($settings['prefix'], true);
   $finalExt = $settings['convertTo'] ? $settings['convertTo'] : $fileExt;
   $fileName .= ".$finalExt";
   $filePath = rtrim($uploadDir, "/") . "/" . $fileName;
