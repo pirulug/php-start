@@ -11,15 +11,23 @@ class MessageHandler {
    * Agregar un mensaje con opción de tipo de notificación
    * @param mixed $message Añade el mensaje
    * @param mixed $type success | danger | primary ...
-   * @param mixed $method bootstrap | toasts | sweetalert
+   * @param mixed $method Tipo de notificación: 'bs' para Bootstrap, 'sa' para SweetAlert2, 'tf' para Toastify
    * @return void
    */
-  public function addMessage($message, $type = 'success', $method = 'bootstrap') {
-    if ($method === 'toast') {
+  public function addMessage($message, $type = 'success', $method = 'bs') {
+    if ($method === "toast") {
       $this->addToast($message, $type);
-    } elseif ($method === 'sweetalert') {
+    } elseif ($method === "sweetalert") {
       $this->addSweetAlert($message, $type);
-    } else {
+    } elseif ($method === "bootstrap") {
+      $this->addBootstrap($message, $type);
+    }
+
+    if ($method === 'tf') {
+      $this->addToast($message, $type);
+    } elseif ($method === 'sa') {
+      $this->addSweetAlert($message, $type);
+    } elseif ($method === 'bs') {
       $this->addBootstrap($message, $type);
     }
   }
