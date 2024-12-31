@@ -20,12 +20,12 @@ class MessageHandler {
     } elseif ($method === 'sweetalert') {
       $this->addSweetAlert($message, $type);
     } else {
-      $this->addBootstrapMessage($message, $type);
+      $this->addBootstrap($message, $type);
     }
   }
 
   // Agregar un mensaje de Bootstrap
-  private function addBootstrapMessage($message, $type) {
+  private function addBootstrap($message, $type) {
     if (!isset($_SESSION['messages'])) {
       $_SESSION['messages'] = [];
     }
@@ -175,32 +175,41 @@ class MessageHandler {
 }
 
 
+/*
+
 // Modo de uso
 
-// $messageHandler = new MessageHandler();
+// Inicializar la clase
+$messageHandler = new MessageHandler();
 
 // Agregar mensajes de Bootstrap
-/* $messageHandler->addMessage("Este es un mensaje de alerta primaria", "primary", "bootstrap");
+$messageHandler->addMessage("Este es un mensaje de alerta primaria", "primary", "bootstrap");
 $messageHandler->addMessage("Este es un mensaje de alerta secundaria", "secondary", "bootstrap");
 $messageHandler->addMessage("Este es un mensaje de alerta de éxito", "success", "bootstrap");
 $messageHandler->addMessage("Este es un mensaje de alerta de peligro", "danger", "bootstrap");
 $messageHandler->addMessage("Este es un mensaje de alerta de advertencia", "warning", "bootstrap");
 $messageHandler->addMessage("Este es un mensaje de alerta informativa", "info", "bootstrap");
 $messageHandler->addMessage("Este es un mensaje de alerta ligera", "light", "bootstrap");
-$messageHandler->addMessage("Este es un mensaje de alerta oscura", "dark", "bootstrap"); */
+$messageHandler->addMessage("Este es un mensaje de alerta oscura", "dark", "bootstrap");
 
 // Agregar notificaciones Toastify
-/* $messageHandler->addMessage("Este es un Toastify de información", "info", "toast");
+$messageHandler->addMessage("Este es un Toastify de información", "info", "toast");
 $messageHandler->addMessage("Este es un Toastify de éxito", "success", "toast");
 $messageHandler->addMessage("Este es un Toastify de peligro", "danger", "toast");
 $messageHandler->addMessage("Este es un Toastify de advertencia", "warning", "toast");
 $messageHandler->addMessage("Este es un Toastify de primaria", "primary", "toast");
 $messageHandler->addMessage("Este es un Toastify de secundaria", "secondary", "toast");
 $messageHandler->addMessage("Este es un Toastify de ligera", "light", "toast");
-$messageHandler->addMessage("Este es un Toastify de oscura", "dark", "toast"); */
+$messageHandler->addMessage("Este es un Toastify de oscura", "dark", "toast");
 
-// Verificar y realizar acciones según el tipo de mensaje
-/* if ($messageHandler->hasMessagesOfType('danger')) {
+// Agregar mensajes de SweetAlert2
+$messageHandler->addMessage("Este es un mensaje SweetAlert2 de éxito", "success", "sweetalert");
+$messageHandler->addMessage("Este es un mensaje SweetAlert2 de error", "danger", "sweetalert");
+$messageHandler->addMessage("Este es un mensaje SweetAlert2 de advertencia", "warning", "sweetalert");
+$messageHandler->addMessage("Este es un mensaje SweetAlert2 de información", "info", "sweetalert");
+
+// Verificar si existen mensajes de un tipo específico
+if ($messageHandler->hasMessagesOfType('danger')) {
   echo "<p>Hay mensajes de tipo 'danger' en la sesión.</p>";
 }
 
@@ -216,25 +225,14 @@ if ($messageHandler->hasMessagesOfType('info')) {
   echo "<p>Hay mensajes de tipo 'info' en la sesión.</p>";
 }
 
-if ($messageHandler->hasMessagesOfType('primary')) {
-  echo "<p>Hay mensajes de tipo 'primary' en la sesión.</p>";
-}
-
-if ($messageHandler->hasMessagesOfType('secondary')) {
-  echo "<p>Hay mensajes de tipo 'secondary' en la sesión.</p>";
-}
-
-if ($messageHandler->hasMessagesOfType('light')) {
-  echo "<p>Hay mensajes de tipo 'light' en la sesión.</p>";
-}
-
-if ($messageHandler->hasMessagesOfType('dark')) {
-  echo "<p>Hay mensajes de tipo 'dark' en la sesión.</p>";
-} */
-
 // Mostrar los mensajes de Bootstrap
-// $messageHandler->displayMessages();
+$messageHandler->displayMessages();
 
 // Mostrar las notificaciones Toastify
-// $messageHandler->displayToasts();
+$messageHandler->displayToasts();
+
+// Mostrar las notificaciones SweetAlert2
+$messageHandler->displaySweetAlerts();
+
+*/
 
