@@ -28,10 +28,10 @@
         <label class="control-label">Role</label>
         <select class="form-select" name="user_role" required>
           <option value="0">- Seleccionar -</option>
-          <option value="1" <?= $user->user_role == 1 ? 'selected' : '' ?>>
+          <option value="2" <?= $user->user_role == 2 ? 'selected' : '' ?>>
             Administrador
           </option>
-          <option value="2" <?= $user->user_role == 2 ? 'selected' : '' ?>>
+          <option value="3" <?= $user->user_role == 3 ? 'selected' : '' ?>>
             Suscriptor
           </option>
         </select>

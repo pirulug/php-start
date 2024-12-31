@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   // Validar selected
-  if (!in_array($user_role, [1, 2])) {
+  if (!in_array($user_role, [2, 3])) {
     $messageHandler->addMessage("Seleccionar rol.", "danger");
   }
 

@@ -105,6 +105,14 @@ Este botón mostrará un modal de advertencia con un temporizador de 5 segundos.
 <button sw-title="Información" sw-text="Este es un mensaje informativo." sw-icon="info" sw-confirm-btn-text="Entendido" sw-show-confirm-btn="false">Información</button>
 ```
 
+```html
+<button class="btn btn-danger" sw2-title="¿Eliminar usuario?" sw2-text="Esta acción no se puede deshacer."
+    sw2-icon="warning" sw2-confirm-btn-text="Sí, eliminar" sw2-cancel-btn-text="No, cancelar"
+    sw2-redirect-url="index.html?id=1">
+    Eliminar Usuario
+  </button>
+```
+
 ### Opciones de configuración avanzadas
 
 - `allowOutsideClick`: Permite cerrar el modal al hacer clic fuera de él (valor predeterminado: true).
