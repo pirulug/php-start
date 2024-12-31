@@ -11,12 +11,14 @@ class MessageHandler {
    * Agregar un mensaje con opción de tipo de notificación
    * @param mixed $message Añade el mensaje
    * @param mixed $type success | danger | primary ...
-   * @param mixed $method bootstrap | toasts
+   * @param mixed $method bootstrap | toasts | sweetalert
    * @return void
    */
   public function addMessage($message, $type = 'success', $method = 'bootstrap') {
     if ($method === 'toast') {
       $this->addToast($message, $type);
+    } elseif ($method === 'sweetalert') {
+      $this->addSweetAlert($message, $type);
     } else {
       $this->addBootstrapMessage($message, $type);
     }
@@ -28,6 +30,14 @@ class MessageHandler {
       $_SESSION['messages'] = [];
     }
     $_SESSION['messages'][] = ['message' => $message, 'type' => $type];
+  }
+
+  // Agregar una notificación SweetAlert
+  private function addSweetAlert($message, $type) {
+    if (!isset($_SESSION['sweetalerts'])) {
+      $_SESSION['sweetalerts'] = [];
+    }
+    $_SESSION['sweetalerts'][] = ['message' => $message, 'type' => $type];
   }
 
   // Agregar una notificación Toastify
@@ -100,6 +110,24 @@ class MessageHandler {
     }
   }
 
+  // Mostrar las notificaciones SweetAlert2
+  public function displaySweetAlerts() {
+    if (isset($_SESSION['sweetalerts']) && !empty($_SESSION['sweetalerts'])) {
+      echo "<script>";
+      foreach ($_SESSION['sweetalerts'] as $alert) {
+        $icon = $this->getSweetAlertIcon($alert['type']);
+        echo "Swal.fire({
+                text: \"{$alert['message']}\",
+                icon: \"$icon\",
+                confirmButtonText: 'Aceptar'
+              });";
+      }
+      echo "</script>";
+
+      unset($_SESSION['sweetalerts']);
+    }
+  }
+
   // Verificar si existen mensajes de un tipo específico
   public function hasMessagesOfType($type = 'danger') {
     if (isset($_SESSION['messages'])) {
@@ -117,6 +145,17 @@ class MessageHandler {
     return isset($_SESSION['messages']) && !empty($_SESSION['messages']);
   }
 
+  // Obtener el icono correspondiente para SweetAlert2
+  private function getSweetAlertIcon($type) {
+    $icons = [
+      'success' => 'success',
+      'danger'  => 'error',
+      'warning' => 'warning',
+      'info'    => 'info',
+      'primary' => 'question',
+    ];
+    return $icons[$type] ?? 'info';
+  }
 
   // Obtener el color de fondo basado en el tipo de Toastify
   private function getBackgroundColor($type) {
