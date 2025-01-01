@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
 
-    $messageHandler->addMessage("Usuario se actualizo correctamente", "success", "toast");
+    $messageHandler->addMessage("Usuario se actualizo correctamente", "success", "tf");
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
   }

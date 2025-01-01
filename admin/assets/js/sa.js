@@ -1,20 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Selecciona todos los botones con atributos personalizados para SweetAlert2
-  document.querySelectorAll("[sw-title]").forEach((button) => {
+  document.querySelectorAll("[sa-title]").forEach((button) => {
     button.addEventListener("click", () => {
       // Obtén los atributos personalizados del botón
-      const title = button.getAttribute("sw-title") || "Sin título";
-      const text = button.getAttribute("sw-text") || "";
-      const icon = button.getAttribute("sw-icon") || "info";
+      const title = button.getAttribute("sa-title") || "Sin título";
+      const text = button.getAttribute("sa-text") || "";
+      const icon = button.getAttribute("sa-icon") || "info";
       const confirmButtonText =
-        button.getAttribute("sw-confirm-btn-text") || "Aceptar";
-      const cancelButtonText = button.getAttribute("sw-cancel-btn-text") || "";
-      const redirectUrl = button.getAttribute("sw-redirect-url") || null;
-      const timer = parseInt(button.getAttribute("sw-timer"), 10) || 0; // Timer en milisegundos
+        button.getAttribute("sa-confirm-btn-text") || "Aceptar";
+      const cancelButtonText = button.getAttribute("sa-cancel-btn-text") || "";
+      const redirectUrl = button.getAttribute("sa-redirect-url") || null;
+      const timer = parseInt(button.getAttribute("sa-timer"), 10) || 0; // Timer en milisegundos
       const showConfirmButton =
-        button.getAttribute("sw-show-confirm-btn") !== "false"; // Determina si mostrar el botón de confirmar
+        button.getAttribute("sa-show-confirm-btn") !== "false"; // Determina si mostrar el botón de confirmar
       const showCancelButton =
-        button.getAttribute("sw-show-cancel-btn") !== "false"; // Determina si mostrar el botón de cancelar
+        button.getAttribute("sa-show-cancel-btn") !== "false"; // Determina si mostrar el botón de cancelar
 
       // Configura el objeto de opciones de SweetAlert2
       const options = {

@@ -4,7 +4,7 @@
 
 <?php $theme->blockStart("script") ?>
 <script src="<?= SITE_URL_ADMIN ?>/assets/js/sweetalert2.js"></script>
-<script src="<?= SITE_URL_ADMIN ?>/assets/js/sw-dinamico.js"></script>
+<script src="<?= SITE_URL_ADMIN ?>/assets/js/sa.js"></script>
 <?php $messageHandler->displaySweetAlerts(); ?>
 <?php $theme->blockEnd("script") ?>
 
@@ -57,9 +57,9 @@
                 </a>
 
                 <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top"
-                  data-bs-title="Eliminar" sw-title="¿Eliminar usuario?" sw-text="Esta acción no se puede deshacer."
-                  sw-icon="warning" sw-confirm-btn-text="Sí, eliminar" sw-cancel-btn-text="No, cancelar"
-                  sw-redirect-url="delete.php?id=<?= $encryption->encrypt($user->user_id) ?>">
+                  data-bs-title="Eliminar" sa-title="¿Eliminar usuario?" sa-text="Esta acción no se puede deshacer."
+                  sa-icon="warning" sa-confirm-btn-text="Sí, eliminar" sa-cancel-btn-text="No, cancelar"
+                  sa-redirect-url="delete.php?id=<?= $encryption->encrypt($user->user_id) ?>">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
