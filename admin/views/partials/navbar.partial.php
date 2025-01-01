@@ -63,6 +63,12 @@ $menuItems = [
         'roles' => [1]
       ],
       [
+        'title' => 'Información',
+        'path'  => 'info',
+        'link'  => 'settings/info.php',
+        'roles' => [1]
+      ],
+      [
         'title' => 'Estadística',
         'path'  => 'statistics',
         'link'  => 'settings/statistics.php',
