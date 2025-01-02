@@ -13,7 +13,7 @@ $page_keywords    = $settings->st_keywords;
 
 $og_title       = $page_title;
 $og_description = $page_description;
-$og_image       = SITE_URL . "/assets/img/logo-vertical.png";
+$og_image       = SITE_URL . "/uploads/site/" . $settings->st_og_image;
 $og_url         = SITE_URL . "/404";
 
 include "views/404.view.php";
