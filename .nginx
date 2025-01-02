@@ -5,6 +5,12 @@ server {
     root /ruta/a/tu/proyecto;
     index index.php;
 
+    # Excluir la carpeta admin de la reescritura
+    location /admin/ {
+        # Aquí puedes agregar reglas adicionales específicas para la carpeta admin si las necesitas
+        try_files $uri $uri/ =404;
+    }
+
     location / {
         try_files $uri $uri/ /index.php?$query_string;
     }
