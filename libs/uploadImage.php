@@ -4,7 +4,7 @@ function upload_image_variants($file, $uploadDir, $options = []) {
   // Configuración predeterminada
   $defaults = [
     "imageSupported" => ["jpg", "png", "jpeg", "webp"], // Extensiones permitidas
-    "maxSize"        => 2 * 1024 * 1024,                      // Tamaño máximo: 2 MB
+    "maxSize"        => 2 * 1024 * 1024,                // Tamaño máximo: 2 MB
     "convertTo"      => null,                               // Convertir a: null, "jpg", "png", "webp"
     "optimize"       => 7,                                   // Calidad (0 a 10)
     "fileName"       => null,                                // Nombre del archivo personalizado
