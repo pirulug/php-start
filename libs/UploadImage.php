@@ -5,11 +5,11 @@ function upload_image_variants($file, $uploadDir, $options = []) {
   $defaults = [
     "imageSupported" => ["jpg", "png", "jpeg", "webp"], // Extensiones permitidas
     "maxSize"        => 2 * 1024 * 1024,                // Tamaño máximo: 2 MB
-    "convertTo"      => null,                               // Convertir a: null, "jpg", "png", "webp"
-    "optimize"       => 7,                                   // Calidad (0 a 10)
-    "fileName"       => null,                                // Nombre del archivo personalizado
-    "prefix"         => "img_",                                // Nombre del archivo personalizado
-    "resize"         => []                                     // Tamaños a redimensionar (ejemplo: ['small' => [150, 150], 'medium' => [300, 300]])
+    "convertTo"      => null,                           // Convertir a: null, "jpg", "png", "webp"
+    "optimize"       => 7,                              // Calidad (0 a 10)
+    "fileName"       => null,                           // Nombre del archivo personalizado
+    "prefix"         => "img_",                         // Nombre del archivo personalizado
+    "resize"         => []                              // Tamaños a redimensionar (ejemplo: ['small' => [150, 150], 'medium' => [300, 300]])
   ];
   $settings = array_merge($defaults, $options);
 
@@ -92,11 +92,11 @@ function upload_image($file, $uploadDir, $resizeWidth = null, $resizeHeight = nu
   // Configuración predeterminada
   $defaults = [
     "imageSupported" => ["jpg", "png", "jpeg", "webp"], // Extensiones permitidas
-    "maxSize"        => 2 * 1024 * 1024,                      // Tamaño máximo: 2 MB
-    "convertTo"      => null,                               // Convertir a: null, "jpg", "png", "webp"
-    "optimize"       => 7,                                   // Calidad (0 a 10)
-    "fileName"       => null,                                // Nombre del archivo personalizado
-    "prefix"         => "img_"                                 // Prefijo del archivo
+    "maxSize"        => 2 * 1024 * 1024,                // Tamaño máximo: 2 MB
+    "convertTo"      => null,                           // Convertir a: null, "jpg", "png", "webp"
+    "optimize"       => 7,                              // Calidad (0 a 10)
+    "fileName"       => null,                           // Nombre del archivo personalizado
+    "prefix"         => "img_"                          // Prefijo del archivo
   ];
   $settings = array_merge($defaults, $options);
 
