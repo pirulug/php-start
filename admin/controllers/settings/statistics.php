@@ -12,6 +12,8 @@ $yearly  = $visitCounter->get_graph_data('yearly');
 
 $page_comparative = $visitCounter->get_page_comparative_daily_data();
 
+$alwaysPage = $visitCounter->get_total_visits_by_page();
+
 /* ========== Theme config ========= */
 $theme_title = "Estadísticas";
 $theme_path  = "statistics";

@@ -48,29 +48,104 @@ class VisitCounter {
   public function get_graph_data($type) {
     switch ($type) {
       case 'daily':
+        // Datos por Día (mes actual)
         $month_start = date('Y-m-01');
-        return $this->connect->query("
-                    SELECT visit_date, SUM(visit_count) AS total
-                    FROM visits
-                    WHERE visit_date >= '$month_start'
-                    GROUP BY visit_date
-                ")->fetchAll(PDO::FETCH_ASSOC);
+        $month_end = date('Y-m-t'); // Último día del mes
+        $dates = [];
+
+        // Generar todas las fechas del mes actual
+        $start = new DateTime($month_start);
+        $end = new DateTime($month_end);
+        $interval = new DateInterval('P1D');
+        $daterange = new DatePeriod($start, $interval, $end->modify('+1 day'));
+
+        foreach ($daterange as $date) {
+          $dates[$date->format('j')] = "0";
+        }
+
+        // Consulta los datos existentes
+        $daily = $this->connect->query("SELECT visit_date, SUM(visit_count) AS total
+                                        FROM visits
+                                        WHERE visit_date >= '$month_start'
+                                        AND visit_date <= '$month_end'
+                                        GROUP BY visit_date
+                                    ")->fetchAll(PDO::FETCH_ASSOC);
+
+        // Combina los datos existentes con las fechas generadas
+        foreach ($daily as $row) {
+          $day         = date('j', strtotime($row['visit_date']));
+          $dates[$day] = $row['total'];
+        }
+
+        return $dates;
+
       case 'monthly':
+        // Datos por Mes (solo meses del año actual)
         $year_start = date('Y-01-01');
-        return $this->connect->query("
-                    SELECT DATE_FORMAT(visit_date, '%Y-%m') AS month, SUM(visit_count) AS total
-                    FROM visits
-                    WHERE visit_date >= '$year_start'
-                    GROUP BY month
-                ")->fetchAll(PDO::FETCH_ASSOC);
+        $year_end = date('Y-12-31'); // Último día del año
+
+        $monthNames = [
+          1  => 'Enero',
+          2  => 'Febrero',
+          3  => 'Marzo',
+          4  => 'Abril',
+          5  => 'Mayo',
+          6  => 'Junio',
+          7  => 'Julio',
+          8  => 'Agosto',
+          9  => 'Septiembre',
+          10 => 'Octubre',
+          11 => 'Noviembre',
+          12 => 'Diciembre'
+        ];
+
+        // Inicializamos un array para los meses del año
+        $months = [];
+        foreach ($monthNames as $key => $month) {
+          $months[$month] = "0"; // Inicializamos todos los meses con 0
+        }
+
+        // Consulta los datos existentes
+        $monthly = $this->connect->query("SELECT DATE_FORMAT(visit_date, '%Y-%m') AS month, SUM(visit_count) AS total
+                                            FROM visits
+                                            WHERE visit_date >= '$year_start' AND visit_date <= '$year_end'
+                                            GROUP BY month
+                                        ")->fetchAll(PDO::FETCH_ASSOC);
+
+        // Combina los datos existentes con los meses generados
+        foreach ($monthly as $row) {
+          $month              = date('n', strtotime($row['month']));
+          $monthName          = $monthNames[$month];
+          $months[$monthName] = $row['total'];
+        }
+
+        return $months;
       case 'yearly':
+        // Datos por Año (últimos 10 años)
         $last_10_years_start = date('Y-m-d', strtotime('-10 years'));
-        return $this->connect->query("
-                    SELECT YEAR(visit_date) AS year, SUM(visit_count) AS total
-                    FROM visits
-                    WHERE visit_date >= '$last_10_years_start'
-                    GROUP BY year
-                ")->fetchAll(PDO::FETCH_ASSOC);
+        $current_year = date('Y'); // Año actual
+
+        // Inicializamos un array para los últimos 10 años, con valor 0 para cada uno
+        $years = [];
+        for ($i = 0; $i < 10; $i++) {
+          $year         = $current_year - $i; // Restamos para obtener los últimos 10 años
+          $years[$year] = 0; // Inicializamos todos los años con 0
+        }
+
+        // Consulta los datos existentes
+        $yearly = $this->connect->query("SELECT YEAR(visit_date) AS year, SUM(visit_count) AS total
+                                          FROM visits
+                                          WHERE visit_date >= '$last_10_years_start'
+                                          GROUP BY year
+                                      ")->fetchAll(PDO::FETCH_ASSOC);
+
+        // Combina los datos existentes con los años generados
+        foreach ($yearly as $row) {
+          $year         = $row['year']; // Año
+          $years[$year] = $row['total']; // Asignamos el total al año correspondiente
+        }
+
+        return $years;
       default:
         return [];
     }
@@ -89,17 +164,17 @@ class VisitCounter {
     return $stmt->fetchColumn() ?: 0;
   }
 
-  // Obtener estadísticas diarias para todas las páginas del año
+  // Obtener estadísticas diarias para todas las páginas de los últimos 7 días
   public function get_page_comparative_daily_data() {
-    $year_start = date('Y-01-01');
+    $last_7_days_start = date('Y-m-d', strtotime('-7 days')); // Fecha de inicio de los últimos 7 días
+    $current_date      = date('Y-m-d'); // Fecha actual
 
-    // Query para obtener visitas diarias por página en todo el año
-    $query = "
-      SELECT visit_date, page, SUM(visit_count) AS total
-      FROM visits
-      WHERE visit_date >= '$year_start'
-      GROUP BY visit_date, page
-      ORDER BY visit_date ASC
+    // Query para obtener visitas diarias por página en los últimos 7 días
+    $query = "SELECT visit_date, page, SUM(visit_count) AS total
+    FROM visits
+    WHERE visit_date >= '$last_7_days_start' AND visit_date <= '$current_date'
+    GROUP BY visit_date, page
+    ORDER BY visit_date ASC
   ";
 
     $result = $this->connect->query($query)->fetchAll(PDO::FETCH_ASSOC);
@@ -108,6 +183,56 @@ class VisitCounter {
     $data = [];
     foreach ($result as $row) {
       $data[$row['page']][] = ['date' => $row['visit_date'], 'total' => $row['total']];
+    }
+
+    // Asegurarse de que haya datos para cada uno de los 7 días, incluso si no hay visitas en alguno
+    // Creación de un array con los últimos 7 días, aunque no haya visitas
+    $dates = [];
+    for ($i = 6; $i >= 0; $i--) {
+      $dates[] = date('Y-m-d', strtotime("-$i days"));
+    }
+
+    // Completar los datos de cada página con 0 para los días que no tienen registros
+    foreach ($data as $page => $pageData) {
+      // Crear un array con los días y visitas 0
+      $pageDataWithZeroes = [];
+      foreach ($dates as $date) {
+        $found = false;
+        foreach ($pageData as $visit) {
+          if ($visit['date'] == $date) {
+            $pageDataWithZeroes[] = ['date' => $date, 'total' => $visit['total']];
+            $found                = true;
+            break;
+          }
+        }
+        if (!$found) {
+          $pageDataWithZeroes[] = ['date' => $date, 'total' => 0];
+        }
+      }
+      // Reemplazar los datos originales con los datos completos
+      $data[$page] = $pageDataWithZeroes;
+    }
+
+    return $data;
+  }
+
+  // Obtener visitas totales por página (todo el tiempo)
+  public function get_total_visits_by_page() {
+    // Consulta SQL para obtener el total de visitas por página desde el inicio
+    $query = "
+        SELECT page, SUM(visit_count) AS total
+        FROM visits
+        GROUP BY page
+    ";
+
+    // Ejecutar la consulta y obtener el resultado
+    $result = $this->connect->query($query)->fetchAll(PDO::FETCH_ASSOC);
+
+    // Preparar los datos en el formato deseado (array asociativo)
+    $data = [];
+    foreach ($result as $row) {
+      // Usamos el nombre de la página como clave y el total de visitas como valor
+      $data[$row['page']] = (int) $row['total'];  // Asegúrate de que el valor es un entero
     }
 
     return $data;
