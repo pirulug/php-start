@@ -201,8 +201,8 @@
 </script>
 <?php $theme->blockEnd("script"); ?>
 
-<?php require BASE_DIR . "/admin/views/partials/top.partial.php"; ?>
-<?php require BASE_DIR . "/admin/views/partials/navbar.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
 
 <div class="row">
   <div class="col-12">
@@ -280,5 +280,5 @@
 </div>
 
 
-<?php require BASE_DIR . "/admin/views/partials/footer.partial.php"; ?>
-<?php require BASE_DIR . "/admin/views/partials/bottom.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/partials/footer.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/partials/bottom.partial.php"; ?>
