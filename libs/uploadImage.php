@@ -1,15 +1,15 @@
 <?php
 
-function upload_image($file, $uploadDir, $options = []) {
+function upload_image_variants($file, $uploadDir, $options = []) {
   // Configuración predeterminada
   $defaults = [
     "imageSupported" => ["jpg", "png", "jpeg", "webp"], // Extensiones permitidas
-    "maxSize" => 2 * 1024 * 1024,                      // Tamaño máximo: 2 MB
-    "convertTo" => null,                               // Convertir a: null, "jpg", "png", "webp"
-    "optimize" => 7,                                   // Calidad (0 a 10)
-    "fileName" => null,                                // Nombre del archivo personalizado
-    "prefix" => "img_",                                    // Prefijo para el nombre del archivo
-    "resize" => []                                     // Tamaños a redimensionar (ejemplo: ['small' => [150, 150], 'medium' => [300, 300]])
+    "maxSize"        => 2 * 1024 * 1024,                      // Tamaño máximo: 2 MB
+    "convertTo"      => null,                               // Convertir a: null, "jpg", "png", "webp"
+    "optimize"       => 7,                                   // Calidad (0 a 10)
+    "fileName"       => null,                                // Nombre del archivo personalizado
+    "prefix"         => "img_",                                // Nombre del archivo personalizado
+    "resize"         => []                                     // Tamaños a redimensionar (ejemplo: ['small' => [150, 150], 'medium' => [300, 300]])
   ];
   $settings = array_merge($defaults, $options);
 
@@ -41,6 +41,7 @@ function upload_image($file, $uploadDir, $options = []) {
 
   // Generar un nombre único para el archivo si no se proporciona uno
   $fileName = $settings['fileName'] ? $settings['fileName'] : uniqid($settings['prefix'], true);
+  $fileName = str_replace(".", "", $fileName);
   $finalExt = $settings['convertTo'] ? $settings['convertTo'] : $fileExt;
   $fileName .= ".$finalExt";
   $filePath = rtrim($uploadDir, "/") . "/" . $fileName;
@@ -79,11 +80,103 @@ function upload_image($file, $uploadDir, $options = []) {
   unlink($tempPath); // Eliminar archivo temporal
 
   return [
-    "success" => true,
-    "message" => "Imagen subida y procesada con éxito.",
-    "file_name" => $fileName,
-    "file_path" => $filePath,
+    "success"        => true,
+    "message"        => "Imagen subida y procesada con éxito.",
+    "file_name"      => $fileName,
+    "file_path"      => $filePath,
     "resized_images" => $resizedImages
+  ];
+}
+
+function upload_image($file, $uploadDir, $resizeWidth = null, $resizeHeight = null, $options = []) {
+  // Configuración predeterminada
+  $defaults = [
+    "imageSupported" => ["jpg", "png", "jpeg", "webp"], // Extensiones permitidas
+    "maxSize"        => 2 * 1024 * 1024,                      // Tamaño máximo: 2 MB
+    "convertTo"      => null,                               // Convertir a: null, "jpg", "png", "webp"
+    "optimize"       => 7,                                   // Calidad (0 a 10)
+    "fileName"       => null,                                // Nombre del archivo personalizado
+    "prefix"         => "img_"                                 // Prefijo del archivo
+  ];
+  $settings = array_merge($defaults, $options);
+
+  // Asegurarse de que el directorio de subida exista
+  if (!is_dir($uploadDir)) {
+    if (!mkdir($uploadDir, 0777, true)) {
+      return ["success" => false, "message" => "No se pudo crear el directorio de destino."];
+    }
+  }
+
+  // Validar si se cargó el archivo correctamente
+  if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
+    return ["success" => false, "message" => "Error al subir el archivo."];
+  }
+
+  // Validar tamaño del archivo
+  if ($file['size'] > $settings['maxSize']) {
+    return ["success" => false, "message" => "El archivo excede el tamaño máximo permitido de " . ($settings['maxSize'] / 1024 / 1024) . " MB."];
+  }
+
+  // Obtener información del archivo
+  $fileInfo = pathinfo($file['name']);
+  $fileExt  = strtolower($fileInfo['extension']);
+
+  // Validar extensión del archivo
+  if (!in_array($fileExt, $settings['imageSupported'])) {
+    return ["success" => false, "message" => "La extensión .$fileExt no está permitida."];
+  }
+
+  // Generar un nombre único para el archivo si no se proporciona uno
+  $fileName = $settings['fileName'] ? $settings['fileName'] : uniqid($settings['prefix'], true);
+  $fileName = str_replace(".", "", $fileName);
+  $finalExt = $settings['convertTo'] ? $settings['convertTo'] : $fileExt;
+  $fileName .= ".$finalExt";
+  $filePath = rtrim($uploadDir, "/") . "/" . $fileName;
+
+  // Mover el archivo temporalmente
+  $tempPath = rtrim($uploadDir, "/") . "/temp_" . uniqid() . ".$fileExt";
+  if (!move_uploaded_file($file['tmp_name'], $tempPath)) {
+    return ["success" => false, "message" => "No se pudo mover el archivo al directorio temporal."];
+  }
+
+  // Obtener dimensiones de la imagen original
+  [$originalWidth, $originalHeight] = getimagesize($tempPath);
+
+  if ($resizeWidth === null && $resizeHeight === null) {
+    $conversionResult = process_image($tempPath, $filePath, $finalExt, $settings['optimize']);
+    if (!$conversionResult['success']) {
+      unlink($tempPath); // Eliminar archivo temporal
+      return $conversionResult;
+    } else {
+      unlink($tempPath);
+      return [
+        "success"   => true,
+        "message"   => "Imagen subida y redimensionada con éxito.",
+        "file_name" => $fileName,
+        "file_path" => $filePath
+      ];
+    }
+  } elseif ($resizeWidth === null) {
+    $resizeWidth = ($resizeHeight / $originalHeight) * $originalWidth;
+  } elseif ($resizeHeight === null) {
+    $resizeHeight = ($resizeWidth / $originalWidth) * $originalHeight;
+  }
+
+  // Redimensionar la imagen al tamaño calculado
+  $resizeResult = resize_image($tempPath, $filePath, (int) $resizeWidth, (int) $resizeHeight, $settings['optimize']);
+
+  if (!$resizeResult['success']) {
+    unlink($tempPath);
+    return $resizeResult;
+  }
+
+  unlink($tempPath);
+
+  return [
+    "success"   => true,
+    "message"   => "Imagen subida y redimensionada con éxito.",
+    "file_name" => $fileName,
+    "file_path" => $filePath
   ];
 }
 
@@ -170,9 +263,9 @@ function resize_image($sourcePath, $destinationPath, $width, $height, $quality) 
       $image->destroy();
 
       return [
-        "success" => true,
-        "message" => "Imagen redimensionada con Imagick.",
-        "path" => $destinationPath,
+        "success"   => true,
+        "message"   => "Imagen redimensionada con Imagick.",
+        "path"      => $destinationPath,
         "file_name" => $fileName
       ];
     } catch (Exception $e) {
@@ -259,12 +352,54 @@ function resize_image($sourcePath, $destinationPath, $width, $height, $quality) 
 
   if ($result) {
     return [
-      "success" => true,
-      "message" => "Imagen redimensionada y recortada con GD.",
-      "path" => $destinationPath,
+      "success"   => true,
+      "message"   => "Imagen redimensionada y recortada con GD.",
+      "path"      => $destinationPath,
       "file_name" => $fileName
     ];
   } else {
     return ["success" => false, "message" => "Error al guardar la imagen redimensionada con GD."];
   }
+}
+
+// Obtener imagen segun su tamaño
+function get_image_url($imageData, $baseUrl, $desiredWidth = null) {
+  // Decodificar el JSON del campo course_image
+  $images = json_decode($imageData, true);
+
+  // Validar que la decodificación fue exitosa
+  if (!$images || !isset($images['original'])) {
+    return $baseUrl . "default.webp"; // URL de la imagen por defecto
+  }
+
+  // Si la imagen es "default.webp", devolverla sin importar el tamaño deseado
+  if ($images['original'] === "default.webp") {
+    return $baseUrl . "default.webp";
+  }
+
+  // Si no se especifica un tamaño deseado, devolver la original
+  if ($desiredWidth === null) {
+    return $baseUrl . "" . $images['original'];
+  }
+
+  // Si hay imágenes redimensionadas, buscar la más cercana al tamaño deseado
+  if (isset($images['resized']) && is_array($images['resized'])) {
+    $closestSize = null;
+    $closestFile = null;
+
+    foreach ($images['resized'] as $size => $fileName) {
+      if ($closestSize === null || abs($desiredWidth - $size) < abs($desiredWidth - $closestSize)) {
+        $closestSize = $size;
+        $closestFile = $fileName;
+      }
+    }
+
+    // Si se encuentra una imagen redimensionada adecuada, devolver su URL
+    if ($closestFile) {
+      return $baseUrl . "" . $closestFile;
+    }
+  }
+
+  // Si no hay redimensionadas, devolver la original
+  return $baseUrl . "" . $images['original'];
 }
