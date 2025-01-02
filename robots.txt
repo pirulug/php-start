@@ -1,0 +1,26 @@
+# Bloquear todos los robots de acceso a todo el sitio
+User-agent: *
+Disallow: /
+
+# Permitir que todos los robots accedan a todo el sitio
+User-agent: *
+Disallow: 
+
+# Bloquear un directorio específico
+User-agent: *
+Disallow: /admin/
+
+# Permitir que Googlebot acceda a todo, pero bloquear el acceso a un directorio específico
+User-agent: Googlebot
+Disallow: /admin/
+
+# Bloquear un archivo específico para todos los robots
+User-agent: *
+Disallow: /example.html
+
+# Permitir el acceso a un archivo o directorio bloqueado previamente
+User-agent: *
+Allow: /public/allowed-file.html
+
+# Definir la ubicación del sitemap
+Sitemap: https://www.tusitio.com/sitemap.xml

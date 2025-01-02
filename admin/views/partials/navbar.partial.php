@@ -74,6 +74,18 @@ $menuItems = [
         'link'  => 'settings/statistics.php',
         'roles' => [1]
       ],
+      [
+        'title' => 'robots.txt',
+        'path'  => 'robots',
+        'link'  => 'settings/robots.php',
+        'roles' => [1]
+      ],
+      [
+        'title' => 'Sitemap.xml',
+        'path'  => 'sitemap',
+        'link'  => 'settings/sitemap.php',
+        'roles' => [1]
+      ],
     ]
   ],
 ];
