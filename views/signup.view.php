@@ -1,5 +1,5 @@
-<?php require __DIR__ . "/partials/top.partial.php"; ?>
-<?php require __DIR__ . "/partials/navbar.partial.php"; ?>
+<?php require __DIR__ . "/_partials/top.partial.php"; ?>
+<?php require __DIR__ . "/_partials/navbar.partial.php"; ?>
 
 <div class="container d-flex flex-column mt-3" style="">
   <div class="row">
@@ -39,5 +39,5 @@
   </div>
 </div>
 
-<?php require __DIR__ . "/partials/footer.partial.php"; ?>
-<?php require __DIR__ . "/partials/bottom.partial.php"; ?>
+<?php require __DIR__ . "/_partials/footer.partial.php"; ?>
+<?php require __DIR__ . "/_partials/bottom.partial.php"; ?>
