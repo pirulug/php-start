@@ -16,25 +16,21 @@
 
 <?php $theme->blockStart("script"); ?>
 <script>
-  // Datos generados por PHP
   const data = <?= json_encode($stats); ?>;
-  const totalVisits = data.all_time.toString(); // Convertir el número total en string
+  const totalVisits = data.all_time.toString(); 
 
-  // Actualizar el contador con imágenes
   function updateCounter() {
     const counterContainer = document.getElementById('animated-counter');
-    counterContainer.innerHTML = ''; // Limpiar el contenido actual
+    counterContainer.innerHTML = ''; 
 
-    // Dividir el número en dígitos individuales y crear las imágenes
     totalVisits.split('').forEach(digit => {
       const img = document.createElement('img');
-      img.src = `<?= SITE_URL ?>/assets/img/numeros/${digit}.png`; // Ruta de las imágenes
-      img.alt = digit; // Texto alternativo para accesibilidad
-      img.style.transition = 'transform 0.3s ease'; // Transición animada
+      img.src = `<?= SITE_URL ?>/assets/img/numeros/${digit}.png`; 
+      img.alt = digit; 
+      img.style.transition = 'transform 0.3s ease'; 
       counterContainer.appendChild(img);
     });
 
-    // Aplicar una animación a los números
     const images = counterContainer.querySelectorAll('img');
     images.forEach((img, index) => {
       setTimeout(() => {
@@ -42,11 +38,10 @@
         setTimeout(() => {
           img.style.transform = 'scale(1)';
         }, 200);
-      }, index * 100); // Escalonar animaciones para cada número
+      }, index * 100);
     });
   }
 
-  // Llamar a la función al cargar la página
   updateCounter();
 </script>
 <?php $theme->blockEnd("script"); ?>
