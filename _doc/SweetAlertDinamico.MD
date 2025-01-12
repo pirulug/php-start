@@ -106,9 +106,9 @@ Este botón mostrará un modal de advertencia con un temporizador de 5 segundos.
 ```
 
 ```html
-<button class="btn btn-danger" sw2-title="¿Eliminar usuario?" sw2-text="Esta acción no se puede deshacer."
-    sw2-icon="warning" sw2-confirm-btn-text="Sí, eliminar" sw2-cancel-btn-text="No, cancelar"
-    sw2-redirect-url="index.html?id=1">
+<button class="btn btn-danger" sa-title="¿Eliminar usuario?" sa-text="Esta acción no se puede deshacer."
+    sa-icon="warning" sa-confirm-btn-text="Sí, eliminar" sa-cancel-btn-text="No, cancelar"
+    sa-redirect-url="index.html?id=1">
     Eliminar Usuario
   </button>
 ```
