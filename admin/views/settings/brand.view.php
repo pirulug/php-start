@@ -1,5 +1,5 @@
-<?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
-<?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/top.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/navbar.partial.php"; ?>
 
 <div class="card">
   <div class="card-body">
@@ -50,5 +50,5 @@
   </div>
 </div>
 
-<?php require BASE_DIR_ADMIN . "/views/partials/footer.partial.php"; ?>
-<?php require BASE_DIR_ADMIN . "/views/partials/bottom.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/footer.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/bottom.partial.php"; ?>

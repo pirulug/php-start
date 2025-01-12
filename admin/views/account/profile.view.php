@@ -1,5 +1,5 @@
-<?php require BASE_DIR_ADMIN . "/views/partials/top.partial.php"; ?>
-<?php require BASE_DIR_ADMIN . "/views/partials/navbar.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/top.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/navbar.partial.php"; ?>
 
 <div class="row">
   <div class="col-md-3 col-xl-4">
@@ -63,5 +63,5 @@
   </div>
 </div>
 
-<?php require BASE_DIR_ADMIN . "/views/partials/footer.partial.php"; ?>
-<?php require BASE_DIR_ADMIN . "/views/partials/bottom.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/footer.partial.php"; ?>
+<?php require BASE_DIR_ADMIN . "/views/_partials/bottom.partial.php"; ?>

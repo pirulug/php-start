@@ -1,4 +1,4 @@
-<?php require "partials/top.partial.php"; ?>
+<?php require "_partials/top.partial.php"; ?>
 
 <div class="container d-flex flex-column">
   <div class="row vh-100">
@@ -46,5 +46,5 @@
   </div>
 </div>
 
-<?php require "partials/dark-ligth.partial.php"; ?>
-<?php require "partials/bottom.partial.php"; ?>
+<?php require "_partials/dark-ligth.partial.php"; ?>
+<?php require "_partials/bottom.partial.php"; ?>
