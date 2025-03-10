@@ -80,7 +80,7 @@
           <th>Espacio de Almacenamiento</th>
           <td>
             <?php
-            $freeSpace = round(disk_free_space("/") / 1024 / 1024);
+            $freeSpace  = round(disk_free_space("/") / 1024 / 1024);
             $totalSpace = round(disk_total_space("/") / 1024 / 1024);
             echo "$freeSpace MB libre de $totalSpace MB";
             ?>
