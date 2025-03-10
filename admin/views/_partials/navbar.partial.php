@@ -198,17 +198,17 @@ $role = $_SESSION['user_role'];
           <div class="dropdown-menu dropdown-menu-end">
             <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/account/profile.php">
               <i class="align-middle me-1" data-feather="user"></i>
-              Profile
+              Perfil
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/account/settings.php">
               <i class="align-middle me-1" data-feather="settings"></i>
-              Settings &amp; Privacy
+              Contraseña
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="<?= SITE_URL ?>/admin/controllers/logout.php">
               <i class="align-middle me-1" data-feather="log-out"></i>
-              Log out
+              Cerrar Session
             </a>
           </div>
         </li>
