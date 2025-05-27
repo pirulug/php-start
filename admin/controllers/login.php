@@ -2,9 +2,13 @@
 
 require_once "../core.php";
 
-if ($accessControl->is_user_logged_in()) {
-  header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
+if (isset($_SESSION['signin']) && $_SESSION['signin'] == true) {
+  header('Location: ' . SITE_URL_ADMIN . '/controllers/dashboard.php');
   exit();
+} else {
+  if (isset($_COOKIE['psloggin'])) {
+    setcookie('psloggin', '', time() - 3600, "/");
+  }
 }
 
 // Verificar si existe la cookie 'psloggin' y si es válida
@@ -21,13 +25,11 @@ if (isset($_COOKIE['psloggin'])) {
 
   if ($result_cookie !== false) {
     // Establecer la sesión del usuario
-    $_SESSION['signedin']  = true;
-    $_SESSION['user_id']   = $result_cookie->user_id;
-    $_SESSION['user_role'] = $result_cookie->user_role;
-    $_SESSION['user_name'] = $result_cookie->user_name;
+    $_SESSION['signin']  = true;
+    $_SESSION['user_id'] = $result_cookie->user_id;
 
     $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " ingresó automáticamente con cookie.");
-    header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
+    header('Location: ' . SITE_URL_ADMIN . '/controllers/dashboard.php');
     exit();
   } else {
     // Si la cookie es inválida, eliminarla
@@ -49,10 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $result_login = $stmt->fetch(PDO::FETCH_OBJ);
 
   if ($result_login !== false) {
-    $_SESSION['signedin']  = true;
-    $_SESSION['user_id']   = $result_login->user_id;
-    $_SESSION['user_role'] = $result_login->user_role;
-    $_SESSION['user_name'] = $result_login->user_name;
+    $_SESSION['signin']  = true;
+    $_SESSION['user_id'] = $result_login->user_id;
 
     if (isset($remember_me)) {
       setcookie('psloggin', $encryption->encrypt($result_login->user_id), time() + (86400 * 30), "/");
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
     $messageHandler->addMessage("Datos correctos", "success");
-    header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
+    header('Location: ' . SITE_URL_ADMIN . '/controllers/dashboard.php');
     exit();
   } else {
     $messageHandler->addMessage("incorrect login data or access denied", "danger");

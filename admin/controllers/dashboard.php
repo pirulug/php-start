@@ -2,8 +2,7 @@
 
 require_once "../core.php";
 
-$accessControl->require_login(SITE_URL_ADMIN . "/controllers/login.php");
-$accessControl->check_access([1, 2], SITE_URL . "/404.php");
+$accessControl->check_access([1,2], SITE_URL_ADMIN . "/controllers/error.php");
 
 /* ========== Theme config ========= */
 $theme_title = "Dashboard";

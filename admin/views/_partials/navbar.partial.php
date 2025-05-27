@@ -90,7 +90,7 @@ $menuItems = [
   ],
 ];
 
-$role = $_SESSION['user_role'];
+$role = $user_session->user_role ?? 0;
 ?>
 
 <nav class="sidebar js-sidebar" id="sidebar">

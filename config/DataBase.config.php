@@ -1,12 +1,12 @@
 <?php
-class Database {
+class DataBase {
   private $connection;
 
   public function __construct($host, $name, $user, $pass) {
-    $this->connect($host, $name, $user, $pass);
+    $this->connect_mysql($host, $name, $user, $pass);
   }
 
-  private function connect($host, $name, $user, $pass) {
+  private function connect_mysql($host, $name, $user, $pass) {
     try {
       $this->connection = new PDO(
         "mysql:host=$host;dbname=$name;charset=utf8",

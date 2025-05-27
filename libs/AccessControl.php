@@ -1,10 +1,16 @@
 <?php
 
 class AccessControl {
-  public function __construct() {
+  private $isSignin;
+  private $userSession;
+
+  public function __construct($isSignin = null, $userSession = null) {
     if (session_status() == PHP_SESSION_NONE) {
       session_start();
     }
+
+    $this->isSignin    = $isSignin;
+    $this->userSession = $userSession;
   }
 
   /**
@@ -13,7 +19,7 @@ class AccessControl {
    * @return bool
    */
   public function is_user_logged_in() {
-    return isset($_SESSION['signedin']) && $_SESSION['signedin'] === true;
+    return isset($this->isSignin) && $this->isSignin === true;
   }
 
   /**
@@ -38,7 +44,7 @@ class AccessControl {
   public function user_has_role($allowedRoles) {
     if (!$this->is_user_logged_in())
       return false;
-    $userRole = $_SESSION['user_role'];
+    $userRole = $this->userSession->user_role;
     if (is_array($allowedRoles)) {
       return in_array($userRole, $allowedRoles);
     }

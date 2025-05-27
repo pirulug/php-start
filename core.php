@@ -12,13 +12,18 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once "config.php";
 require_once "functions.php";
 
+// Config
+foreach (glob(BASE_DIR . '/config/*.php') as $file) {
+  require_once $file;
+}
+
 // Libs
 foreach (glob(BASE_DIR . '/libs/*.php') as $file) {
   require_once $file;
 }
 
 // Conectar BD
-$db      = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASS);
+$db      = new DataBase(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 $connect = $db->getConnection();
 
 if (!$connect) {
