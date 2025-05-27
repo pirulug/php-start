@@ -2,7 +2,7 @@
 
 require_once "../core.php";
 
-$accessControl->check_access([1,2], SITE_URL_ADMIN . "/controllers/error.php");
+$accessControl->check_access([1, 2], SITE_URL_ADMIN . "/controllers/logout.php");
 
 /* ========== Theme config ========= */
 $theme_title = "Dashboard";

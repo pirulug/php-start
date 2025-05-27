@@ -2,6 +2,8 @@
 
 require_once "../../core.php";
 
+$accessControl->check_access([1], SITE_URL . "/404.php");
+
 $file_path = BASE_DIR . "/robots.txt";
 
 // Verificar si el archivo existe

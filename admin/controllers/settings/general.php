@@ -2,7 +2,6 @@
 
 require_once "../../core.php";
 
-$accessControl->require_login(SITE_URL_ADMIN . "/controllers/login.php");
 $accessControl->check_access([1], SITE_URL . "/404.php");
 
 $querySelect = "SELECT * FROM settings";

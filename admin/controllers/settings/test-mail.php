@@ -2,6 +2,8 @@
 
 require_once "../../core.php";
 
+$accessControl->check_access([1], SITE_URL . "/404.php");
+
 // Incluye las clases de PHPMailer
 require BASE_DIR . '/libs/phpmailer/src/PHPMailer.php';
 require BASE_DIR . '/libs/phpmailer/src/SMTP.php';

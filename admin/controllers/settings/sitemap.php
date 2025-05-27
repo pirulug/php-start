@@ -2,6 +2,8 @@
 
 require_once "../../core.php";
 
+$accessControl->check_access([1], SITE_URL . "/404.php");
+
 // Cargar el archivo XML y obtener las páginas actuales
 $file_path = BASE_DIR . "/sitemap.xml";
 $pages     = [];

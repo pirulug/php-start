@@ -2,7 +2,7 @@
 
 require_once "../../core.php";
 
-$accessControl->check_access([1, 2]);
+$accessControl->check_access([1, 2], SITE_URL_ADMIN . "/controllers/404.php");
 
 // Si no tine id
 if (!isset($_GET["id"]) || $_GET["id"] == "") {

@@ -2,7 +2,8 @@
 
 require_once "../../core.php";
 
-$accessControl->check_access([1, 2]);
+$accessControl->check_access([1, 2], SITE_URL_ADMIN . "/controllers/404.php");
+
 
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 $page   = isset($_GET['page']) ? (int) $_GET['page'] : 1;
