@@ -15,10 +15,11 @@ INSERT INTO `ads` (id, title, subtitle, content, status, position) VALUES ('3', 
 CREATE TABLE `brand` (
   `st_favicon` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'favicon.png' CHECK (json_valid(`st_favicon`)),
   `st_whitelogo` varchar(150) NOT NULL DEFAULT 'whitelogo.png',
-  `st_darklogo` varchar(150) NOT NULL DEFAULT 'darklogo.png'
+  `st_darklogo` varchar(150) NOT NULL DEFAULT 'darklogo.png',
+  `st_og_image` varchar(150) DEFAULT 'og_image.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci ROW_FORMAT=COMPACT;
 
-INSERT INTO `brand` (st_favicon, st_whitelogo, st_darklogo) VALUES ('{\"android-chrome-192x192\":\"android-chrome-192x192.png\",\"android-chrome-512x512\":\"android-chrome-512x512.png\",\"apple-touch-icon\":\"apple-touch-icon.png\",\"favicon-16x16\":\"favicon-16x16.png\",\"favicon-32x32\":\"favicon-32x32.png\",\"favicon\":\"favicon.ico\",\"webmanifest\":\"site.webmanifest\"}', 'st_logo_light_676a1776a22819.22110494.webp', 'st_logo_dark_676a1776a6e180.31937129.webp');
+INSERT INTO `brand` (st_favicon, st_whitelogo, st_darklogo) VALUES ('{\"android-chrome-192x192\":\"android-chrome-192x192.png\",\"android-chrome-512x512\":\"android-chrome-512x512.png\",\"apple-touch-icon\":\"apple-touch-icon.png\",\"favicon-16x16\":\"favicon-16x16.png\",\"favicon-32x32\":\"favicon-32x32.png\",\"favicon\":\"favicon.ico\",\"webmanifest\":\"site.webmanifest\"}', 'whitelogo.png', 'darklogo.png', 'og_image.png');
 
 CREATE TABLE `settings` (
   `st_sitename` varchar(150) DEFAULT NULL,

@@ -1,51 +1,12 @@
-<?php $theme->blockStart("style"); // Block ?>
+<?php $theme->blockStart("style"); ?>
 <link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/tagify.css">
-<style>
-  #preview-image {
-    display: block;
-    width: 300px;
-    height: 180px;
-    object-fit: cover;
-    border: solid 1px #e6e6e6;
-    /* background: #e6e6e6; */
-    margin: 10px auto;
-    border-radius: .5rem;
-  }
-</style>
 <?php $theme->blockEnd("style"); ?>
 
-<?php $theme->blockStart("script"); // Block ?>
+<?php $theme->blockStart("script"); ?>
 <script src="<?= SITE_URL ?>/admin/assets/js/tagify.js"></script>
 <script>
   const input = document.getElementById('tag-input');
   new Tagify(input);
-</script>
-<script>
-  document.getElementById('og_image').addEventListener('change', function (event) {
-    const input = event.target;
-    const preview = document.getElementById('preview-image');
-    const file = input.files[0];
-
-    if (file) {
-      // Verificar que sea un archivo de imagen
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-
-        // Leer el archivo como una URL
-        reader.onload = function (e) {
-          preview.src = e.target.result; // Asignar la URL generada al src de la imagen
-        };
-
-        reader.readAsDataURL(file); // Leer el contenido del archivo
-      } else {
-        alert('Por favor, selecciona un archivo de imagen válido.');
-        preview.src = 'default.webp'; // Restaurar la imagen por defecto
-      }
-    } else {
-      // Si no hay archivo, restaurar la imagen por defecto
-      preview.src = 'default.webp';
-    }
-  });
 </script>
 <?php $theme->blockEnd("script"); ?>
 
@@ -69,12 +30,6 @@
       <div class="mb-3">
         <label class="form-label">Keywords</label>
         <input class="form-control" id="tag-input" type="text" value='<?= $settings->st_keywords ?>' name="st_keywords">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Imagen Open Graph</label>
-        <img id="preview-image" src="<?= SITE_URL ?>/uploads/site/<?= $settings->st_og_image ?>"
-          alt="Imagen Open Graph">
-        <input class="form-control" type="file" name="og_image" id="og_image">
       </div>
       <h3 class="h5 m-0">Social</h3>
       <hr>
