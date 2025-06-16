@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_URI'] == "/index.php") {
 }
 
 // Obtener la ruta de la URL
-$request = trim($_SERVER['REQUEST_URI'], '/');
-$request = explode('?', $request)[0];
+$request  = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+$segments = explode('/', $request);
 
-switch ($request) {
+switch ($segments[0]) {
   case '':
     $visitCounter->register_visit("Home");
     include 'pages/index.php';
