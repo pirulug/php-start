@@ -1,5 +1,5 @@
 <?php $theme->blockStart("script"); ?>
-<script src="<?= $url->js("chartjs.js") ?>"></script>
+<script src="<?= $url_static->js("chartjs.js") ?>"></script>
 <script>
   const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
   //- const labels = Utils.months({count: 7});
