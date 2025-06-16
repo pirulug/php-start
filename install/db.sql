@@ -82,3 +82,4 @@ CREATE TABLE visit_ips (
   FOREIGN KEY (visit_id) REFERENCES visits (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
+-- -----------------------------------------------------------------------------
