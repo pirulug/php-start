@@ -9,15 +9,36 @@ class VisitCounter {
   // Registrar visita
   public function register_visit($page) {
     $today = date('Y-m-d');
+    $ip    = $this->get_client_ip();
+
+    // Verifica si ya existe una visita para esa página y fecha
     $query = $this->connect->prepare("SELECT id FROM visits WHERE page = :page AND visit_date = :visit_date");
     $query->execute([':page' => $page, ':visit_date' => $today]);
 
     if ($query->rowCount() > 0) {
-      $this->connect->prepare("UPDATE visits SET visit_count = visit_count + 1 WHERE page = :page AND visit_date = :visit_date")
-        ->execute([':page' => $page, ':visit_date' => $today]);
+      $visit_id = $query->fetchColumn();
+
+      $this->connect->prepare("UPDATE visits SET visit_count = visit_count + 1 WHERE id = :id")
+        ->execute([':id' => $visit_id]);
     } else {
       $this->connect->prepare("INSERT INTO visits (page, visit_date) VALUES (:page, :visit_date)")
         ->execute([':page' => $page, ':visit_date' => $today]);
+
+      $visit_id = $this->connect->lastInsertId();
+    }
+
+    // Registrar IP
+    $stmt = $this->connect->prepare("INSERT INTO visit_ips (visit_id, ip_address) VALUES (:visit_id, :ip)");
+    $stmt->execute([':visit_id' => $visit_id, ':ip' => $ip]);
+  }
+
+  private function get_client_ip() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+      return $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+      return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+    } else {
+      return $_SERVER['REMOTE_ADDR'];
     }
   }
 
