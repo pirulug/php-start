@@ -23,16 +23,16 @@
   <meta property="twitter:description" content="<?= $og_description ?? "" ?>" />
   <meta property="twitter:image" content="<?= $og_image ?? "" ?>" />
 
-  <link rel="apple-touch-icon" sizes="180x180" href="<?= $url->favicon($brd_apple_touch_icon) ?>">
-  <link rel="icon" type="image/png" sizes="32x32" href="<?= $url->favicon($brd_favicon_32x32) ?>">
-  <link rel="icon" type="image/png" sizes="16x16" href="<?= $url->favicon($brd_favicon_16x16) ?>">
-  <link rel="manifest" href="<?= $url->favicon($brd_webmanifest) ?>">
+  <link rel="apple-touch-icon" sizes="180x180" href="<?= $url_static->favicon($brd_apple_touch_icon) ?>">
+  <link rel="icon" type="image/png" sizes="32x32" href="<?= $url_static->favicon($brd_favicon_32x32) ?>">
+  <link rel="icon" type="image/png" sizes="16x16" href="<?= $url_static->favicon($brd_favicon_16x16) ?>">
+  <link rel="manifest" href="<?= $url_static->favicon($brd_webmanifest) ?>">
 
-  <link rel="stylesheet" href="<?= $url->css("fontawesome.css") ?>" />
-  <link rel="stylesheet" href="<?= $url->css("bootstrapicons.css") ?>" />
-  <link rel="stylesheet" href="<?= $url->css("toastifyjs.css") ?>" />
-  <link rel="stylesheet" href="<?= $url->css("piruui.css") ?>" />
-  <link rel="stylesheet" href="<?= $url->css("extra.css") ?>" />
+  <link rel="stylesheet" href="<?= $url_static->css("fontawesome.css") ?>" />
+  <link rel="stylesheet" href="<?= $url_static->css("bootstrapicons.css") ?>" />
+  <link rel="stylesheet" href="<?= $url_static->css("toastifyjs.css") ?>" />
+  <link rel="stylesheet" href="<?= $url_static->css("piruui.css") ?>" />
+  <link rel="stylesheet" href="<?= $url_static->css("extra.css") ?>" />
 
   <?php $theme->block("style"); ?>
 </head>

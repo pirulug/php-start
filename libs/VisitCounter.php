@@ -258,4 +258,21 @@ class VisitCounter {
 
     return $data;
   }
+
+  // Obtener el top de IPs con más visitas
+  public function get_top_ips($limit = 10) {
+    $query = "
+    SELECT ip_address, COUNT(*) AS total_visits
+    FROM visit_ips
+    GROUP BY ip_address
+    ORDER BY total_visits DESC
+    LIMIT :limit
+  ";
+
+    $stmt = $this->connect->prepare($query);
+    $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }

@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg bg-body">
   <div class="container">
     <a class="navbar-brand" href="<?= SITE_URL ?>">
-      <img class="brand-logo-ligth" src="<?= $url->logo($brand->st_whitelogo) ?>" alt="Logo Light" class="logo-light"
+      <img class="brand-logo-ligth" src="<?= $url_static->logo($brand->st_whitelogo) ?>" alt="Logo Light" class="logo-light"
         height="40">
-      <img class="brand-logo-dark" src="<?= $url->logo($brand->st_darklogo) ?>" alt="Logo Dark" class="logo-dark d-none"
+      <img class="brand-logo-dark" src="<?= $url_static->logo($brand->st_darklogo) ?>" alt="Logo Dark" class="logo-dark d-none"
         height="40">
     </a>
     <button class="navbar-toggler me-1 ms-auto" type="button" data-bs-toggle="offcanvas"
@@ -13,10 +13,10 @@
     </button>
     <div class="offcanvas offcanvas-start" id="navbarResponsive">
       <div class="offcanvas-header">
-        <a class="navbar-brand" href="<?= $url->home() ?>">
-          <img class="brand-logo-ligth" src="<?= $url->logo($brand->st_whitelogo) ?>" alt="Logo Light"
+        <a class="navbar-brand" href="<?= $url_static->home() ?>">
+          <img class="brand-logo-ligth" src="<?= $url_static->logo($brand->st_whitelogo) ?>" alt="Logo Light"
             class="logo-light" height="40">
-          <img class="brand-logo-dark" src="<?= $url->logo($brand->st_darklogo) ?>" alt="Logo Dark"
+          <img class="brand-logo-dark" src="<?= $url_static->logo($brand->st_darklogo) ?>" alt="Logo Dark"
             class="logo-dark d-none" height="40">
         </a>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -24,7 +24,7 @@
       <div class="offcanvas-body">
         <ul class="navbar-nav align-items-lg-center justify-content-end flex-grow-1 pe-1">
           <li class="nav-item">
-            <a class="nav-link" href="<?= $url->home() ?>">Inicio</a>
+            <a class="nav-link" href="<?= $url_static->home() ?>">Inicio</a>
           </li>
 
         </ul>

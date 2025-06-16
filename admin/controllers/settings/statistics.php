@@ -13,6 +13,8 @@ $page_comparative = $visitCounter->get_page_comparative_daily_data();
 
 $alwaysPage = $visitCounter->get_total_visits_by_page();
 
+$top_ips = $visitCounter->get_top_ips(10);
+
 /* ========== Theme config ========= */
 $theme_title = "Estadísticas";
 $theme_path  = "statistics";

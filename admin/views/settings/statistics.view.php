@@ -257,6 +257,17 @@
         <canvas id="alwaysPageChart" width="400" height="200"></canvas>
       </div>
     </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <?php
+        echo "<h3>Top 10 IPs</h3><ul>";
+        foreach ($top_ips as $row) {
+          echo "<li>{$row['ip_address']} — {$row['total_visits']} visitas</li>";
+        }
+        echo "</ul>";
+        ?>
+      </div>
+    </div>
   </div>
   <div class="col-lg-6">
     <div class="card mb-3">
