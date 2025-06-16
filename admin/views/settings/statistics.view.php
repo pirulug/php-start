@@ -2,7 +2,7 @@
 <?php $theme->blockEnd("style"); ?>
 
 <?php $theme->blockStart("script"); ?>
-<script src="<?= SITE_URL ?>/admin/assets/js/chartjs.js"></script>
+<script src="<?= $url_static->js("chartjs.js") ?>"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     // Datos por Día (mes actual)
