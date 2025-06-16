@@ -25,7 +25,7 @@ foreach (glob(BASE_DIR . '/libs/*.php') as $file) {
 // =============================================================================
 // Helpers
 // =============================================================================
-foreach (glob(BASE_DIR . '/helpers/*.php') as $file) {
+foreach (glob(BASE_DIR . '/functions/*.php') as $file) {
   require_once $file;
 }
 
