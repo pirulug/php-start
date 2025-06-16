@@ -1,5 +1,0 @@
-<?php
-
-$theme = new TemplateEngine();
-
-

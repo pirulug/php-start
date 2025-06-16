@@ -13,7 +13,7 @@ class UrlHelper {
     if (!in_array($type, $validTypes)) {
       throw new Exception("Tipo de activo no válido: $type");
     }
-    return "{$this->domain}/assets/{$type}/{$file}";
+    return "{$this->domain}/static/{$type}/{$file}";
   }
 
   // Atajo para CSS
