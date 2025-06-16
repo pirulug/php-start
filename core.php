@@ -98,4 +98,4 @@ $st_og_image  = $brand->st_og_image;
 
 $settings = $connect->query("SELECT * FROM settings")->fetch(PDO::FETCH_OBJ);
 
-$url = new UrlHelper(SITE_URL);
+$url_static = new UrlHelper(SITE_URL);

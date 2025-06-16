@@ -1,5 +1,5 @@
 <?php $theme->blockStart("script"); ?>
-<script src="<?= SITE_URL ?>/admin/assets/js/chartjs.js"></script>
+<script src="<?= $url->js("chartjs.js") ?>"></script>
 <script>
   const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
   //- const labels = Utils.months({count: 7});
@@ -57,7 +57,6 @@
     }
   });
 
-
   // Bar chart
   new Chart(document.getElementById("chartjs-dashboard-bar"), {
     type: "bar",
@@ -99,32 +98,6 @@
 
 <?php require BASE_DIR_ADMIN . "/views/_partials/top.partial.php"; ?>
 <?php require BASE_DIR_ADMIN . "/views/_partials/navbar.partial.php"; ?>
-
-<?php
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploaded_file'])) {
-
-//   $file      = $_FILES['uploaded_file']; // Asegúrate de usar el nombre correcto del input
-//   $uploadDir = BASE_DIR . '/upload/';
-
-//   $result = upload_file($file, $uploadDir, [
-//     'allowedTypes' => ['mp3'],
-//     'maxSize'      => 10 * 1024 * 1024,
-//   ]);
-
-//   if ($result['success']) {
-//     echo $result["message"] . $result['file_name'] . "<br>" . $result["file_path"];
-//   } else {
-//     echo 'Error: ' . $result['message'];
-//   }
-// }
-?>
-
-<!-- <form action="" method="post" enctype="multipart/form-data">
-  <label for="uploaded_file">Selecciona una imagen PNG:</label>
-  <input type="file" name="uploaded_file" id="uploaded_file" accept="audio/*">
-  <button type="submit">Subir y Optimizar</button>
-</form> -->
-
 
 <div class="row g-4">
   <div class="col-sm-6 col-xl-3">

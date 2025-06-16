@@ -12,7 +12,9 @@
       </div>
       <div class="col-6 text-end">
         <p class="mb-0">
-          Designed By&nbsp;<a class="text-muted" href="http://github.com/pirulug" target="_blank">Pirulug</a></p>
+          Designed By&nbsp;
+          <a class="text-muted" href="http://github.com/pirulug" target="_blank">Pirulug</a>
+        </p>
       </div>
     </div>
   </div>
