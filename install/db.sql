@@ -59,6 +59,7 @@ CREATE TABLE users (
   user_password varchar(255) NOT NULL,
   user_role tinyint(1) NOT NULL DEFAULT 3,
   user_status tinyint(1) NOT NULL DEFAULT 1,
+  user_image varchar(255) NOT NULL,
   user_updated datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   user_created datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (user_id)

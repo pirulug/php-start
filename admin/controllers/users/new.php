@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_status = clear_data($_POST['user_status']);
   $password    = clear_data($_POST['user_password']);
 
+
   // Validar el nombre de usuario (mínimo 4 caracteres)
   if (strlen($user_name) < 4) {
     $messageHandler->addMessage("El nombre de usuario debe tener al menos 4 caracteres.", "danger");
@@ -45,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   // Validar selected
-  if (!in_array($user_role, [2,3])) {
+  if (!in_array($user_role, [2, 3])) {
     $messageHandler->addMessage("Seleccionar rol.", "danger");
   }
 
@@ -54,12 +55,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $messageHandler->addMessage("Seleccionar estatus.", "danger");
   }
 
+  // Imagen
+  if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
+    if (!$messageHandler->hasMessagesOfType('danger')) {
+      $upload_path = BASE_DIR . '/uploads/user/';
+      $user_image  = $_FILES["user_image"];
+      $user_image  = upload_image(
+        $user_image,
+        $upload_path,
+        100,
+        100,
+        [
+          'convertTo' => 'webp',
+          'prefix'    => 'u-'
+        ]);
+
+      if (!$user_image['success']) {
+        $messageHandler->addMessage($user_image['message'], "danger");
+      }else{
+        $user_image = $user_image['file_name'];
+      }
+    } else {
+      $user_image = "default.webp";
+    }
+  } else {
+    $user_image = "default.webp";
+  }
+
   // Si no hay mensajes de error, proceder con la inserción
   if (!$messageHandler->hasMessagesOfType('danger')) {
+
     $hashed_password = $encryption->encrypt($password);
 
     // Preparar la consulta SQL para la inserción
-    $query     = "INSERT INTO users (user_name, user_email, user_role, user_status, user_password, user_updated) VALUES (:user_name, :user_email, :user_role, :user_status, :user_password, CURRENT_TIME)";
+    $query     = "INSERT INTO users (user_name, user_email, user_role, user_status, user_password, user_image, user_updated) VALUES (:user_name, :user_email, :user_role, :user_status, :user_password, user_image, CURRENT_TIME)";
     $statement = $connect->prepare($query);
 
     // Enlazar los parámetros
@@ -68,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $statement->bindParam(':user_role', $user_role);
     $statement->bindParam(':user_status', $user_status);
     $statement->bindParam(':user_password', $hashed_password);
+    $statement->bindParam(':user_image', $user_image);
 
     // Ejecutar la consulta de inserción
     if ($statement->execute()) {

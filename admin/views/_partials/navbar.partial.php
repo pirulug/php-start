@@ -191,8 +191,9 @@ $role = $user_session->user_role ?? 0;
             <i class="align-middle" data-feather="user"></i>
           </a>
           <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-            <img class="avatar img-fluid rounded me-1" src="<?= get_gravatar($user_session->user_email) ?>"
-              alt="Charles Hall" />
+            <img class="avatar img-fluid rounded me-1"
+              src="<?= SITE_URL . "/uploads/user/" . $user_session->user_image ?>"
+              alt="<?= $user_session->user_name ?>" />
             <span><?= $user_session->user_name ?></span>
           </a>
           <div class="dropdown-menu dropdown-menu-end">

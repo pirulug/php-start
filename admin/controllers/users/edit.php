@@ -92,6 +92,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $messageHandler->addMessage("Seleccionar estatus.", "danger");
   }
 
+  // Imagen
+  if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
+    if (!$messageHandler->hasMessagesOfType('danger')) {
+
+      $upload_path = BASE_DIR . '/uploads/user/';
+      $user_image  = $_FILES["user_image"];
+      $user_image  = upload_image(
+        $user_image,
+        $upload_path,
+        100,
+        100,
+        [
+          'convertTo' => 'webp',
+          'prefix'    => 'u-'
+        ]);
+
+      if (!$user_image['success']) {
+        $messageHandler->addMessage($user_image['message'], "danger");
+      } else {
+        $user_image = $user_image['file_name'];
+
+        if ($user->user_image && file_exists($upload_path . $user->user_image) && $user->user_image !== 'default.webp') {
+          unlink($upload_path . $user->user_image);
+        }
+      }
+
+    } else {
+      $user_image = $user->user_image;
+    }
+
+    var_dump($messageHandler->hasMessagesOfType('danger'));
+  } else {
+    $user_image = $user->user_image;
+  }
+
   // Si no hay mensajes de error, proceder con la inserción
   if (!$messageHandler->hasMessagesOfType('danger')) {
     $query = "UPDATE users 
@@ -101,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               user_role = :user_role, 
               user_status = :user_status, 
               user_password = :user_password, 
+              user_image = :user_image, 
               user_updated = CURRENT_TIME 
               WHERE 
               user_id = :user_id";
@@ -110,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bindParam(':user_role', $user_role);
     $stmt->bindParam(':user_status', $user_status);
     $stmt->bindParam(':user_password', $user_password);
+    $stmt->bindParam(':user_image', $user_image);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
 

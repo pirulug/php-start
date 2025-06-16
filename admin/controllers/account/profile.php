@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $update = false;
 
   // Obtener los datos actuales del usuario en la base de datos
-  $query = "SELECT user_name, user_email FROM users WHERE user_id = :user_id";
+  $query = "SELECT user_name, user_email, user_image FROM users WHERE user_id = :user_id";
   $stmt  = $connect->prepare($query);
   $stmt->bindParam(':user_id', $user_id);
   $stmt->execute();
@@ -64,21 +64,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
 
+  // Imagen
+  if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
+    if (!$messageHandler->hasMessagesOfType('danger')) {
+
+      $upload_path = BASE_DIR . '/uploads/user/';
+      $user_image  = $_FILES["user_image"];
+      $user_image  = upload_image(
+        $user_image,
+        $upload_path,
+        100,
+        100,
+        [
+          'convertTo' => 'webp',
+          'prefix'    => 'u-'
+        ]);
+
+      // var_dump($user_image);
+
+      if (!$user_image['success']) {
+        $messageHandler->addMessage($user_image['message'], "danger");
+      } else {
+        $user_image = $user_image['file_name'];
+        if ($current_user->user_image && file_exists($upload_path . $current_user->user_image) && $current_user->user_image !== 'default.webp') {
+          unlink($upload_path . $current_user->user_image);
+        }
+         $update = true;
+      }
+
+    } else {
+      $user_image = $current_user->user_image;
+    }
+  } else {
+    $user_image = $current_user->user_image;
+  }
+
   // Si no hay errores y se requiere actualización, proceder a actualizar el usuario
   if (!$messageHandler->hasMessagesOfType('danger') && $update) {
     $query = "UPDATE users 
               SET 
                   user_name = :user_name, 
-                  user_email = :user_email
+                  user_email = :user_email,
+                  user_image = :user_image
               WHERE 
                   user_id = :user_id";
     $stmt  = $connect->prepare($query);
     $stmt->bindParam(':user_name', $user_name);
     $stmt->bindParam(':user_email', $user_email);
+    $stmt->bindParam(':user_image', $user_image);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
 
-    $_SESSION['user_name'] == $user_name;
+    // $_SESSION['user_name'] == $user_name;
 
     $messageHandler->addMessage("Usuario actualizado correctamente", "success", "toast");
     header("Location: " . $_SERVER['HTTP_REFERER']);

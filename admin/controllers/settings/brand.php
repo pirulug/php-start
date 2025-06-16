@@ -63,7 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Procesar LOGO CLARO si se ha subido
   if (!empty($_FILES['st_whitelogo']) && $_FILES['st_whitelogo']['size'] > 0) {
     $upWhiteLogo  = $_FILES['st_whitelogo'];
-    $whitelogo    = upload_image($upWhiteLogo, $uploadPathLogo, null, null, ['convertTo' => 'webp', 'prefix' => 'st_logo_light_']);
+    $whitelogo    = upload_image(
+      $upWhiteLogo, 
+      $uploadPathLogo, 
+      320, 
+      71, 
+      [
+        'convertTo' => 'webp', 
+        'prefix' => 'st_logo_light_'
+      ]);
     $st_whitelogo = $whitelogo['file_name'];
 
     $query = "UPDATE brand SET st_whitelogo = :st_whitelogo";
@@ -89,9 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Procesar LOGO OSCURO si se ha subido
   if (!empty($_FILES['st_darklogo']) && $_FILES['st_darklogo']['size'] > 0) {
     $upDarkLogo  = $_FILES['st_darklogo'];
-    $darklogo    = upload_image($upDarkLogo, $uploadPathLogo,
-      null,
-      null,
+    $darklogo    = upload_image(
+      $upDarkLogo, 
+      $uploadPathLogo,
+      320,
+      71,
       [
         'convertTo' => 'webp',
         'prefix'    => 'st_logo_dark_'
@@ -120,9 +130,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Procesar OPEN GRAPH IMAGE si se ha subido
   if (!empty($_FILES['st_og_image']) && $_FILES['st_og_image']['size'] > 0) {
     $upOGImage   = $_FILES['st_og_image'];
-    $ogImage     = upload_image($upOGImage, $uploadPathLogo,
-      null,
-      null,
+    $ogImage     = upload_image(
+      $upOGImage, 
+      $uploadPathLogo,
+      1200,
+      630,
       [
         'convertTo' => 'webp',
         'prefix'    => 'og_image_'
