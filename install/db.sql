@@ -71,8 +71,6 @@ CREATE TABLE visit_ips (
 
 
 -- 7. Tabla de ADS
--- -----------------------------------------------------------------------------
-
 CREATE TABLE ads (
   ad_id INT AUTO_INCREMENT PRIMARY KEY,
   ad_title VARCHAR(255) NOT NULL DEFAULT '',
