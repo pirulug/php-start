@@ -1,85 +1,80 @@
 CREATE TABLE ads (
-  id int(10) unsigned NOT NULL AUTO_INCREMENT,
-  title varchar(255) NOT NULL DEFAULT '',
-  subtitle varchar(255) NOT NULL DEFAULT '',
-  content mediumtext NOT NULL,
-  status tinyint(4) NOT NULL DEFAULT 1,
-  position varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (id)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+  ad_id INT AUTO_INCREMENT PRIMARY KEY,
+  ad_title VARCHAR(255) NOT NULL DEFAULT '',
+  ad_subtitle VARCHAR(255) NOT NULL DEFAULT '',
+  ad_content MEDIUMTEXT NOT NULL,
+  ad_status TINYINT(4) NOT NULL DEFAULT 1,
+  ad_position VARCHAR(255) NOT NULL DEFAULT ''
+);
 
-INSERT INTO ads (id, title, subtitle, content, status, position) VALUES ('1', 'Header', '(Appears on all pages right under the nav bar)', '&lt;div &gt;\r\n&lt;a href=&quot;#&quot;&gt;\r\n&lt;img src=&quot;https://dummyimage.com/200x400/bababa/ebecf5.jpg&quot;/&gt;\r\n&lt;/a&gt;\r\n&lt;/div&gt;', '1', 'header');
-INSERT INTO ads (id, title, subtitle, content, status, position) VALUES ('2', 'Footer', '(Appears on all pages right before the footer)', '&lt;div &gt;\r\n&lt;a href=&quot;#&quot;&gt;\r\n&lt;img src=&quot;https://wicombit.com/demo/banner.jpg&quot;/&gt;\r\n&lt;/a&gt;\r\n&lt;/div&gt;', '1', 'footer');
-INSERT INTO ads (id, title, subtitle, content, status, position) VALUES ('3', 'Sidebar', '(Appears on all pages right on left bar)', '&lt;div &gt;\r\n&lt;a href=&quot;#&quot;&gt;\r\n&lt;img src=&quot;https://wicombit.com/demo/sidebar.jpg&quot;/&gt;\r\n&lt;/a&gt;\r\n&lt;/div&gt;', '1', 'sidebar');
+INSERT INTO ads (ad_id, ad_title, ad_subtitle, ad_content, ad_status, ad_position) VALUES
+(1, 'Header', '(Appears on all pages right under the nav bar)', '<div><a href="#"><img src="https://dummyimage.com/200x400/bababa/ebecf5.jpg"/></a></div>', 1, 'header'),
+(2, 'Footer', '(Appears on all pages right before the footer)', '<div><a href="#"><img src="https://wicombit.com/demo/banner.jpg"/></a></div>', 1, 'footer'),
+(3, 'Sidebar', '(Appears on all pages right on left bar)', '<div><a href="#"><img src="https://wicombit.com/demo/sidebar.jpg"/></a></div>', 1, 'sidebar');
 
-CREATE TABLE brand (
-  st_favicon longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'favicon.png' CHECK (json_valid(st_favicon)),
-  st_whitelogo varchar(150) NOT NULL DEFAULT 'whitelogo.png',
-  st_darklogo varchar(150) NOT NULL DEFAULT 'darklogo.png',
-  st_og_image varchar(150) DEFAULT 'og_image.png'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci ROW_FORMAT=COMPACT;
 
-INSERT INTO brand (st_favicon, st_whitelogo, st_darklogo) VALUES ('{\"android-chrome-192x192\":\"android-chrome-192x192.png\",\"android-chrome-512x512\":\"android-chrome-512x512.png\",\"apple-touch-icon\":\"apple-touch-icon.png\",\"favicon-16x16\":\"favicon-16x16.png\",\"favicon-32x32\":\"favicon-32x32.png\",\"favicon\":\"favicon.ico\",\"webmanifest\":\"site.webmanifest\"}', 'whitelogo.png', 'darklogo.png', 'og_image.png');
+CREATE TABLE options (
+  option_id INT AUTO_INCREMENT PRIMARY KEY,
+  option_key VARCHAR(100),
+  option_value TEXT NOT NULL
+);
 
-CREATE TABLE settings (
-  st_sitename varchar(150) DEFAULT NULL,
-  st_description mediumtext DEFAULT NULL,
-  st_keywords mediumtext DEFAULT NULL,
-  st_facebook varchar(150) DEFAULT NULL,
-  st_twitter varchar(150) DEFAULT NULL,
-  st_instagram varchar(150) DEFAULT NULL,
-  st_youtube varchar(150) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+INSERT INTO options (option_key, option_value) VALUES
+('site_name', 'Php Start'),
+('site_url', 'http://php-start.test'),
+('site_url_admin', 'http://php-start.test/admin'),
+('base_dir', '/ruta/absoluta/a/tu/proyecto'),
+('base_dir_admin', '/ruta/absoluta/a/tu/proyecto/admin'),
+('favicon', '{"favicon.ico":"favicon.ico"}'),
+('white_logo', 'whitelogo.png'),
+('dark_logo', 'darklogo.png'),
+('og_image', 'og_image.png'),
+('smtp_host', 'smtp.test.com'),
+('smtp_email', 'no-reply@test.com'),
+('smtp_password', '********'),
+('smtp_port', '587'),
+('smtp_encryption', 'tls'),
+('facebook', 'https://facebook.com'),
+('twitter', 'https://twitter.com');
 
-INSERT INTO settings (st_sitename, st_description, st_keywords, st_facebook, st_twitter, st_instagram, st_youtube) VALUES ('PhpStart - Minifrmawork ', 'PhpStart es un Minifrmawork hecha por Pirulug', 'phpstart, php, css, js, html, bootstrap', 'https://facebook.com/', 'https://twitter.com/', 'https://www.instagram.com/', 'https://www.youtube.com/');
-
-CREATE TABLE smtp (
-  st_smtphost varchar(150) NOT NULL,
-  st_smtpemail varchar(150) NOT NULL,
-  st_smtppassword varchar(150) NOT NULL,
-  st_smtpport varchar(150) NOT NULL,
-  st_smtpencrypt varchar(150) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci ROW_FORMAT=COMPACT;
-
-INSERT INTO smtp (st_smtphost, st_smtpemail, st_smtppassword, st_smtpport, st_smtpencrypt) VALUES ('-', '-', '-', '-', '-');
-
-CREATE TABLE user_logs (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  user_id varchar(100) NOT NULL,
-  action varchar(100) NOT NULL,
-  description varchar(100) NOT NULL,
-  timestamp timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+-- Roles de usuario
+CREATE TABLE user_roles (
+  user_role_id INT PRIMARY KEY,
+  user_role_name VARCHAR(50) NOT NULL
+);
 
 CREATE TABLE users (
-  user_id int(11) NOT NULL AUTO_INCREMENT,
-  user_name varchar(255) NOT NULL,
-  user_email varchar(255) NOT NULL,
-  user_password varchar(255) NOT NULL,
-  user_role tinyint(1) NOT NULL DEFAULT 3,
-  user_status tinyint(1) NOT NULL DEFAULT 1,
-  user_image varchar(255) NOT NULL,
+  user_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+  user_name VARCHAR(255) NOT NULL,
+  user_email VARCHAR(255) NOT NULL,
+  user_password VARCHAR(255) NOT NULL,
+  user_role_id INT NOT NULL,
+  user_status INT NOT NULL DEFAULT 1,
+  user_image VARCHAR(255) NOT NULL,
   user_updated datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   user_created datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (user_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+);
+
+CREATE TABLE user_logs (
+  user_log_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id VARCHAR(100) NOT NULL,
+  user_log_action VARCHAR(100) NOT NULL,
+  user_log_description VARCHAR(100) NOT NULL,
+  user_log_timestamp timestamp NOT NULL DEFAULT current_timestamp(),
+);
 
 CREATE TABLE visits (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  page varchar(255) NOT NULL,
-  visit_date date NOT NULL,
-  visit_count int(11) DEFAULT 1,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+  visit_id INT AUTO_INCREMENT PRIMARY KEY,
+  visit_page VARCHAR(255) NOT NULL,
+  visit_date DATE NOT NULL,
+);
 
 CREATE TABLE visit_ips (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  visit_id int(11) NOT NULL,
-  ip_address varchar(45) NOT NULL,
-  created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
+  visit_ip_id INT AUTO_INCREMENT PRIMARY KEY,
+  visit_id INT NOT NULL,
+  visit_ip_address VARCHAR(45) NOT NULL,
+  visit_ip_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (visit_id) REFERENCES visits (id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+);
 
 -- -----------------------------------------------------------------------------
