@@ -27,6 +27,6 @@ if (isset($_SESSION['signedin'])) {
   }
 } else {
   header("Location: " . SITE_URL_ADMIN . "/controllers/login.php");
-  $messageHandler->addMessage("No inició sesión", "danger");
+  // $messageHandler->addMessage("No inició sesión", "danger");
   exit();
 }

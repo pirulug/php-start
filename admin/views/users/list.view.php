@@ -1,10 +1,10 @@
 <?php $theme->blockStart("style") ?>
-<link rel="stylesheet" href="<?= SITE_URL_ADMIN ?>/assets/css/sweetalert2.css">
+<link rel="stylesheet" href="<?= SITE_URL?>/static/css/sweetalert2.css">
 <?php $theme->blockEnd("style") ?>
 
 <?php $theme->blockStart("script") ?>
-<script src="<?= SITE_URL_ADMIN ?>/assets/js/sweetalert2.js"></script>
-<script src="<?= SITE_URL_ADMIN ?>/assets/js/sa.js"></script>
+<script src="<?= SITE_URL ?>/static/js/sweetalert2.js"></script>
+<script src="<?= SITE_URL ?>/static/js/sa.js"></script>
 <?php $messageHandler->displaySweetAlerts(); ?>
 <?php $theme->blockEnd("script") ?>
 
