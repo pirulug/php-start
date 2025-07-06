@@ -17,7 +17,7 @@
             <dt>Correo electrónico</dt>
             <dd><?= $user_session->user_email ?></dd>
             <dt>Miembro desde</dt>
-            <dd><?= formatDate($user_session->user_created) ?></dd>
+            <dd><?= $user_session->user_created ?></dd>
           </dl>
           <hr>
           <div class="d-grid">

@@ -1,6 +1,6 @@
 <?php
 
-// require_once "core.php";
+require_once "core.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $username         = trim($_POST['username']);
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $confirm_password = $_POST['confirm_password'];
 
   // Validar el usuario (mínimo 5 caracteres, sin espacios)
-  if (strlen($username) < 5 || preg_match('/\s/', $username)) {
+  if (strlen($username) < 4 || preg_match('/\s/', $username)) {
     $messageHandler->addMessage("El usuario debe tener al menos 5 caracteres y no contener espacios.", "danger");
 
   }
@@ -62,21 +62,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
       $messageHandler->addMessage("Registro exitoso. Ahora puedes iniciar sesión.", "success", "toast");
-      header("Location: " . SITE_URL . "/signin.php");
+      header("Location: " . SITE_URL . "/signin");
     } else {
       $messageHandler->addMessage("Error al registrar al usuario: " . $stmt->errorInfo()[2], "danger");
     }
   }
 }
 
-
-$page_title       = "SignUp | " . $settings->st_sitename;
-$page_description = $settings->st_description;
-$page_keywords    = $settings->st_keywords;
+$page_title       = "SignUp | " . SITE_NAME;
+$page_description = SITE_DESCRIPTION;
+$page_keywords    = SITE_KEYWORDS;
 
 $og_title       = $page_title;
 $og_description = $page_description;
-$og_image       = SITE_URL . "/uploads/site/" . $settings->st_og_image;
-$og_url         = SITE_URL . "/signup";
+$og_image       = SITE_URL . "/uploads/site/" . $st_og_image;
+$og_url         = SITE_URL . "/signin";
 
 include "views/signup.view.php";
