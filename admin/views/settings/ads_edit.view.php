@@ -6,23 +6,23 @@
     <form enctype="multipart/form-data" action="" method="post">
 
       <p class="mb-3">
-        <?= $ad->title ?>
+        <?= $ad->ad_title ?>
         <small>
-          <?= $ad->subtitle ?>
+          <?= $ad->ad_subtitle ?>
         </small>
       </p>
 
-      <input type="hidden" value="<?= $ad->id ?>" name="id">
+      <input type="hidden" value="<?= $ad->ad_id ?>" name="id">
       <div class="mb-3">
         <textarea class="mceNoEditor form-control" type="text" name="content"
-          style="field-sizing: content;min-height: 4lh;" required><?= $ad->content ?></textarea>
+          style="field-sizing: content;min-height: 4lh;" required><?= $ad->ad_content ?></textarea>
       </div>
       <div class="mb-3">
         <label class="form-label">Status</label>
 
         <select class="custom-select form-control" name="status" required="">
-          <option value="0" <?= $ad->status == "0" ? "selected" : "" ?>>Draft</option>
-          <option value="1" <?= $ad->status == "1" ? "selected" : "" ?>>Publish</option>
+          <option value="0" <?= $ad->ad_status == "0" ? "selected" : "" ?>>Draft</option>
+          <option value="1" <?= $ad->ad_status == "1" ? "selected" : "" ?>>Publish</option>
         </select>
       </div>
 

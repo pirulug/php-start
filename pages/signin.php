@@ -25,7 +25,7 @@ if (isset($_COOKIE['psloggin'])) {
     $_SESSION['user_role'] = $result_cookie->user_role;
     $_SESSION['user_name'] = $result_cookie->user_name;
 
-    $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " ingresó automáticamente con cookie.");
+    $log->logUser($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " ingresó automáticamente con cookie.");
     header('Location: ' . SITE_URL . '/admin/controllers/dashboard.php');
     exit();
   } else {
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       setcookie('psloggin', $encryption->encrypt($result_login->user_id), time() + (86400 * 30), "/");
     }
 
-    $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
+    $log->logUser($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
     $messageHandler->addMessage("Datos correctos", "success", "toast");
     header('Location: ' . SITE_URL . "/");
     exit();

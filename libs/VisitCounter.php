@@ -1,4 +1,5 @@
 <?php
+
 class VisitCounter {
   private $connect;
 
@@ -6,30 +7,30 @@ class VisitCounter {
     $this->connect = $connect;
   }
 
-  // Registrar visita
   public function register_visit($page) {
-    $today = date('Y-m-d');
-    $ip    = $this->get_client_ip();
+    $ip      = $this->get_client_ip();
+    $browser = $this->get_browser();
+    $os      = $this->get_os();
+    $country = $this->get_country_by_ip($ip);
 
-    // Verifica si ya existe una visita para esa página y fecha
-    $query = $this->connect->prepare("SELECT id FROM visits WHERE page = :page AND visit_date = :visit_date");
-    $query->execute([':page' => $page, ':visit_date' => $today]);
+    // Verificar si ya hay una visita en los últimos 30 minutos para esta IP y página
+    $stmt = $this->connect->prepare("SELECT 1 FROM visits
+        WHERE visit_page = ?
+          AND visit_ip = ?
+          AND visit_date >= NOW() - INTERVAL 30 MINUTE
+        LIMIT 1");
+    $stmt->execute([$page, $ip]);
 
-    if ($query->rowCount() > 0) {
-      $visit_id = $query->fetchColumn();
-
-      $this->connect->prepare("UPDATE visits SET visit_count = visit_count + 1 WHERE id = :id")
-        ->execute([':id' => $visit_id]);
-    } else {
-      $this->connect->prepare("INSERT INTO visits (page, visit_date) VALUES (:page, :visit_date)")
-        ->execute([':page' => $page, ':visit_date' => $today]);
-
-      $visit_id = $this->connect->lastInsertId();
+    // Si ya existe, no registrar otra visita
+    if ($stmt->fetch()) {
+      return;
     }
 
-    // Registrar IP
-    $stmt = $this->connect->prepare("INSERT INTO visit_ips (visit_id, ip_address) VALUES (:visit_id, :ip)");
-    $stmt->execute([':visit_id' => $visit_id, ':ip' => $ip]);
+
+    $stmt = $this->connect->prepare("INSERT INTO visits (visit_page, visit_ip, visit_country, visit_browser, visit_os)
+      VALUES (?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([$page, $ip, $country, $browser, $os]);
   }
 
   private function get_client_ip() {
@@ -42,237 +43,274 @@ class VisitCounter {
     }
   }
 
-  // Obtener estadísticas básicas
-  public function get_basic_stats() {
-    $today            = date('Y-m-d');
-    $yesterday        = date('Y-m-d', strtotime('-1 day'));
-    $week_start       = date('Y-m-d', strtotime('monday this week'));
-    $week_end         = date('Y-m-d', strtotime('sunday this week'));
-    $last_week_start  = date('Y-m-d', strtotime('monday last week'));
-    $last_week_end    = date('Y-m-d', strtotime('sunday last week'));
-    $month_start      = date('Y-m-01');
-    $last_month_start = date('Y-m-01', strtotime('first day of last month'));
-    $last_month_end   = date('Y-m-t', strtotime('last day of last month'));
-
-    return [
-      'today'      => $this->get_visit_count($today, $today),
-      'yesterday'  => $this->get_visit_count($yesterday, $yesterday),
-      'this_week'  => $this->get_visit_count($week_start, $week_end),
-      'last_week'  => $this->get_visit_count($last_week_start, $last_week_end),
-      'this_month' => $this->get_visit_count($month_start, date('Y-m-d')),
-      'last_month' => $this->get_visit_count($last_month_start, $last_month_end),
-      'all_time'   => $this->get_visit_count()
-    ];
+  private function get_country_by_ip($ip) {
+    return 'Desconocido';
   }
 
-  // Obtener estadísticas diarias, mensuales o anuales
-  public function get_graph_data($type) {
-    switch ($type) {
-      case 'daily':
-        // Datos por Día (mes actual)
-        $month_start = date('Y-m-01');
-        $month_end = date('Y-m-t'); // Último día del mes
-        $dates = [];
-
-        // Generar todas las fechas del mes actual
-        $start = new DateTime($month_start);
-        $end = new DateTime($month_end);
-        $interval = new DateInterval('P1D');
-        $daterange = new DatePeriod($start, $interval, $end->modify('+1 day'));
-
-        foreach ($daterange as $date) {
-          $dates[$date->format('j')] = "0";
-        }
-
-        // Consulta los datos existentes
-        $daily = $this->connect->query("SELECT visit_date, SUM(visit_count) AS total
-                                        FROM visits
-                                        WHERE visit_date >= '$month_start'
-                                        AND visit_date <= '$month_end'
-                                        GROUP BY visit_date
-                                    ")->fetchAll(PDO::FETCH_ASSOC);
-
-        // Combina los datos existentes con las fechas generadas
-        foreach ($daily as $row) {
-          $day         = date('j', strtotime($row['visit_date']));
-          $dates[$day] = $row['total'];
-        }
-
-        return $dates;
-
-      case 'monthly':
-        // Datos por Mes (solo meses del año actual)
-        $year_start = date('Y-01-01');
-        $year_end = date('Y-12-31'); // Último día del año
-
-        $monthNames = [
-          1  => 'Enero',
-          2  => 'Febrero',
-          3  => 'Marzo',
-          4  => 'Abril',
-          5  => 'Mayo',
-          6  => 'Junio',
-          7  => 'Julio',
-          8  => 'Agosto',
-          9  => 'Septiembre',
-          10 => 'Octubre',
-          11 => 'Noviembre',
-          12 => 'Diciembre'
-        ];
-
-        // Inicializamos un array para los meses del año
-        $months = [];
-        foreach ($monthNames as $key => $month) {
-          $months[$month] = "0"; // Inicializamos todos los meses con 0
-        }
-
-        // Consulta los datos existentes
-        $monthly = $this->connect->query("SELECT DATE_FORMAT(visit_date, '%Y-%m') AS month, SUM(visit_count) AS total
-                                            FROM visits
-                                            WHERE visit_date >= '$year_start' AND visit_date <= '$year_end'
-                                            GROUP BY month
-                                        ")->fetchAll(PDO::FETCH_ASSOC);
-
-        // Combina los datos existentes con los meses generados
-        foreach ($monthly as $row) {
-          $month              = date('n', strtotime($row['month']));
-          $monthName          = $monthNames[$month];
-          $months[$monthName] = $row['total'];
-        }
-
-        return $months;
-      case 'yearly':
-        // Datos por Año (últimos 10 años)
-        $last_10_years_start = date('Y-m-d', strtotime('-10 years'));
-        $current_year = date('Y'); // Año actual
-
-        // Inicializamos un array para los últimos 10 años, con valor 0 para cada uno
-        $years = [];
-        for ($i = 0; $i < 10; $i++) {
-          $year         = $current_year - $i; // Restamos para obtener los últimos 10 años
-          $years[$year] = 0; // Inicializamos todos los años con 0
-        }
-
-        // Consulta los datos existentes
-        $yearly = $this->connect->query("SELECT YEAR(visit_date) AS year, SUM(visit_count) AS total
-                                          FROM visits
-                                          WHERE visit_date >= '$last_10_years_start'
-                                          GROUP BY year
-                                      ")->fetchAll(PDO::FETCH_ASSOC);
-
-        // Combina los datos existentes con los años generados
-        foreach ($yearly as $row) {
-          $year         = $row['year']; // Año
-          $years[$year] = $row['total']; // Asignamos el total al año correspondiente
-        }
-
-        return $years;
-      default:
-        return [];
-    }
+  private function get_browser() {
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+    if (preg_match('/firefox/i', $ua))
+      return 'Firefox';
+    if (preg_match('/chrome/i', $ua))
+      return 'Chrome';
+    if (preg_match('/safari/i', $ua))
+      return 'Safari';
+    if (preg_match('/opera|opr/i', $ua))
+      return 'Opera';
+    if (preg_match('/msie|trident/i', $ua))
+      return 'Internet Explorer';
+    if (preg_match('/edge/i', $ua))
+      return 'Edge';
+    return 'Desconocido';
   }
 
-  // Obtener cantidad de visitas en un rango de fechas
-  private function get_visit_count($start_date = null, $end_date = null) {
-    $query = "SELECT SUM(visit_count) FROM visits";
-    if ($start_date && $end_date) {
-      $query .= " WHERE visit_date BETWEEN :start_date AND :end_date";
-      $stmt  = $this->connect->prepare($query);
-      $stmt->execute([':start_date' => $start_date, ':end_date' => $end_date]);
+  private function get_os() {
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+    if (preg_match('/windows nt 10/i', $ua))
+      return 'Windows 10';
+    if (preg_match('/windows nt 6.1/i', $ua))
+      return 'Windows 7';
+    if (preg_match('/macintosh|mac os x/i', $ua))
+      return 'Mac OS X';
+    if (preg_match('/linux/i', $ua))
+      return 'Linux';
+    if (preg_match('/android/i', $ua))
+      return 'Android';
+    if (preg_match('/iphone/i', $ua))
+      return 'iPhone';
+    return 'Desconocido';
+  }
+
+  public function get_total_visits($page = null) {
+    if ($page) {
+      $stmt = $this->connect->prepare("SELECT COUNT(*) FROM visits WHERE visit_page = ?");
+      $stmt->execute([$page]);
     } else {
-      $stmt = $this->connect->query($query);
+      $stmt = $this->connect->query("SELECT COUNT(*) FROM visits");
     }
-    return $stmt->fetchColumn() ?: 0;
+    return $stmt->fetchColumn();
   }
 
-  // Obtener estadísticas diarias para todas las páginas de los últimos 7 días
-  public function get_page_comparative_daily_data() {
-    $last_7_days_start = date('Y-m-d', strtotime('-7 days')); // Fecha de inicio de los últimos 7 días
-    $current_date      = date('Y-m-d'); // Fecha actual
-
-    // Query para obtener visitas diarias por página en los últimos 7 días
-    $query = "SELECT visit_date, page, SUM(visit_count) AS total
-    FROM visits
-    WHERE visit_date >= '$last_7_days_start' AND visit_date <= '$current_date'
-    GROUP BY visit_date, page
-    ORDER BY visit_date ASC
-  ";
-
-    $result = $this->connect->query($query)->fetchAll(PDO::FETCH_ASSOC);
-
-    // Organizar los datos para cada página
-    $data = [];
-    foreach ($result as $row) {
-      $data[$row['page']][] = ['date' => $row['visit_date'], 'total' => $row['total']];
-    }
-
-    // Asegurarse de que haya datos para cada uno de los 7 días, incluso si no hay visitas en alguno
-    // Creación de un array con los últimos 7 días, aunque no haya visitas
-    $dates = [];
-    for ($i = 6; $i >= 0; $i--) {
-      $dates[] = date('Y-m-d', strtotime("-$i days"));
-    }
-
-    // Completar los datos de cada página con 0 para los días que no tienen registros
-    foreach ($data as $page => $pageData) {
-      // Crear un array con los días y visitas 0
-      $pageDataWithZeroes = [];
-      foreach ($dates as $date) {
-        $found = false;
-        foreach ($pageData as $visit) {
-          if ($visit['date'] == $date) {
-            $pageDataWithZeroes[] = ['date' => $date, 'total' => $visit['total']];
-            $found                = true;
-            break;
-          }
-        }
-        if (!$found) {
-          $pageDataWithZeroes[] = ['date' => $date, 'total' => 0];
-        }
-      }
-      // Reemplazar los datos originales con los datos completos
-      $data[$page] = $pageDataWithZeroes;
-    }
-
-    return $data;
-  }
-
-  // Obtener visitas totales por página (todo el tiempo)
-  public function get_total_visits_by_page() {
-    // Consulta SQL para obtener el total de visitas por página desde el inicio
-    $query = "
-        SELECT page, SUM(visit_count) AS total
-        FROM visits
-        GROUP BY page
-    ";
-
-    // Ejecutar la consulta y obtener el resultado
-    $result = $this->connect->query($query)->fetchAll(PDO::FETCH_ASSOC);
-
-    // Preparar los datos en el formato deseado (array asociativo)
-    $data = [];
-    foreach ($result as $row) {
-      // Usamos el nombre de la página como clave y el total de visitas como valor
-      $data[$row['page']] = (int) $row['total'];  // Asegúrate de que el valor es un entero
-    }
-
-    return $data;
-  }
-
-  // Obtener el top de IPs con más visitas
-  public function get_top_ips($limit = 10) {
-    $query = "
-    SELECT ip_address, COUNT(*) AS total_visits
-    FROM visit_ips
-    GROUP BY ip_address
-    ORDER BY total_visits DESC
-    LIMIT :limit
-  ";
-
-    $stmt = $this->connect->prepare($query);
+  public function get_top_countries($limit = 10) {
+    $stmt = $this->connect->prepare("SELECT visit_country, COUNT(*) as total
+      FROM visits
+      GROUP BY visit_country
+      ORDER BY total DESC
+      LIMIT :limit
+    ");
     $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
     $stmt->execute();
-
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+
+  public function get_basic_stats() {
+    $today      = $this->get_count_by_period('DAY', 0);
+    $yesterday  = $this->get_count_by_period('DAY', 1);
+    $this_week  = $this->get_count_by_period('WEEK', 0);
+    $last_week  = $this->get_count_by_period('WEEK', 1);
+    $this_month = $this->get_count_by_period('MONTH', 0);
+    $last_month = $this->get_count_by_period('MONTH', 1);
+    $all_time   = $this->get_total_visits();
+
+    return compact('today', 'yesterday', 'this_week', 'last_week', 'this_month', 'last_month', 'all_time');
+  }
+
+  private function get_count_by_period($period, $offset = 0) {
+    $query = match ($period) {
+      'DAY' => "SELECT COUNT(*) FROM visits WHERE DATE(visit_date) = CURDATE() - INTERVAL :offset DAY",
+      'WEEK' => "SELECT COUNT(*) FROM visits WHERE YEARWEEK(visit_date, 1) = YEARWEEK(CURDATE() - INTERVAL :offset WEEK, 1)",
+      'MONTH' => "SELECT COUNT(*) FROM visits WHERE MONTH(visit_date) = MONTH(CURDATE() - INTERVAL :offset MONTH) AND YEAR(visit_date) = YEAR(CURDATE() - INTERVAL :offset MONTH)",
+      default => ""
+    };
+
+    $stmt = $this->connect->prepare($query);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    return (int) $stmt->fetchColumn();
+  }
+
+  public function get_graph_data($type = 'daily') {
+    return match ($type) {
+      'daily' => $this->get_daily_visits(),
+      'monthly' => $this->get_monthly_visits(),
+      'yearly' => $this->get_yearly_visits(),
+      default => [],
+    };
+  }
+
+  public function get_daily_visits() {
+    $month_start = date('Y-m-01');
+    $month_end   = date('Y-m-t');
+
+    $stmt = $this->connect->prepare("SELECT DATE(visit_date) AS visit_day, COUNT(*) AS visit_count
+        FROM visits
+        WHERE visit_date BETWEEN :start AND :end
+        GROUP BY visit_day");
+    $stmt->execute(['start' => $month_start, 'end' => $month_end]);
+    $visits_raw = $stmt->fetchAll(PDO::FETCH_KEY_PAIR); // ['2025-07-01' => 5, ...]
+
+    $result   = [];
+    $start    = new DateTime($month_start);
+    $end      = new DateTime($month_end);
+    $interval = new DateInterval('P1D');
+    $period   = new DatePeriod($start, $interval, $end->modify('+1 day'));
+
+    foreach ($period as $date) {
+      $full_date  = $date->format('Y-m-d');
+      $day_number = $date->format('d');
+
+      $result[] = [
+        'dia'     => (int) $day_number,
+        'visitas' => isset($visits_raw[$full_date]) ? (int) $visits_raw[$full_date] : 0,
+      ];
+    }
+
+    return $result;
+  }
+
+  public function get_monthly_visits() {
+    $months = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    $data   = array_fill_keys($months, 0);
+
+    $stmt = $this->connect->prepare("
+    SELECT MONTH(visit_date) as month, COUNT(*) as total
+    FROM visits
+    WHERE YEAR(visit_date) = YEAR(CURDATE())
+    GROUP BY month
+  ");
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $monthName        = $months[$row['month'] - 1];
+      $data[$monthName] = (int) $row['total'];
+    }
+
+    return $data;
+  }
+
+  public function get_yearly_visits() {
+    $currentYear = (int) date('Y');
+    $years       = range($currentYear - 9, $currentYear);
+    $data        = array_fill_keys($years, 0);
+
+    $stmt = $this->connect->prepare("
+    SELECT YEAR(visit_date) as year, COUNT(*) as total
+    FROM visits
+    WHERE YEAR(visit_date) BETWEEN :start AND :end
+    GROUP BY year
+  ");
+    $stmt->bindValue(':start', $currentYear - 9, PDO::PARAM_INT);
+    $stmt->bindValue(':end', $currentYear, PDO::PARAM_INT);
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $data[(int) $row['year']] = (int) $row['total'];
+    }
+
+    return $data;
+  }
+
+  public function get_page_comparative_daily_data($limit = 7) {
+    // 1. Fechas de lunes a domingo de esta semana
+    $monday = date('Y-m-d', strtotime('monday this week'));
+    $sunday = date('Y-m-d', strtotime('sunday this week'));
+
+    // 2. Obtener las páginas más visitadas de la semana
+    $stmt = $this->connect->prepare("
+        SELECT visit_page, COUNT(*) AS total
+        FROM visits
+        WHERE DATE(visit_date) BETWEEN :monday AND :sunday
+        GROUP BY visit_page
+        ORDER BY total DESC
+        LIMIT :limit
+    ");
+    $stmt->bindValue(':monday', $monday);
+    $stmt->bindValue(':sunday', $sunday);
+    $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    $top_pages = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    if (empty($top_pages))
+      return [];
+
+    // 3. Obtener visitas por día para esas páginas
+    $in     = str_repeat('?,', count($top_pages) - 1) . '?';
+    $stmt2  = $this->connect->prepare("
+        SELECT visit_page, DATE(visit_date) as date, COUNT(*) as total
+        FROM visits
+        WHERE DATE(visit_date) BETWEEN ? AND ?
+        AND visit_page IN ($in)
+        GROUP BY visit_page, date
+    ");
+    $params = array_merge([$monday, $sunday], $top_pages);
+    $stmt2->execute($params);
+
+    $rawData = [];
+    while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+      $rawData[$row['visit_page']][$row['date']] = (int) $row['total'];
+    }
+
+    // 4. Generar los días de la semana con nombre
+    $dias_semana = [
+      'Monday'    => 'Lunes',
+      'Tuesday'   => 'Martes',
+      'Wednesday' => 'Miércoles',
+      'Thursday'  => 'Jueves',
+      'Friday'    => 'Viernes',
+      'Saturday'  => 'Sábado',
+      'Sunday'    => 'Domingo',
+    ];
+
+    $result = [];
+    $dates  = [];
+    $dt     = new DateTime($monday);
+    while ($dt->format('Y-m-d') <= $sunday) {
+      $full_date = $dt->format('Y-m-d');
+      $dia_texto = $dias_semana[$dt->format('l')]; // l = textual en inglés
+      $dates[]   = [
+        'fecha' => $full_date,
+        'dia'   => $dia_texto
+      ];
+      $dt->modify('+1 day');
+    }
+
+    // 5. Construir el resultado por página
+    foreach ($top_pages as $page) {
+      $pageData = [];
+      foreach ($dates as $info) {
+        $visitas    = $rawData[$page][$info['fecha']] ?? 0;
+        $pageData[] = [
+          'dia'     => $info['dia'], // Lunes, Martes, etc.
+          'visitas' => $visitas
+        ];
+      }
+      $result[$page] = $pageData;
+    }
+
+    return $result;
+  }
+
+  public function get_total_visits_by_page() {
+    $stmt = $this->connect->query("SELECT visit_page, COUNT(*) as total FROM visits GROUP BY visit_page ORDER BY total DESC");
+    $data = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $data[$row['visit_page']] = (int) $row['total'];
+    }
+    return $data;
+  }
+
+  public function get_top_ips($limit = 10) {
+    $stmt = $this->connect->prepare("SELECT visit_ip as ip_address, COUNT(*) as total_visits
+    FROM visits
+    GROUP BY visit_ip
+    ORDER BY total_visits DESC
+    LIMIT :limit");
+    $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
 }

@@ -4,52 +4,40 @@ require_once "../../core.php";
 
 $accessControl->check_access([1], SITE_URL . "/404.php");
 
-$querySelect = "SELECT * FROM settings";
-$settings    = $connect->query($querySelect)->fetch(PDO::FETCH_OBJ);
+// Obtener todas las opciones como array asociativo
+$query      = "SELECT option_key, option_value FROM options";
+$optionsRaw = $connect->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
+
+// Decodificar valores si es necesario
+// $optionsRaw['site_keywords'] = explode(',', $optionsRaw['site_keywords'] ?? '');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $st_sitename    = clear_data($_POST['st_sitename']);
-  $st_description = clear_data($_POST['st_description']);
+  $option_updates = [
+    'site_name'        => clear_data($_POST['st_sitename']),
+    'site_description' => clear_data($_POST['st_description']),
+    'facebook'         => clear_data($_POST['st_facebook']),
+    'twitter'          => clear_data($_POST['st_twitter']),
+    'instagram'        => clear_data($_POST['st_instagram']),
+    'youtube'          => clear_data($_POST['st_youtube']),
+  ];
 
+  // Procesar keywords
   $st_keywords = json_decode($_POST['st_keywords'], true);
-
   if (is_array($st_keywords)) {
-    $st_keywords_values = array_map(function ($keyword) {
-      return $keyword['value'];
-    }, $st_keywords);
-
-    $st_keywords_imploded = implode(', ', $st_keywords_values);
-  } else {
-    $st_keywords_imploded = '';
+    $keywords                        = array_map(fn($item) => $item['value'], $st_keywords);
+    $option_updates['site_keywords'] = implode(',', $keywords);
   }
 
-  $st_facebook  = clear_data($_POST['st_facebook']);
-  $st_twitter   = clear_data($_POST['st_twitter']);
-  $st_instagram = clear_data($_POST['st_instagram']);
-  $st_youtube   = clear_data($_POST['st_youtube']);
+  // Actualizar cada opción
+  foreach ($option_updates as $key => $value) {
+    $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = :key");
+    $stmt->execute([
+      ':value' => $value,
+      ':key'   => $key
+    ]);
+  }
 
-  $query = "UPDATE settings SET
-        st_sitename = :st_sitename,
-        st_description = :st_description,
-        st_keywords = :st_keywords,
-        st_facebook = :st_facebook,
-        st_twitter = :st_twitter,
-        st_instagram = :st_instagram,
-        st_youtube = :st_youtube";
-
-  $stmt = $connect->prepare($query);
-
-  $stmt->bindParam(':st_sitename', $st_sitename);
-  $stmt->bindParam(':st_description', $st_description);
-  $stmt->bindParam(':st_keywords', $st_keywords_imploded);
-  $stmt->bindParam(':st_facebook', $st_facebook);
-  $stmt->bindParam(':st_twitter', $st_twitter);
-  $stmt->bindParam(':st_instagram', $st_instagram);
-  $stmt->bindParam(':st_youtube', $st_youtube);
-
-  $stmt->execute();
-
-  $messageHandler->addMessage('Se actualizo de manera correcta', 'success');
+  $messageHandler->addMessage('Se actualizó correctamente.', 'success');
   header("Refresh:0");
   exit();
 }

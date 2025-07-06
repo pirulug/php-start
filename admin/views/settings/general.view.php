@@ -1,9 +1,9 @@
 <?php $theme->blockStart("style"); ?>
-<link rel="stylesheet" href="<?= SITE_URL ?>/admin/assets/css/tagify.css">
+<link rel="stylesheet" href="<?= $url_static->css("tagify.css") ?>">
 <?php $theme->blockEnd("style"); ?>
 
 <?php $theme->blockStart("script"); ?>
-<script src="<?= SITE_URL ?>/admin/assets/js/tagify.js"></script>
+<script src="<?= $url_static->js("tagify.js") ?>"></script>
 <script>
   const input = document.getElementById('tag-input');
   new Tagify(input);
@@ -20,34 +20,35 @@
       <hr>
       <div class="mb-3">
         <label class="form-label">Site Name</label>
-        <input class="form-control" type="text" value="<?= $settings->st_sitename ?>" name="st_sitename">
+        <input class="form-control" type="text" value="<?= $optionsRaw['site_name'] ?? '' ?>" name="st_sitename">
       </div>
       <div class="mb-3">
         <label class="form-label">Description</label>
         <textarea class="form-control" name="st_description"
-          style="field-sizing: content;min-height: 3lh;"><?= $settings->st_description ?></textarea>
+          style="field-sizing: content;min-height: 3lh;"><?= $optionsRaw['site_description'] ?? '' ?></textarea>
       </div>
       <div class="mb-3">
         <label class="form-label">Keywords</label>
-        <input class="form-control" id="tag-input" type="text" value='<?= $settings->st_keywords ?>' name="st_keywords">
+        <input class="form-control" id="tag-input" type="text" value='<?= $optionsRaw['site_keywords'] ?>'
+          name="st_keywords">
       </div>
       <h3 class="h5 m-0">Social</h3>
       <hr>
       <div class="mb-3">
         <label class="form-label">Facebook</label>
-        <input class="form-control" type="text" value="<?= $settings->st_facebook ?>" name="st_facebook">
+        <input class="form-control" type="text" value="<?= $optionsRaw["facebook"] ?>" name="st_facebook">
       </div>
       <div class="mb-3">
         <label class="form-label">Twitter</label>
-        <input class="form-control" type="text" value="<?= $settings->st_twitter ?>" name="st_twitter">
+        <input class="form-control" type="text" value="<?= $optionsRaw["twitter"] ?>" name="st_twitter">
       </div>
       <div class="mb-3">
         <label class="form-label">Instagram</label>
-        <input class="form-control" type="text" value="<?= $settings->st_instagram ?>" name="st_instagram">
+        <input class="form-control" type="text" value="<?= $optionsRaw["instagram"] ?>" name="st_instagram">
       </div>
       <div class="mb-3">
         <label class="form-label">Youtube</label>
-        <input class="form-control" type="text" value="<?= $settings->st_youtube ?>" name="st_youtube">
+        <input class="form-control" type="text" value="<?= $optionsRaw["youtube"] ?>" name="st_youtube">
       </div>
 
       <hr>

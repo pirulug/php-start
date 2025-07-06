@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
       $messageHandler->addMessage("La contraseña se ha actualizado correctamente.", "success");
-      $log->logAction($userId, 'Actualizado', "Cambio de contraseña se ha actualizado correctamente.");
+      $log->logUser($userId, 'Actualizado', "Cambio de contraseña se ha actualizado correctamente.");
       header("Refresh: 0");  // Refrescar la página para evitar reenvíos del formulario
       exit();
     } else {

@@ -4,7 +4,7 @@
 
 session_start();
 
-$log->logAction($_SESSION['user_id'], 'Salir', $_SESSION['user_name'] . " salió.");
+$log->logUser($_SESSION['user_id'], 'Salir', $_SESSION['user_name'] . " salió.");
 
 session_destroy();
 $_SESSION = array();

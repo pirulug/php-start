@@ -28,7 +28,7 @@ if (isset($_COOKIE['psloggin'])) {
     $_SESSION['signin']  = true;
     $_SESSION['user_id'] = $result_cookie->user_id;
 
-    $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " ingresó automáticamente con cookie.");
+    $log->logUser($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " ingresó automáticamente con cookie.");
     header('Location: ' . SITE_URL_ADMIN . '/controllers/dashboard.php');
     exit();
   } else {
@@ -40,7 +40,7 @@ if (isset($_COOKIE['psloggin'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_name     = clear_data($_POST['user-name']);
   $user_password = $encryption->encrypt(clear_data($_POST['user-password']));
-  $remember_me   = $_POST['remember-me'];
+  $remember_me   = $_POST['remember-me'] ?? null;
 
   $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password AND user_status = 1 AND user_role IN (1, 2)";
   $stmt  = $connect->prepare($query);
@@ -53,19 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if ($result_login !== false) {
     $_SESSION['signin']  = true;
     $_SESSION['user_id'] = $result_login->user_id;
-
+    
     if (isset($remember_me)) {
       setcookie('psloggin', $encryption->encrypt($result_login->user_id), time() + (86400 * 30), "/");
     }
 
-    $log->logAction($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
+    $log->logUser($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
     $messageHandler->addMessage("Datos correctos", "success");
     header('Location: ' . SITE_URL_ADMIN . '/controllers/dashboard.php');
     exit();
   } else {
     $messageHandler->addMessage("incorrect login data or access denied", "danger");
   }
-
 }
 
 /* ========== Theme config ========= */

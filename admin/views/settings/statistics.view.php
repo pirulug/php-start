@@ -7,8 +7,8 @@
   document.addEventListener('DOMContentLoaded', function () {
     // Datos por Día (mes actual)
     const dataDay = <?php echo json_encode($daily); ?>;
-    const labelsDay = Object.keys(dataDay);
-    const valuesDay = Object.values(dataDay);
+    const labelsDay = dataDay.map(item => item.dia);
+    const valuesDay = dataDay.map(item => item.visitas);
     const ctxDay = document.getElementById('chartDay').getContext('2d');
     new Chart(ctxDay, {
       type: 'line',
@@ -106,16 +106,19 @@
     // Comparativa de Páginas
     const pageComparative = <?= json_encode($page_comparative); ?>;
 
-    const dates = Array.from(new Set(
-      Object.values(pageComparative).flatMap(d => d.map(item => item.date))
-    )).sort();
+    const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    const dates = diasSemana.filter(dia =>
+      Object.values(pageComparative).some(pagina =>
+        pagina.some(item => item.dia === dia)
+      )
+    );
 
     const pages = Object.keys(pageComparative);
 
     const datasets = pages.map((page, index) => {
-      const visits = dates.map(date => {
-        const entry = pageComparative[page].find(item => item.date === date);
-        return entry ? entry.total : 0;
+      const visits = dates.map(dia => {
+        const entry = pageComparative[page].find(item => item.dia === dia);
+        return entry ? entry.visitas : 0;
       });
 
       return {
@@ -151,7 +154,7 @@
             type: 'category',
             title: {
               display: true,
-              text: 'Fecha'
+              text: 'Día'
             }
           },
           y: {

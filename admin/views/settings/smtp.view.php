@@ -43,23 +43,23 @@
     <form action="" method="post">
       <div class="mb-3">
         <label class="form-label" for="">Host</label>
-        <input class="form-control" type="text" value="<?= $smtp->st_smtphost ?>" name="st_smtphost">
+        <input class="form-control" type="text" value="<?= $optionsRaw["smtp_host"] ?>" name="st_smtphost">
       </div>
       <div class="mb-3">
         <label class="form-label" for="">Email</label>
-        <input class="form-control" type="text" value="<?= $smtp->st_smtpemail ?>" name="st_smtpemail">
+        <input class="form-control" type="text" value="<?= $optionsRaw["smtp_email"] ?>" name="st_smtpemail">
       </div>
       <div class="mb-3">
         <label class="form-label" for="">Password</label>
-        <input class="form-control" type="text" value="<?= $smtp->st_smtppassword ?>" name="st_smtppassword">
+        <input class="form-control" type="text" value="<?= $optionsRaw["smtp_password"] ?>" name="st_smtppassword">
       </div>
       <div class="mb-3">
         <label class="form-label" for="">Port</label>
-        <input class="form-control" type="text" value="<?= $smtp->st_smtpport ?>" name="st_smtpport">
+        <input class="form-control" type="text" value="<?= $optionsRaw["smtp_port"] ?>" name="st_smtpport">
       </div>
       <div class="mb-3">
         <label class="form-label" for="">Encrypt</label>
-        <input class="form-control" type="text" value="<?= $smtp->st_smtpencrypt ?>" name="st_smtpencrypt">
+        <input class="form-control" type="text" value="<?= $optionsRaw["smtp_encryption"] ?>" name="st_smtpencrypt">
       </div>
 
       <hr>

@@ -1,24 +1,18 @@
--- 1. Tabla de roles
-CREATE TABLE user_roles (
-  user_role_id INT PRIMARY KEY,
-  user_role_name VARCHAR(50) NOT NULL
-);
-
--- 2. Tabla de usuarios
+-- 1. Tabla de usuarios
 CREATE TABLE users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
   user_name VARCHAR(255) NOT NULL,
   user_email VARCHAR(255) NOT NULL,
   user_password VARCHAR(255) NOT NULL,
-  user_role_id INT NOT NULL,
-  user_status INT NOT NULL DEFAULT 1,
+  user_role INT NOT NULL DEFAULT 3,
+  user_status INT NOT NULL DEFAULT 2,
   user_image VARCHAR(255) NOT NULL,
   user_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   user_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_role_id) REFERENCES user_roles(user_role_id)
 );
 
--- 3. Tabla de log de usuarios
+-- 2. Tabla de log de usuarios
 CREATE TABLE user_logs (
   user_log_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -28,19 +22,19 @@ CREATE TABLE user_logs (
   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- 4. Tabla de opciones
+-- 3. Tabla de opciones
 CREATE TABLE options (
   option_id INT AUTO_INCREMENT PRIMARY KEY,
   option_key VARCHAR(100),
   option_value TEXT NOT NULL
 );
 
+TRUNCATE TABLE options;
 INSERT INTO options (option_key, option_value) VALUES
 ('site_name', 'Php Start'),
 ('site_url', 'http://php-start.test'),
-('site_url_admin', 'http://php-start.test/admin'),
-('base_dir', '/ruta/absoluta/a/tu/proyecto'),
-('base_dir_admin', '/ruta/absoluta/a/tu/proyecto/admin'),
+('site_description', 'A simple PHP starter project'),
+('site_keywords', 'php, start, project, template'),
 ('favicon', '{"favicon.ico":"favicon.ico"}'),
 ('white_logo', 'whitelogo.png'),
 ('dark_logo', 'darklogo.png'),
@@ -51,26 +45,22 @@ INSERT INTO options (option_key, option_value) VALUES
 ('smtp_port', '587'),
 ('smtp_encryption', 'tls'),
 ('facebook', 'https://facebook.com'),
-('twitter', 'https://twitter.com');
+('twitter', 'https://twitter.com'),
+('instagram', 'https://instagram.com'),
+('youtube', 'https://youtube.com');
 
--- 5. Tabla de visitas
+-- 4. Tabla de visitas
 CREATE TABLE visits (
   visit_id INT AUTO_INCREMENT PRIMARY KEY,
   visit_page VARCHAR(255) NOT NULL,
-  visit_date DATE NOT NULL
+  visit_ip VARCHAR(45) NOT NULL,
+  visit_country VARCHAR(100) NOT NULL,
+  visit_browser VARCHAR(255) NOT NULL,
+  visit_os VARCHAR(255) NOT NULL,
+  visit_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- 6. Tabla de ip de las visitas
-CREATE TABLE visit_ips (
-  visit_ip_id INT AUTO_INCREMENT PRIMARY KEY,
-  visit_id INT NOT NULL,
-  visit_ip_address VARCHAR(45) NOT NULL,
-  visit_ip_created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (visit_id) REFERENCES visits(visit_id) ON DELETE CASCADE
-);
-
-
--- 7. Tabla de ADS
+-- 5. Tabla de ADS
 CREATE TABLE ads (
   ad_id INT AUTO_INCREMENT PRIMARY KEY,
   ad_title VARCHAR(255) NOT NULL DEFAULT '',
@@ -86,3 +76,8 @@ INSERT INTO ads (ad_id, ad_title, ad_subtitle, ad_content, ad_status, ad_positio
 (3, 'Sidebar', '(Appears on all pages right on left bar)', '<div><a href="#"><img src="https://wicombit.com/demo/sidebar.jpg"/></a></div>', 1, 'sidebar');
 
 -- -----------------------------------------------------------------------------
+
+INSERT INTO users (user_name, user_email, user_password, user_role_id, user_status, user_image) VALUES
+('Admin', 'admin@admin.com', 'VWpZK25XUGxDS0k1MVd2bGdxbFhXZz09', 1, 1, 'admin.png');
+
+TRUNCATE TABLE user_logs;

@@ -4,9 +4,9 @@ require_once "core.php";
 
 // $stats = $visitCounter->get_basic_stats();
 
-$page_title       = $settings->st_sitename;
-$page_description = $settings->st_description;
-$page_keywords    = $settings->st_keywords;
+$page_title       = SITE_NAME;
+$page_description = SITE_DESCRIPTION;
+$page_keywords    = SITE_KEYWORDS;
 
 $og_title       = $page_title;
 $og_description = $page_description;

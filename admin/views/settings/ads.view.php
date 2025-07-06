@@ -16,17 +16,17 @@
           <?php foreach ($ads as $ad): ?>
             <tr>
               <td>
-                <?= $ad->title ?>
+                <?= $ad->ad_title ?>
               </td>
               <td>
-                <?php if ($ad->status == "1"): ?>
+                <?php if ($ad->ad_status == "1"): ?>
                   <span class="badge bg-success">Publish</span>
                 <?php else: ?>
                   <span class="badge bg-warning">Draft</span>
                 <?php endif; ?>
               </td>
               <td>
-                <a href="<?= SITE_URL ?>/admin/controllers/settings/ads_edit.php?id=<?= $ad->id ?>" class="btn btn-success">
+                <a href="<?= SITE_URL ?>/admin/controllers/settings/ads_edit.php?id=<?= $ad->ad_id ?>" class="btn btn-success">
                   <i class="fa fa-edit"></i>
                 </a>
               </td>

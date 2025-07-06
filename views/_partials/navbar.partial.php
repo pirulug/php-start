@@ -1,9 +1,9 @@
 <nav class="navbar navbar-expand-lg bg-body">
   <div class="container">
     <a class="navbar-brand" href="<?= SITE_URL ?>">
-      <img class="brand-logo-ligth" src="<?= $url_static->logo($brand->st_whitelogo) ?>" alt="Logo Light" class="logo-light"
+      <img class="brand-logo-ligth" src="<?= $url_static->logo($st_whitelogo) ?>" alt="Logo Light" class="logo-light"
         height="40">
-      <img class="brand-logo-dark" src="<?= $url_static->logo($brand->st_darklogo) ?>" alt="Logo Dark" class="logo-dark d-none"
+      <img class="brand-logo-dark" src="<?= $url_static->logo($st_darklogo) ?>" alt="Logo Dark" class="logo-dark d-none"
         height="40">
     </a>
     <button class="navbar-toggler me-1 ms-auto" type="button" data-bs-toggle="offcanvas"
@@ -14,9 +14,9 @@
     <div class="offcanvas offcanvas-start" id="navbarResponsive">
       <div class="offcanvas-header">
         <a class="navbar-brand" href="<?= $url_static->home() ?>">
-          <img class="brand-logo-ligth" src="<?= $url_static->logo($brand->st_whitelogo) ?>" alt="Logo Light"
+          <img class="brand-logo-ligth" src="<?= $url_static->logo($st_whitelogo) ?>" alt="Logo Light"
             class="logo-light" height="40">
-          <img class="brand-logo-dark" src="<?= $url_static->logo($brand->st_darklogo) ?>" alt="Logo Dark"
+          <img class="brand-logo-dark" src="<?= $url_static->logo($st_darklogo) ?>" alt="Logo Dark"
             class="logo-dark d-none" height="40">
         </a>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

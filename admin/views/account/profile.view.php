@@ -99,14 +99,14 @@
   <div class="card-body">
     <?php foreach ($log->getLogsByUser($user->user_id) as $log): ?>
       <div class="d-flex align-items-start">
-        <img class="rounded-circle me-2" src="<?= get_gravatar($log->user_email) ?>" alt="<?= $log->user_name ?>"
+        <img class="rounded-circle me-2" src="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>" alt="<?= $log->user_name ?>"
           width="36" height="36">
         <div class="flex-grow-1">
-          <small class="float-end text-navy"><?= tiempoDesdeCambio($log->timestamp) ?></small>
-          <!-- <strong><?= $log->user_name ?></strong> -->
-          <?= $log->description ?>
+          <small class="float-end text-navy"><?= tiempoDesdeCambio($log->user_log_timestamp) ?></small>
+          <strong><?= $log->user_name ?></strong>
+          <?= $log->user_log_description ?>
           <br>
-          <small class="text-muted"><?= $log->timestamp ?></small>
+          <small class="text-muted"><?= $log->user_log_timestamp ?></small>
         </div>
       </div>
     <?php endforeach; ?>

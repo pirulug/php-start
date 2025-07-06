@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       if ($result->count > 0) {
         $messageHandler->addMessage("El nombre de usuario ya está en uso.", "danger");
       } else {
-        $log->logAction($user_id, 'Actualizado', "Usuario actualizo usuario $current_user->user_name a $user_name.");
+        $log->logUser($user_id, 'Actualizado', "Usuario actualizo usuario $current_user->user_name a $user_name.");
 
         $update = true;
       }
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       if ($result->count > 0) {
         $messageHandler->addMessage("El email ya está registrado.", "danger");
       } else {
-        $log->logAction($user_id, 'Actualizado', "Usuario actualizo email $current_user->user_email a $user_email.");
+        $log->logUser($user_id, 'Actualizado', "Usuario actualizo email $current_user->user_email a $user_email.");
 
         $update = true;
       }

@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $content = clear_data($_POST['content']);
   $status  = clear_data($_POST['status']);
 
-  $query = "UPDATE ads SET content = :content, status = :status WHERE id = :id";
+  $query = "UPDATE ads SET ad_content = :content, ad_status = :status WHERE ad_id = :id";
   $stmt  = $connect->prepare($query);
   $stmt->bindParam(":content", $content);
   $stmt->bindParam(":status", $status);
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   exit();
 }
 
-$querySelect = "SELECT * FROM ads WHERE id=:id";
+$querySelect = "SELECT * FROM ads WHERE ad_id=:id";
 $stmt        = $connect->prepare($querySelect);
 $stmt->bindParam(":id", $_GET['id']);
 $stmt->execute();
