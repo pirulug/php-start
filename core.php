@@ -113,15 +113,17 @@ define('SITE_URL_ADMIN', $options['site_url']."/admin" ?? 'http://php-start.test
 define('SITE_DESCRIPTION', $options['site_description'] ?? '');
 define('SITE_KEYWORDS', $options['site_keywords'] ?? '');
 
-$st_favicon = json_decode($options["favicon"]);
+$st_favicon = json_decode($options["favicon"], true);
 
-// $brd_android_chrome_192x192 = $st_favicon["android-chrome-192x192"];
-// $brd_android_chrome_512x512 = $st_favicon["android-chrome-512x512"];
-// $brd_apple_touch_icon       = $st_favicon["apple-touch-icon"];
-// $brd_favicon_16x16          = $st_favicon["favicon-16x16"];
-// $brd_favicon_32x32          = $st_favicon["favicon-32x32"];
-// $brd_favicon                = $st_favicon["favicon"];
-// $brd_webmanifest            = $st_favicon["webmanifest"];
+// print_r($st_favicon);
+
+$brd_android_chrome_192x192 = $st_favicon["android-chrome-192x192"];
+$brd_android_chrome_512x512 = $st_favicon["android-chrome-512x512"];
+$brd_apple_touch_icon       = $st_favicon["apple-touch-icon"];
+$brd_favicon_16x16          = $st_favicon["favicon-16x16"];
+$brd_favicon_32x32          = $st_favicon["favicon-32x32"];
+$brd_favicon                = $st_favicon["favicon.ico"];
+$brd_webmanifest            = $st_favicon["webmanifest"];
 
 $st_darklogo  = $options['dark_logo'] ?? 'default-dark.png';
 $st_whitelogo = $options['white_logo'] ?? 'default-white.png';

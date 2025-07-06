@@ -76,13 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 }
 
-$page_title       = "SigIn | " . $settings->st_sitename;
-$page_description = $settings->st_description;
-$page_keywords    = $settings->st_keywords;
+$page_title       = "SigIn | " . SITE_NAME;
+$page_description = SITE_DESCRIPTION;
+$page_keywords    = SITE_KEYWORDS;
 
 $og_title       = $page_title;
 $og_description = $page_description;
-$og_image       = SITE_URL . "/uploads/site/" . $settings->st_og_image;
+$og_image       = SITE_URL . "/uploads/site/" . $st_og_image;
 $og_url         = SITE_URL . "/signin";
 
 include "views/signin.view.php";
