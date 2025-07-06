@@ -1,5 +1,5 @@
 <?php $theme->blockStart("style") ?>
-<link rel="stylesheet" href="<?= SITE_URL?>/static/css/sweetalert2.css">
+<link rel="stylesheet" href="<?= SITE_URL ?>/static/css/sweetalert2.css">
 <?php $theme->blockEnd("style") ?>
 
 <?php $theme->blockStart("script") ?>
@@ -13,10 +13,11 @@
 
 <div class="card">
   <div class="card-body">
-    <form method="GET" action="">
-      <div class="input-group mb-3">
-        <input class="form-control" type="text" name="search" value="<?= htmlspecialchars($search) ?>">
-        <button class="btn btn-primary" type="submit">Buscar</button>
+    <form method="get" class="mb-3">
+      <div class="input-group">
+        <input type="text" name="search" class="form-control" placeholder="Buscar..."
+          value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+        <button class="btn btn-primary">Buscar</button>
       </div>
     </form>
     <div class="table-responsive">
@@ -69,7 +70,7 @@
       </table>
     </div>
 
-    <?php renderPagination($offset, $limit, $total_results, $page, $search, $total_pages) ?>
+    <?= $paginator->renderLinks('?') ?>
 
   </div>
 </div>

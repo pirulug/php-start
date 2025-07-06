@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       setcookie('psloggin', $encryption->encrypt($result_login->user_id), time() + (86400 * 30), "/");
     }
 
-    $log->logUser($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " Ingreso.");
+    $log->logUser($_SESSION['user_id'], 'Ingreso', $result_login->user_name . " Ingreso.");
     $messageHandler->addMessage("Datos correctos", "success");
     header('Location: ' . SITE_URL_ADMIN . '/controllers/dashboard.php');
     exit();

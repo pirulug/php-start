@@ -8,8 +8,7 @@ CREATE TABLE users (
   user_status INT NOT NULL DEFAULT 2,
   user_image VARCHAR(255) NOT NULL,
   user_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  user_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_role_id) REFERENCES user_roles(user_role_id)
+  user_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 2. Tabla de log de usuarios

@@ -4,40 +4,23 @@ require_once "../../core.php";
 
 $accessControl->check_access([1, 2], SITE_URL_ADMIN . "/controllers/404.php");
 
-
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-$page   = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-$limit  = 10;
-$offset = ($page - 1) * $limit;
-
-$orderColumn    = 'user_id';
-$orderDirection = 'DESC';
-
-$currentUserId = $_SESSION['user_id'];
-
-// Condiciones adicionales dinámicas
-$searchColumns = ['user_name', 'user_email'];
-
-$additionalConditions = [
+$paginator = new Paginator($connect, 'users', 10);
+$paginator->setSearchColumns(['user_name', 'user_email']);
+$paginator->setOrder('user_id', 'DESC');
+$paginator->setAdditionalConditions([
   [
-    'sql'   => 'user_role != 1',
+    'sql' => 'user_role != 1',
     'param' => null,
-    'value' => null,
-    'type'  => null,
+    'value' => null
   ],
   [
-    'sql'   => 'user_id != :currentUserId',
+    'sql' => 'user_id != :currentUserId',
     'param' => ':currentUserId',
-    'value' => $currentUserId,
-    'type'  => PDO::PARAM_INT,
+    'value' => $_SESSION['user_id']
   ]
-];
+]);
 
-$total_results = getTotalResults('users', $searchColumns, $search, $additionalConditions, $connect);
-$total_pages   = ceil($total_results / $limit);
-
-$users = getPaginatedResults('users', $searchColumns, $search, $additionalConditions, $limit, $offset, $connect, $orderColumn, $orderDirection);
-
+$users = $paginator->getResults();
 
 /* ========== Theme config ========= */
 $theme_title = "Lista de usuarios";

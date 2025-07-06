@@ -1,145 +1,169 @@
 <?php
 
-/* --------------- */
-// Paginador
-/* --------------- */
+class Paginator {
+  protected $pdo;
+  protected $table;
+  protected $perPage;
+  protected $searchTerm;
+  protected $currentPage;
+  protected $searchColumns;
+  protected $additionalConditions;
+  protected $orderColumn;
+  protected $orderDirection;
 
-function getPaginatedResults($table, $searchColumns, $searchTerm, $additionalConditions, $limit, $offset, $connect, $orderColumn = 'id', $orderDirection = 'ASC') {
-  $searchTerm = "%$searchTerm%";
-  $query      = "SELECT * FROM $table 
-            WHERE (";
+  public $totalItems;
+  public $totalPages;
 
-  $first = true;
-  foreach ($searchColumns as $column) {
-    if (!$first) {
-      $query .= " OR ";
+  public function __construct($pdo, $table, $perPage = 10) {
+    $this->pdo                  = $pdo;
+    $this->table                = $table;
+    $this->perPage              = $perPage;
+    $this->searchTerm           = $_GET['search'] ?? '';
+    $this->currentPage          = max((int) ($_GET['page'] ?? 1), 1);
+    $this->searchColumns        = [];
+    $this->additionalConditions = [];
+    $this->orderColumn          = 'id';
+    $this->orderDirection       = 'DESC';
+  }
+
+  public function setSearchColumns(array $columns) {
+    $this->searchColumns = $columns;
+  }
+
+  public function setOrder($column, $direction = 'DESC') {
+    $this->orderColumn    = $column;
+    $this->orderDirection = strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC';
+  }
+
+  public function setAdditionalConditions(array $conditions) {
+    $this->additionalConditions = $conditions;
+  }
+
+  public function getResults(array $columns = ['*']) {
+    $offset = ($this->currentPage - 1) * $this->perPage;
+
+    // Build WHERE clause
+    $whereClauses = [];
+    $params       = [];
+
+    // Search
+    if ($this->searchTerm && $this->searchColumns) {
+      $searchParts = [];
+      foreach ($this->searchColumns as $i => $col) {
+        $key           = ":search$i";
+        $searchParts[] = "$col LIKE $key";
+        $params[$key]  = '%' . $this->searchTerm . '%';
+      }
+      $whereClauses[] = '(' . implode(' OR ', $searchParts) . ')';
     }
-    $query .= "$column LIKE :searchTerm";
-    $first = false;
-  }
 
-  $query .= ")";
-
-  // Add additional conditions dynamically
-  foreach ($additionalConditions as $condition) {
-    $query .= " AND " . $condition['sql'];
-  }
-
-  $query .= " LIMIT :limit OFFSET :offset";
-
-  $stmt = $connect->prepare($query);
-  $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
-  $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
-  $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
-
-  // Bind additional condition values
-  foreach ($additionalConditions as $key => $condition) {
-    if (isset($condition['value'])) {
-      $stmt->bindValue($condition['param'], $condition['value'], $condition['type']);
+    // Additional conditions
+    foreach ($this->additionalConditions as $cond) {
+      $whereClauses[] = $cond['sql'];
+      if ($cond['param']) {
+        $params[$cond['param']] = $cond['value'];
+      }
     }
-  }
 
-  $stmt->execute();
-  return $stmt->fetchAll(PDO::FETCH_OBJ);
-}
+    $whereSQL = count($whereClauses) ? 'WHERE ' . implode(' AND ', $whereClauses) : '';
 
-function getTotalResults($table, $searchColumns, $searchTerm, $additionalConditions, $connect) {
-  $searchTerm = "%$searchTerm%";
-  $query      = "SELECT COUNT(*) as total FROM $table 
-            WHERE (";
+    // Query
+    // $sql  = "SELECT * FROM {$this->table} $whereSQL ORDER BY {$this->orderColumn} {$this->orderDirection} LIMIT :offset, :limit";
+    $colStr = implode(', ', $columns);
+    $sql    = "SELECT $colStr FROM {$this->table} $whereSQL ORDER BY {$this->orderColumn} {$this->orderDirection} LIMIT :offset, :limit";
+    $stmt   = $this->pdo->prepare($sql);
 
-  $first = true;
-  foreach ($searchColumns as $column) {
-    if (!$first) {
-      $query .= " OR ";
+    // Bind dynamic params
+    foreach ($params as $key => $val) {
+      $stmt->bindValue($key, $val);
     }
-    $query .= "$column LIKE :searchTerm";
-    $first = false;
-  }
 
-  $query .= ")";
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $this->perPage, PDO::PARAM_INT);
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-  // Add additional conditions dynamically
-  foreach ($additionalConditions as $condition) {
-    $query .= " AND " . $condition['sql'];
-  }
-
-  $stmt = $connect->prepare($query);
-  $stmt->bindValue(':searchTerm', $searchTerm, PDO::PARAM_STR);
-
-  // Bind additional condition values
-  foreach ($additionalConditions as $key => $condition) {
-    if (isset($condition['value'])) {
-      $stmt->bindValue($condition['param'], $condition['value'], $condition['type']);
+    // Count total
+    $countSQL  = "SELECT COUNT(*) FROM {$this->table} $whereSQL";
+    $countStmt = $this->pdo->prepare($countSQL);
+    foreach ($params as $key => $val) {
+      $countStmt->bindValue($key, $val);
     }
+    $countStmt->execute();
+    $this->totalItems = $countStmt->fetchColumn();
+    $this->totalPages = ceil($this->totalItems / $this->perPage);
+
+    return $results;
   }
 
-  $stmt->execute();
-  $result = $stmt->fetch(PDO::FETCH_OBJ);
-  return $result->total;
-}
+  public function renderLinks($baseUrl = '?') {
+    if ($this->totalPages <= 1)
+      return '';
 
-function renderPagination($offset, $limit, $total_results, $page, $search, $total_pages) {
-  echo '<div class="row">
-          <div class="col-md-6">
+    $offset        = ($this->currentPage - 1) * $this->perPage;
+    $limit         = $this->perPage;
+    $search        = urlencode($this->searchTerm);
+    $page          = $this->currentPage;
+    $total_results = $this->totalItems;
+    $total_pages   = $this->totalPages;
+
+    $html = '<div class="row">
+        <div class="col-md-6">
             <p>Mostrando ' . ($offset + 1) . ' a ' . min($offset + $limit, $total_results) . ' de ' . $total_results . ' entradas</p>
-          </div>
-          <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
             <ul class="pagination justify-content-end">';
 
-  if ($page > 1) {
-    echo '<li class="page-item">
-            <a class="page-link" href="?search=' . $search . '&page=' . ($page - 1) . '">Anterior</a>
-          </li>';
-  }
-
-  if ($page > 3) {
-    echo '<li class="page-item">
-            <a class="page-link" href="?search=' . $search . '&page=1">1</a>
-          </li>';
-    if ($page > 4) {
-      echo '<li class="page-item disabled">
-              <a class="page-link">...</a>
-            </li>';
+    // Anterior
+    if ($page > 1) {
+      $html .= '<li class="page-item">
+                    <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . ($page - 1) . '">Anterior</a>
+                  </li>';
     }
-  }
 
-  for ($i = max(1, $page - 2); $i <= min($page + 2, $total_pages); $i++) {
-    echo '<li class="page-item">
-            <a class="page-link ' . ($i == $page ? 'active' : '') . '" href="?search=' . $search . '&page=' . $i . '">' . $i . '</a>
-          </li>';
-  }
-
-  if ($page < $total_pages - 2) {
-    if ($page < $total_pages - 3) {
-      echo '<li class="page-item disabled">
-              <a class="page-link">...</a>
-            </li>';
+    // Primera página y elipsis
+    if ($page > 3) {
+      $html .= '<li class="page-item">
+                    <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=1">1</a>
+                  </li>';
+      if ($page > 4) {
+        $html .= '<li class="page-item disabled">
+                        <a class="page-link">...</a>
+                      </li>';
+      }
     }
-    echo '<li class="page-item">
-            <a class="page-link" href="?search=' . $search . '&page=' . $total_pages . '">' . $total_pages . '</a>
-          </li>';
-  }
 
-  if ($page < $total_pages) {
-    echo '<li class="page-item">
-            <a class="page-link" href="?search=' . $search . '&page=' . ($page + 1) . '">Siguiente</a>
-          </li>';
-  }
+    // Rango dinámico de páginas
+    for ($i = max(1, $page - 2); $i <= min($page + 2, $total_pages); $i++) {
+      $active = $i == $page ? ' active' : '';
+      $html .= '<li class="page-item' . $active . '">
+                    <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . $i . '">' . $i . '</a>
+                  </li>';
+    }
 
-  echo '</ul>
+    // Elipsis y última página
+    if ($page < $total_pages - 2) {
+      if ($page < $total_pages - 3) {
+        $html .= '<li class="page-item disabled">
+                        <a class="page-link">...</a>
+                      </li>';
+      }
+      $html .= '<li class="page-item">
+                    <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . $total_pages . '">' . $total_pages . '</a>
+                  </li>';
+    }
+
+    // Siguiente
+    if ($page < $total_pages) {
+      $html .= '<li class="page-item">
+                    <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . ($page + 1) . '">Siguiente</a>
+                  </li>';
+    }
+
+    $html .= '</ul>
         </div>
-      </div>';
-}
+    </div>';
 
-function formatDate($date) {
-  $timestamp = strtotime($date);
-
-  $months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-
-  $day   = date('d', $timestamp);
-  $month = date('n', $timestamp) - 1;
-  $year  = date('Y', $timestamp);
-
-  return "$day " . $months[$month] . " $year";
+    return $html;
+  }
 }
