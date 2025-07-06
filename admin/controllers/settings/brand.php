@@ -32,28 +32,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (mime_content_type($upFavicon['tmp_name']) !== 'image/png') {
       $messageHandler->addMessage("El archivo debe ser un PNG válido.", "danger");
     } else {
-      move_uploaded_file($upFavicon["tmp_name"], $uploadPathFavicon . $upFavicon['name']);
+      try {
+        // 1. Generar nuevos favicons
+        $generator      = new FaviconGenerator($uploadPathFavicon);
+        $generatedFiles = $generator->generate($upFavicon['tmp_name']);
 
-      $generator = new FaviconGenerator($uploadPathFavicon);
-      $generator->generate($uploadPathFavicon . $upFavicon['name']);
-      unlink($uploadPathFavicon . $upFavicon['name']);
+        if (empty($generatedFiles)) {
+          throw new Exception("No se generaron los favicons.");
+        }
 
-      $newFavicon = json_encode([
-        "android-chrome-192x192" => "android-chrome-192x192.png",
-        "android-chrome-512x512" => "android-chrome-512x512.png",
-        "apple-touch-icon"       => "apple-touch-icon.png",
-        "favicon-16x16"          => "favicon-16x16.png",
-        "favicon-32x32"          => "favicon-32x32.png",
-        "favicon.ico"            => "favicon.ico",
-        "webmanifest"            => "site.webmanifest"
-      ], JSON_UNESCAPED_SLASHES);
+        // 2. Obtener favicons anteriores
+        $stmt = $connect->prepare("SELECT option_value FROM options WHERE option_key = 'favicon'");
+        $stmt->execute();
+        $oldFaviconJson = $stmt->fetchColumn();
+        $oldFiles       = $oldFaviconJson ? json_decode($oldFaviconJson, true) : [];
 
-      $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = 'favicon'");
-      $stmt->bindParam(':value', $newFavicon);
-      $stmt->execute();
-      $messageHandler->addMessage("Favicon actualizado correctamente.", "success");
-      header("Location: brand.php");
-      exit();
+        // 3. Eliminar favicons anteriores si existen
+        foreach ($oldFiles as $filename) {
+          $fullPath = $uploadPathFavicon . $filename;
+          if (file_exists($fullPath)) {
+            unlink($fullPath);
+          }
+        }
+
+        // 4. Guardar nuevos favicons en base de datos
+        $newFavicon = json_encode($generatedFiles, JSON_UNESCAPED_SLASHES);
+        $stmt       = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = 'favicon'");
+        $stmt->bindParam(':value', $newFavicon);
+        $stmt->execute();
+
+        $messageHandler->addMessage("Favicon actualizado correctamente.", "success");
+        header("Location: brand.php");
+        exit();
+
+      } catch (Exception $e) {
+        $messageHandler->addMessage("Error al generar favicon: " . $e->getMessage(), "danger");
+      }
     }
   }
 
