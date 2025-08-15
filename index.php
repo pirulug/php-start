@@ -1,6 +1,6 @@
 <?php
 
-require "core.php";
+require_once "core/init.front.php";
 
 if ($_SERVER['REQUEST_URI'] == "/index.php") {
   header("Location: " . SITE_URL);

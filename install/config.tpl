@@ -25,9 +25,9 @@ const DB_USER = "<DB_USER>";
 const DB_PASS = "<DB_PASSWORD>";
 
 // Configuración de la aplicación
-const SITE_NAME = "<SITE_NAME>";
-const SITE_URL = "<SITE_URL>";
-const SITE_URL_ADMIN = SITE_URL . "/admin";
+// const SITE_NAME = "<SITE_NAME>";
+// const SITE_URL = "<SITE_URL>";
+// const SITE_URL_ADMIN = SITE_URL . "/admin";
 
 // Directorio Base
 const BASE_DIR = __DIR__;

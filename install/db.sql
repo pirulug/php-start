@@ -30,13 +30,13 @@ CREATE TABLE options (
 
 TRUNCATE TABLE options;
 INSERT INTO options (option_key, option_value) VALUES
-('site_name', 'Php Start'),
-('site_url', 'http://php-start.test'),
+('site_name', '-'),
+('site_url', '-'),
 ('site_description', 'A simple PHP starter project'),
 ('site_keywords', 'php, start, project, template'),
-('favicon', '{"favicon.ico":"favicon.ico"}'),
-('white_logo', 'whitelogo.png'),
-('dark_logo', 'darklogo.png'),
+('favicon', '{}'),
+('white_logo', '-'),
+('dark_logo', '-'),
 ('og_image', 'og_image.png'),
 ('smtp_host', 'smtp.test.com'),
 ('smtp_email', 'no-reply@test.com'),
@@ -60,23 +60,23 @@ CREATE TABLE visits (
 );
 
 -- 5. Tabla de ADS
-CREATE TABLE ads (
-  ad_id INT AUTO_INCREMENT PRIMARY KEY,
-  ad_title VARCHAR(255) NOT NULL DEFAULT '',
-  ad_subtitle VARCHAR(255) NOT NULL DEFAULT '',
-  ad_content MEDIUMTEXT NOT NULL,
-  ad_status TINYINT(4) NOT NULL DEFAULT 1,
-  ad_position VARCHAR(255) NOT NULL DEFAULT ''
-);
+-- CREATE TABLE ads (
+--   ad_id INT AUTO_INCREMENT PRIMARY KEY,
+--   ad_title VARCHAR(255) NOT NULL DEFAULT '',
+--   ad_subtitle VARCHAR(255) NOT NULL DEFAULT '',
+--   ad_content MEDIUMTEXT NOT NULL,
+--   ad_status TINYINT(4) NOT NULL DEFAULT 1,
+--   ad_position VARCHAR(255) NOT NULL DEFAULT ''
+-- );
 
-INSERT INTO ads (ad_id, ad_title, ad_subtitle, ad_content, ad_status, ad_position) VALUES
-(1, 'Header', '(Appears on all pages right under the nav bar)', '<div><a href="#"><img src="https://dummyimage.com/200x400/bababa/ebecf5.jpg"/></a></div>', 1, 'header'),
-(2, 'Footer', '(Appears on all pages right before the footer)', '<div><a href="#"><img src="https://wicombit.com/demo/banner.jpg"/></a></div>', 1, 'footer'),
-(3, 'Sidebar', '(Appears on all pages right on left bar)', '<div><a href="#"><img src="https://wicombit.com/demo/sidebar.jpg"/></a></div>', 1, 'sidebar');
+-- INSERT INTO ads (ad_id, ad_title, ad_subtitle, ad_content, ad_status, ad_position) VALUES
+-- (1, 'Header', '(Appears on all pages right under the nav bar)', '<div><a href="#"><img src="https://dummyimage.com/200x400/bababa/ebecf5.jpg"/></a></div>', 1, 'header'),
+-- (2, 'Footer', '(Appears on all pages right before the footer)', '<div><a href="#"><img src="https://wicombit.com/demo/banner.jpg"/></a></div>', 1, 'footer'),
+-- (3, 'Sidebar', '(Appears on all pages right on left bar)', '<div><a href="#"><img src="https://wicombit.com/demo/sidebar.jpg"/></a></div>', 1, 'sidebar');
 
 -- -----------------------------------------------------------------------------
 
-INSERT INTO users (user_name, user_email, user_password, user_role_id, user_status, user_image) VALUES
-('Admin', 'admin@admin.com', 'VWpZK25XUGxDS0k1MVd2bGdxbFhXZz09', 1, 1, 'admin.png');
+-- INSERT INTO users (user_name, user_email, user_password, user_role, user_status, user_image) VALUES
+-- ('Admin', 'admin@admin.com', 'VWpZK25XUGxDS0k1MVd2bGdxbFhXZz09', 1, 1, 'admin.png');
 
-TRUNCATE TABLE user_logs;
+-- TRUNCATE TABLE user_logs;

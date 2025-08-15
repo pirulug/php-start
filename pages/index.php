@@ -1,6 +1,5 @@
 <?php
 
-require_once "core.php";
 
 // $stats = $visitCounter->get_basic_stats();
 
