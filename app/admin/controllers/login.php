@@ -1,7 +1,7 @@
 <?php
 
 if (isset($_SESSION['signin']) && $_SESSION['signin'] == true) {
-  header('Location: ' . SITE_URL_ADMIN . '/dashboard.php');
+  header('Location: ' . url_admin("dashboard"));
   exit();
 } else {
   if (isset($_COOKIE['psloggin'])) {
@@ -22,15 +22,12 @@ if (isset($_COOKIE['psloggin'])) {
   $result_cookie = $stmt->fetch(PDO::FETCH_OBJ);
 
   if ($result_cookie !== false) {
-    // Establecer la sesión del usuario
     $_SESSION['signin']  = true;
     $_SESSION['user_id'] = $result_cookie->user_id;
 
-    // $log->logUser($_SESSION['user_id'], 'Ingreso', $_SESSION['user_name'] . " ingresó automáticamente con cookie.");
-    header('Location: ' . SITE_URL_ADMIN . '/dashboard.php');
+    header('Location: ' . url_admin("dashboard"));
     exit();
   } else {
-    // Si la cookie es inválida, eliminarla
     setcookie('psloggin', '', time() - 3600, "/");
   }
 }

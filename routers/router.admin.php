@@ -92,6 +92,6 @@ switch ($segments[1] ?? '') {
     break;
 
   default:
-    include path_admin("errors/404");
+    header("Location: " . url_admin("login"));
     break;
 }
