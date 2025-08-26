@@ -1,72 +1,62 @@
+
 # PHP Start
 
 ![PHP Version](https://img.shields.io/badge/PHP-%3E%3D%208.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-PHP Start es un miniframework ligero diseñado para facilitar el desarrollo rápido de aplicaciones web en PHP. Está construido con un enfoque en la simplicidad, el rendimiento y la flexibilidad.
+**PHP Start** is a lightweight and modular mini-framework for rapid web application development in PHP. It is designed for simplicity, performance, and flexibility, allowing you to build scalable and well-organized projects.
 
-## Características
+## Main Features
 
-- **Ligero y rápido**: Sin dependencias innecesarias, se centra en lo esencial para maximizar el rendimiento.
-- **Control de acceso basado en roles**: Implementación flexible de roles (superadmin, admin, usuario) para gestionar permisos.
-- **Manejo de sesiones**: Gestión de sesiones sencilla y efectiva con redirección automática en caso de errores.
-- **Configurable**: Fácil de personalizar y extender según las necesidades de tu proyecto.
-- **Estructura de directorios intuitiva**: Facilita la organización del código y recursos.
+- **Lightweight & Fast:** No unnecessary external dependencies.
+- **Role-based Access Control:** Superadmin, admin, and user roles.
+- **Advanced Session Management:** Automatic redirection and protection.
+- **Custom Template Engine:** Clear separation between logic and views.
+- **Notification System:** Supports Bootstrap, SweetAlert, and Toast.
+- **Modular Structure:** Organized folders for admin, API, pages, static resources, and libraries.
 
-## Instalación
-
-1. Clona el repositorio:
-
-    ```bash
-    git clone https://github.com/pirulug/php-start.git
-    ```
-
-2. Navega al directorio del proyecto:
-
-    ```bash
-    cd php-start
-    ```
-
-3. Configura tu servidor local (Apache/Nginx) para apuntar al directorio `public/`.
-
-4. Asegúrate de que tu servidor tiene PHP 8.0 o superior.
-
-## Estructura del Proyecto
+## Project Structure
 
 ```plaintext
 php-start/
-|── admin
-|── assets
-|── install
-|── libs
-|── uploads
-|── views
-|── index.md
-└── README.md
+├── app/                # Business logic (admin, api, pages)
+├── core/               # Initialization, configuration, helpers
+├── libs/               # Reusable libraries (AccessControl, Encryption, etc.)
+├── routers/            # Routers for admin, API, and frontend
+├── static/             # Static resources (CSS, JS, images, plugins)
+├── uploads/            # User and site uploaded files
+├── config.php          # Main configuration
+├── index.php           # Main entry point
+├── README.md           # Documentation
 ```
 
-## Uso
-### Control de Acceso Basado en Roles
-El miniframework incluye una clase AccessControl que permite gestionar permisos según roles. Los roles disponibles son:
+## Installation
 
-- Superadmin (rol 0): Acceso total.
-- Admin (rol 1): Acceso con ciertas restricciones.
-- Usuario (rol 2): Acceso limitado.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/pirulug/php-start.git
+    ```
+2. Enter the project directory:
+    ```bash
+    cd php-start
+    ```
+3. Configure your local server (Apache/Nginx) to point to the root directory.
+4. Make sure your server is running PHP 8.0 or higher.
 
-Ejemplo de uso:
+## Usage Example
+
+### Role-based Access Control
 
 ```php
 $accessControl = new AccessControl($userRole);
 if ($accessControl->hasAccess([1, 2])) {
-    // El usuario tiene acceso
+    // User has access
 } else {
-    // El usuario no tiene acceso
+    // User does not have access
 }
 ```
 
-## Manejo de Sesiones
-
-La clase SessionManager facilita la gestión de sesiones y redirecciones automáticas:
+### Session Management
 
 ```php
 $session = new SessionManager();
@@ -75,18 +65,25 @@ if (!$session->isLoggedIn()) {
 }
 ```
 
-## Contribuir
+### Notifications
 
-¡Las contribuciones son bienvenidas! Siéntete libre de abrir un issue o enviar un pull request.
+```php
+$notifier = new Notifier();
+$notifier->notify('Welcome!', 'success', 'sweetalert');
+```
 
-## Haz un fork del proyecto.
-- Crea una nueva rama (git checkout -b feature/nueva-feature).
-- Haz tus cambios y haz commit (git commit -am 'Agrega una nueva característica').
-- Haz push a la rama (git push origin feature/nueva-feature).
-- Abre un Pull Request.
+## Contributing
 
-## Licencia
-Este proyecto está licenciado bajo la licencia MIT. Consulta el archivo LICENSE para más detalles.
+Contributions are welcome! Feel free to open an issue or submit a pull request.
 
-## Contacto
-Si tienes alguna pregunta o sugerencia, no dudes en abrir un issue o contactar a través de GitHub.
+## Fork the Project
+- Create a new branch (`git checkout -b feature/new-feature`).
+- Make your changes and commit (`git commit -am 'Add a new feature'`).
+- Push to the branch (`git push origin feature/new-feature`).
+- Open a Pull Request.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Contact
+If you have any questions or suggestions, feel free to open an issue or contact via GitHub.
