@@ -29,10 +29,10 @@
 /*---------------------------------------------------------------
 | BASE DE DATOS
 ----------------------------------------------------------------*/
-const DB_HOST = "localhost";     // Host de la base de datos
-const DB_NAME = "php-start";     // Nombre de la BD
-const DB_USER = "root";          // Usuario de la BD
-const DB_PASS = "";              // Contraseña de la BD
+const DB_HOST = "localhost"; // Host de la base de datos
+const DB_NAME = "php-start"; // Nombre de la BD
+const DB_USER = "root"; // Usuario de la BD
+const DB_PASS = ""; // Contraseña de la BD
 
 /*---------------------------------------------------------------
 | APLICACIÓN
@@ -56,11 +56,11 @@ const BASE_DIR = __DIR__;
 /*---------------------------------------------------------------
 | SEGURIDAD
 ----------------------------------------------------------------*/
-const ENCRYPT_METHOD = "AES-256-CBC";            // Método de cifrado
-const ENCRYPT_KEY = '$STARTPHP@2024PIRU';     // Llave de cifrado (cambiar en prod)
-const ENCRYPT_IV = '456232132132432234132';  // IV (debe tener 16 bytes exactos en AES)
+const ENCRYPT_METHOD = "AES-256-CBC"; // Método de cifrado
+const ENCRYPT_KEY = '$STARTPHP@2024PIRU'; // Llave de cifrado (cambiar en prod)
+const ENCRYPT_IV = '456232132132432234132'; // IV (debe tener 16 bytes exactos en AES)
 
 /*---------------------------------------------------------------
 | SISTEMA
 ----------------------------------------------------------------*/
-date_default_timezone_set("America/Lima");       // Zona horaria por defecto
+date_default_timezone_set("America/Lima"); // Zona horaria por defecto
