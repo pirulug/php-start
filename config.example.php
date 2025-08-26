@@ -13,7 +13,7 @@
 |                                     
 | Author        : Pirulug
 | Author URI    : https://github.com/pirulug
-| Project       : PhpInstaller
+| Project       : PhpSTART
 | Version       : 0.0.1
 | License       : MIT
 ------------------------------------------------------------------------------*/
