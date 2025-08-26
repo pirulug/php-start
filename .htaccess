@@ -25,7 +25,7 @@ Options -Indexes
 RewriteEngine On
 
 # Excluir la carpeta admin/ de las reglas
-RewriteCond %{REQUEST_URI} !^/admin/
+# RewriteCond %{REQUEST_URI} !^/admin/
 
 # Reescribir todas las peticiones al archivo index.php
 RewriteCond %{REQUEST_FILENAME} !-f
