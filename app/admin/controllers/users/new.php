@@ -1,9 +1,5 @@
 <?php
 
-require_once "core/init.php";
-
-// $accessControl->check_access([1, 2], SITE_URL_ADMIN . "/controllers/404.php");
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
   $user_name   = clear_data($_POST['user_name']);
