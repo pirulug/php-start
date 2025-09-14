@@ -1,5 +1,9 @@
 <?php
 
+if (!file_exists(__DIR__ . "/../config.php")) {
+  die("Te falta el archivo config.php");
+}
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
@@ -82,7 +86,7 @@ $theme->setGlobals([
   'accessControl'  => $accessControl,
   'cipher'         => $cipher,
   'config'         => $config,
-  'favicon'         => $favicon,
+  'favicon'        => $favicon,
   'SITE_URL_ADMIN' => SITE_URL_ADMIN,
   'SITE_NAME'      => SITE_NAME,
   'SITE_URL'       => SITE_URL
