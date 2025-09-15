@@ -80,12 +80,15 @@ switch ($segments[1] ?? '') {
   case "account":
     switch ($segments[2] ?? '') {
       case 'profile':
+        $accessControl->check_access([1, 2], url_admin("logout"));
         include path_admin("account/profile");
         break;
       case 'settings':
+        $accessControl->check_access([1, 2], url_admin("logout"));
         include path_admin("account/settings");
         break;
       default:
+        $accessControl->check_access([1, 2], url_admin("logout"));
         include path_admin("errors/404-alt");
         break;
     }
