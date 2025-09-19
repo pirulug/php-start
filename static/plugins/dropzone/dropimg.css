@@ -84,3 +84,12 @@
   color: #e74c3c;
   text-align: center;
 }
+
+.dropimg-error {
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  color: #e74c3c;
+  margin-top: 6px;
+  font-weight: bold;
+}
