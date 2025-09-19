@@ -1,0 +1,86 @@
+.dropimg-zone {
+  border: 2px dashed #bbb;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ececec;
+  width: 100%; /* ocupa todo el ancho disponible */
+  max-width: 100%; /* no desborda */
+}
+
+[data-bs-theme="dark"] .dropimg-zone {
+  background: #111;
+}
+
+.dropimg-zone input[type="file"] {
+  display: none;
+}
+
+.dropimg-preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-weight: bold;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  aspect-ratio: inherit; /* respeta proporción */
+}
+
+.dropimg-text {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.2s;
+  white-space: nowrap;
+  text-align: center;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropimg-text:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+/* 🔹 Dropzones pequeños */
+.dropimg-zone.small .dropimg-text {
+  font-size: 11px;
+  padding: 4px 6px;
+}
+
+/* 🔹 Dropzones muy pequeños → solo ícono */
+.dropimg-zone.tiny .dropimg-text {
+  font-size: 0;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropimg-zone.tiny .dropimg-text svg {
+  width: 18px;
+  height: 18px;
+  fill: #333;
+  background: transparent;
+}
+
+.dropimg-recommend {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #e74c3c;
+  text-align: center;
+}

@@ -1,5 +1,5 @@
 <?php $theme->blockStart("style"); ?>
-<link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/dropzone/dropzone.css" ?>">
+<link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/dropzone/dropimg.css" ?>">
 <?php $theme->blockEnd("style"); ?>
 
 <form id="formNewUser" enctype="multipart/form-data" action="" method="post">
@@ -58,15 +58,10 @@
     <div class="col-4">
       <div class="card">
         <div class="card-body">
-          <label for="post_image" class="form-label">Imagen</label>
-          <!-- <img id="preview_user_image" class="preview-image preview-logo mb-3"
-            src="<?= SITE_URL ?>/uploads/user/default.webp">
-          <input type="file" class="form-control image-input" name="user_image" data-preview="preview_user_image"> -->
-
-
-          <input type="file" name="user_image" data-pdz data-pdz-width="100" data-pdz-height="100"
-            data-pdz-accept=".jpg,.jpeg,.png,.gif,.webp" accept=".jpg,.jpeg,.png,.gif,.webp">
-
+          <label for="user_image" class="form-label">Imagen</label>
+          <!-- <?= SITE_URL ?>/uploads/user/default.webp -->
+          <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
+            accept=".jpg,.jpeg,.png,.gif,.webp">
         </div>
       </div>
     </div>
@@ -82,12 +77,8 @@
 </form>
 
 <?php $theme->blockStart("script"); ?>
-<script src="<?= SITE_URL . "/static/plugins/dropzone/dropzone.js" ?>"></script>
+<script src="<?= SITE_URL . "/static/plugins/dropzone/dropimg.js" ?>"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("input[data-pdz]").forEach((input) => {
-      new PirulugDropzone(input);
-    });
-  });
+  DropImg.init();
 </script>
 <?php $theme->blockEnd("script"); ?>

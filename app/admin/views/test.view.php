@@ -1,5 +1,7 @@
 <?php $theme->blockStart("style"); ?>
 <link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/dropzone/dropzone.css" ?>">
+
+<link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/dropzone/dropimg.css" ?>">
 <?php $theme->blockEnd("style"); ?>
 
 <!-- Ejemplo múltiple -->
@@ -20,6 +22,26 @@
   </div>
 </div>
 
+<h3>imgDROP</h3>
+<div class="card card-body mb-3">
+  <input type="file" name="foto1" data-dropimg data-width="350" data-height="500">
+</div>
+
+<div class="card card-body mb-3">
+  <input type="file" name="foto2" data-dropimg data-width="250" data-height="250">
+</div>
+
+<div class="card card-body mb-3">
+  <input type="file" name="foto3" data-dropimg data-width="400" data-height="300">
+</div>
+
+<div class="card card-body mb-3">
+  <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
+    data-default="<?= SITE_URL . '/uploads/user/default.webp' ?>" accept=".jpg,.jpeg,.png,.gif,.webp">
+
+</div>
+
+
 <?php $theme->blockStart("script"); ?>
 <script src="<?= SITE_URL . "/static/plugins/dropzone/dropzone.js" ?>"></script>
 <script>
@@ -28,5 +50,10 @@
       new PirulugDropzone(input);
     });
   });
+</script>
+
+<script src="<?= SITE_URL . "/static/plugins/dropzone/dropimg.js" ?>"></script>
+<script>
+  DropImg.init();
 </script>
 <?php $theme->blockEnd("script"); ?>
