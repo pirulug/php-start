@@ -1,18 +1,5 @@
 <?php $theme->blockStart("style"); ?>
-<style>
-  .preview-image {
-    display: block;
-    object-fit: cover;
-    border: dotted 1px #e6e6e6;
-    margin: 10px auto;
-    border-radius: .5rem;
-  }
-
-  .preview-logo {
-    width: 100px;
-    height: 100px;
-  }
-</style>
+<link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/dropzone/dropzone.css" ?>">
 <?php $theme->blockEnd("style"); ?>
 
 <form enctype="multipart/form-data" method="post">
@@ -72,10 +59,12 @@
     <div class="col-4">
       <div class="card">
         <div class="card-body">
-          <label for="post_image" class="form-label">Imagen</label>
+          <!-- <label for="post_image" class="form-label">Imagen</label>
           <img id="preview_user_image" class="preview-image preview-logo mb-3"
             src="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>">
-          <input type="file" class="form-control image-input" name="user_image" data-preview="preview_user_image">
+          <input type="file" class="form-control image-input" name="user_image" data-preview="preview_user_image"> -->
+          <input type="file" id="user_image" name="user_image" data-pdz data-pdz-width="100" data-pdz-height="100"
+            data-pdz-default="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>" accept=".jpg,.jpeg,.png,.gif,.webp">
         </div>
       </div>
     </div>
@@ -92,27 +81,11 @@
 </form>
 
 <?php $theme->blockStart("script"); ?>
+<script src="<?= SITE_URL . "/static/plugins/dropzone/dropzone.js" ?>"></script>
 <script>
-  document.querySelectorAll('.image-input').forEach(function (input) {
-    input.addEventListener('change', function (event) {
-      const file = event.target.files[0];
-      const previewId = input.getAttribute('data-preview');
-      const preview = document.getElementById(previewId);
-
-      if (file) {
-        if (file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            preview.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        } else {
-          alert('Por favor, selecciona un archivo de imagen válido.');
-          preview.src = 'default.webp';
-        }
-      } else {
-        preview.src = 'default.webp';
-      }
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("input[data-pdz]").forEach((input) => {
+      new PirulugDropzone(input);
     });
   });
 </script>

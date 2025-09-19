@@ -13,6 +13,10 @@ switch ($segments[1] ?? '') {
     include path_admin("logout");
     break;
 
+  case 'test':
+    include path_admin("test");
+    break;
+
   case 'users':
     $accessControl->check_access([1, 2], url_admin("logout"));
     include path_admin("users/list");

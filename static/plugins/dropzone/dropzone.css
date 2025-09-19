@@ -1,0 +1,156 @@
+/* 🎨 Estilos base (independientes del tema) */
+.pirulug-dropzone {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px dashed;
+  border-radius: 0.75rem;
+  margin: 10px auto;
+  padding: 12px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+
+.pirulug-dropzone.dragover {
+  border-color: var(--accent-color);
+  background: var(--accent-bg);
+}
+
+.pirulug-dropzone svg {
+  width: 64px;
+  height: 64px;
+  fill: var(--icon-color);
+}
+
+.pirulug-dropzone small {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-top: 8px;
+  display: block;
+}
+
+.pirulug-dropzone .counter {
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
+
+.pirulug-dropzone .error-msg {
+  color: #c62828;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  display: none;
+  text-align: center;
+}
+
+/* 📂 Lista vertical */
+.pdz-file-list {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pdz-file-item {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+}
+
+.pdz-file-thumb {
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.3rem;
+  margin-right: 10px;
+}
+
+.pdz-file-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdz-file-name {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdz-remove-btn {
+  flex-shrink: 0;
+  margin-left: 10px;
+  background: #ff4d4d;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdz-remove-btn:hover {
+  background: #e63939;
+}
+
+/* 🌞 Tema claro */
+[data-bs-theme="light"] {
+  --accent-color: #4caf50;
+  --accent-bg: #f6fff6;
+  --icon-color: #666;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --border-color: #ddd;
+  --bg-color: #fff;
+}
+
+[data-bs-theme="light"] .pirulug-dropzone {
+  border-color: var(--border-color);
+  background: #fafafa;
+}
+
+[data-bs-theme="light"] .pdz-file-item {
+  border-color: var(--border-color);
+  background: var(--bg-color);
+}
+
+/* 🌚 Tema oscuro */
+[data-bs-theme="dark"] {
+  --accent-color: #81c784;
+  --accent-bg: #1b2b1b;
+  --icon-color: #aaa;
+  --text-primary: #eee;
+  --text-secondary: #bbb;
+  --border-color: #444;
+  --bg-color: #222;
+}
+
+[data-bs-theme="dark"] .pirulug-dropzone {
+  border-color: var(--border-color);
+  background: #2a2a2a;
+}
+
+[data-bs-theme="dark"] .pdz-file-item {
+  border-color: var(--border-color);
+  background: var(--bg-color);
+}
