@@ -1,38 +1,5 @@
 <?php $theme->blockStart("script"); ?>
-<script>
-  document.getElementById('testMail').addEventListener('click', function (event) {
-    event.preventDefault();
-
-    const button = event.target;
-    const spinner = document.getElementById('spinner');
-
-    // Deshabilitar el botón y mostrar el spinner
-    button.setAttribute('disabled', true);
-    spinner.style.display = 'inline-block';
-
-    fetch('test-mail.php', {
-      method: 'GET',
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error en la respuesta de la red');
-        }
-        return response.text();
-      })
-      .then(data => {
-        console.log('Correo de prueba enviado:', data);
-        alert('Correo de prueba enviado con éxito');
-      })
-      .catch(error => {
-        console.error('Hubo un problema con la solicitud fetch:', error);
-        alert('Error al enviar el correo de prueba');
-      })
-      .finally(() => {
-        button.removeAttribute('disabled');
-        spinner.style.display = 'none';
-      });
-  });
-</script>
+<script src="<?= SITE_URL ?>/static/scripts/test-mail.js"></script>
 <?php $theme->blockEnd("script"); ?>
 
 <div class="card">
@@ -61,8 +28,12 @@
 
       <hr>
       <button class="btn btn-primary" type="submit">Guardar</button>
-      <button id="testMail" class="btn btn-success">
-        <i id="spinner" class="fa fa-spinner fa-spin" style="display: none;"></i>
+      <button id="testMail" class="btn btn-info">
+        <i id="loading" class="fa fa-spinner fa-spin" style="display:none"></i>
+
+        <!-- <div class="spinner-border text-light" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div> -->
         Enviar Correo de Prueba
       </button>
     </form>

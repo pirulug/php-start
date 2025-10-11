@@ -16,6 +16,8 @@ if ($segments[0] === ADMIN_NAME) {
   require "routers/router.admin.php";
 } elseif ($segments[0] === "api") {
   require "routers/router.api.php";
+} elseif ($segments[0] === "ajax") {
+  require "routers/router.ajax.php";
 } else {
   require "routers/router.front.php";
 }

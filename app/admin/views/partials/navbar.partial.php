@@ -67,12 +67,12 @@ $menu_general = [
       'link'  => 'settings/info',
       'roles' => [1]
     ],
-    [
-      'title' => 'Estadística',
-      'path'  => 'statistics',
-      'link'  => 'settings/statistics',
-      'roles' => [1]
-    ],
+    // [
+    //   'title' => 'Estadística',
+    //   'path'  => 'statistics',
+    //   'link'  => 'settings/statistics',
+    //   'roles' => [1]
+    // ],
     [
       'title' => 'robots.txt',
       'path'  => 'robots',

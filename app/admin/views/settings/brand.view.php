@@ -1,4 +1,4 @@
-<?php $theme->blockStart("style"); ?>
+<!-- <?php $theme->blockStart("style"); ?>
 <style>
   .preview-image {
     display: block;
@@ -50,7 +50,11 @@
     });
   });
 </script>
-<?php $theme->blockEnd("script"); ?>
+<?php $theme->blockEnd("script"); ?> -->
+
+<?php $theme->blockStart("style"); ?>
+<link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/dropzone/dropimg.css" ?>">
+<?php $theme->blockEnd("style"); ?>
 
 <div class="row g-3">
 
@@ -59,14 +63,11 @@
     <div class="card bg-dark text-white">
       <div class="card-body">
         <h5>WHITE LOGO</h5>
-        <p>Recommended Size: <b>320 x 71 Pixels</b></p>
-        <img id="preview_whitelogo" class="preview-image preview-logo mb-3"
-          src="<?= SITE_URL . "/uploads/site/" . ($optionsRaw['white_logo'] ?? 'default-white.webp') ?>" alt="whitelogo"
-          height="71">
         <form method="post" enctype="multipart/form-data">
           <div class="mb-3">
-            <input class="form-control image-input" type="file" name="st_whitelogo" data-preview="preview_whitelogo"
-              required>
+            <input type="file" id="st_whitelogo" name="st_whitelogo" data-dropimg data-width="300" data-height="71"
+              data-default="<?= SITE_URL . "/uploads/site/" . $optionsRaw['white_logo'] ?>"
+              accept=".jpg,.jpeg,.png,.gif,.webp" required>
           </div>
           <button class="btn btn-primary w-100" type="submit">Guardar</button>
         </form>
@@ -79,14 +80,11 @@
     <div class="card bg-white text-dark">
       <div class="card-body">
         <h5>DARK LOGO</h5>
-        <p>Recommended Size: <b>320 x 71 Pixels</b></p>
-        <img id="preview_darklogo" class="preview-image preview-logo mb-3"
-          src="<?= SITE_URL . "/uploads/site/" . ($optionsRaw['dark_logo'] ?? 'default-dark.webp') ?>" alt="darklogo"
-          height="71">
         <form method="post" enctype="multipart/form-data">
           <div class="mb-3">
-            <input class="form-control image-input" type="file" name="st_darklogo" data-preview="preview_darklogo"
-              required>
+            <input type="file" id="st_darklogo" name="st_darklogo" data-dropimg data-width="300" data-height="71"
+              data-default="<?= SITE_URL . "/uploads/site/" . $optionsRaw['dark_logo'] ?>"
+              accept=".jpg,.jpeg,.png,.gif,.webp" required>
           </div>
           <button class="btn btn-primary w-100" type="submit">Guardar</button>
         </form>
@@ -99,15 +97,11 @@
     <div class="card">
       <div class="card-body">
         <h5>FAVICON</h5>
-        <p>Recomendado: <b>128 x 128 píxeles</b></p>
-        <img id="preview_favicon" class="preview-image preview-favicon mb-3"
-          src="<?= SITE_URL . "/uploads/site/favicons/" . ($st_favicon['favicon.ico'] ?? 'favicon.ico') ?>"
-          alt="favicon">
         <form method="post" enctype="multipart/form-data">
-          <input type="hidden" name="st_favicon_save" value="<?= $st_favicon['favicon.ico'] ?? '' ?>">
           <div class="mb-3">
-            <input class="form-control image-input" type="file" name="st_favicon" data-preview="preview_favicon"
-              required>
+            <input type="file" id="st_favicon" name="st_favicon" data-dropimg data-width="128" data-height="128"
+              data-default="<?= SITE_URL . "/uploads/site/favicons/" . $st_favicon['favicon.ico'] ?>"
+              accept=".jpg,.jpeg,.png,.gif,.webp" required>
           </div>
           <button class="btn btn-primary w-100" type="submit">Guardar</button>
         </form>
@@ -120,14 +114,11 @@
     <div class="card">
       <div class="card-body">
         <h5>IMAGEN OPEN GRAPH</h5>
-        <p>Recomendado: <b>1200 x 630 píxeles</b></p>
-        <img id="preview_og_image" class="preview-image preview-og mb-3"
-          src="<?= SITE_URL ?>/uploads/site/<?= $optionsRaw['og_image'] ?? 'default-og.webp' ?>"
-          alt="Imagen Open Graph">
         <form method="post" enctype="multipart/form-data">
           <div class="mb-3">
-            <input id="og_image" class="form-control image-input" type="file" name="st_og_image"
-              data-preview="preview_og_image" required>
+            <input type="file" id="st_og_image" name="st_og_image" data-dropimg data-width="1200" data-height="630"
+              data-default="<?= SITE_URL ?>/uploads/site/<?= $optionsRaw['og_image'] ?>"
+              accept=".jpg,.jpeg,.png,.gif,.webp" required>
           </div>
           <button class="btn btn-primary w-100" type="submit">Guardar</button>
         </form>
@@ -136,3 +127,10 @@
   </div>
 
 </div>
+
+<?php $theme->blockStart("script"); ?>
+<script src="<?= SITE_URL . "/static/plugins/dropzone/dropimg.js" ?>"></script>
+<script>
+  DropImg.init();
+</script>
+<?php $theme->blockEnd("script"); ?>

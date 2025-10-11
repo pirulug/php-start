@@ -5,10 +5,14 @@ function path_admin(string $path, string $ext = ".php"): string {
 }
 
 function path_front(string $path, string $ext = ".php"): string {
-  return BASE_DIR_PAGES . "/controllers/" . $path . $ext;
+  return BASE_DIR_FRONT . "/controllers/" . $path . $ext;
 }
 
 function path_api(string $path, string $ext = ".php"): string {
+  return BASE_DIR_API . "/" . $path . $ext;
+}
+
+function path_ajax(string $path, string $ext = ".php"): string {
   return BASE_DIR_AJAX . "/" . $path . $ext;
 }
 
@@ -23,4 +27,8 @@ function url_front(string $path) {
 
 function url_api(string $path) {
   return SITE_URL_API . "/" . $path;
+}
+
+function url_ajax(string $path) {
+  return SITE_URL_AJAX . "/" . $path;
 }

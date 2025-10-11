@@ -59,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
 
         $notifier->add("Favicon actualizado correctamente.", "success");
-        header("Location: brand.php");
-        exit();
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit;
 
       } catch (Exception $e) {
         $notifier->add("Error al generar favicon: " . $e->getMessage(), "danger");
@@ -86,8 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $notifier->add("Logo claro actualizado correctamente.", "success");
-    header("Location: brand.php");
-    exit();
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
   }
 
   // =============== LOGO OSCURO ===============
@@ -108,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $notifier->add("Logo oscuro actualizado correctamente.", "success");
-    header("Location: brand.php");
-    exit();
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
   }
 
   // =============== OG IMAGE ===============
@@ -130,8 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $notifier->add("Imagen Open Graph actualizada correctamente.", "success");
-    header("Location: brand.php");
-    exit();
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
   }
 }
 
@@ -141,6 +141,7 @@ $theme->render(
     'theme_title' => 'Brand',
     'theme_path'  => 'brand',
     'optionsRaw'  => $optionsRaw,
+    'st_favicon'  => $st_favicon,
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"
 );
