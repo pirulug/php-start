@@ -31,21 +31,66 @@
         <div class="mb-3">
           <figure class="text-center">
             <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
-              data-default="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>"
-              accept=".jpg,.jpeg,.png,.gif,.webp" required>
+              data-default="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>" accept=".jpg,.jpeg,.png,.gif,.webp">
           </figure>
         </div>
 
         <div class="mb-3">
-          <label for="name" class="form-label">Nombre de usuario</label>
-          <input type="text" name="name" id="name" class="form-control" placeholder="Tu nombre de usuario"
-            value="<?= $user->user_name ?>" required>
+          <label for="user_name" class="form-label">Nombre de usuario</label>
+          <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Tu nombre de usuario"
+            value="<?= $user->user_name ?>" disabled>
         </div>
+
         <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="text" name="email" id="email" class="form-control" placeholder="Tu Email"
+          <label for="user_first_name">Nombre</label>
+          <input type="text" name="user_first_name" id="user_first_name" class="form-control"
+            value="<?= $user->user_first_name ?>">
+        </div>
+
+        <div class="mb-3">
+          <label for="user_last_name">Apellidos</label>
+          <input type="text" name="user_last_name" id="user_last_name" class="form-control"
+            value="<?= $user->user_last_name ?>">
+        </div>
+
+        <div class="mb-3">
+          <label for="user_nickname">Alias (obligatorio)</label>
+          <input type="text" name="user_nickname" id="user_nickname" class="form-control"
+            value="<?= $user->user_nickname ?>" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="user_display_name" class="form-label">Mostrar este nombre públicamente</label>
+          <select name="user_display_name" id="user_display_name" class="form-select">
+            <?php
+            // Posibles opciones de nombre público (orden como WordPress)
+            $display_options = [
+              $user->user_name, // nombre de usuario
+              $user->user_nickname,
+              $user->user_first_name,
+              $user->user_last_name,
+              trim($user->user_first_name . ' ' . $user->user_last_name),
+              trim($user->user_last_name . ' ' . $user->user_first_name),
+            ];
+
+            // Elimina duplicados y valores vacíos
+            $display_options = array_unique(array_filter($display_options));
+
+            // Genera las opciones del select
+            foreach ($display_options as $option):
+              $selected = ($option === $user->user_display_name) ? 'selected="selected"' : '';
+              echo "<option value=\"" . htmlspecialchars($option, ENT_QUOTES) . "\" $selected>$option</option>";
+            endforeach;
+            ?>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="user_email" class="form-label">Email</label>
+          <input type="text" name="user_email" id="user_email" class="form-control" placeholder="Tu Email"
             value="<?= $user->user_email ?>" required>
         </div>
+
         <input type="hidden" name="id" value="<?= $user->user_id ?>">
 
         <button name="update_profile" type="submit" class="btn btn-primary">Guardar Cambios</button>

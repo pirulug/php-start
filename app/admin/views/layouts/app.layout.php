@@ -101,7 +101,7 @@
                 <img class="avatar img-fluid rounded me-1"
                   src="<?= SITE_URL . "/uploads/user/" . $user_session->user_image ?>"
                   alt="<?= $user_session->user_name ?>" />
-                <span><?= $user_session->user_name ?></span>
+                <span><?= $user_session->user_display_name ?></span>
               </a>
               <div class="dropdown-menu dropdown-menu-end">
                 <a class="dropdown-item" href="<?= url_admin("account/profile") ?>">
@@ -111,7 +111,7 @@
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="<?= url_admin("account/settings") ?>">
                   <i class="align-middle me-1" data-feather="settings"></i>
-                  Contraseña
+                  Settings
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="<?= url_admin("logout") ?>">
