@@ -1,18 +1,5 @@
 <?php $theme->blockStart("style"); ?>
-<style>
-  .preview-image {
-    display: block;
-    object-fit: cover;
-    border: dotted 1px #e6e6e6;
-    margin: 10px auto;
-    border-radius: .5rem;
-  }
-
-  .preview-logo {
-    width: 100px;
-    height: 100px;
-  }
-</style>
+<link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/dropzone/dropimg.css" ?>">
 <?php $theme->blockEnd("style"); ?>
 
 <div class="tab tab-vertical">
@@ -43,11 +30,10 @@
       <form enctype="multipart/form-data" method="POST">
         <div class="mb-3">
           <figure class="text-center">
-            <img id="preview_user_image" class="img-fluid rounded-circle preview-image preview-logo mb-3"
-              src="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>" width="100" height="100">
+            <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
+              data-default="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>"
+              accept=".jpg,.jpeg,.png,.gif,.webp" required>
           </figure>
-          <input type="file" class="form-control image-input" name="user_image" data-preview="preview_user_image"
-            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
         </div>
 
         <div class="mb-3">
@@ -97,30 +83,9 @@
   </div>
 </div>
 
-
 <?php $theme->blockStart("script"); ?>
+<script src="<?= SITE_URL . "/static/plugins/dropzone/dropimg.js" ?>"></script>
 <script>
-  document.querySelectorAll('.image-input').forEach(function (input) {
-    input.addEventListener('change', function (event) {
-      const file = event.target.files[0];
-      const previewId = input.getAttribute('data-preview');
-      const preview = document.getElementById(previewId);
-
-      if (file) {
-        if (file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            preview.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        } else {
-          alert('Por favor, selecciona un archivo de imagen válido.');
-          preview.src = 'default.webp';
-        }
-      } else {
-        preview.src = 'default.webp';
-      }
-    });
-  });
+  DropImg.init();
 </script>
 <?php $theme->blockEnd("script"); ?>
