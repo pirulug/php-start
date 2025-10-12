@@ -4,13 +4,20 @@ switch ($segments[0]) {
     include path_front("index");
     break;
 
-  case 'about':
-    echo "Acerca de";
-    // include "pages/about.php";
+  case 'signin':
+    include path_front("auth/signin");
+    break;
+
+  case 'signup':
+    include path_front("auth/signup");
+    break;
+
+  case 'signout':
+    include path_front("auth/signout");
     break;
 
   default:
     http_response_code(404);
-    echo "Página no encontrada (Front)";
+    include path_front("errors/404");
     break;
 }

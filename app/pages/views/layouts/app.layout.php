@@ -60,9 +60,23 @@
           <div class="offcanvas-body">
             <ul class="navbar-nav align-items-lg-center justify-content-end flex-grow-1 pe-1">
               <li class="nav-item">
-                <a class="nav-link" href="<?= "" ?>">Inicio</a>
+                <a class="nav-link" href="<?= SITE_URL ?>">
+                  <i class="fa fa-home"></i>
+                  Inicio
+                </a>
               </li>
-
+              <li class="nav-item">
+                <a class="nav-link" href="<?= SITE_URL ?>/signin">
+                  <i class="fa fa-key"></i>
+                  Iniciar Sesión
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="<?= SITE_URL ?>/signup">
+                  <i class="fa fa-plus"></i>
+                  Registrarse
+                </a>
+              </li>
             </ul>
           </div>
         </div>

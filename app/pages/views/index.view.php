@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container my-3">
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Card title</h5>
