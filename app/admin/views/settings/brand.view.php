@@ -59,7 +59,7 @@
 <div class="row g-3">
 
   <!-- LOGO CLARO -->
-  <div class="col-6">
+  <div class="col-12">
     <div class="card bg-dark text-white">
       <div class="card-body">
         <h5>WHITE LOGO</h5>
@@ -76,7 +76,7 @@
   </div>
 
   <!-- LOGO OSCURO -->
-  <div class="col-6">
+  <div class="col-12">
     <div class="card bg-white text-dark">
       <div class="card-body">
         <h5>DARK LOGO</h5>
@@ -93,7 +93,7 @@
   </div>
 
   <!-- FAVICON -->
-  <div class="col-6">
+  <div class="col-12">
     <div class="card">
       <div class="card-body">
         <h5>FAVICON</h5>
@@ -110,7 +110,7 @@
   </div>
 
   <!-- OPEN GRAPH IMAGE -->
-  <div class="col-6">
+  <div class="col-12">
     <div class="card">
       <div class="card-body">
         <h5>IMAGEN OPEN GRAPH</h5>
