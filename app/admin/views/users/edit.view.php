@@ -28,12 +28,12 @@
 
           <div class="mb-3">
             <label class="control-label">Role</label>
-            <select class="form-select" name="user_role" required>
+            <select class="form-select" name="role_id" required>
               <option value="0">- Seleccionar -</option>
-              <option value="2" <?= $user->user_role == 2 ? 'selected' : '' ?>>
+              <option value="2" <?= $user->role_id == 2 ? 'selected' : '' ?>>
                 Administrador
               </option>
-              <option value="3" <?= $user->user_role == 3 ? 'selected' : '' ?>>
+              <option value="3" <?= $user->role_id == 3 ? 'selected' : '' ?>>
                 Suscriptor
               </option>
             </select>

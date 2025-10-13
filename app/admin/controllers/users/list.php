@@ -7,7 +7,7 @@ $paginator->setSearchColumns(['user_name', 'user_email']);
 $paginator->setOrder('user_id', 'DESC');
 $paginator->setAdditionalConditions([
   [
-    'sql'   => 'user_role != 1',
+    'sql'   => 'role_id != 1',
     'param' => null,
     'value' => null
   ],
@@ -20,12 +20,12 @@ $paginator->setAdditionalConditions([
 
 $users = $paginator->getResults();
 
-// Renderizar dashboard
+// Renderizar template
 $theme->render(
   BASE_DIR_ADMIN . "/views/users/list.view.php",
   [
-    'theme_title' => 'Lista de usuarios',
-    'theme_path'  => 'user-list',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     "users"       => $users,
     "paginator"   => $paginator
   ],

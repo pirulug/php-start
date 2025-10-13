@@ -138,8 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $theme->render(
   BASE_DIR_ADMIN . "/views/settings/brand.view.php",
   [
-    'theme_title' => 'Brand',
-    'theme_path'  => 'brand',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     'optionsRaw'  => $optionsRaw,
     'st_favicon'  => $st_favicon,
   ],

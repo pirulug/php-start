@@ -24,9 +24,9 @@
               <td><?= $user->user_name ?></td>
               <td><?= $user->user_email ?></td>
               <td>
-                <?php if ($user->user_role == 2): ?>
+                <?php if ($user->role_id == 2): ?>
                   <span class="badge bg-success">Administrador</span>
-                <?php elseif ($user->user_role == 3): ?>
+                <?php elseif ($user->role_id == 3): ?>
                   <span class="badge bg-info">Suscriptor</span>
                 <?php endif; ?>
               </td>

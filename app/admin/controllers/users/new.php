@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
   $user_name   = clear_data($_POST['user_name']);
   $user_email  = clear_data($_POST['user_email']);
-  $user_role   = clear_data($_POST['user_role']);
+  $role_id     = clear_data($_POST['role_id']);
   $user_status = clear_data($_POST['user_status']);
   $password    = clear_data($_POST['user_password']);
 
@@ -51,9 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   // Validar rol y estatus
-  if (!in_array($user_role, [2, 3])) {
+  if (!in_array($role_id, [2, 3])) {
     $notifier->add("Seleccionar rol.", "danger");
-    // $log->log('error', "Rol inválido", $user_role);
+    // $log->log('error', "Rol inválido", $role_id);
   }
 
   if (!in_array($user_status, [1, 2])) {
@@ -92,14 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
       $query     = "INSERT INTO users 
-        (user_name, user_email, user_role, user_status, user_password, user_image, user_updated) 
+        (user_name, user_email, role_id, user_status, user_password, user_image, user_updated) 
         VALUES 
-        (:user_name, :user_email, :user_role, :user_status, :user_password, :user_image, CURRENT_TIME)";
+        (:user_name, :user_email, :role_id, :user_status, :user_password, :user_image, CURRENT_TIME)";
       $statement = $connect->prepare($query);
 
       $statement->bindParam(':user_name', $user_name);
       $statement->bindParam(':user_email', $user_email);
-      $statement->bindParam(':user_role', $user_role);
+      $statement->bindParam(':role_id', $role_id);
       $statement->bindParam(':user_status', $user_status);
       $statement->bindParam(':user_password', $hashed_password);
       $statement->bindParam(':user_image', $user_image);
@@ -127,8 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $theme->render(
   BASE_DIR_ADMIN . "/views/users/new.view.php",
   [
-    'theme_title' => 'Nuevo usuario',
-    'theme_path'  => 'user-new'
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"
 );

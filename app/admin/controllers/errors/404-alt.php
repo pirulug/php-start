@@ -7,8 +7,8 @@ require_once "core/init.php";
 $theme->render(
   BASE_DIR_ADMIN . "/views/errors/404-alt.view.php",
   [
-    'theme_title' => '404',
-    'theme_path'  => '404',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"
 );

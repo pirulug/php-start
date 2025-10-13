@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $theme->render(
   BASE_DIR_ADMIN . "/views/settings/robots.view.php",
   [
-    'theme_title'  => 'Robots.txt',
-    'theme_path'   => 'robots',
+    'theme_title'  => $theme_title,
+    'theme_path'   => $theme_path,
     'file_content' => $file_content,
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"

@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $theme->render(
   BASE_DIR_ADMIN . "/views/settings/general.view.php",
   [
-    'theme_title' => 'General',
-    'theme_path'  => 'general',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     'optionsRaw'  => $optionsRaw,
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"

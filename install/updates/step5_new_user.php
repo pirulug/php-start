@@ -17,15 +17,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_users'])) {
 
     // 3. Insertar nuevo admin
     $stmt = $connect->prepare("
-            INSERT INTO users (user_name, user_email, user_password, user_role, user_status)
-            VALUES (:user_name, :user_email, :user_password, :user_role, :user_status)
+            INSERT INTO users (user_name, user_email, user_password, role_id, user_status)
+            VALUES (:user_name, :user_email, :user_password, :role_id, :user_status)
         ");
 
     $stmt->execute([
       ':user_name'     => $adminUser,
       ':user_email'    => $adminEmail,
       ':user_password' => $adminPass,
-      ':user_role'     => $adminRole,
+      ':role_id'     => $adminRole,
       ':user_status'   => $adminStatus,
     ]);
 

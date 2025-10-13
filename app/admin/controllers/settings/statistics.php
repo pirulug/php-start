@@ -17,8 +17,8 @@ $top_ips = $visitCounter->get_top_ips(10);
 $theme->render(
   BASE_DIR_ADMIN . "/views/settings/statistics.view.php",
   [
-    'theme_title'      => 'Estadísticas',
-    'theme_path'       => 'statistics',
+    'theme_title'      => $theme_title,
+    'theme_path'       => $theme_path,
     'stats'            => $stats,
     'daily'            => $daily,
     'monthly'          => $monthly,

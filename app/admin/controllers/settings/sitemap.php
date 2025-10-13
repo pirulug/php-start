@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $theme->render(
   BASE_DIR_ADMIN . "/views/settings/sitemap.view.php",
   [
-    'theme_title' => 'Sitemap.xml',
-    'theme_path'  => 'sitemap',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     'file_path'   => $file_path,
     'pages'       => $pages
   ],

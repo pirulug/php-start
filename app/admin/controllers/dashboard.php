@@ -14,8 +14,8 @@ $stats = 18;
 $theme->render(
   BASE_DIR_ADMIN . "/views/dashboard.view.php",
   [
-    'theme_title' => 'Dashboard',
-    'theme_path'  => 'dashboard',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     'count_user'  => $count_user,
     'stats'       => $stats
   ],

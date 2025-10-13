@@ -44,7 +44,7 @@ class AccessControl {
   public function user_has_role($allowedRoles) {
     if (!$this->is_user_logged_in())
       return false;
-    $userRole = $this->userSession->user_role;
+    $userRole = $this->userSession->role_id;
     if (is_array($allowedRoles)) {
       return in_array($userRole, $allowedRoles);
     }

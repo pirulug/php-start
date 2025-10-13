@@ -34,8 +34,8 @@ $optionsRaw = $connect->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
 $theme->render(
   BASE_DIR_ADMIN . "/views/settings/smtp.view.php",
   [
-    'theme_title' => 'SMTP',
-    'theme_path'  => 'smtp',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     'optionsRaw'  => $optionsRaw,
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"

@@ -39,8 +39,8 @@ $isDbVersionOk = version_compare($dbVersion, $minDbVersion, '>=');
 $theme->render(
   BASE_DIR_ADMIN . "/views/settings/info.view.php",
   [
-    'theme_title'        => 'Informacion',
-    'theme_path'         => 'info',
+    'theme_title'        => $theme_title,
+    'theme_path'         => $theme_path,
     'requiredExtensions' => $requiredExtensions,
     'isPhpVersionOk'     => $isPhpVersionOk,
     'isMemoryLimitOk'    => $isMemoryLimitOk,
@@ -49,7 +49,7 @@ $theme->render(
     'dbVersion'          => $dbVersion,
     'dbType'             => $dbType,
     'minDbVersion'       => $minDbVersion,
-    'isDbVersionOk'       => $isDbVersionOk,
+    'isDbVersionOk'      => $isDbVersionOk,
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"
 );

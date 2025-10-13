@@ -28,12 +28,12 @@
 
           <div class="mb-3">
             <label class="form-label">Role</label>
-            <select class="form-select" name="user_role" required>
+            <select class="form-select" name="role_id" required>
               <option value="">- Seleccionar -</option>
-              <option value="2" <?= isset($_POST['user_role']) && $_POST['user_role'] == 2 ? 'selected' : '' ?>>
+              <option value="2" <?= isset($_POST['role_id']) && $_POST['role_id'] == 2 ? 'selected' : '' ?>>
                 Administrador
               </option>
-              <option value="3" <?= isset($_POST['user_role']) && $_POST['user_role'] == 3 ? 'selected' : '' ?>>
+              <option value="3" <?= isset($_POST['role_id']) && $_POST['role_id'] == 3 ? 'selected' : '' ?>>
                 Usuario
               </option>
             </select>

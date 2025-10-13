@@ -43,7 +43,7 @@ $notifier = new notifier();
 // =============================================================================
 $cipher = new Cipher(ENCRYPT_METHOD, ENCRYPT_KEY, ENCRYPT_IV);
 
-// echo $encryption->encrypt("admin123");
+// echo $cipher->encrypt("admin123");
 // exit();
 
 // =============================================================================
@@ -63,6 +63,9 @@ if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
 } else {
   $accessControl = new AccessControl(false, null);
 }
+
+$accessManager = new AccessManager($connect, $user_session);
+
 
 // =============================================================================
 // Cargar Configuración del sitio

@@ -14,7 +14,7 @@ if (isset($_COOKIE['psloggin'])) {
   $user_id = $cipher->decrypt($_COOKIE['psloggin']);
 
   // Consultar si el usuario existe y está activo
-  $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1 AND user_role IN (1, 2)";
+  $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1 AND role_id IN (1, 2)";
   $stmt  = $connect->prepare($query);
   $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
   $stmt->execute();
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_password = $cipher->encrypt(clear_data($_POST['user-password']));
   $remember_me   = $_POST['remember-me'] ?? null;
 
-  $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password AND user_status = 1 AND user_role IN (1, 2)";
+  $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password AND user_status = 1 AND role_id IN (1, 2)";
   $stmt  = $connect->prepare($query);
   $stmt->bindParam(':user_name', $user_name, PDO::PARAM_STR);
   $stmt->bindParam(':user_password', $user_password, PDO::PARAM_STR);
@@ -66,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $theme->render(
   BASE_DIR_ADMIN . "/views/login.view.php",
   [
-    'theme_title' => 'Dashboard',
-    'theme_path'  => 'dashboard',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     // 'count_user'  => $count_user,
     // 'stats'       => $stats
   ],

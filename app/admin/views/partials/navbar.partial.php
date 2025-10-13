@@ -94,7 +94,7 @@ $menuItems = [
   $menu_general,
 ];
 
-$role = $user_session->user_role ?? 0;
+$role = $user_session->role_id ?? 0;
 ?>
 
 <nav class="sidebar js-sidebar" id="sidebar">

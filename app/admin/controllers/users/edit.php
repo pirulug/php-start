@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $user_id       = $cipher->decrypt(clear_data($_POST['user_id']));
   $user_name     = clear_data($_POST['user_name']);
   $user_email    = clear_data($_POST['user_email']);
-  $user_role     = clear_data($_POST['user_role']);
+  $role_id     = clear_data($_POST['role_id']);
   $user_status   = clear_data($_POST['user_status']);
   $user_password = clear_data($_POST['user_password']);
   // $user_password_save = cleardata($_POST['user_password_save']);
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   // Validar selected
-  if (!in_array($user_role, [2, 3])) {
+  if (!in_array($role_id, [2, 3])) {
     $notifier->add("Seleccionar rol.", "danger");
   }
 
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               SET 
               user_name = :user_name, 
               user_email = :user_email, 
-              user_role = :user_role, 
+              role_id = :role_id, 
               user_status = :user_status, 
               user_password = :user_password, 
               user_image = :user_image, 
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt  = $connect->prepare($query);
     $stmt->bindParam(':user_name', $user_name);
     $stmt->bindParam(':user_email', $user_email);
-    $stmt->bindParam(':user_role', $user_role);
+    $stmt->bindParam(':role_id', $role_id);
     $stmt->bindParam(':user_status', $user_status);
     $stmt->bindParam(':user_password', $user_password);
     $stmt->bindParam(':user_image', $user_image);
@@ -161,8 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $theme->render(
   BASE_DIR_ADMIN . "/views/users/edit.view.php",
   [
-    'theme_title' => 'Lista de usuarios',
-    'theme_path'  => 'user-edit',
+    'theme_title' => $theme_title,
+    'theme_path'  => $theme_path,
     "user"        => $user
   ],
   BASE_DIR_ADMIN . "/views/layouts/app.layout.php"
