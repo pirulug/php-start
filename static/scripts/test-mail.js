@@ -35,16 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          // console.log("Respuesta del servidor:", data);
+          console.log("Respuesta del servidor:", data);
           if (data.success) {
-            alert("✅ Correo de prueba enviado con éxito a: " + destinatario);
+            alert("Correo de prueba enviado con éxito a: " + destinatario);
           } else {
-            alert("⚠️ Error al enviar el correo: " + data.message);
+            alert("Error al enviar el correo: " + data.message);
           }
         })
         .catch((error) => {
           console.error("Error en fetch:", error);
-          alert("❌ Error al enviar el correo de prueba.");
+          alert("Error al enviar el correo de prueba.");
         })
         .finally(() => {
           button.removeAttribute("disabled");

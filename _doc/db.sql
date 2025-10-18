@@ -13,6 +13,17 @@ CREATE TABLE roles (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =========================================================
+-- TABLA: permission_groups
+-- Grupos o módulos de permisos (ej: Usuarios, Configuración, Ventas)
+-- =========================================================
+CREATE TABLE permission_groups (
+  permission_group_id INT AUTO_INCREMENT PRIMARY KEY,
+  permission_group_name VARCHAR(100) NOT NULL,                -- Nombre del grupo (ej: Usuarios)
+  permission_group_key_name VARCHAR(100) NOT NULL UNIQUE,     -- Clave única (ej: users)
+  permission_group_description VARCHAR(150) DEFAULT NULL      -- Descripción del grupo
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- =========================================================
 -- TABLA: PERMISSIONS
 -- Lista de permisos individuales del sistema (crear, editar, eliminar, etc.)
 -- =========================================================
@@ -20,7 +31,9 @@ CREATE TABLE permissions (
   permission_id INT AUTO_INCREMENT PRIMARY KEY,
   permission_name VARCHAR(100) NOT NULL,              -- Nombre legible del permiso
   permission_key_name VARCHAR(100) NOT NULL UNIQUE,   -- Clave única, ej: 'users.edit'
-  permission_description VARCHAR(150) DEFAULT NULL    -- Descripción del permiso
+  permission_description VARCHAR(150) DEFAULT NULL,    -- Descripción del permiso
+  permission_group_id INT NOT NULL,
+  FOREIGN KEY (permission_group_id) REFERENCES permission_groups(permission_group_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- =========================================================

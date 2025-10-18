@@ -1,6 +1,6 @@
 <?php
 
-const BASE_DIR_FRONT = BASE_DIR . "/app/pages"; // Directorio del FRONT
+const BASE_DIR_FRONT = BASE_DIR . "/app/front"; // Directorio del FRONT
 
 const BASE_DIR_ADMIN = BASE_DIR . "/app/admin"; // Directorio del BACK
 

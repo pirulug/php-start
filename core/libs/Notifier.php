@@ -62,13 +62,35 @@ class Notifier {
     if (!empty($_SESSION['bootstrap'])) {
       $messages = $_SESSION['bootstrap'];
 
+      // Agrupar mensajes por tipo
+      $grouped = [];
       foreach ($messages as $msg) {
-        echo "<div class='alert alert-{$msg['type']} alert-dismissible fade show' role='alert'>
-                {$msg['message']}
-                <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-              </div>";
+        $type             = $msg['type'] ?? 'info';
+        $grouped[$type][] = $msg['message'];
       }
 
+      // Mostrar alertas agrupadas
+      foreach ($grouped as $type => $msgs) {
+        // Si hay solo un mensaje, mostrar texto plano
+        if (count($msgs) === 1) {
+          echo "<div class='alert alert-{$type} alert-dismissible fade show' role='alert'>
+                        {$msgs[0]}
+                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                      </div>";
+        } else {
+          // Si hay varios, mostrar como lista
+          echo "<div class='alert alert-{$type} alert-dismissible fade show' role='alert'>
+                        <ul class='mb-0'>";
+          foreach ($msgs as $m) {
+            echo "<li>{$m}</li>";
+          }
+          echo "</ul>
+                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+                      </div>";
+        }
+      }
+
+      // Limpiar mensajes después de mostrarlos
       unset($_SESSION['bootstrap']);
     }
   }
@@ -109,6 +131,18 @@ class Notifier {
   /** ---------- Utilidades ---------- */
 
   public function has($method = 'bootstrap', $type = null) {
+    $messages = $_SESSION[$method] ?? [];
+    if ($type) {
+      foreach ($messages as $msg) {
+        if ($msg['type'] === $type)
+          return true;
+      }
+      return false;
+    }
+    return !empty($messages);
+  }
+
+  public function hasErrors($method = 'bootstrap', $type = "danger") {
     $messages = $_SESSION[$method] ?? [];
     if ($type) {
       foreach ($messages as $msg) {

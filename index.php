@@ -13,11 +13,11 @@ $request  = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 $segments = explode('/', $request);
 
 if ($segments[0] === ADMIN_NAME) {
-  require "routers/router.admin.php";
+  require "routers/admin.router.php";
 } elseif ($segments[0] === "api") {
-  require "routers/router.api.php";
+  require "routers/api.router.php";
 } elseif ($segments[0] === "ajax") {
-  require "routers/router.ajax.php";
+  require "routers/ajax.router.php";
 } else {
-  require "routers/router.front.php";
+  require "routers/front.router.php";
 }
