@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       // Recordar usuario
       if ($remember_me) {
-        setcookie("user_id", $user->user_id, time() + (30 * 24 * 60 * 60), "/");
+        setcookie("php-start", $user->user_id, time() + (30 * 24 * 60 * 60), "/");
       }
 
       $notifier->add("¡Bienvenido de nuevo, {$user->user_name}!", "success");

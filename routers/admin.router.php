@@ -187,7 +187,6 @@ $routes = [
   'logout'      => [
     'title'  => 'Logout',
     'path'   => 'auth-logout',
-    'layout' => 'auth',
     'auth'   => false,
   ],
 
@@ -279,4 +278,7 @@ if (!empty($template['auth']) && $template['auth']) {
 
 // 6 Cargar archivos
 include_once path_admin($template['path']);
-include_once path_admin_layout($template['layout']);
+
+if(isset($template['layout'])){
+  include_once path_admin_layout($template['layout']);
+}
