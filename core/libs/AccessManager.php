@@ -130,7 +130,7 @@ class AccessManager {
     echo "🎭 Rol ID: {$roleId}\n";
 
     // SUPER ADMIN (rol_id = 1)
-    if ((int) $this->user->role_id === 1) {
+    if ($this->is_superadmin()) {
       echo "\n💥 Este usuario es SUPER ADMINISTRADOR.\n";
       echo "   → Tiene acceso TOTAL a todos los módulos, menús y permisos.\n";
       echo "   (No se requiere comprobación de permisos en la base de datos.)\n";

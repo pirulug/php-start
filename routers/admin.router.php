@@ -185,46 +185,38 @@ $routes = [
 
   // Logout
   'logout'      => [
-    'title'  => 'Logout',
-    'path'   => 'auth-logout',
-    'auth'   => false,
-  ],
-
-  // Account profile
-  'account/profile'     => [
-    'title'  => 'Mi Perfil',
-    'path'   => 'account-profile',
-    'layout' => 'main',
-    'auth'   => true,
-  ],
-
-  // Account settings
-  'account/settings'     => [
-    'title'  => 'Ajustes de Cuenta',
-    'path'   => 'account-settings',
-    'layout' => 'main',
-    'auth'   => true,
+    'title' => 'Logout',
+    'path'  => 'auth-logout',
+    'auth'  => false,
   ],
 
   // Account 
-  "account"    => [
+  "account"     => [
     'title'  => 'Cuenta',
     'layout' => 'main',
     'auth'   => true,
-    'items'     => [
-      'account/profile'     => [
+    'items'  => [
+      'account/profile'  => [
         'title'  => 'Mi Perfil',
         'path'   => 'account-profile',
         'layout' => 'main',
         'auth'   => true,
       ],
-      'account/settings'     => [
+      'account/settings' => [
         'title'  => 'Ajustes de Cuenta',
         'path'   => 'account-settings',
         'layout' => 'main',
         'auth'   => true,
       ],
     ],
+  ],
+
+  // test
+  'test'        => [
+    'title' => 'Test',
+    'path'  => 'test-index',
+    'auth'  => false,
+    'layout' => 'main',
   ],
 
 ];
@@ -279,6 +271,6 @@ if (!empty($template['auth']) && $template['auth']) {
 // 6 Cargar archivos
 include_once path_admin($template['path']);
 
-if(isset($template['layout'])){
+if (isset($template['layout'])) {
   include_once path_admin_layout($template['layout']);
 }

@@ -26,6 +26,11 @@ switch ($segments[1] ?? '') {
     ]);
     break;
 
+  case "users":
+    
+    include path_ajax("users/get");
+    break;
+
   default:
     http_response_code(404);
     echo json_encode([
