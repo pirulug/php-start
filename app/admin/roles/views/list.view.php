@@ -24,7 +24,7 @@
               <td><?= $data->role_name ?></td>
               <td><?= $data->role_description ?></td>
               <td>
-                <a href="rol/edit/<?= $data->role_id ?>" class="btn btn-success">
+                <a href="rol/edit/<?= $data->role_id ?>" class="btn btn-sm btn-success">
                   <i class="fa fa-pen"></i>
                 </a>
               </td>
