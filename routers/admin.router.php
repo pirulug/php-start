@@ -213,9 +213,9 @@ $routes = [
 
   // test
   'test'        => [
-    'title' => 'Test',
-    'path'  => 'test-index',
-    'auth'  => false,
+    'title'  => 'Test',
+    'path'   => 'test-index',
+    'auth'   => false,
     'layout' => 'main',
   ],
 
@@ -259,8 +259,16 @@ if (!$template) {
 
 // 4 Error si no existe
 if (!$template) {
+  $template = [
+    'title'  => '404',
+    'path'   => 'errors-404-alt',
+    'layout' => 'main',
+  ];
   http_response_code(404);
-  exit("Página no encontrada");
+  include_once path_admin($template['path']);
+  include_once path_admin_layout($template['layout']);
+
+  exit();
 }
 
 // 5 Validar acceso

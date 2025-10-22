@@ -10,10 +10,7 @@
   <title><?= $template["title"] ?> | <?= SITE_NAME ?></title>
 
   <!-- Favicon-->
-  <link rel="apple-touch-icon" sizes="180x180" href="<?= SITE_URL ?>/static/assets/img/favicon/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="<?= SITE_URL ?>/static/assets/img/favicon/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="i<?= SITE_URL ?>/static/assets/mg/favicon/favicon-16x16.png" />
-  <link rel="manifest" href="<?= SITE_URL ?>/static/assets/img/favicon/site.webmanifest" />
+  <link rel="shortcut icon" href="<?= SITE_URL ?>/static/assets/mg/favicon/favicon.ico" type="image/x-icon">
 
   <!-- Css -->
   <link rel="stylesheet" href="<?= SITE_URL ?>/static/assets/css/fontawesome.css" />
