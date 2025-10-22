@@ -251,12 +251,6 @@ if (!$template) {
   }
 }
 
-// echo "<pre>";
-// print_r($template);
-// echo $template["path"];
-// echo "</pre>";
-// exit();
-
 // 4 Error si no existe
 if (!$template) {
   $template = [
