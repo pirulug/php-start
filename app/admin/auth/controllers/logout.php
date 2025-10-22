@@ -27,5 +27,5 @@ if (isset($_COOKIE['php-start'])) {
 }
 
 // 5. Redirigir al login
-header("Location: /");
+header("Location: " . SITE_URL_ADMIN);
 exit;

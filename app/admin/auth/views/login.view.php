@@ -34,7 +34,6 @@
                   <button class="btn btn-primary">Sign in</button>
                 </div>
               </form>
-
             </div>
           </div>
         </div>

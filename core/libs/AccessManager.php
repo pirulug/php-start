@@ -12,15 +12,17 @@ class AccessManager {
    * Verifica si el usuario actual es superadministrador según su nombre.
    */
   protected function is_superadmin() {
-    if (!$this->user || !isset($this->user->user_name))
+    // Validar que haya usuario y que tenga nombre
+    if (!$this->user || empty($this->user->user_name))
       return false;
 
-    if (defined('SUPERADMIN_USERNAMES')) {
-      $superadmins = array_map('strtolower', SUPERADMIN_USERNAMES);
-      return in_array(strtolower($this->user->user_name), $superadmins);
-    }
+    // Validar que la constante esté definida y sea un array
+    if (!defined('SUPERADMIN_USERNAMES') || !is_array(SUPERADMIN_USERNAMES))
+      return false;
 
-    return false;
+    // Convertir todos los nombres a minúsculas y comparar
+    $superadmins = array_map('strtolower', SUPERADMIN_USERNAMES);
+    return in_array(strtolower($this->user->user_name), $superadmins);
   }
 
   /**
@@ -33,9 +35,12 @@ class AccessManager {
 
     // Usuario no logueado
     if (!$this->user) {
-      if ($redirect)
+      if ($redirect) {
         header("Location: {$redirect}");
-      exit("Acceso denegado: sesión no válida.");
+      } else {
+        // exit("Acceso denegado: sesión no válida.");
+        header("Location: " . SITE_URL);
+      }
     }
 
     // Verifica permiso directo
@@ -107,6 +112,35 @@ class AccessManager {
     ");
     $stmt->bindParam(":role_id", $this->user->role_id, PDO::PARAM_INT);
     $stmt->bindParam(":key", $theme_path, PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetchColumn() > 0;
+  }
+
+  public function can_login($role_id = null, $user_name = null) {
+    // Permitir detectar superadmin directamente
+    if ($user_name && defined('SUPERADMIN_USERNAMES')) {
+      $superadmins = array_map('strtolower', SUPERADMIN_USERNAMES);
+      if (in_array(strtolower($user_name), $superadmins)) {
+        return true;
+      }
+    }
+
+    if ($this->is_superadmin())
+      return true;
+
+    $role_id = $role_id ?? ($this->user->role_id ?? null);
+    if (!$role_id)
+      return false;
+
+    $stmt = $this->db->prepare("
+    SELECT COUNT(*) 
+    FROM role_permissions rp
+    INNER JOIN permissions p ON rp.permission_id = p.permission_id
+    WHERE rp.role_id = :role_id
+    AND p.permission_key_name = 'login_access'
+  ");
+    $stmt->bindParam(":role_id", $role_id, PDO::PARAM_INT);
     $stmt->execute();
 
     return $stmt->fetchColumn() > 0;
