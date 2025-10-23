@@ -51,6 +51,9 @@ if (!empty($template['auth']) && $template['auth']) {
   $accessManager->ensure_access($template['path'], $template['title']);
 }
 
+// Analytics
+$analytics->trackVisit($template['title'], $_SERVER['REQUEST_URI']);
+
 // Cargar archivos
 include_once path_front($template['path']);
 include_once path_front_layout($template['layout']);

@@ -46,6 +46,9 @@ if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
 // Gestor de accesos
 $accessManager = new AccessManager($connect, $user_session);
 
+// Analytics
+$analytics = new Analytics($connect);
+
 // Configuraciones del sitio
 $config  = new SiteConfig($connect);
 $favicon = json_decode($config->get("favicon"), true);
