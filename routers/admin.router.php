@@ -44,7 +44,6 @@ $routes = [
       'user/delete' => [
         'title'  => 'Eliminar Usuario',
         'path'   => 'users-delete',
-        'layout' => 'main',
         'auth'   => true,
         'hidden' => true,
       ],
@@ -82,7 +81,6 @@ $routes = [
       'rol/delete' => [
         'title'  => 'Eliminar Rol',
         'path'   => 'roles-delete',
-        'layout' => 'main',
         'auth'   => true,
         'hidden' => true,
       ],
@@ -120,7 +118,6 @@ $routes = [
       'permission/delete' => [
         'title'  => 'Eliminar Permiso',
         'path'   => 'permissions-delete',
-        'layout' => 'main',
         'auth'   => true,
         'hidden' => true,
       ],

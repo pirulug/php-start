@@ -24,7 +24,7 @@
               <td><?= $user->user_name ?></td>
               <td><?= $user->user_email ?></td>
               <td>
-                <?= $user->role_id ?>                
+                <?= $user->role_id ?>
               </td>
               <td>
                 <?php if ($user->user_status == 1): ?>
@@ -40,10 +40,9 @@
                   <i class="fa fa-pen"></i>
                 </a>
 
-                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top"
-                  data-bs-title="Eliminar" sa-title="¿Eliminar usuario?" sa-text="Esta acción no se puede deshacer."
-                  sa-icon="warning" sa-confirm-btn-text="Sí, eliminar" sa-cancel-btn-text="No, cancelar"
-                  sa-redirect-url="user/delete/<?= $cipher->encrypt($user->user_id) ?>">
+                <button class="btn btn-sm btn-danger" sa-title="¿Eliminar usuario?"
+                  sa-text="Esta acción no se puede deshacer." sa-icon="warning" sa-confirm-btn-text="Sí, eliminar"
+                  sa-cancel-btn-text="No, cancelar" sa-redirect-url="user/delete/<?= $cipher->encrypt($user->user_id) ?>">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>

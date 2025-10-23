@@ -27,6 +27,11 @@
                 <a href="rol/edit/<?= $data->role_id ?>" class="btn btn-sm btn-success">
                   <i class="fa fa-pen"></i>
                 </a>
+                <!-- <button class="btn btn-sm btn-danger" sa-title="¿Eliminar usuario?" sa-text="Esta acción no se puede deshacer."
+                  sa-icon="warning" sa-confirm-btn-text="Sí, eliminar" sa-cancel-btn-text="No, cancelar"
+                  sa-redirect-url="rol/delete/<?= $data->role_id ?>">
+                  <i class="fa fa-trash"></i>
+                </button> -->
               </td>
             </tr>
           <?php endforeach; ?>
