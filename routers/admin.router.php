@@ -215,7 +215,7 @@ $routes = [
     'auth'   => true,
     'layout' => 'main',
   ],
-  
+
   'iplo'        => [
     'title'  => 'Test',
     'path'   => 'test-ip',
