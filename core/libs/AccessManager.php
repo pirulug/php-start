@@ -117,7 +117,7 @@ class AccessManager {
     return $stmt->fetchColumn() > 0;
   }
 
-  public function can_login($role_id = null, $user_name = null) {
+  public function can_login($role_id = null, $user_name = null, $permission_name = "login-access") {
     // Permitir detectar superadmin directamente
     if ($user_name && defined('SUPERADMIN_USERNAMES')) {
       $superadmins = array_map('strtolower', SUPERADMIN_USERNAMES);
@@ -130,16 +130,17 @@ class AccessManager {
       return true;
 
     $role_id = $role_id ?? ($this->user->role_id ?? null);
+
     if (!$role_id)
       return false;
 
     $stmt = $this->db->prepare("
-    SELECT COUNT(*) 
-    FROM role_permissions rp
-    INNER JOIN permissions p ON rp.permission_id = p.permission_id
-    WHERE rp.role_id = :role_id
-    AND p.permission_key_name = 'login_access'
-  ");
+      SELECT COUNT(*) 
+      FROM role_permissions rp
+      INNER JOIN permissions p ON rp.permission_id = p.permission_id
+      WHERE rp.role_id = :role_id
+      AND p.permission_key_name = $permission_name
+    ");
     $stmt->bindParam(":role_id", $role_id, PDO::PARAM_INT);
     $stmt->execute();
 

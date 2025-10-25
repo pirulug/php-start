@@ -10,7 +10,7 @@
   <title><?= $template["title"] ?> | <?= SITE_NAME ?></title>
 
   <!-- Favicon-->
-  <link rel="shortcut icon" href="<?= SITE_URL ?>/static/assets/mg/favicon/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="<?= SITE_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
 
   <!-- Css -->
   <link rel="stylesheet" href="<?= SITE_URL ?>/static/assets/css/fontawesome.css" />

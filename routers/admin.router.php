@@ -212,14 +212,14 @@ $routes = [
   'test'        => [
     'title'  => 'Test',
     'path'   => 'test-index',
-    'auth'   => false,
+    'auth'   => true,
     'layout' => 'main',
   ],
   
   'iplo'        => [
     'title'  => 'Test',
     'path'   => 'test-ip',
-    'auth'   => false,
+    'auth'   => true,
     'layout' => 'main',
   ],
 

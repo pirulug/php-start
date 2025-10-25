@@ -11,13 +11,11 @@ function path_admin_view(string $path, string $ext = ".view.php"): string {
 }
 
 function path_admin_layout(string $layout, string $ext = ".layout.php"): string {
-  // $path = explode('.', $path);
-  return BASE_DIR_ADMIN . "/layouts/" . $layout . $ext;
+  return BASE_DIR_ADMIN . "/_layouts/" . $layout . $ext;
 }
 
 function path_admin_layout_partial(string $partial, string $ext = ".partial.php"): string {
-  // $path = explode('.', $path);
-  return BASE_DIR_ADMIN . "/layouts/partials/" . $partial . $ext;
+  return BASE_DIR_ADMIN . "/_layouts/partials/" . $partial . $ext;
 }
 
 
