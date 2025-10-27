@@ -21,6 +21,21 @@
         </tr>
       </thead>
     </table>
+
+    <!-- <table id="tablaUsuarios" class="table table-striped" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Creado</th>
+        </tr>
+      </thead>
+    </table> -->
   </div>
 </div>
 
@@ -47,4 +62,23 @@
       ]
     });
   });
+  // $('#tablaUsuarios').DataTable({
+  //   ajax: 'http://php-start.test/ajax/users',
+  //   serverSide: true,
+  //   processing: true,
+  //   columns: [
+  //     { data: 'id' },
+  //     { data: 'username' },
+  //     { data: 'email' },
+  //     { data: 'first_name' },
+  //     { data: 'last_name' },
+  //     { data: 'role' },
+  //     { data: 'status' },
+  //     { data: 'created' }
+  //   ],
+  //   columnDefs: [
+  //     { targets: [1, 6], orderable: false }
+  //   ]
+  // });
+
 </script>

@@ -11,6 +11,7 @@
       <table class="table table-hover table-bordered align-middle">
         <thead>
           <tr>
+            <th>Imagen</th>
             <th>Usuario</th>
             <th>Email</th>
             <th>Role</th>
@@ -21,10 +22,13 @@
         <tbody>
           <?php foreach ($users as $user): ?>
             <tr>
+              <td class="text-center">
+                <img src="<?= SITE_URL . "/uploads/user/" . $user->user_image ?>" width="50px">
+              </td>
               <td><?= $user->user_name ?></td>
               <td><?= $user->user_email ?></td>
               <td>
-                <?= $user->role_id ?>
+                <?= $user->role_name ?>
               </td>
               <td>
                 <?php if ($user->user_status == 1): ?>
@@ -52,7 +56,7 @@
       </table>
     </div>
 
-    <?= $paginator->renderLinks('?') ?>
+    <?= $dt->renderLinks('?') ?>
 
   </div>
 </div>
