@@ -38,7 +38,7 @@
         </tbody>
       </table>
 
-      <?= $paginator->renderLinks('?') ?>
+      <?= $dt->renderLinks('?') ?>
     </div>
   </div>
 </div>

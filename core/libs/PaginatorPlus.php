@@ -132,7 +132,7 @@ class PaginatorPlus {
     if ($this->totalPages <= 1)
       return '';
 
-    $html = '<nav><ul class="pagination justify-content-end">';
+    $html = '<nav><ul class="pagination justify-content-end m-0">';
 
     $search = urlencode($this->searchTerm);
     $page   = $this->currentPage;
