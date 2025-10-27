@@ -1,43 +1,37 @@
-<div class="card">
-  <div class="card-body">
-    <form method="get" class="mb-3">
-      <div class="input-group">
-        <input type="text" name="search" class="form-control" placeholder="Buscar..."
-          value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-        <button class="btn btn-primary">Buscar</button>
+<div class="row g-3">
+  <?php foreach ($groupedPermissions as $groupName => $perms): ?>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-bold text-uppercase"><?= htmlspecialchars($groupName) ?></span>
+        <span class="badge bg-primary rounded-pill"><?= count($perms) ?> permisos</span>
       </div>
-    </form>
-    <div class="table-responsive">
-      <table class="table table-striped table-bordered">
-        <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Key</th>
-            <th>Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php foreach ($permissions as $data): ?>
-            <tr>
-              <td><?= $data->permission_id ?></td>
-              <td><?= $data->permission_name ?></td>
-              <td><?= $data->permission_key_name ?></td>
-              <td>
-                <a href="permission/edit/<?= $data->permission_id ?>" class="btn btn-sm btn-success">
-                  <i class="fa fa-pen"></i>
-                </a>
-                <button class="btn btn-sm btn-danger" sa-title="¿Eliminar usuario?"
-                  sa-text="Esta acción no se puede deshacer." sa-icon="warning" sa-confirm-btn-text="Sí, eliminar"
-                  sa-cancel-btn-text="No, cancelar" sa-redirect-url="permission/delete/<?= $data->permission_id ?>">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+
+      <ul class="list-group list-group-flush">
+        <?php foreach ($perms as $perm): ?>
+          <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex flex-column">
+              <span class="fw-semibold"><?= htmlspecialchars($perm->permission_name) ?></span>
+              <small class="text-muted">
+                ID: <?= $perm->permission_id ?> • Key: <code><?= htmlspecialchars($perm->permission_key_name) ?></code>
+              </small>
+            </div>
+
+            <div class="btn-group">
+              <a href="permission/edit/<?= $perm->permission_id ?>" class="btn btn-outline-success btn-sm"
+                data-bs-toggle="tooltip" title="Editar permiso">
+                <i class="fa fa-pen"></i>
+              </a>
+
+              <button class="btn btn-outline-danger btn-sm" sa-title="¿Eliminar permiso?"
+                sa-text="Esta acción no se puede deshacer." sa-icon="warning" sa-confirm-btn-text="Sí, eliminar"
+                sa-cancel-btn-text="No, cancelar" sa-redirect-url="permission/delete/<?= $perm->permission_id ?>"
+                data-bs-toggle="tooltip" title="Eliminar permiso">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </li>
+        <?php endforeach; ?>
+      </ul>
     </div>
-    <?= $paginator->renderLinks('?') ?>
-  </div>
+  <?php endforeach; ?>
 </div>

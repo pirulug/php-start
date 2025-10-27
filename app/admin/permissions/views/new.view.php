@@ -1,7 +1,7 @@
-<div class="card">
-  <div class="card-body">
+<form method="POST" action="">
+  <div class="card mb-3">
+    <div class="card-body">
 
-    <form method="POST" action="">
       <!-- Grupo existente -->
       <div class="mb-3">
         <label class="form-label">Seleccionar Grupo Existente</label>
@@ -15,9 +15,12 @@
         </select>
       </div>
 
+
+
       <div class="text-center my-3">
         <span class="badge bg-secondary">O crear nuevo grupo</span>
       </div>
+
 
       <!-- Crear nuevo grupo -->
       <div class="mb-3">
@@ -31,7 +34,11 @@
         <input type="text" class="form-control" name="new_group_key" id="new_group_key" placeholder="Ej: settings">
       </div>
 
-      <hr>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
 
       <!-- Datos del permiso -->
       <div class="mb-3">
@@ -49,11 +56,16 @@
         <label for="permission_description" class="form-label">Descripción (opcional)</label>
         <textarea class="form-control" name="permission_description" id="permission_description" rows="2"></textarea>
       </div>
-
-      <div class="d-grid">
-        <button type="submit" class="btn btn-success">Guardar Permiso</button>
-      </div>
-    </form>
-
+    </div>
   </div>
-</div>
+
+  <div class="d-flex justify-content-between bg-body p-3 rounded">
+    <a href="<?= url_admin("permissions") ?>" class="btn btn-secondary">
+      Volver
+    </a>
+    <button type="submit" class="btn btn-primary">
+      Guardar
+    </button>
+  </div>
+
+</form>

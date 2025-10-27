@@ -1,6 +1,6 @@
-<div class="card">
-  <div class="card-body">
-    <form method="POST" action="">
+<form method="POST" action="">
+  <div class="card mb-3">
+    <div class="card-body">
       <!-- Grupo existente -->
       <div class="mb-3">
         <label class="form-label">Grupo Existente</label>
@@ -30,7 +30,11 @@
         <input type="text" class="form-control" name="new_group_key" id="new_group_key" placeholder="Ej: settings">
       </div>
 
-      <hr>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
 
       <!-- Datos del permiso -->
       <div class="mb-3">
@@ -51,16 +55,15 @@
           rows="2"><?= htmlspecialchars($permission->permission_description) ?></textarea>
       </div>
 
-      <div class="">
-        <a href="<?= url_admin("permissions") ?>" class="btn btn-secondary">
-          <i class="fa fa-arrow-left"></i>
-          Volver
-        </a>
-        <button type="submit" class="btn btn-primary">
-          <i class="fa fa-save"></i>
-          Actualizar
-        </button>
-      </div>
-    </form>
+    </div>
   </div>
-</div>
+
+  <div class="d-flex justify-content-between bg-body p-3 rounded">
+    <a href="<?= url_admin("permissions") ?>" class="btn btn-secondary">
+      Volver
+    </a>
+    <button type="submit" class="btn btn-primary">
+      Actualizar
+    </button>
+  </div>
+</form>
