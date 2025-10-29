@@ -12,6 +12,11 @@ CREATE TABLE roles (
   role_description VARCHAR(150) DEFAULT NULL   -- Descripción del rol
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO roles (role_name, role_description) VALUES
+('Administrador', 'Usuario con todos los permisos del sistema'),
+('Editor', 'Usuario con permisos para editar contenido'),
+('Usuario', 'Usuario con permisos básicos de acceso');
+
 -- =========================================================
 -- TABLA: permission_groups
 -- Grupos o módulos de permisos (ej: Usuarios, Configuración, Ventas)
@@ -22,6 +27,9 @@ CREATE TABLE permission_groups (
   permission_group_key_name VARCHAR(100) NOT NULL UNIQUE,     -- Clave única (ej: users)
   permission_group_description VARCHAR(150) DEFAULT NULL      -- Descripción del grupo
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO permission_groups (permission_group_name, permission_group_key_name, permission_group_description) VALUES
+("Sin grupo", "no_group", "Permisos sin grupo asignado");
 
 -- =========================================================
 -- TABLA: PERMISSIONS
@@ -36,6 +44,9 @@ CREATE TABLE permissions (
   FOREIGN KEY (permission_group_id) REFERENCES permission_groups(permission_group_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO permissions (permission_name, permission_key_name, permission_description, permission_group_id) VALUES
+("Dashboard", "dashboard", "", 1);
+
 -- =========================================================
 -- TABLA INTERMEDIA: ROLE_PERMISSIONS
 -- Relación muchos a muchos entre roles y permisos
@@ -47,6 +58,9 @@ CREATE TABLE role_permissions (
   FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (permission_id) REFERENCES permissions(permission_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO role_permissions (role_id, permission_id) VALUES
+(1, 1); -- Asignar permiso de dashboard al rol Administrador
 
 -- =========================================================
 -- TABLA: USERS
@@ -100,6 +114,11 @@ INSERT INTO options (option_key, option_value) VALUES
 ('site_url', 'http://php-start.test'),
 ('site_description', 'A simple PHP starter project'),
 ('site_keywords', 'php, start, project, template'),
+('site_language', 'es'),
+('site_timezone', 'America/New_York'),
+('date_format', 'Y-m-d'),
+('time_format', 'H:i:s'),
+('datetime_format', 'Y-m-d H:i:s'),
 ('favicon', '{"android-chrome-192x192":"android-chrome-192x192.png","android-chrome-512x512":"android-chrome-512x512.png","apple-touch-icon":"apple-touch-icon.png","favicon-16x16":"favicon-16x16.png","favicon-32x32":"favicon-32x32.png","favicon.ico":"favicon.ico","webmanifest":"site.webmanifest"}'),
 ('white_logo', 'st_logo_light.webp'),
 ('dark_logo', 'st_logo_dark.webp'),
@@ -109,7 +128,11 @@ INSERT INTO options (option_key, option_value) VALUES
 ('smtp_password', '********'),
 ('smtp_port', '587'),
 ('smtp_encryption', 'tls'),
+('google_recaptcha_enabled', '0'),
+('google_recaptcha_site_key', ''),
+('google_recaptcha_secret_key', ''),
 ('facebook', 'https://facebook.com'),
 ('twitter', 'https://twitter.com'),
 ('instagram', 'https://instagram.com'),
-('youtube', 'https://youtube.com');
+('youtube', 'https://youtube.com'),
+('version', '1.0');
