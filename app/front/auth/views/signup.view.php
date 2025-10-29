@@ -33,10 +33,6 @@
               placeholder="Vuelve a escribir la Contraseña" required>
           </div>
 
-          <div class="mb-3 text-center">
-            <!-- <div class="g-recaptcha" data-sitekey="6LeOfCoUAAAAAPbdDj7EZmmbxCCxIkXPSOx18I8J" data-theme="light"></div> -->
-          </div>
-
           <div class="d-grid">
             <button type="submit" class="btn btn-primary">Registrarse</button>
           </div>

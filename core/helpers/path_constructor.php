@@ -22,12 +22,12 @@ function path_admin_layout_partial(string $partial, string $ext = ".partial.php"
 // 
 
 function path_front(string $path, string $ext = ".php"): array {
-  $parts = explode('/', $path);
+  $parts = explode('-', $path);
 
   if (count($parts) < 2) {
     return [
       "success" => false,
-      "message" => "Ruta inválida. Se esperaba al menos 'modulo/archivo'",
+      "message" => "Ruta inválida. Se esperaba al menos 'modulo-archivo'",
     ];
   }
 
@@ -48,12 +48,12 @@ function path_front(string $path, string $ext = ".php"): array {
 }
 
 function path_front_view(string $path, string $ext = ".view.php"): array {
-  $parts = explode('/', $path);
+  $parts = explode('-', $path);
 
   if (count($parts) < 2) {
     return [
       "success" => false,
-      "message" => "Ruta inválida. Se esperaba al menos 'modulo/archivo'.",
+      "message" => "Ruta inválida. Se esperaba al menos 'modulo-archivo'.",
     ];
   }
 

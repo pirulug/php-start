@@ -19,17 +19,27 @@ if (isset($_COOKIE['php-start'])) {
     if ($stmt->rowCount() === 1) {
       $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-      // Verificar si aún puede iniciar sesión
-      if ($accessManager->can_login($user->role_id, $user->user_name)) {
-        $_SESSION['user_id'] = $user->user_id;
-        $_SESSION['signin']  = true;
+      // Actualizar última conexión
+      $update = $connect->prepare("
+        UPDATE users 
+        SET user_last_login = NOW() 
+        WHERE user_id = :user_id
+      ");
+      $update->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
+      $update->execute();
 
-        header("Location: " . SITE_URL . "/profile");
-        exit();
-      } else {
-        // Sin permisos => borrar cookie
-        setcookie("php-start", "", time() - 3600, "/");
-      }
+      // Crear sesión
+      $_SESSION['user_id'] = $user->user_id;
+      $_SESSION['signin']  = true;
+
+      // Renovar cookie
+      setcookie("php-start", $cipher->encrypt($user->user_id), time() + (30 * 24 * 60 * 60), "/");
+
+      // Redirigir al perfil
+      $notifier->add("¡Bienvenido de nuevo, {$user->user_name}!", "success", "toast");
+      header("Location: " . SITE_URL . "/profile");
+      exit();
+
     } else {
       // Usuario no existe o está inactivo => borrar cookie
       setcookie("php-start", "", time() - 3600, "/");
@@ -73,6 +83,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sign_in'])) {
 
     if ($stmt->rowCount() === 1) {
       $user = $stmt->fetch(PDO::FETCH_OBJ);
+
+      // Actualizar última conexión
+      $update = $connect->prepare("
+        UPDATE users 
+        SET user_last_login = NOW() 
+        WHERE user_id = :user_id
+      ");
+      $update->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
+      $update->execute();
 
       // Crear sesión
       $_SESSION['user_id'] = $user->user_id;
