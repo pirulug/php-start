@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($stmt_insert->execute()) {
 
         // Enviar correo de bienvenida con su contraseña
-        $subject = "Bienvenido a PHP-Start";
+        $subject = "Bienvenido a " . SITE_NAME ;
         $body    = "
           <h3>Hola {$username},</h3>
           <p>Tu cuenta ha sido creada exitosamente.</p>
