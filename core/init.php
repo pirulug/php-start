@@ -47,8 +47,34 @@ if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
 $accessManager = new AccessManager($connect, $user_session);
 
 // Analytics
-$analytics = new Analytics($connect);
+// $analytics = new Analytics($connect);
+
 
 // Configuraciones del sitio
 $config  = new SiteConfig($connect);
 $favicon = json_decode($config->get("favicon"), true);
+
+// echo "<pre>";
+// var_dump($config);
+// echo "</pre>";
+
+// exit();
+
+// Mail Service
+$mailService = (new MailService())
+  ->host($config->get("smtp_host"))
+  ->email($config->get("smtp_email"))
+  ->password($config->get("smtp_password"))
+  ->port($config->get("smtp_port"))
+  ->encryption($config->get("smtp_encryption"))
+  ->init();
+
+// $result = $mailService->send(
+//   "pirulug@gmail.com",
+//   "Correo de prueba",
+//   "<p>Este es un correo de prueba desde PHP-Start.</p>"
+// );
+
+// echo $result["message"];
+
+// exit();

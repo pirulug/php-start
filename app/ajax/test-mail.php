@@ -1,6 +1,5 @@
 <?php
 
-
 require __DIR__ . "/../../core/init.php";
 require BASE_DIR . '/core/vendor/php-mailer/src/Exception.php';
 require BASE_DIR . '/core/vendor/php-mailer/src/PHPMailer.php';

@@ -55,11 +55,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $stmt_insert->bindParam(':email', $email, PDO::PARAM_STR);
 
       if ($stmt_insert->execute()) {
-        $notifier->add("Cuenta creada exitosamente. Ya puedes iniciar sesión.", "success");
+
+        // Enviar correo de bienvenida con su contraseña
+        $subject = "Bienvenido a PHP-Start";
+        $body    = "
+          <h3>Hola {$username},</h3>
+          <p>Tu cuenta ha sido creada exitosamente.</p>
+          <p><strong>Correo:</strong> {$email}</p>
+          <p><strong>Contraseña:</strong> {$password}</p>
+          <hr>
+          <p>Te recomendamos cambiar tu contraseña al iniciar sesión por primera vez.</p>
+          <p>Atentamente,<br>El equipo de PHP-Start</p>
+        ";
+
+        $result = $mailService->send($email, $subject, $body);
+
+        // Si falla, simplemente mostrar aviso, pero no detener el registro
+        if (!$result["success"]) {
+          $notifier->add("Usuario creado, pero no se pudo enviar el correo: {$result['message']}", "warning", "toast");
+        } else {
+          $notifier->add("Cuenta creada exitosamente. Se envió un correo con tus credenciales.", "success", "toast");
+        }
+
+        $notifier->add("Cuenta creada exitosamente. Ya puedes iniciar sesión.", "success", "toast");
         header("Location: " . SITE_URL . "/signin");
         exit();
       } else {
-        $notifier->add("Error al registrar el usuario. Inténtalo nuevamente.", "danger");
+        $notifier->add("Error al registrar el usuario. Inténtalo nuevamente.", "danger", "toast");
       }
     }
   }
