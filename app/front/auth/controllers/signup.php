@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <p><strong>Contraseña:</strong> {$password}</p>
           <hr>
           <p>Te recomendamos cambiar tu contraseña al iniciar sesión por primera vez.</p>
-          <p>Atentamente,<br>El equipo de PHP-Start</p>
+          <p>Atentamente,<br>El equipo de " . SITE_NAME . "</p>
         ";
 
         $result = $mailService->send($email, $subject, $body);
