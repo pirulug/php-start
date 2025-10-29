@@ -9,6 +9,7 @@
         </div>
 
         <div class="card-body">
+          <?= $notifier->showBootstrap(); ?>
           <div class="mb-3">
             <label for="user_login" class="form-label">Correo electrónico</label>
             <input type="email" class="form-control" id="user_login" name="email" placeholder="Email" required>

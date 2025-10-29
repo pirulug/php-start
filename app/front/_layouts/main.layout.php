@@ -15,8 +15,11 @@
 
   <link rel="stylesheet" href="<?= SITE_URL ?>/static/assets/css/bootstrapicons.css">
   <link rel="stylesheet" href="<?= SITE_URL ?>/static/assets/css/fontawesome.css">
+
   <link rel="stylesheet" href="<?= SITE_URL ?>/static/assets/css/piruui.css">
   <link rel="stylesheet" href="<?= SITE_URL ?>/static/assets/css/sticky.css">
+
+  <link rel="stylesheet" href="<?= SITE_URL ?>/static/plugins/toastifyjs/toastifyjs.css" />
 
   <script>
     (function () {
@@ -63,18 +66,36 @@
                   Inicio
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="<?= SITE_URL ?>/signin">
-                  <i class="fa fa-key"></i>
-                  Iniciar Sesión
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="<?= SITE_URL ?>/signup">
-                  <i class="fa fa-plus"></i>
-                  Registrarse
-                </a>
-              </li>
+              <?php if (!is_signed_in()): ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="<?= SITE_URL ?>/signin">
+                    <i class="fa fa-key"></i>
+                    Iniciar Sesión
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="<?= SITE_URL ?>/signup">
+                    <i class="fa fa-plus"></i>
+                    Registrarse
+                  </a>
+                </li>
+              <?php endif; ?>
+              <?php if (is_signed_in()): ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="<?= SITE_URL ?>/profile">
+                    <i class="fa fa-user"></i>
+                    Perfil
+                  </a>
+                </li>
+              <?php endif; ?>
+              <?php if (is_signed_in()): ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="<?= SITE_URL ?>/signout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Cerrar Sesión
+                  </a>
+                </li>
+              <?php endif; ?>
             </ul>
           </div>
         </div>
@@ -102,7 +123,13 @@
     </nav>
 
     <main class="main-content">
-      <?php include_once path_front_view($template["path"] ?? "") ?>
+      <?php
+      $view = path_front_view($template["path"] ?? "");
+      if ($view["success"]):
+        include_once $view["file"];
+      else: ?>
+        <div class='w-50 m-auto alert alert-danger'><?= $view['message'] ?></div>
+      <?php endif; ?>
     </main>
 
     <footer class="footer bg-body">
@@ -116,9 +143,10 @@
     </footer>
   </div>
 
-
-
+  <script src="<?= SITE_URL ?>/static/plugins/toastifyjs/toastifyjs.js"></script>
   <script src="<?= SITE_URL ?>/static/assets/js/piruui.js"></script>
+
+  <?= $notifier->showToasts(); ?>
 
 </body>
 

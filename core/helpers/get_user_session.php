@@ -7,3 +7,11 @@ function get_user_session_information($connect, $user_id) {
 
   return $stmt->fetch(PDO::FETCH_OBJ);
 }
+
+function is_signed_in(): bool {
+  if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+  }
+
+  return isset($_SESSION["signin"]) && $_SESSION["signin"] === true;
+}

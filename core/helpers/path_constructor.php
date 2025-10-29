@@ -21,18 +21,60 @@ function path_admin_layout_partial(string $partial, string $ext = ".partial.php"
 
 // 
 
-function path_front(string $path, string $ext = ".php"): string {
-  $path = explode('/', $path);
-  return BASE_DIR_FRONT . "/" . $path[0] . "/controllers/" . $path[1] . $ext;
+function path_front(string $path, string $ext = ".php"): array {
+  $parts = explode('/', $path);
+
+  if (count($parts) < 2) {
+    return [
+      "success" => false,
+      "message" => "Ruta inválida. Se esperaba al menos 'modulo/archivo'",
+    ];
+  }
+
+  $file = BASE_DIR_FRONT . "/" . $parts[0] . "/controllers/" . $parts[1] . $ext;
+
+  if (!file_exists($file)) {
+    return [
+      "success" => false,
+      "message" => "El archivo solicitado no existe: " . implode('/', $parts),
+    ];
+  }
+
+  return [
+    "success" => true,
+    "message" => "Archivo encontrado",
+    "file"    => $file,
+  ];
 }
 
-function path_front_view(string $path, string $ext = ".view.php"): string {
-  $path = explode('/', $path);
-  return BASE_DIR_FRONT . "/" . $path[0] . "/views/" . $path[1] . $ext;
+function path_front_view(string $path, string $ext = ".view.php"): array {
+  $parts = explode('/', $path);
+
+  if (count($parts) < 2) {
+    return [
+      "success" => false,
+      "message" => "Ruta inválida. Se esperaba al menos 'modulo/archivo'.",
+    ];
+  }
+
+  $file = BASE_DIR_FRONT . "/" . $parts[0] . "/views/" . $parts[1] . $ext;
+
+  if (!file_exists($file)) {
+    return [
+      "success" => false,
+      "message" => "La vista solicitada no existe: " . implode('/', $parts),
+    ];
+  }
+
+  return [
+    "success" => true,
+    "file"    => $file,
+    "message" => "Vista encontrada correctamente.",
+  ];
 }
 
 function path_front_layout(string $layout, string $ext = ".layout.php"): string {
-  return BASE_DIR_FRONT . "/layouts/" . $layout . $ext;
+  return BASE_DIR_FRONT . "/_layouts/" . $layout . $ext;
 }
 
 function path_api(string $path, string $ext = ".php"): string {

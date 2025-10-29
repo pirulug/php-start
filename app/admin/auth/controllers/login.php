@@ -11,7 +11,8 @@ if (isset($_COOKIE['php-start'])) {
       throw new Exception("ID inválido en cookie");
     }
 
-    $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1 AND role_id IN (1, 2)";
+    // $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1 AND role_id IN (1, 2)";
+    $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1";
     $stmt  = $connect->prepare($query);
     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt->execute();

@@ -29,10 +29,18 @@ switch ($segments[0]) {
 
   case 'signout':
     $template = [
-      'title'  => 'Cerrar Sesión',
-      'path'   => 'auth/signout',
+      'title' => 'Cerrar Sesión',
+      'path'  => 'auth/signout',
+      'auth'  => false,
+    ];
+    break;
+
+  case 'profile':
+    $template = [
+      'title'  => 'Perfil',
+      'path'   => 'account/profile',
       'layout' => 'main',
-      'auth'   => false,
+      'auth'   => true,
     ];
     break;
 
@@ -52,5 +60,14 @@ if (!empty($template['auth']) && $template['auth']) {
 }
 
 // Cargar archivos
-include_once path_front($template['path']);
-include_once path_front_layout($template['layout']);
+$result = path_front($template['path']);
+if ($result['success']) {
+  include_once $result['file'];
+} else {
+  echo "<div style='color:red; font-weight:bold;'>{$result['message']}</div>";
+  exit();
+}
+
+if (!empty($template["layout"])) {
+  include_once path_front_layout($template['layout']);
+}

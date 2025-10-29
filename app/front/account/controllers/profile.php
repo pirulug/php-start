@@ -1,11 +1,17 @@
 <?php
 
-// Theme Render
-$theme->render(
-  BASE_DIR_FRONT . "/views/account/profile.view.php",
-  [
-    'theme_title' => 'Perfil',
-    'theme_path'  => 'profile',
-  ],
-  BASE_DIR_FRONT . "/views/layouts/app.layout.php"
-);
+$query = "SELECT 
+  users.*,
+  roles.* 
+FROM 
+  users
+INNER JOIN
+  roles
+ON
+  users.role_id = roles.role_id
+WHERE 
+  user_id = :user_id";
+$stmt  = $connect->prepare($query);
+$stmt->bindParam(":user_id", $_SESSION["user_id"]);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_OBJ);
