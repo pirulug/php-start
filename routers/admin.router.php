@@ -133,6 +133,13 @@ $routes = [
     'icon'      => 'settings',
     'collapsed' => true,
     'items'     => [
+      'settings/date_time' => [
+        'title'  => 'Date & Time',
+        'path'   => 'settings-date_time',
+        'layout' => 'main',
+        'auth'   => true,
+        'hidden' => false,
+      ],
       'settings/general' => [
         'title'  => 'General',
         'path'   => 'settings-general',

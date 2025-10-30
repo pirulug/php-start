@@ -139,9 +139,10 @@ class AccessManager {
       FROM role_permissions rp
       INNER JOIN permissions p ON rp.permission_id = p.permission_id
       WHERE rp.role_id = :role_id
-      AND p.permission_key_name = $permission_name
+      AND p.permission_key_name = :permission_name
     ");
     $stmt->bindParam(":role_id", $role_id, PDO::PARAM_INT);
+    $stmt->bindParam(":permission_name", $permission_name, PDO::PARAM_STR);
     $stmt->execute();
 
     return $stmt->fetchColumn() > 0;

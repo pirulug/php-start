@@ -1,5 +1,12 @@
 <?php
 
+if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
+  if (!$accessManager->can_login($user_session->user_id, $user_session->user_name)) {
+    header("Location: " . SITE_URL);
+    exit();
+  }
+}
+
 // --- AUTO LOGIN CON COOKIE ---
 if (isset($_COOKIE['php-start'])) {
   try {

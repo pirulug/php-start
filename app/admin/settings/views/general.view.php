@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="<?= SITE_URL . "/static/plugins/tagify/tagify.css" ?>">
 
-
 <div class="card">
   <div class="card-body">
     <form action="" method="POST" enctype="multipart/form-data">

@@ -49,16 +49,14 @@ $accessManager = new AccessManager($connect, $user_session);
 // Analytics
 // $analytics = new Analytics($connect);
 
-
 // Configuraciones del sitio
 $config  = new SiteConfig($connect);
 $favicon = json_decode($config->get("favicon"), true);
 
-// echo "<pre>";
-// var_dump($config);
-// echo "</pre>";
-
-// exit();
+/**
+ * Default Timezone
+ */
+date_default_timezone_set($config->get('site_timezone', 'UTC'));
 
 // Mail Service
 $mailService = (new MailService())
