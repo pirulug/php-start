@@ -183,6 +183,12 @@ $routes = [
         'layout' => 'main',
         'auth'   => true,
       ],
+      'settings/backups' => [
+        'title'  => 'Backups',
+        'path'   => 'settings-backups',
+        'layout' => 'main',
+        'auth'   => true,
+      ],
     ],
   ],
 
