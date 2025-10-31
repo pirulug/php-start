@@ -133,6 +133,12 @@ $routes = [
     'icon'      => 'settings',
     'collapsed' => true,
     'items'     => [
+      'settings/general' => [
+        'title'  => 'General',
+        'path'   => 'settings-general',
+        'layout' => 'main',
+        'auth'   => true,
+      ],
       'settings/date_time' => [
         'title'  => 'Date & Time',
         'path'   => 'settings-date_time',
@@ -140,11 +146,12 @@ $routes = [
         'auth'   => true,
         'hidden' => false,
       ],
-      'settings/general' => [
-        'title'  => 'General',
-        'path'   => 'settings-general',
+      'settings/captcha' => [
+        'title'  => 'CAPTCHA',
+        'path'   => 'settings-captcha',
         'layout' => 'main',
         'auth'   => true,
+        'hidden' => false,
       ],
       'settings/smtp'    => [
         'title'  => 'SMTP',
