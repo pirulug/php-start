@@ -11,13 +11,19 @@ class MailService {
   private array $config = [];
   private bool $initialized = false;
 
+  // Soporte para modo encadenado
+  private ?string $to = null;
+  private ?string $subject = null;
+  private ?string $body = null;
+  private array $attachments = [];
+
   public function __construct() {
     $this->mail = new PHPMailer(true);
     $this->mail->isHTML(true);
     $this->mail->CharSet = 'UTF-8';
   }
 
-  // Métodos encadenables
+  // ===== CONFIGURACIÓN SMTP =====
   public function host(?string $host): self {
     $this->config['host'] = trim((string) $host);
     return $this;
@@ -39,18 +45,15 @@ class MailService {
     return $this;
   }
 
-  // Verifica si la configuración mínima está presente
   private function isConfigValid(): bool {
     $required = ['host', 'email', 'password', 'port'];
     foreach ($required as $key) {
-      if (empty($this->config[$key])) {
+      if (empty($this->config[$key]))
         return false;
-      }
     }
     return true;
   }
 
-  // Inicializa PHPMailer solo si la config está completa
   public function init(): self {
     if (!$this->isConfigValid()) {
       $this->initialized = false;
@@ -70,14 +73,52 @@ class MailService {
     return $this;
   }
 
-  // Envía el correo (si la config está correcta)
-  public function send(string $to, string $subject, string $body, array $attachments = []): array {
+  // ===== NUEVO: MÉTODOS ENCADENADOS =====
+  public function to(string $to): self {
+    $this->to = $to;
+    return $this;
+  }
+
+  public function subject(string $subject): self {
+    $this->subject = $subject;
+    return $this;
+  }
+
+  public function body(string $body): self {
+    $this->body = $body;
+    return $this;
+  }
+
+  public function attach(string $filePath): self {
+    if (file_exists($filePath)) {
+      $this->attachments[] = $filePath;
+    }
+    return $this;
+  }
+
+  // ===== ENVÍO PRINCIPAL =====
+  public function send(?string $to = null, ?string $subject = null, ?string $body = null, array $attachments = []): array {
     if (!$this->initialized || !$this->isConfigValid()) {
       return [
         "success" => false,
         "message" => "Falta configuración SMTP. No se pudo enviar el correo."
       ];
     }
+
+    // Si se llama en modo encadenado, usar los valores almacenados
+    $to          = $to ?? $this->to;
+    $subject     = $subject ?? $this->subject;
+    $body        = $body ?? $this->body;
+    $attachments = array_merge($this->attachments, $attachments);
+
+    if (empty($to) || empty($subject) || empty($body)) {
+      return [
+        "success" => false,
+        "message" => "Faltan datos del correo (destinatario, asunto o cuerpo)."
+      ];
+    }
+
+    file_put_contents(BASE_DIR . "/logs/debug_mail.log", date("Y-m-d H:i:s") . " - Enviando correo...\n", FILE_APPEND);
 
     try {
       $this->mail->clearAddresses();
@@ -88,12 +129,14 @@ class MailService {
       $this->mail->Body    = $body;
 
       foreach ($attachments as $filePath) {
-        if (file_exists($filePath)) {
-          $this->mail->addAttachment($filePath);
-        }
+        $this->mail->addAttachment($filePath);
       }
 
       $this->mail->send();
+
+      // Reset parcial tras enviar
+      $this->to          = $this->subject = $this->body = null;
+      $this->attachments = [];
 
       return [
         "success" => true,

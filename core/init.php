@@ -58,6 +58,9 @@ $favicon = json_decode($config->get("favicon"), true);
  */
 date_default_timezone_set($config->get('site_timezone', 'UTC'));
 
+file_put_contents(BASE_DIR . "/logs/debug_mail.log", date("Y-m-d H:i:s") . " - Creando MailService en init.php\n", FILE_APPEND);
+
+
 // Mail Service
 $mailService = (new MailService())
   ->host($config->get("smtp_host"))
@@ -67,12 +70,12 @@ $mailService = (new MailService())
   ->encryption($config->get("smtp_encryption"))
   ->init();
 
-// $result = $mailService->send(
-//   "pirulug@gmail.com",
-//   "Correo de prueba",
-//   "<p>Este es un correo de prueba desde PHP-Start.</p>"
-// );
+// $send = $mailService
+//   ->to("pirulug@gmail.com")
+//   ->subject("Correo de prueba")
+//   ->body("<p>Este es un correo de prueba desde PHP-Start.</p>")
+//   ->send();
 
-// echo $result["message"];
+// echo $send["message"];
 
 // exit();
