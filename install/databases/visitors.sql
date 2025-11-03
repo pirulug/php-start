@@ -53,6 +53,9 @@ CREATE TABLE visitor_useronline (
   INDEX idx_useronline_last_activity (visitor_useronline_last_activity)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+ALTER TABLE visitor_useronline
+ADD UNIQUE KEY uniq_useronline_ip_visitor (visitor_useronline_ip, visitor_useronline_visitor_id);
+
 -- ============================================================
 -- Tabla: visitor_sessions
 -- ============================================================

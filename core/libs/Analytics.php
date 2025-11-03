@@ -138,14 +138,68 @@ class Analytics {
 
   /** ================= USER ONLINE ================= **/
   private function updateUserOnline(int $visitorId, int $pageId, string $ip, string $referer): void {
+    // Duración de sesión online (5 minutos)
+    $timeout = 5; // minutos
+
+    // Verificar si el visitante ya está online recientemente
     $stmt = $this->connect->prepare("
-      REPLACE INTO visitor_useronline (
-        visitor_useronline_visitor_id, visitor_useronline_page_id,
-        visitor_useronline_ip, visitor_useronline_referer,
-        visitor_useronline_last_activity
-      ) VALUES (?, ?, ?, ?, NOW())
+      SELECT visitor_useronline_id
+      FROM visitor_useronline
+      WHERE visitor_useronline_visitor_id = :vid
+        AND visitor_useronline_ip = :ip
+        AND visitor_useronline_last_activity > (NOW() - INTERVAL :timeout MINUTE)
+      LIMIT 1
     ");
-    $stmt->execute([$visitorId, $pageId, $ip, $referer]);
+    $stmt->bindValue(':vid', $visitorId, PDO::PARAM_INT);
+    $stmt->bindValue(':ip', $ip);
+    $stmt->bindValue(':timeout', $timeout, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($existing) {
+      // Solo actualizamos la actividad y página
+      $update = $this->connect->prepare("
+        UPDATE visitor_useronline
+        SET visitor_useronline_last_activity = NOW(),
+            visitor_useronline_page_id = :page_id,
+            visitor_useronline_referer = :referer
+        WHERE visitor_useronline_id = :id
+      ");
+      $update->execute([
+        ':page_id' => $pageId,
+        ':referer' => $referer,
+        ':id'      => $existing['visitor_useronline_id']
+      ]);
+    } else {
+      // Insertar nuevo registro (o reemplazar si ya existe combinación IP+visitor)
+      $insert = $this->connect->prepare("
+        INSERT INTO visitor_useronline (
+          visitor_useronline_visitor_id,
+          visitor_useronline_page_id,
+          visitor_useronline_ip,
+          visitor_useronline_referer,
+          visitor_useronline_last_activity
+        )
+        VALUES (:vid, :page_id, :ip, :referer, NOW())
+        ON DUPLICATE KEY UPDATE
+          visitor_useronline_last_activity = NOW(),
+          visitor_useronline_page_id = VALUES(visitor_useronline_page_id),
+          visitor_useronline_referer = VALUES(visitor_useronline_referer)
+      ");
+      $insert->execute([
+        ':vid'     => $visitorId,
+        ':page_id' => $pageId,
+        ':ip'      => $ip,
+        ':referer' => $referer
+      ]);
+    }
+
+    // Limpieza opcional: eliminar usuarios inactivos (>10 min)
+    $this->connect->query("
+      DELETE FROM visitor_useronline
+      WHERE visitor_useronline_last_activity < (NOW() - INTERVAL 10 MINUTE)
+    ");
   }
 
   /** ================= GEOLOCACIÓN EXTERNA ================= **/

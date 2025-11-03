@@ -35,23 +35,32 @@ $recentSessions = $connect->query("
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // Usuarios online
+// Usuarios online (con país, navegador y plataforma)
 $onlineUsers = $connect->query("
-  SELECT u.visitor_useronline_ip, p.visitor_pages_title, u.visitor_useronline_last_activity
+  SELECT 
+    u.visitor_useronline_ip,
+    p.visitor_pages_title,
+    u.visitor_useronline_last_activity,
+    v.visitor_country,
+    v.visitor_browser,
+    v.visitor_platform
   FROM visitor_useronline u
+  JOIN visitors v ON u.visitor_useronline_visitor_id = v.visitor_id
   LEFT JOIN visitor_pages p ON u.visitor_useronline_page_id = p.visitor_pages_id
   WHERE u.visitor_useronline_last_activity > (NOW() - INTERVAL 5 MINUTE)
   ORDER BY u.visitor_useronline_last_activity DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+
 echo json_encode([
-  'totals' => [
-    'visitors' => (int)$totalVisitors,
-    'pages' => (int)$totalPages,
-    'sessions' => (int)$totalSessions,
-    'online' => (int)$usersOnline
+  'totals'         => [
+    'visitors' => (int) $totalVisitors,
+    'pages'    => (int) $totalPages,
+    'sessions' => (int) $totalSessions,
+    'online'   => (int) $usersOnline
   ],
-  'topPages' => $topPages,
-  'countries' => $countries,
+  'topPages'       => $topPages,
+  'countries'      => $countries,
   'recentSessions' => $recentSessions,
-  'onlineUsers' => $onlineUsers
+  'onlineUsers'    => $onlineUsers
 ]);
