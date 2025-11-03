@@ -189,6 +189,12 @@ $routes = [
         'layout' => 'main',
         'auth'   => true,
       ],
+      'settings/visitors' => [
+        'title'  => 'Visitors',
+        'path'   => 'settings-visitors',
+        'layout' => 'main',
+        'auth'   => true,
+      ],
     ],
   ],
 

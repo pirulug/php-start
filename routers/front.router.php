@@ -56,7 +56,7 @@ switch ($segments[0]) {
 
 // Validar acceso
 if (!empty($template['auth']) && $template['auth']) {
-  $accessManager->ensure_access("front-".$template['path'], "Front - ".$template['title']);
+  $accessManager->ensure_access("front-" . $template['path'], "Front - " . $template['title']);
 }
 
 // Cargar archivos
@@ -64,6 +64,9 @@ $result = path_front($template['path']);
 
 if ($result['success']) {
   include_once $result['file'];
+
+  $analytics = new Analytics($connect);
+  $analytics->trackVisit($template['title'], $template['path']);
 } else {
   echo "<div style='color:red; font-weight:bold;'>{$result['message']}</div>";
   exit();

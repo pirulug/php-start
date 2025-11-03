@@ -31,6 +31,11 @@ switch ($segments[1] ?? '') {
     include path_ajax("users/get");
     break;
 
+  case "visitors":
+    
+    include path_ajax("visitors");
+    break;
+
   default:
     http_response_code(404);
     echo json_encode([
