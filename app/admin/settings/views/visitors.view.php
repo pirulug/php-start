@@ -1,5 +1,61 @@
-<!-- Librería de banderas -->
 <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="row mb-3">
+  <div class="col-4">
+    <!-- CARD RESUMEN DE TRÁFICO -->
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span><strong>Resumen de tráfico</strong> <i class="fa-regular fa-circle-question text-muted"
+            title="Resumen general de visitantes y visitas"></i></span>
+        <button class="btn btn-sm btn-light" onclick="loadAnalytics()"><i class="fa-solid fa-rotate"></i></button>
+      </div>
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <div class="me-2"><span class="text-success fw-bold">● Visitantes en línea</span></div>
+          <div class="fs-4 fw-bold" id="summaryOnline">0</div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle text-center">
+            <thead>
+              <tr class="text-muted small">
+                <th>Hora</th>
+                <th>Visitantes</th>
+                <th>Visitas</th>
+              </tr>
+            </thead>
+            <tbody id="summaryTraffic">
+              <!-- Se llena dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="row g-3">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header fw-bold">Visitas por Día (Mes Actual)</div>
+          <div class="card-body chart-container"><canvas id="chartMonthDays"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header fw-bold">Visitas por Mes (Año Actual)</div>
+          <div class="card-body chart-container"><canvas id="chartYearMonths"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header fw-bold">Visitas por Año (Últimos 10 Años)</div>
+          <div class="card-body chart-container"><canvas id="chartYears"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Tarjetas resumen -->
 <div class="row g-4 mb-4" id="summary-cards">
@@ -39,23 +95,59 @@
 
 <!-- Gráficos -->
 <div class="row g-4">
-  <div class="col-md-6">
+  <div class="col-lg-6">
     <div class="card">
-      <div class="card-header  fw-bold">Top 5 Páginas Más Visitadas</div>
+      <div class="card-header fw-bold">Tendencia de Tráfico (Últimos 30 días)</div>
+      <div class="card-body chart-container"><canvas id="chartTrend"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header fw-bold">Top 5 Páginas Más Visitadas</div>
       <div class="card-body chart-container"><canvas id="chartPages"></canvas></div>
     </div>
   </div>
-  <div class="col-md-6">
+</div>
+
+<div class="row g-4 mt-3">
+  <div class="col-lg-4">
     <div class="card">
-      <div class="card-header  fw-bold">Visitantes por País</div>
+      <div class="card-header fw-bold">Visitantes por País</div>
       <div class="card-body chart-container"><canvas id="chartCountries"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header fw-bold">Uso del Navegador</div>
+      <div class="card-body chart-container"><canvas id="chartBrowsers"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header fw-bold">Sistemas Operativos</div>
+      <div class="card-body chart-container"><canvas id="chartPlatforms"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header fw-bold">Tipos de Dispositivos</div>
+      <div class="card-body chart-container"><canvas id="chartDevices"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header fw-bold">Principales Referencias</div>
+      <div class="card-body chart-container"><canvas id="chartReferers"></canvas></div>
     </div>
   </div>
 </div>
 
 <!-- Tablas -->
-<div class="card mt-3">
-  <div class="card-header fw-bold ">Últimas Sesiones</div>
+<div class="card mt-4">
+  <div class="card-header fw-bold">Últimas Sesiones</div>
   <div class="table-responsive">
     <table class="table table-striped mb-0" id="tableSessions">
       <thead>
@@ -73,7 +165,7 @@
 </div>
 
 <div class="card mt-3">
-  <div class="card-header fw-bold ">Usuarios Online</div>
+  <div class="card-header fw-bold">Usuarios Online</div>
   <div class="table-responsive">
     <table class="table table-striped mb-0" id="tableOnline">
       <thead>
@@ -91,11 +183,23 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-  // ============================================================
-  // Configuración de gráficos
-  // ============================================================
+
+  // =============================================
+  // Gráficos iniciales
+  // =============================================
+  const chartTrend = new Chart(document.getElementById('chartTrend'), {
+    type: 'line',
+    data: {
+      labels: [], datasets: [
+        { label: 'Visitantes', data: [], borderColor: '#0d6efd', tension: 0.3, fill: false },
+        { label: 'Visitas', data: [], borderColor: '#198754', tension: 0.3, fill: false }
+      ]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
   const chartPages = new Chart(document.getElementById('chartPages'), {
     type: 'bar',
     data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: 'rgba(13,110,253,0.6)' }] },
@@ -104,14 +208,80 @@
 
   const chartCountries = new Chart(document.getElementById('chartCountries'), {
     type: 'doughnut',
-    data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0d6efd', '#198754', '#dc3545', '#ffc107', '#20c997', '#6f42c1', '#fd7e14', '#0dcaf0', '#adb5bd', '#6610f2'] }] },
+    data: { labels: [], datasets: [{ data: [], backgroundColor: generateColors(10) }] },
     options: { plugins: { legend: { position: 'bottom' } } }
   });
 
-  // ============================================================
-  // Mapas auxiliares
-  // ============================================================
-  // Mapa aproximado país → código ISO2
+  const chartBrowsers = new Chart(document.getElementById('chartBrowsers'), {
+    type: 'pie',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: generateColors(8) }] },
+    options: { plugins: { legend: { position: 'bottom' } } }
+  });
+
+  const chartPlatforms = new Chart(document.getElementById('chartPlatforms'), {
+    type: 'pie',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: generateColors(8) }] },
+    options: { plugins: { legend: { position: 'bottom' } } }
+  });
+
+  const chartDevices = new Chart(document.getElementById('chartDevices'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Dispositivos', data: [], backgroundColor: 'rgba(255,193,7,0.7)' }] },
+    options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+  });
+
+  const chartReferers = new Chart(document.getElementById('chartReferers'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Referencias', data: [], backgroundColor: 'rgba(220,53,69,0.7)' }] },
+    options: { indexAxis: 'y', scales: { x: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+  });
+
+  // ==========================
+  // GRÁFICOS NUEVOS
+  // ==========================
+  const chartMonthDays = new Chart(document.getElementById('chartMonthDays'), {
+    type: 'line',
+    data: { labels: [], datasets: [{ label: 'Visitas', data: [], borderColor: '#0d6efd', fill: false, tension: 0.3 }] },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  const chartYearMonths = new Chart(document.getElementById('chartYearMonths'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: 'rgba(13,110,253,0.6)' }] },
+    options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+  });
+
+  const chartYears = new Chart(document.getElementById('chartYears'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: 'rgba(255,193,7,0.7)' }] },
+    options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
+  });
+
+  // =============================================
+  // Funciones auxiliares
+  // =============================================
+  function generateColors(n) {
+    return Array.from({ length: n }, (_, i) => `hsl(${i * 36}, 70%, 60%)`);
+  }
+
+  const browserIcons = {
+    chrome: 'fa-brands fa-chrome text-danger',
+    firefox: 'fa-brands fa-firefox text-warning',
+    safari: 'fa-brands fa-safari text-info',
+    edge: 'fa-brands fa-edge text-primary',
+    opera: 'fa-brands fa-opera text-danger',
+    brave: 'fa-solid fa-shield-halved text-warning',
+    'internet explorer': 'fa-brands fa-internet-explorer text-primary'
+  };
+  const osIcons = {
+    windows: 'fa-brands fa-windows text-primary',
+    mac: 'fa-brands fa-apple text-dark',
+    ios: 'fa-solid fa-mobile-screen-button text-secondary',
+    android: 'fa-brands fa-android text-success',
+    linux: 'fa-brands fa-linux text-secondary'
+  };
+
+  // --- Mapa país → código ISO2 ---
   const countryToCode = {
     // América del Sur
     'argentina': 'ar', 'bolivia': 'bo', 'brasil': 'br', 'brazil': 'br', 'chile': 'cl',
@@ -189,91 +359,127 @@
     'localhost': 'xx', 'desconocido': 'xx', 'unknown': 'xx'
   };
 
-  function getFlagFromCountry(name = '') {
-    const code = countryToCode[name.toLowerCase()] || 'xx';
+  function getBrowserIcon(b) {
+    b = b?.toLowerCase() || '';
+    const key = Object.keys(browserIcons).find(k => b.includes(k));
+    return `<i class="${key ? browserIcons[key] : 'fa-solid fa-globe text-muted'}"></i>`;
+  }
+  function getOSIcon(p) {
+    p = p?.toLowerCase() || '';
+    const key = Object.keys(osIcons).find(k => p.includes(k));
+    return `<i class="${key ? osIcons[key] : 'fa-solid fa-desktop text-muted'}"></i>`;
+  }
+  function getFlag(country) {
+    if (!country) return '<span class="fi fi-xx"></span>';
+    const code = countryToCode[country.toLowerCase()] || 'xx';
     return `<span class="fi fi-${code}"></span>`;
   }
 
-  // ============================================================
-  // Iconos Font Awesome
-  // ============================================================
-  const browserIcons = {
-    chrome: 'fa-brands fa-chrome text-danger',
-    firefox: 'fa-brands fa-firefox text-warning',
-    safari: 'fa-brands fa-safari text-info',
-    edge: 'fa-brands fa-edge text-primary',
-    opera: 'fa-brands fa-opera text-danger',
-    brave: 'fa-solid fa-shield-halved text-warning',
-    'internet explorer': 'fa-brands fa-internet-explorer text-primary'
-  };
-
-  const osIcons = {
-    windows: 'fa-brands fa-windows text-primary',
-    mac: 'fa-brands fa-apple text-dark',
-    ios: 'fa-solid fa-mobile-screen-button text-secondary',
-    android: 'fa-brands fa-android text-success',
-    linux: 'fa-brands fa-linux text-secondary',
-  };
-
-  function getBrowserIcon(browserName = '') {
-    browserName = browserName.toLowerCase();
-    const key = Object.keys(browserIcons).find(k => browserName.includes(k));
-    const icon = key ? browserIcons[key] : 'fa-solid fa-globe text-muted';
-    return `<i class="${icon}"></i>`;
-  }
-
-  function getOSIcon(platform = '') {
-    platform = platform.toLowerCase();
-    const key = Object.keys(osIcons).find(k => platform.includes(k));
-    const icon = key ? osIcons[key] : 'fa-solid fa-desktop text-muted';
-    return `<i class="${icon}"></i>`;
-  }
-
-  // ============================================================
+  // =============================================
   // Carga de datos
-  // ============================================================
+  // =============================================
   async function loadAnalytics() {
     const res = await fetch('<?= SITE_URL ?>/ajax/visitors');
     const data = await res.json();
 
-    // Totales
     document.getElementById('totalVisitors').textContent = data.totals.visitors.toLocaleString();
     document.getElementById('totalPages').textContent = data.totals.pages.toLocaleString();
     document.getElementById('totalSessions').textContent = data.totals.sessions.toLocaleString();
     document.getElementById('usersOnline').textContent = data.totals.online.toLocaleString();
 
-    // Chart páginas
+    chartTrend.data.labels = data.trend.map(d => d.date);
+    chartTrend.data.datasets[0].data = data.trend.map(d => d.visitors);
+    chartTrend.data.datasets[1].data = data.trend.map(d => d.visits);
+    chartTrend.update();
+
     chartPages.data.labels = data.topPages.map(p => p.title);
     chartPages.data.datasets[0].data = data.topPages.map(p => p.views);
     chartPages.update();
 
-    // Chart países
     chartCountries.data.labels = data.countries.map(c => c.country);
     chartCountries.data.datasets[0].data = data.countries.map(c => c.total);
     chartCountries.update();
 
-    // Tabla sesiones
+    chartBrowsers.data.labels = data.browsers.map(b => b.browser);
+    chartBrowsers.data.datasets[0].data = data.browsers.map(b => b.total);
+    chartBrowsers.update();
+
+    chartPlatforms.data.labels = data.platforms.map(p => p.platform);
+    chartPlatforms.data.datasets[0].data = data.platforms.map(p => p.total);
+    chartPlatforms.update();
+
+    chartDevices.data.labels = data.devices.map(d => d.device);
+    chartDevices.data.datasets[0].data = data.devices.map(d => d.total);
+    chartDevices.update();
+
+    chartReferers.data.labels = data.referers.map(r => r.referer);
+    chartReferers.data.datasets[0].data = data.referers.map(r => r.total);
+    chartReferers.update();
+
     const sessionsBody = document.querySelector('#tableSessions tbody');
     sessionsBody.innerHTML = data.recentSessions.map(s => `
-        <tr>
-          <td>${getFlagFromCountry(s.visitor_country)} ${s.visitor_country ?? '-'}</td>
-          <td>${getBrowserIcon(s.visitor_browser)} ${s.visitor_browser}</td>
-          <td>${getOSIcon(s.visitor_platform)} ${s.visitor_platform}</td>
-          <td>${s.visitor_sessions_start_page}</td>
-          <td>${s.visitor_sessions_start_time}</td>
-        </tr>`).join('');
+      <tr>
+        <td>${getFlag(s.visitor_country)} ${s.visitor_country ?? '-'}</td>
+        <td>${getBrowserIcon(s.visitor_browser)} ${s.visitor_browser ?? '-'}</td>
+        <td>${getOSIcon(s.visitor_platform)} ${s.visitor_platform ?? '-'}</td>
+        <td>${s.visitor_sessions_start_page ?? '-'}</td>
+        <td>${s.visitor_sessions_start_time}</td>
+      </tr>
+    `).join('');
 
-    // Tabla usuarios online
     const onlineBody = document.querySelector('#tableOnline tbody');
     onlineBody.innerHTML = data.onlineUsers.map(o => `
-    <tr>
-      <td>${o.visitor_useronline_ip}</td>
-      <td>${getFlagFromCountry(o.visitor_country)} ${o.visitor_country ?? '-'}</td>
-      <td>${getBrowserIcon(o.visitor_browser)} ${o.visitor_browser ?? '-'}</td>
-      <td>${getOSIcon(o.visitor_platform)} ${o.visitor_platform ?? '-'}</td>
-      <td>${o.visitor_pages_title ?? '—'}</td>
-      <td>${o.visitor_useronline_last_activity}</td>
-    </tr>`).join('');
+      <tr>
+        <td>${o.visitor_useronline_ip}</td>
+        <td>${getFlag(o.visitor_country)} ${o.visitor_country ?? '-'}</td>
+        <td>${getBrowserIcon(o.visitor_browser)} ${o.visitor_browser ?? '-'}</td>
+        <td>${getOSIcon(o.visitor_platform)} ${o.visitor_platform ?? '-'}</td>
+        <td>${o.visitor_pages_title ?? '—'}</td>
+        <td>${o.visitor_useronline_last_activity}</td>
+      </tr>
+    `).join('');
+
+    // --- CARD RESUMEN ---
+    document.getElementById('summaryOnline').textContent = data.totals.online ?? 0;
+
+    const resumen = [
+      { label: 'Hoy', v: data.summary.today },
+      { label: 'Ayer', v: data.summary.yesterday },
+      { label: 'Esta semana', v: data.summary.thisWeek },
+      { label: 'Última semana', v: data.summary.lastWeek },
+      { label: 'Este mes', v: data.summary.thisMonth },
+      { label: 'Último mes', v: data.summary.lastMonth },
+      { label: 'Últimos 7 días', v: data.summary.last7 },
+      { label: 'Últimos 30 días', v: data.summary.last30 },
+      { label: 'Últimos 90 días', v: data.summary.last90 },
+      { label: 'Últimos 6 meses', v: data.summary.last6m },
+      { label: 'Este año (enero-hoy)', v: data.summary.thisYear },
+      { label: 'Total', v: data.summary.total },
+    ];
+
+    const tbody = document.getElementById('summaryTraffic');
+    tbody.innerHTML = resumen.map(r => `
+      <tr>
+        <td class="text-start">${r.label}</td>
+        <td class="text-primary fw-semibold">${r.v.visitors ?? 0}</td>
+        <td class="text-primary fw-semibold">${r.v.visits ?? 0}</td>
+      </tr>
+    `).join('');
+
+    // --- VISITAS POR DÍA DEL MES ACTUAL ---
+    chartMonthDays.data.labels = data.monthDays.map(d => d.day);
+    chartMonthDays.data.datasets[0].data = data.monthDays.map(d => d.visits);
+    chartMonthDays.update();
+
+    // --- VISITAS POR MES DEL AÑO ---
+    chartYearMonths.data.labels = data.yearMonths.map(d => d.month);
+    chartYearMonths.data.datasets[0].data = data.yearMonths.map(d => d.visits);
+    chartYearMonths.update();
+
+    // --- VISITAS DE LOS ÚLTIMOS 10 AÑOS ---
+    chartYears.data.labels = data.lastYears.map(d => d.year);
+    chartYears.data.datasets[0].data = data.lastYears.map(d => d.visits);
+    chartYears.update();
   }
 
   loadAnalytics();
