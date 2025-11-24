@@ -12,7 +12,7 @@ CREATE TABLE visitor_pages (
   visitor_pages_created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uniq_visitor_pages_uri (visitor_pages_uri),
   INDEX idx_visitor_pages_type (visitor_pages_type)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================================
 -- Tabla: visitors
@@ -33,16 +33,16 @@ CREATE TABLE visitors (
   visitor_total_hits INT DEFAULT 0,
   UNIQUE KEY uniq_visitor_ip_ua (visitor_ip, visitor_user_agent(255)),
   INDEX idx_visitor_country (visitor_country)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================================
 -- Tabla: visitor_useronline
 -- ============================================================
 CREATE TABLE visitor_useronline (
   visitor_useronline_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  visitor_useronline_visitor_id BIGINT UNSIGNED NOT NULL,
+  visitor_useronline_visitor_id BIGINT UNSIGNED NOT NULL UNIQUE,
   visitor_useronline_page_id BIGINT UNSIGNED DEFAULT NULL,
-  visitor_useronline_ip VARCHAR(60) NOT NULL,
+  visitor_useronline_ip VARCHAR(60) NOT NULL UNIQUE,
   visitor_useronline_last_activity DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   visitor_useronline_referer VARCHAR(512) DEFAULT NULL,
   visitor_useronline_agent VARCHAR(255) DEFAULT NULL,
@@ -51,10 +51,7 @@ CREATE TABLE visitor_useronline (
   FOREIGN KEY (visitor_useronline_visitor_id) REFERENCES visitors (visitor_id) ON DELETE CASCADE,
   FOREIGN KEY (visitor_useronline_page_id) REFERENCES visitor_pages (visitor_pages_id) ON DELETE SET NULL,
   INDEX idx_useronline_last_activity (visitor_useronline_last_activity)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-ALTER TABLE visitor_useronline
-ADD UNIQUE KEY uniq_useronline_ip_visitor (visitor_useronline_ip, visitor_useronline_visitor_id);
+);
 
 -- ============================================================
 -- Tabla: visitor_sessions
@@ -71,4 +68,4 @@ CREATE TABLE visitor_sessions (
   FOREIGN KEY (visitor_sessions_visitor_id) REFERENCES visitors (visitor_id) ON DELETE CASCADE,
   UNIQUE KEY uniq_cookie (visitor_sessions_cookie),
   INDEX idx_sessions_start_time (visitor_sessions_start_time)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);

@@ -10,11 +10,12 @@
     <div class="table-responsive">
 
       <table class="table table-striped table-bordered">
-        <thead class="table-dark">
+        <thead>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
+            <th>Accion</th>
           </tr>
         </thead>
         <tbody>

@@ -1,14 +1,8 @@
 <?php
 
-if (!file_exists(__DIR__ . "/../config.php")) {
-  die("Te falta el archivo config.php");
-}
-
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
-
-require_once __DIR__ . "/../config.php";
 
 foreach (glob(BASE_DIR . '/core/config/*.php') as $file) {
   require_once $file;
@@ -23,7 +17,12 @@ foreach (glob(BASE_DIR . '/core/helpers/*.php') as $file) {
 }
 
 // Conexión a base de datos
-$db      = new Database(DB_HOST, DB_NAME, DB_USER, DB_PASS);
+$db = new DataBase()
+  ->host(DB_HOST)
+  ->name(DB_NAME)
+  ->user(DB_USER)
+  ->password(DB_PASS);
+
 $connect = $db->getConnection();
 
 if (!$connect) {
@@ -53,13 +52,11 @@ $accessManager = new AccessManager($connect, $user_session);
 $config  = new SiteConfig($connect);
 $favicon = json_decode($config->get("favicon"), true);
 
-/**
- * Default Timezone
- */
+// Default Timezone
+
 date_default_timezone_set($config->get('site_timezone', 'UTC'));
 
-file_put_contents(BASE_DIR . "/logs/debug_mail.log", date("Y-m-d H:i:s") . " - Creando MailService en init.php\n", FILE_APPEND);
-
+// file_put_contents(BASE_DIR . "/logs/debug_mail.log", date("Y-m-d H:i:s") . " - Creando MailService en init.php\n", FILE_APPEND);
 
 // Mail Service
 $mailService = (new MailService())

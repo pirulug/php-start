@@ -61,8 +61,8 @@ class DataTableServer {
       foreach ($this->columns as $col) {
         $searchParts[] = "{$col['db']} LIKE :search";
       }
-      $searchSql = implode(' OR ', $searchParts);
-      $where .= $where ? " AND ($searchSql)" : "WHERE $searchSql";
+      $searchSql  = implode(' OR ', $searchParts);
+      $where     .= $where ? " AND ($searchSql)" : "WHERE $searchSql";
     }
 
     // Totales

@@ -8,13 +8,12 @@
 -- =========================================================
 CREATE TABLE roles (
   role_id INT AUTO_INCREMENT PRIMARY KEY,
-  role_name VARCHAR(50) NOT NULL UNIQUE,       -- Ejemplo: 'Administrador'
-  role_description VARCHAR(150) DEFAULT NULL   -- Descripción del rol
+  role_name VARCHAR(50) NOT NULL UNIQUE, -- Ejemplo: 'Administrador'
+  role_description VARCHAR(150) DEFAULT NULL -- Descripción del rol
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO roles (role_name, role_description) VALUES
 ('Administrador', 'Usuario con todos los permisos del sistema'),
-('Editor', 'Usuario con permisos para editar contenido'),
 ('Usuario', 'Usuario con permisos básicos de acceso');
 
 -- =========================================================
@@ -38,7 +37,7 @@ INSERT INTO permission_groups (permission_group_name, permission_group_key_name,
 CREATE TABLE permissions (
   permission_id INT AUTO_INCREMENT PRIMARY KEY,
   permission_name VARCHAR(100) NOT NULL,              -- Nombre legible del permiso
-  permission_key_name VARCHAR(100) NOT NULL UNIQUE,   -- Clave única, ej: 'users.edit'
+  permission_key_name VARCHAR(100) NOT NULL UNIQUE,   -- Clave única, ej: 'users-edit'
   permission_description VARCHAR(150) DEFAULT NULL,    -- Descripción del permiso
   permission_group_id INT NOT NULL,
   FOREIGN KEY (permission_group_id) REFERENCES permission_groups(permission_group_id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -60,7 +59,7 @@ CREATE TABLE role_permissions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO role_permissions (role_id, permission_id) VALUES
-(1, 1); -- Asignar permiso de dashboard al rol Administrador
+(1, 1);
 
 -- =========================================================
 -- TABLA: USERS
@@ -68,44 +67,46 @@ INSERT INTO role_permissions (role_id, permission_id) VALUES
 -- =========================================================
 CREATE TABLE users (
   user_id INT AUTO_INCREMENT PRIMARY KEY,
-  
-  -- Credenciales principales
-  user_name VARCHAR(255) NOT NULL UNIQUE,     -- Nombre de usuario (login)
-  user_password VARCHAR(255) NOT NULL,        -- Contraseña cifrada (hash)
-  user_email VARCHAR(255) NOT NULL UNIQUE,    -- Correo electrónico único
-  
-  -- Datos personales
-  user_nickname VARCHAR(100) DEFAULT NULL,    -- Apodo
-  user_first_name VARCHAR(100) DEFAULT NULL,  -- Nombre
-  user_last_name VARCHAR(100) DEFAULT NULL,   -- Apellido
-  user_display_name VARCHAR(150) DEFAULT NULL,-- Nombre público mostrado
-  
-  -- Información estado
-  user_status TINYINT NOT NULL DEFAULT 2,     -- 1 = Activo, 2 = Inactivo
-  role_id INT NOT NULL DEFAULT 3,             -- Relación con roles
-  
-  -- Imagen de perfil
+  user_login VARCHAR(255) NULL UNIQUE,
+  user_password VARCHAR(255) NULL,
+  user_nickname VARCHAR(100) DEFAULT NULL,
+  user_display_name VARCHAR(150) DEFAULT NULL,
+  user_email VARCHAR(255) NULL UNIQUE,
+  role_id INT NULL,
+  user_status TINYINT NOT NULL DEFAULT 1,
   user_image VARCHAR(255) NOT NULL DEFAULT 'default.webp',
-  
-  -- Metadatos adicionales
-  user_activation_key VARCHAR(255) DEFAULT NULL,
-  user_url VARCHAR(255) DEFAULT NULL,
-  
-  -- Fechas de registro y actualización
   user_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   user_updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  user_last_login DATETIME DEFAULT NULL, -- No debe actualizarse automáticamente cada vez
-  
-  -- Relación con roles
-  FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE SET DEFAULT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  user_deleted DATETIME DEFAULT NULL,
+  user_last_login DATETIME DEFAULT NULL,
 
+  FOREIGN KEY (role_id) REFERENCES roles(role_id)
+    ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+INSERT INTO users (user_login, user_password, user_nickname, user_display_name, user_email, role_id) VALUES
+('admin', 'Y2FtQ09UWGxjcmRGbm9hOHNpWDVjZz09', 'Admin', 'Admin', 'admin@gmail.com', 1),
+('user', 'Y2FtQ09UWGxjcmRGbm9hOHNpWDVjZz09', 'User', "User", 'user@gmail.com', 2);
+
+CREATE TABLE usermeta (
+  usermeta_id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  usermeta_key VARCHAR(150) NOT NULL,
+  usermeta_value TEXT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO usermeta (user_id, usermeta_key, usermeta_value) VALUES
+(1, 'first_name', 'Administrador'),
+(1, 'last_name', ''),
+(1, 'second_last_name', '');
 
 -- 2. Tabla de opciones
 CREATE TABLE options (
   option_id INT AUTO_INCREMENT PRIMARY KEY,
-  option_key VARCHAR(100),
-  option_value TEXT NOT NULL
+  option_key VARCHAR(100) NULL,
+  option_value TEXT NULL
 );
 
 TRUNCATE TABLE options;
@@ -115,7 +116,7 @@ INSERT INTO options (option_key, option_value) VALUES
 ('site_description', 'A simple PHP starter project'),
 ('site_keywords', 'php, start, project, template'),
 ('site_language', 'es'),
-('site_timezone', 'America/New_York'),
+('site_timezone', 'America/Lima'),
 ('date_format', 'Y-m-d'),
 ('time_format', 'H:i:s'),
 ('datetime_format', 'Y-m-d H:i:s'),

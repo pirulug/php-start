@@ -149,12 +149,12 @@ class AccessManager {
   }
 
   public function debug_permissions() {
-    echo "<pre style='background:#1e1e1e;color:#b3ffb3;padding:12px;border-radius:10px;font-size:14px;line-height:1.4em'>";
-    echo "🧠 Debug de permisos del usuario\n";
+    echo "<pre>";
+    echo "Debug de permisos del usuario\n";
     echo "---------------------------------\n";
 
     if (!$this->user) {
-      echo "⚠️ No hay usuario en sesión.\n";
+      echo "No hay usuario en sesión.\n";
       echo "</pre>";
       return;
     }
@@ -162,12 +162,12 @@ class AccessManager {
     $userName = htmlspecialchars($this->user->user_name ?? '(sin nombre)');
     $roleId   = htmlspecialchars($this->user->role_id ?? '?');
 
-    echo "👤 Usuario: {$userName}\n";
-    echo "🎭 Rol ID: {$roleId}\n";
+    echo "Usuario: {$userName}\n";
+    echo "Rol ID: {$roleId}\n";
 
     // SUPER ADMIN (rol_id = 1)
     if ($this->is_superadmin()) {
-      echo "\n💥 Este usuario es SUPER ADMINISTRADOR.\n";
+      echo "\nEste usuario es SUPER ADMINISTRADOR.\n";
       echo "   → Tiene acceso TOTAL a todos los módulos, menús y permisos.\n";
       echo "   (No se requiere comprobación de permisos en la base de datos.)\n";
       echo "</pre>";
@@ -186,14 +186,14 @@ class AccessManager {
     $stmt->execute();
     $permissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo "\n📋 Permisos cargados:\n\n";
+    echo "\nPermisos cargados:\n\n";
     if ($permissions) {
       foreach ($permissions as $perm) {
         echo "   • " . htmlspecialchars($perm['permission_key_name']) .
           " (" . htmlspecialchars($perm['permission_name']) . ")\n";
       }
     } else {
-      echo "❌ Este rol no tiene permisos asignados.\n";
+      echo "Este rol no tiene permisos asignados.\n";
     }
 
     echo "</pre>";

@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Si no hay errores, comprobar usuario y contraseña
   if (!$notifier->hasErrors()) {
-    $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password AND user_status = 1 AND role_id IN (1, 2)";
+    $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password";
     $stmt  = $connect->prepare($query);
     $stmt->bindParam(':user_name', $user_name, PDO::PARAM_STR);
     $stmt->bindParam(':user_password', $user_password, PDO::PARAM_STR);
