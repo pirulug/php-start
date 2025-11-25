@@ -19,6 +19,10 @@ class UploadImage {
   private string $prefix = "img_";
   private array $resizeVariants = [];
 
+  // NUEVO: tamaño del archivo principal
+  private ?int $mainWidth = null;
+  private ?int $mainHeight = null;
+
 
   /* ============================================================
    * CONFIGURACIONES FLUENT
@@ -78,6 +82,18 @@ class UploadImage {
     return $this;
   }
 
+  /** NUEVO: Redimensionar la imagen principal (width) */
+  public function width(int $width): self {
+    $this->mainWidth = $width;
+    return $this;
+  }
+
+  /** NUEVO: Redimensionar la imagen principal (height) */
+  public function height(int $height): self {
+    $this->mainHeight = $height;
+    return $this;
+  }
+
 
   /* ============================================================
    * PROCESO PRINCIPAL DE SUBIDA
@@ -126,6 +142,11 @@ class UploadImage {
     // Temp
     $temp = "{$this->uploadDir}/temp_" . uniqid() . ".$ext";
     move_uploaded_file($this->file['tmp_name'], $temp);
+
+    /* ========= REDIMENSIONAR IMAGEN PRINCIPAL (SI SE SOLICITÓ) ========= */
+    if ($this->mainWidth || $this->mainHeight) {
+      $this->resizeImage($temp, $temp, $this->mainWidth ?? 0, $this->mainHeight ?? 0, $this->quality);
+    }
 
     // Procesar imagen principal
     $main = $this->processImage($temp, $finalPath, $finalExt, $this->quality);
@@ -225,7 +246,16 @@ class UploadImage {
     if (class_exists('Imagick')) {
       try {
         $img = new Imagick($src);
-        $img->cropThumbnailImage($width, $height);
+
+        // Mantener proporción si width o height son 0
+        if ($width > 0 && $height == 0) {
+          $img->thumbnailImage($width, 0);
+        } elseif ($height > 0 && $width == 0) {
+          $img->thumbnailImage(0, $height);
+        } else {
+          $img->cropThumbnailImage($width, $height);
+        }
+
         $img->setImageCompressionQuality($quality * 10);
         $img->writeImage($dest);
 
@@ -239,8 +269,27 @@ class UploadImage {
   }
 
   private function resizeImageGD($src, $dest, $w, $h, $quality) {
-    $info = getimagesize($src);
-    $orig = imagecreatefromstring(file_get_contents($src));
+    $info  = getimagesize($src);
+    $origW = $info[0];
+    $origH = $info[1];
+    $orig  = imagecreatefromstring(file_get_contents($src));
+
+    // Mantener proporción si falta width/height
+    if ($w > 0 && $h == 0) {
+      $ratio = $origH / $origW;
+      $h     = intval($w * $ratio);
+    }
+
+    if ($h > 0 && $w == 0) {
+      $ratio = $origW / $origH;
+      $w     = intval($h * $ratio);
+    }
+
+    // Si ambos 0 -> no redimensionar
+    if ($w == 0 && $h == 0) {
+      $w = $origW;
+      $h = $origH;
+    }
 
     $resized = imagecreatetruecolor($w, $h);
 
@@ -251,7 +300,7 @@ class UploadImage {
       imagefill($resized, 0, 0, $transparent);
     }
 
-    imagecopyresampled($resized, $orig, 0, 0, 0, 0, $w, $h, $info[0], $info[1]);
+    imagecopyresampled($resized, $orig, 0, 0, 0, 0, $w, $h, $origW, $origH);
 
     switch ($info['mime']) {
       case "image/jpeg":

@@ -101,49 +101,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
     if (!$notifier->has('danger')) {
 
-      // $upload_path = BASE_DIR . '/uploads/user/';
-      // $user_image  = $_FILES["user_image"];
-      // $user_image  = upload_image(
-      //   $user_image,
-      //   $upload_path,
-      //   100,
-      //   100,
-      //   [
-      //     'convertTo' => 'webp',
-      //     'prefix'    => 'u-'
-      //   ]);
+      $upload_path = BASE_DIR . '/uploads/user/';
 
-      // $uploader = (new UploadImage()
-      //   ->file($_FILES["user_image"])
-      //   ->dir(BASE_DIR . '/uploads/test')
-      //   ->maxSize(1000000) // 1MB
-      //   ->convertTo('webp')
-      //   ->prefix('u-')
-      // );
-
-      // $uploader = (new UploadImage())
-      //   ->file($_FILES['user_image'])
-      //   ->dir(BASE_DIR . '/uploads/test')
-      //   ->upload();
-
-      // $uploader = (new UploadImage())
-      //   ->file($_FILES['user_image'])
-      //   ->dir(BASE_DIR . '/uploads/test')
-      //   ->convertTo("webp")
-      //   ->optimize(8)
-      //   ->upload();
-
-      $uploader = (new UploadImage())
+      $user_image = (new UploadImage())
         ->file($_FILES['user_image'])
-        ->dir(BASE_DIR . '/uploads/test')
-        ->resize("small", 100, 100)
+        ->dir($upload_path)
+        ->convertTo("webp")
+        ->prefix('u_')
+        ->width(100)
+        ->height(100)
+        ->maxSize(5 * 1024 * 1024)
         ->upload();
 
-      echo "<pre>";
-      print_r($uploader);
-      echo "</pre>";
+      // echo "<pre>";
+      // print_r($user_image);
+      // echo "</pre>";
 
-      exit();
+      // exit();
 
       if (!$user_image['success']) {
         $notifier->add($user_image['message'], "danger");
@@ -165,17 +139,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Si no hay mensajes de error, proceder con la inserción
   if (!$notifier->has('danger')) {
-    $query = "UPDATE users 
-              SET 
-              user_login = :user_login, 
-              user_email = :user_email, 
-              role_id = :role_id, 
-              user_status = :user_status, 
-              user_password = :user_password, 
-              user_image = :user_image, 
-              user_updated = CURRENT_TIME 
-              WHERE 
-              user_id = :user_id";
+    $query = "
+      UPDATE 
+        users 
+      SET 
+        user_login = :user_login, 
+        user_email = :user_email, 
+        role_id = :role_id, 
+        user_status = :user_status, 
+        user_password = :user_password, 
+        user_image = :user_image, 
+        user_updated = CURRENT_TIME 
+      WHERE 
+        user_id = :user_id
+    ";
     $stmt  = $connect->prepare($query);
     $stmt->bindParam(':user_login', $user_login);
     $stmt->bindParam(':user_email', $user_email);
