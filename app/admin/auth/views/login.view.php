@@ -41,3 +41,35 @@
     </div>
   </div>
 </div>
+
+<script>
+  const togglePassword = document.getElementById("togglePassword");
+  const passwordInput = document.getElementById("inputChoosePassword");
+  const icon = togglePassword.querySelector("i");
+
+  togglePassword.addEventListener("click", () => {
+    // guardar selección actual
+    let start = passwordInput.selectionStart;
+    let end = passwordInput.selectionEnd;
+
+    // cambiar tipo
+    const isPassword = passwordInput.type === "password";
+    passwordInput.type = isPassword ? "text" : "password";
+
+    // asegurar foco
+    passwordInput.focus();
+
+    // si no hay selección previa, mover al final
+    if (start === 0 && end === 0) {
+      const len = passwordInput.value.length;
+      passwordInput.setSelectionRange(len, len);
+    } else {
+      // restaurar selección previa
+      passwordInput.setSelectionRange(start, end);
+    }
+
+    // alternar ícono
+    icon.classList.toggle("fa-eye");
+    icon.classList.toggle("fa-eye-slash");
+  });
+</script>

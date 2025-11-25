@@ -15,7 +15,7 @@
           <ul class="list-group list-group-flush mb-1">
             <li class="list-group-item">
               <b>Username</b>
-              <a class="pull-right"><?= $user->user_name ?></a>
+              <a class="pull-right"><?= $user->user_login ?></a>
             </li>
             <li class="list-group-item">
               <b>Last Login</b>
@@ -42,7 +42,7 @@
       <div class="card">
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped m-0">
               <tbody>
                 <tr>
                   <td width="160"><strong>Name</strong>:</td>
@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                   <td><strong>Username</strong>:</td>
-                  <td><?= $user->user_name ?></td>
+                  <td><?= $user->user_login ?></td>
                 </tr>
                 <tr>
                   <td><strong>Email</strong>:</td>

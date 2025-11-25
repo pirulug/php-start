@@ -39,7 +39,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_OBJ);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
   $user_id       = $cipher->decrypt(clear_data($_POST['user_id']));
-  $user_login     = clear_data($_POST['user_login']);
+  $user_login    = clear_data($_POST['user_login']);
   $user_email    = clear_data($_POST['user_email']);
   $role_id       = clear_data($_POST['role_id']);
   $user_status   = clear_data($_POST['user_status']);
@@ -101,17 +101,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
     if (!$notifier->has('danger')) {
 
-      $upload_path = BASE_DIR . '/uploads/user/';
-      $user_image  = $_FILES["user_image"];
-      $user_image  = upload_image(
-        $user_image,
-        $upload_path,
-        100,
-        100,
-        [
-          'convertTo' => 'webp',
-          'prefix'    => 'u-'
-        ]);
+      // $upload_path = BASE_DIR . '/uploads/user/';
+      // $user_image  = $_FILES["user_image"];
+      // $user_image  = upload_image(
+      //   $user_image,
+      //   $upload_path,
+      //   100,
+      //   100,
+      //   [
+      //     'convertTo' => 'webp',
+      //     'prefix'    => 'u-'
+      //   ]);
+
+      // $uploader = (new UploadImage()
+      //   ->file($_FILES["user_image"])
+      //   ->dir(BASE_DIR . '/uploads/test')
+      //   ->maxSize(1000000) // 1MB
+      //   ->convertTo('webp')
+      //   ->prefix('u-')
+      // );
+
+      // $uploader = (new UploadImage())
+      //   ->file($_FILES['user_image'])
+      //   ->dir(BASE_DIR . '/uploads/test')
+      //   ->upload();
+
+      // $uploader = (new UploadImage())
+      //   ->file($_FILES['user_image'])
+      //   ->dir(BASE_DIR . '/uploads/test')
+      //   ->convertTo("webp")
+      //   ->optimize(8)
+      //   ->upload();
+
+      $uploader = (new UploadImage())
+        ->file($_FILES['user_image'])
+        ->dir(BASE_DIR . '/uploads/test')
+        ->resize("small", 100, 100)
+        ->upload();
+
+      echo "<pre>";
+      print_r($uploader);
+      echo "</pre>";
+
+      exit();
 
       if (!$user_image['success']) {
         $notifier->add($user_image['message'], "danger");

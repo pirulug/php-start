@@ -33,7 +33,12 @@ if (!$connect) {
 $notifier = new Notifier();
 
 // Cifrador
-$cipher = new Cipher(ENCRYPT_METHOD, ENCRYPT_KEY, ENCRYPT_IV);
+// $cipher = new Cipher(ENCRYPT_METHOD, ENCRYPT_KEY, ENCRYPT_IV);
+
+$cipher = new Cipher()
+  ->method(ENCRYPT_METHOD)
+  ->secretkey(ENCRYPT_KEY)
+  ->secretiv(ENCRYPT_IV);
 
 // Obtener Información de usuario
 if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
@@ -65,5 +70,7 @@ $mailService = (new MailService())
   ->init();
 
 // obtener contraseña
-// echo $cipher->encrypt("admin123");
+// echo $enc = $cipher->encrypt("admin123");
+// echo "<br>";
+// echo $cipher->decrypt($enc);
 // exit();

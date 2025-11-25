@@ -1,405 +1,273 @@
 <?php
 
-function upload_image_variants($file, $uploadDir, $options = []) {
-  // Configuración predeterminada
-  $defaults = [
-    "imageSupported" => ["jpg", "png", "jpeg", "webp"], // Extensiones permitidas
-    "maxSize"        => 2 * 1024 * 1024,                // Tamaño máximo: 2 MB
-    "convertTo"      => null,                           // Convertir a: null, "jpg", "png", "webp"
-    "optimize"       => 7,                              // Calidad (0 a 10)
-    "fileName"       => null,                           // Nombre del archivo personalizado
-    "prefix"         => "img_",                         // Nombre del archivo personalizado
-    "resize"         => []                              // Tamaños a redimensionar (ejemplo: ['small' => [150, 150], 'medium' => [300, 300]])
-  ];
-  $settings = array_merge($defaults, $options);
+/**
+ * Clase UploadImage
+ * 
+ * Esta clase permite subir, convertir, optimizar y redimensionar imágenes.
+ * Cuenta con una interfaz Fluent (encadenamiento de métodos).
+ */
+class UploadImage {
 
-  // Asegurarse de que el directorio de subida exista
-  if (!is_dir($uploadDir)) {
-    if (!mkdir($uploadDir, 0777, true)) {
-      return ["success" => false, "message" => "No se pudo crear el directorio de destino."];
+  private array $file;
+  private string $uploadDir;
+
+  private array $supported = ['jpg', 'jpeg', 'png', 'webp'];
+  private int $maxSize = 2097152; // 2MB
+  private ?string $convertTo = null;
+  private int $quality = 7;
+  private ?string $fileName = null;
+  private string $prefix = "img_";
+  private array $resizeVariants = [];
+
+
+  /* ============================================================
+   * CONFIGURACIONES FLUENT
+   * ============================================================ */
+
+  /** Asigna el archivo $_FILES */
+  public function file(array $file): self {
+    $this->file = $file;
+    return $this;
+  }
+
+  /** Directorio donde se guardará la imagen */
+  public function dir(string $dir): self {
+    $this->uploadDir = rtrim($dir, "/");
+    return $this;
+  }
+
+  /** Extensiones permitidas */
+  public function supported(array $types): self {
+    $this->supported = $types;
+    return $this;
+  }
+
+  /** Tamaño máximo permitido (bytes) */
+  public function maxSize(int $bytes): self {
+    $this->maxSize = $bytes;
+    return $this;
+  }
+
+  /** Convertir a formato: jpg | png | webp | null */
+  public function convertTo(?string $ext): self {
+    $this->convertTo = $ext;
+    return $this;
+  }
+
+  /** Calidad de optimización 0–10 */
+  public function optimize(int $value): self {
+    $this->quality = max(0, min(10, $value));
+    return $this;
+  }
+
+  /** Nombre personalizado */
+  public function fileName(string $name): self {
+    $this->fileName = $name;
+    return $this;
+  }
+
+  /** Prefijo del archivo */
+  public function prefix(string $prefix): self {
+    $this->prefix = $prefix;
+    return $this;
+  }
+
+  /** Añadir variante redimensionada */
+  public function resize(string $key, int $width, int $height): self {
+    $this->resizeVariants[$key] = [$width, $height];
+    return $this;
+  }
+
+
+  /* ============================================================
+   * PROCESO PRINCIPAL DE SUBIDA
+   * ============================================================ */
+  public function upload(): array {
+
+    if (!isset($this->file['tmp_name'])) {
+      return ["success" => false, "message" => "Archivo no recibido."];
     }
-  }
 
-  // Validar si se cargó el archivo correctamente
-  if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-    return ["success" => false, "message" => "Error al subir el archivo."];
-  }
+    // Crear carpeta si no existe
+    if (!is_dir($this->uploadDir)) {
+      mkdir($this->uploadDir, 0777, true);
+    }
 
-  // Validar tamaño del archivo
-  if ($file['size'] > $settings['maxSize']) {
-    return ["success" => false, "message" => "El archivo excede el tamaño máximo permitido de " . ($settings['maxSize'] / 1024 / 1024) . " MB."];
-  }
+    // Validar errores
+    if ($this->file['error'] !== UPLOAD_ERR_OK) {
+      return ["success" => false, "message" => "Error al subir el archivo."];
+    }
 
-  // Obtener información del archivo
-  $fileInfo = pathinfo($file['name']);
-  $fileExt  = strtolower($fileInfo['extension']);
+    // Validar tamaño
+    if ($this->file['size'] > $this->maxSize) {
+      return ["success" => false, "message" => "El archivo supera el máximo permitido."];
+    }
 
-  // Validar extensión del archivo
-  if (!in_array($fileExt, $settings['imageSupported'])) {
-    return ["success" => false, "message" => "La extensión .$fileExt no está permitida."];
-  }
+    // Info del archivo
+    $info = pathinfo($this->file['name']);
+    $ext  = strtolower($info['extension']);
 
-  // Generar un nombre único para el archivo si no se proporciona uno
-  $fileName = $settings['fileName'] ? $settings['fileName'] : uniqid($settings['prefix'], true);
-  $fileName = str_replace(".", "", $fileName);
-  $finalExt = $settings['convertTo'] ? $settings['convertTo'] : $fileExt;
-  $fileName .= ".$finalExt";
-  $filePath = rtrim($uploadDir, "/") . "/" . $fileName;
+    if (!in_array($ext, $this->supported)) {
+      return ["success" => false, "message" => "Extensión .$ext no permitida."];
+    }
 
-  // Mover el archivo al directorio temporal
-  $tempPath = rtrim($uploadDir, "/") . "/temp_" . uniqid() . ".$fileExt";
-  if (!move_uploaded_file($file['tmp_name'], $tempPath)) {
-    return ["success" => false, "message" => "No se pudo mover el archivo al directorio de destino."];
-  }
+    // Nombre final
+    $finalExt = $this->convertTo ? $this->convertTo : $ext;
 
-  // Convertir o procesar la imagen principal
-  $conversionResult = process_image($tempPath, $filePath, $finalExt, $settings['optimize']);
-  if (!$conversionResult['success']) {
-    unlink($tempPath); // Eliminar archivo temporal
-    return $conversionResult;
-  }
+    $name = $this->fileName
+      ? $this->fileName
+      : uniqid($this->prefix, true);
 
-  // Generar imágenes redimensionadas si es necesario
-  $resizedImages = [];
-  if (!empty($settings['resize'])) {
-    foreach ($settings['resize'] as $key => $dimensions) {
-      $resizedPath  = rtrim($uploadDir, "/") . "/" . $fileName . "_$key.$finalExt";
-      $resizeResult = resize_image($tempPath, $resizedPath, $dimensions[0], $dimensions[1], $settings['optimize']);
-      if ($resizeResult['success']) {
-        $resizedImages[$key] = [
-          "file_name" => $resizeResult['file_name'],
-          "file_path" => $resizeResult['path']
-        ];
-      } else {
-        unlink($tempPath);
-        return $resizeResult; // Detener en caso de error
+    $name  = preg_replace("/\./", "", $name);
+    $name .= ".$finalExt";
+
+    $finalPath = "{$this->uploadDir}/{$name}";
+
+    // Temp
+    $temp = "{$this->uploadDir}/temp_" . uniqid() . ".$ext";
+    move_uploaded_file($this->file['tmp_name'], $temp);
+
+    // Procesar imagen principal
+    $main = $this->processImage($temp, $finalPath, $finalExt, $this->quality);
+
+    if (!$main['success']) {
+      unlink($temp);
+      return $main;
+    }
+
+    // Variantes
+    $variants = [];
+
+    foreach ($this->resizeVariants as $key => [$w, $h]) {
+      $variantPath = "{$this->uploadDir}/{$key}_{$name}";
+      $res         = $this->resizeImage($temp, $variantPath, $w, $h, $this->quality);
+
+      if (!$res['success']) {
+        unlink($temp);
+        return $res;
       }
-    }
-  }
 
-  unlink($tempPath); // Eliminar archivo temporal
-
-  return [
-    "success"        => true,
-    "message"        => "Imagen subida y procesada con éxito.",
-    "file_name"      => $fileName,
-    "file_path"      => $filePath,
-    "resized_images" => $resizedImages
-  ];
-}
-
-function upload_image($file, $uploadDir, $resizeWidth = null, $resizeHeight = null, $options = []) {
-  // Configuración predeterminada
-  $defaults = [
-    "imageSupported" => ["jpg", "png", "jpeg", "webp"], // Extensiones permitidas
-    "maxSize"        => 2 * 1024 * 1024,                // Tamaño máximo: 2 MB
-    "convertTo"      => null,                           // Convertir a: null, "jpg", "png", "webp"
-    "optimize"       => 7,                              // Calidad (0 a 10)
-    "fileName"       => null,                           // Nombre del archivo personalizado
-    "prefix"         => "img_"                          // Prefijo del archivo
-  ];
-  $settings = array_merge($defaults, $options);
-
-  // Asegurarse de que el directorio de subida exista
-  if (!is_dir($uploadDir)) {
-    if (!mkdir($uploadDir, 0777, true)) {
-      return ["success" => false, "message" => "No se pudo crear el directorio de destino."];
-    }
-  }
-
-  // Validar si se cargó el archivo correctamente
-  if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-    return ["success" => false, "message" => "Error al subir el archivo."];
-  }
-
-  // Validar tamaño del archivo
-  if ($file['size'] > $settings['maxSize']) {
-    return ["success" => false, "message" => "El archivo excede el tamaño máximo permitido de " . ($settings['maxSize'] / 1024 / 1024) . " MB."];
-  }
-
-  // Obtener información del archivo
-  $fileInfo = pathinfo($file['name']);
-  $fileExt  = strtolower($fileInfo['extension']);
-
-  // Validar extensión del archivo
-  if (!in_array($fileExt, $settings['imageSupported'])) {
-    return ["success" => false, "message" => "La extensión .$fileExt no está permitida."];
-  }
-
-  // Generar un nombre único para el archivo si no se proporciona uno
-  $fileName = $settings['fileName'] ? $settings['fileName'] : uniqid($settings['prefix'], true);
-  $fileName = str_replace(".", "", $fileName);
-  $finalExt = $settings['convertTo'] ? $settings['convertTo'] : $fileExt;
-  $fileName .= ".$finalExt";
-  $filePath = rtrim($uploadDir, "/") . "/" . $fileName;
-
-  // Mover el archivo temporalmente
-  $tempPath = rtrim($uploadDir, "/") . "/temp_" . uniqid() . ".$fileExt";
-  if (!move_uploaded_file($file['tmp_name'], $tempPath)) {
-    return ["success" => false, "message" => "No se pudo mover el archivo al directorio temporal."];
-  }
-
-  // Obtener dimensiones de la imagen original
-  [$originalWidth, $originalHeight] = getimagesize($tempPath);
-
-  if ($resizeWidth === null && $resizeHeight === null) {
-    $conversionResult = process_image($tempPath, $filePath, $finalExt, $settings['optimize']);
-    if (!$conversionResult['success']) {
-      unlink($tempPath); // Eliminar archivo temporal
-      return $conversionResult;
-    } else {
-      unlink($tempPath);
-      return [
-        "success"   => true,
-        "message"   => "Imagen subida y redimensionada con éxito.",
-        "file_name" => $fileName,
-        "file_path" => $filePath
+      $variants[$key] = [
+        "file" => "{$key}_{$name}",
+        "path" => $variantPath
       ];
     }
-  } elseif ($resizeWidth === null) {
-    $resizeWidth = ($resizeHeight / $originalHeight) * $originalWidth;
-  } elseif ($resizeHeight === null) {
-    $resizeHeight = ($resizeWidth / $originalWidth) * $originalHeight;
-  }
 
-  // Redimensionar la imagen al tamaño calculado
-  $resizeResult = resize_image($tempPath, $filePath, (int) $resizeWidth, (int) $resizeHeight, $settings['optimize']);
+    unlink($temp);
 
-  if (!$resizeResult['success']) {
-    unlink($tempPath);
-    return $resizeResult;
-  }
-
-  unlink($tempPath);
-
-  return [
-    "success"   => true,
-    "message"   => "Imagen subida y redimensionada con éxito.",
-    "file_name" => $fileName,
-    "file_path" => $filePath
-  ];
-}
-
-function process_image($sourcePath, $destinationPath, $targetExt, $quality) {
-  // Usar Imagick si está instalado
-  if (class_exists('Imagick')) {
-    return process_with_imagick($sourcePath, $destinationPath, $targetExt, $quality);
-  }
-
-  // Retroceder a GD si Imagick no está disponible
-  return convert_image($sourcePath, $destinationPath, $targetExt, $quality);
-}
-
-function process_with_imagick($sourcePath, $destinationPath, $targetExt, $quality) {
-  try {
-    $imagick = new Imagick($sourcePath);
-    $imagick->setImageFormat($targetExt);
-    $imagick->setImageCompressionQuality($quality * 10); // Escala a 0-100
-    $imagick->writeImage($destinationPath);
-    $imagick->destroy();
-
-    return ["success" => true, "message" => "Imagen procesada con Imagick."];
-  } catch (Exception $e) {
-    return ["success" => false, "message" => "Error al procesar la imagen con Imagick: " . $e->getMessage()];
-  }
-}
-
-function convert_image($sourcePath, $destinationPath, $targetExt, $quality) {
-  $sourceInfo = getimagesize($sourcePath);
-  if (!$sourceInfo) {
-    return ["success" => false, "message" => "No se pudo leer la imagen."];
-  }
-
-  $sourceImage = null;
-  switch ($sourceInfo['mime']) {
-    case 'image/jpeg':
-      $sourceImage = imagecreatefromjpeg($sourcePath);
-      break;
-    case 'image/png':
-      $sourceImage = imagecreatefrompng($sourcePath);
-      break;
-    case 'image/webp':
-      $sourceImage = imagecreatefromwebp($sourcePath);
-      break;
-    default:
-      return ["success" => false, "message" => "Formato no soportado para GD."];
-  }
-
-  $quality          = max(0, min(10, $quality));
-  $convertedQuality = ($targetExt === "png") ? 9 - round($quality) : $quality * 10;
-
-  switch ($targetExt) {
-    case 'jpg':
-    case 'jpeg':
-      imagejpeg($sourceImage, $destinationPath, $convertedQuality);
-      break;
-    case 'png':
-      imagepng($sourceImage, $destinationPath, $convertedQuality);
-      break;
-    case 'webp':
-      imagewebp($sourceImage, $destinationPath, $convertedQuality);
-      break;
-    default:
-      imagedestroy($sourceImage);
-      return ["success" => false, "message" => "Formato de destino no soportado para GD."];
-  }
-
-  imagedestroy($sourceImage);
-  return ["success" => true, "message" => "Imagen procesada con GD."];
-}
-
-function resize_image($sourcePath, $destinationPath, $width, $height, $quality) {
-
-  $fileName = basename($destinationPath);
-
-  // Usar Imagick si está disponible
-  if (class_exists('Imagick')) {
-    try {
-      $image = new Imagick($sourcePath);
-      // $image->thumbnailImage($width, $height, true); // Mantener proporciones
-      $image->cropThumbnailImage($width, $height); // Ajusta y recorta para cubrir el área
-      $image->setImageCompressionQuality($quality * 10); // Calidad 0-100
-      $image->writeImage($destinationPath);
-      $image->destroy();
-
-      return [
-        "success"   => true,
-        "message"   => "Imagen redimensionada con Imagick.",
-        "path"      => $destinationPath,
-        "file_name" => $fileName
-      ];
-    } catch (Exception $e) {
-      return ["success" => false, "message" => "Error al redimensionar con Imagick: " . $e->getMessage()];
-    }
-  }
-
-  // Usar GD como alternativa
-  $sourceInfo = getimagesize($sourcePath);
-  if (!$sourceInfo) {
-    return ["success" => false, "message" => "No se pudo leer la imagen para redimensionar."];
-  }
-
-  $sourceImage = null;
-  switch ($sourceInfo['mime']) {
-    case 'image/jpeg':
-      $sourceImage = imagecreatefromjpeg($sourcePath);
-      break;
-    case 'image/png':
-      $sourceImage = imagecreatefrompng($sourcePath);
-      break;
-    case 'image/webp':
-      $sourceImage = imagecreatefromwebp($sourcePath);
-      break;
-    default:
-      return ["success" => false, "message" => "Formato de imagen no soportado por GD."];
-  }
-
-  $originalWidth  = $sourceInfo[0];
-  $originalHeight = $sourceInfo[1];
-
-  // 1. Redimensionar la imagen usando el ancho dado y un alto calculado automáticamente
-  $newWidth  = $width;
-  $newHeight = (int) ($originalHeight * ($width / $originalWidth));
-
-  // Crear la imagen redimensionada
-  $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-
-  // Mantener la transparencia para imágenes PNG y WebP
-  if ($sourceInfo['mime'] == 'image/png' || $sourceInfo['mime'] == 'image/webp') {
-    imagesavealpha($resizedImage, true);
-    $transparentColor = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127); // Transparente
-    imagefill($resizedImage, 0, 0, $transparentColor);
-  }
-
-  // Redimensionar la imagen
-  imagecopyresampled($resizedImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
-
-  // 2. Realizar el corte desde el centro de la imagen redimensionada
-  $cropX = ($newWidth - $width) / 2;
-  $cropY = ($newHeight - $height) / 2;
-
-  // Crear la imagen final recortada
-  $finalImage = imagecreatetruecolor($width, $height);
-
-  // Mantener la transparencia para imágenes PNG y WebP
-  if ($sourceInfo['mime'] == 'image/png' || $sourceInfo['mime'] == 'image/webp') {
-    imagesavealpha($finalImage, true);
-    $transparentColor = imagecolorallocatealpha($finalImage, 0, 0, 0, 127); // Transparente
-    imagefill($finalImage, 0, 0, $transparentColor);
-  }
-
-  // Copiar el área recortada desde la imagen redimensionada
-  imagecopy($finalImage, $resizedImage, 0, 0, $cropX, $cropY, $width, $height);
-
-  // 3. Guardar la imagen recortada
-  $result = false;
-  switch ($sourceInfo['mime']) {
-    case 'image/jpeg':
-      $result = imagejpeg($finalImage, $destinationPath, $quality * 10); // Calidad 0-100
-      break;
-    case 'image/png':
-      $result = imagepng($finalImage, $destinationPath, 9 - round($quality / 10)); // Calidad 0-9
-      break;
-    case 'image/webp':
-      $result = imagewebp($finalImage, $destinationPath, $quality * 10); // Calidad 0-100
-      break;
-  }
-
-  // Liberar recursos
-  imagedestroy($sourceImage);
-  imagedestroy($resizedImage);
-  imagedestroy($finalImage);
-
-  if ($result) {
     return [
       "success"   => true,
-      "message"   => "Imagen redimensionada y recortada con GD.",
-      "path"      => $destinationPath,
-      "file_name" => $fileName
+      "message"   => "Imagen subida correctamente.",
+      "file_name" => $name,
+      "file_path" => $finalPath,
+      "resized"   => $variants
     ];
-  } else {
-    return ["success" => false, "message" => "Error al guardar la imagen redimensionada con GD."];
-  }
-}
-
-// Obtener imagen segun su tamaño
-function get_image_url($imageData, $baseUrl, $desiredWidth = null) {
-  // Decodificar el JSON del campo course_image
-  $images = json_decode($imageData, true);
-
-  // Validar que la decodificación fue exitosa
-  if (!$images || !isset($images['original'])) {
-    return $baseUrl . "default.webp"; // URL de la imagen por defecto
   }
 
-  // Si la imagen es "default.webp", devolverla sin importar el tamaño deseado
-  if ($images['original'] === "default.webp") {
-    return $baseUrl . "default.webp";
-  }
 
-  // Si no se especifica un tamaño deseado, devolver la original
-  if ($desiredWidth === null) {
-    return $baseUrl . "" . $images['original'];
-  }
+  /* ============================================================
+   * PROCESAMIENTO (IMAGICK o GD)
+   * ============================================================ */
 
-  // Si hay imágenes redimensionadas, buscar la más cercana al tamaño deseado
-  if (isset($images['resized']) && is_array($images['resized'])) {
-    $closestSize = null;
-    $closestFile = null;
-
-    foreach ($images['resized'] as $size => $fileName) {
-      if ($closestSize === null || abs($desiredWidth - $size) < abs($desiredWidth - $closestSize)) {
-        $closestSize = $size;
-        $closestFile = $fileName;
+  private function processImage($src, $dest, $ext, $quality) {
+    if (class_exists("Imagick")) {
+      try {
+        $img = new Imagick($src);
+        $img->setImageFormat($ext);
+        $img->setImageCompressionQuality($quality * 10);
+        $img->writeImage($dest);
+        return ["success" => true];
+      } catch (Exception $e) {
+        return ["success" => false, "message" => $e->getMessage()];
       }
     }
 
-    // Si se encuentra una imagen redimensionada adecuada, devolver su URL
-    if ($closestFile) {
-      return $baseUrl . "" . $closestFile;
-    }
+    return $this->convertImageGD($src, $dest, $ext, $quality);
   }
 
-  // Si no hay redimensionadas, devolver la original
-  return $baseUrl . "" . $images['original'];
+  private function convertImageGD($src, $dest, $ext, $quality) {
+    $info = getimagesize($src);
+
+    switch ($info['mime']) {
+      case "image/jpeg":
+        $img = imagecreatefromjpeg($src);
+        break;
+      case "image/png":
+        $img = imagecreatefrompng($src);
+        break;
+      case "image/webp":
+        $img = imagecreatefromwebp($src);
+        break;
+      default:
+        return ["success" => false, "message" => "Formato no soportado."];
+    }
+
+    $q = ($ext === "png") ? 9 - round($quality) : $quality * 10;
+
+    switch ($ext) {
+      case "jpg":
+      case "jpeg":
+        imagejpeg($img, $dest, $q);
+        break;
+      case "png":
+        imagepng($img, $dest, $q);
+        break;
+      case "webp":
+        imagewebp($img, $dest, $q);
+        break;
+    }
+
+    imagedestroy($img);
+    return ["success" => true];
+  }
+
+  private function resizeImage($src, $dest, $width, $height, $quality) {
+    if (class_exists('Imagick')) {
+      try {
+        $img = new Imagick($src);
+        $img->cropThumbnailImage($width, $height);
+        $img->setImageCompressionQuality($quality * 10);
+        $img->writeImage($dest);
+
+        return ["success" => true];
+      } catch (Exception $e) {
+        return ["success" => false, "message" => $e->getMessage()];
+      }
+    }
+
+    return $this->resizeImageGD($src, $dest, $width, $height, $quality);
+  }
+
+  private function resizeImageGD($src, $dest, $w, $h, $quality) {
+    $info = getimagesize($src);
+    $orig = imagecreatefromstring(file_get_contents($src));
+
+    $resized = imagecreatetruecolor($w, $h);
+
+    // Transparencia
+    if (in_array($info['mime'], ['image/png', 'image/webp'])) {
+      imagesavealpha($resized, true);
+      $transparent = imagecolorallocatealpha($resized, 0, 0, 0, 127);
+      imagefill($resized, 0, 0, $transparent);
+    }
+
+    imagecopyresampled($resized, $orig, 0, 0, 0, 0, $w, $h, $info[0], $info[1]);
+
+    switch ($info['mime']) {
+      case "image/jpeg":
+        imagejpeg($resized, $dest, $quality * 10);
+        break;
+      case "image/png":
+        imagepng($resized, $dest, 9 - round($quality));
+        break;
+      case "image/webp":
+        imagewebp($resized, $dest, $quality * 10);
+        break;
+    }
+
+    imagedestroy($resized);
+    imagedestroy($orig);
+
+    return ["success" => true];
+  }
 }
