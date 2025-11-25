@@ -95,16 +95,40 @@
         }
       });
 
-      // 📌 Validar archivo según accept
+      // Validar requerido al enviar formulario (solo 1 vez por formulario)
+      const form = input.closest("form");
+
+      if (form && !form.dataset.dropimgReqInit) {
+        form.dataset.dropimgReqInit = true;
+
+        form.addEventListener("submit", (e) => {
+          // Buscar SOLO los inputs dentro del formulario enviado
+          const inputs = form.querySelectorAll("[data-dropimg]");
+
+          inputs.forEach((inp) => {
+            const zone = inp.parentNode;
+            const errorMsg = zone.parentNode.querySelector(".dropimg-error");
+
+            if (inp.hasAttribute("data-required") && inp.files.length === 0) {
+              e.preventDefault();
+              errorMsg.textContent = "Debes seleccionar un archivo.";
+              errorMsg.style.display = "block";
+            } else {
+              errorMsg.style.display = "none";
+            }
+          });
+        });
+      }
+
+      // Validar archivo según accept
       function validarArchivo(file) {
         if (!file) return;
 
         const ext = "." + file.name.split(".").pop().toLowerCase();
         if (!accepted.includes(ext)) {
           errorMsg.style.display = "block";
-          // errorMsg.textContent = `❌ El archivo "${
-          //   file.name
-          // }" no es válido. Solo se permiten: ${accepted.join(", ")}`;
+          errorMsg.textContent = `El archivo "${file.name
+            }" no es válido. Solo se permiten: ${accepted.join(", ")}`;
           errorMsg.textContent = `El archivo no es válido. Solo se permiten: ${accepted.join(", ")}`;
           input.value = ""; // limpiar input
           return;
@@ -114,7 +138,7 @@
         mostrarPreview(file);
       }
 
-      // 📌 Mostrar preview
+      // Mostrar preview
       function mostrarPreview(file) {
         if (!file.type.startsWith("image/")) return;
         const reader = new FileReader();
@@ -128,9 +152,11 @@
         };
         reader.readAsDataURL(file);
       }
+
+
     });
   }
 
-  // 📌 Exportar librería global
+  // Exportar librería global
   window.DropImg = { init: initDropImg };
 })();

@@ -1,7 +1,7 @@
 <?php
 
 if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
-  if (!$accessManager->can_login($user_session->user_id, $user_session->user_name)) {
+  if (!$accessManager->can_login($user_session->user_id, $user_session->user_login)) {
     header("Location: " . SITE_URL);
     exit();
   }
@@ -28,9 +28,20 @@ if (isset($_COOKIE['php-start'])) {
       $user = $stmt->fetch(PDO::FETCH_OBJ);
 
       // Verificar si aún puede iniciar sesión
-      if ($accessManager->can_login($user->role_id, $user->user_name)) {
+      if ($accessManager->can_login($user->role_id, $user->user_login)) {
         $_SESSION['user_id'] = $user->user_id;
         $_SESSION['signin']  = true;
+
+        // Actualizar en la base de datos en last login
+        $query = "
+          UPDATE users 
+          SET 
+            user_last_login = NOW()
+          WHERE 
+            user_id = :user_id";
+        $stmt  = $connect->prepare($query);
+        $stmt->bindParam(":user_id", $user->user_id);
+        $stmt->execute();
 
         header("Location: " . url_admin("dashboard"));
         exit();
@@ -50,12 +61,12 @@ if (isset($_COOKIE['php-start'])) {
 
 // --- LOGIN NORMAL ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $user_name     = clear_data($_POST['user-name']);
+  $user_login    = clear_data($_POST['user-name']);
   $user_password = clear_data($_POST['user-password']);
   $remember_me   = $_POST['remember-me'];
 
   // Validar usuario
-  if (empty($user_name)) {
+  if (empty($user_login)) {
     $notifier->add("El campo usuario es obligatorio", "danger");
   }
 
@@ -71,16 +82,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Si no hay errores, comprobar usuario y contraseña
   if (!$notifier->hasErrors()) {
-    $query = "SELECT * FROM users WHERE user_name = :user_name AND user_password = :user_password";
+    $query = "SELECT * FROM users WHERE user_login = :user_login AND user_password = :user_password";
     $stmt  = $connect->prepare($query);
-    $stmt->bindParam(':user_name', $user_name, PDO::PARAM_STR);
+    $stmt->bindParam(':user_login', $user_login, PDO::PARAM_STR);
     $stmt->bindParam(':user_password', $user_password, PDO::PARAM_STR);
     $stmt->execute();
 
     if ($stmt->rowCount() === 1) {
       $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-      if (!$accessManager->can_login($user->role_id, $user->user_name)) {
+      if (!$accessManager->can_login($user->role_id, $user->user_login)) {
         exit("No tiene permiso para iniciar sesión en el sistema.");
       } else {
 
@@ -93,7 +104,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           setcookie("php-start", $cipher->encrypt($user->user_id), time() + (30 * 24 * 60 * 60), "/");
         }
 
-        $notifier->add("¡Bienvenido de nuevo, {$user->user_name}!", "success");
+        // Actualizar en la base de datos en last login
+        $query = "
+          UPDATE users 
+          SET 
+            user_last_login = NOW()
+          WHERE 
+            user_id = :user_id";
+        $stmt  = $connect->prepare($query);
+        $stmt->bindParam(":user_id", $user->user_id);
+        $stmt->execute();
+
+        $notifier->add("¡Bienvenido de nuevo, {$user->user_login}!", "success");
         // Redirigir al dashboard
         header("Location: " . url_admin("dashboard"));
         exit();

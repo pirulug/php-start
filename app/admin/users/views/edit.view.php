@@ -10,7 +10,7 @@
 
           <div class="mb-3">
             <label>Name</label>
-            <input type="text" name="user_name" class="form-control" value="<?= $user->user_name ?>" required>
+            <input type="text" name="user_login" class="form-control" value="<?= $user->user_login ?>" required>
           </div>
 
           <div class="mb-3">

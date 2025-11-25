@@ -35,21 +35,21 @@
         </div>
 
         <div class="mb-3">
-          <label for="user_name" class="form-label">Nombre de usuario</label>
-          <input type="text" name="user_name" id="user_name" class="form-control" placeholder="Tu nombre de usuario"
-            value="<?= $user->user_name ?>" disabled>
+          <label for="user_login" class="form-label">Nombre de usuario</label>
+          <input type="text" name="user_login" id="user_login" class="form-control" placeholder="Tu nombre de usuario"
+            value="<?= $user->user_login ?>" disabled>
         </div>
 
         <div class="mb-3">
           <label for="user_first_name">Nombre</label>
           <input type="text" name="user_first_name" id="user_first_name" class="form-control"
-            value="<?= $user->user_first_name ?>">
+            value="<?= $usermeta->first_name ?>">
         </div>
 
         <div class="mb-3">
           <label for="user_last_name">Apellidos</label>
           <input type="text" name="user_last_name" id="user_last_name" class="form-control"
-            value="<?= $user->user_last_name ?>">
+            value="<?= $usermeta->last_name ?>">
         </div>
 
         <div class="mb-3">
@@ -64,12 +64,12 @@
             <?php
             // Posibles opciones de nombre público (orden como WordPress)
             $display_options = [
-              $user->user_name, // nombre de usuario
+              $user->user_login, // nombre de usuario
               $user->user_nickname,
-              $user->user_first_name,
-              $user->user_last_name,
-              trim($user->user_first_name . ' ' . $user->user_last_name),
-              trim($user->user_last_name . ' ' . $user->user_first_name),
+              $usermeta->first_name,
+              $usermeta->last_name,
+              trim($usermeta->first_name . ' ' . $usermeta->last_name),
+              trim($usermeta->last_name . ' ' . $usermeta->first_name),
             ];
 
             // Elimina duplicados y valores vacíos

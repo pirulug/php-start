@@ -25,7 +25,7 @@
               <td class="text-center">
                 <img src="<?= SITE_URL . "/uploads/user/" . $user->user_image ?>" width="50px">
               </td>
-              <td><?= $user->user_name ?></td>
+              <td><?= $user->user_login ?></td>
               <td><?= $user->user_email ?></td>
               <td>
                 <?= $user->role_name ?>

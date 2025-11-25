@@ -8,8 +8,8 @@
 
           <div class="mb-3">
             <label class="form-label">Name</label>
-            <input type="text" name="user_name" class="form-control"
-              value="<?= isset($_POST['user_name']) ? htmlspecialchars($_POST['user_name']) : '' ?>" required>
+            <input type="text" name="user_login" class="form-control"
+              value="<?= isset($_POST['user_login']) ? htmlspecialchars($_POST['user_login']) : '' ?>" required>
           </div>
 
           <div class="mb-3">

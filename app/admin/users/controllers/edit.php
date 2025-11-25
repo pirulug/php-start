@@ -39,7 +39,7 @@ $roles = $stmt->fetchAll(PDO::FETCH_OBJ);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
   $user_id       = $cipher->decrypt(clear_data($_POST['user_id']));
-  $user_name     = clear_data($_POST['user_name']);
+  $user_login     = clear_data($_POST['user_login']);
   $user_email    = clear_data($_POST['user_email']);
   $role_id       = clear_data($_POST['role_id']);
   $user_status   = clear_data($_POST['user_status']);
@@ -47,13 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // $user_password_save = cleardata($_POST['user_password_save']);
 
   // Validar el nombre de usuario (mínimo 4 caracteres)
-  if (strlen($user_name) < 4) {
+  if (strlen($user_login) < 4) {
     $notifier->add("El nombre de usuario debe tener al menos 4 caracteres.", "danger");
   } else {
     // Verificar si el nombre de usuario ya existe en la base de datos
-    $query     = "SELECT * FROM users WHERE user_name = :user_name AND user_id != :user_id";
+    $query     = "SELECT * FROM users WHERE user_login = :user_login AND user_id != :user_id";
     $statement = $connect->prepare($query);
-    $statement->bindParam(':user_name', $user_name);
+    $statement->bindParam(':user_login', $user_login);
     $statement->bindParam(':user_id', $user_id);
     $statement->execute();
     $result = $statement->fetch(PDO::FETCH_OBJ);
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (!$notifier->has('danger')) {
     $query = "UPDATE users 
               SET 
-              user_name = :user_name, 
+              user_login = :user_login, 
               user_email = :user_email, 
               role_id = :role_id, 
               user_status = :user_status, 
@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               WHERE 
               user_id = :user_id";
     $stmt  = $connect->prepare($query);
-    $stmt->bindParam(':user_name', $user_name);
+    $stmt->bindParam(':user_login', $user_login);
     $stmt->bindParam(':user_email', $user_email);
     $stmt->bindParam(':role_id', $role_id);
     $stmt->bindParam(':user_status', $user_status);

@@ -9,27 +9,27 @@ $roles = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Obtener los datos del formulario y limpiarlos
-  $user_name   = clear_data($_POST['user_name']);
+  $user_login   = clear_data($_POST['user_login']);
   $user_email  = clear_data($_POST['user_email']);
   $role_id     = clear_data($_POST['role_id']);
   $user_status = clear_data($_POST['user_status']);
   $password    = clear_data($_POST['user_password']);
 
   // Validar el nombre de usuario
-  if (strlen($user_name) < 4) {
+  if (strlen($user_login) < 4) {
     $notifier->add("El nombre de usuario debe tener al menos 4 caracteres.", "danger");
-    // $log->log('error', "Validación fallida: nombre demasiado corto", $user_name);
+    // $log->log('error', "Validación fallida: nombre demasiado corto", $user_login);
   } else {
     try {
-      $query     = "SELECT COUNT(*) AS count FROM users WHERE user_name = :user_name";
+      $query     = "SELECT COUNT(*) AS count FROM users WHERE user_login = :user_login";
       $statement = $connect->prepare($query);
-      $statement->bindParam(':user_name', $user_name);
+      $statement->bindParam(':user_login', $user_login);
       $statement->execute();
       $result = $statement->fetch(PDO::FETCH_ASSOC);
 
       if ($result['count'] > 0) {
         $notifier->add("El nombre de usuario ya está en uso.", "danger");
-        // $log->log('error', "Nombre de usuario ya existe", $user_name);
+        // $log->log('error', "Nombre de usuario ya existe", $user_login);
       }
     } catch (PDOException $e) {
       // $log->log('error', "Error en verificación de nombre de usuario", $e->getMessage());
@@ -103,12 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
       $query     = "INSERT INTO users 
-        (user_name, user_email, role_id, user_status, user_password, user_image, user_updated) 
+        (user_login, user_email, role_id, user_status, user_password, user_image, user_updated) 
         VALUES 
-        (:user_name, :user_email, :role_id, :user_status, :user_password, :user_image, CURRENT_TIME)";
+        (:user_login, :user_email, :role_id, :user_status, :user_password, :user_image, CURRENT_TIME)";
       $statement = $connect->prepare($query);
 
-      $statement->bindParam(':user_name', $user_name);
+      $statement->bindParam(':user_login', $user_login);
       $statement->bindParam(':user_email', $user_email);
       $statement->bindParam(':role_id', $role_id);
       $statement->bindParam(':user_status', $user_status);
@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $notifier->add("El nuevo usuario se insertó correctamente.", "success");
 
         // Log de acción del usuario actual
-        // $log->logUser($_SESSION['user_id'], "Crear usuario", "Se creó el usuario: $user_name");
+        // $log->logUser($_SESSION['user_id'], "Crear usuario", "Se creó el usuario: $user_login");
 
         header("Location: " . SITE_URL_ADMIN . "/users");
         exit();

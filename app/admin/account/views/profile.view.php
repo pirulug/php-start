@@ -14,7 +14,7 @@
         <ul class="list-group list-group-flush mb-1">
           <li class="list-group-item">
             <b>Username</b>
-            <a class="pull-right"><?= $user->user_name ?></a>
+            <a class="pull-right"><?= $user->user_login ?></a>
           </li>
           <li class="list-group-item">
             <b>Last Login</b>
@@ -26,50 +26,55 @@
           </li>
         </ul>
 
-        <div class="d-grid">
-          <a href="http://localhost:8050/profile/index/edit" class="btn btn-primary btn-block">
+        <!-- <div class="d-grid">
+          <a href="" class="btn btn-primary btn-block">
             <b>
               <i class="fa fa-pencil"></i>
               Edit
             </b>
           </a>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
   <div class="col-md-9">
-    <div class="card">
+    <div class="card mb-3">
       <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-          <tbody>
-            <tr>
-              <td width="160"><strong>Name</strong>:</td>
-              <td><?= $user->user_display_name ?></td>
-            </tr>
-            <tr>
-              <td><strong>Username</strong>:</td>
-              <td><?= $user->user_name ?></td>
-            </tr>
-            <tr>
-              <td><strong>Email</strong>:</td>
-              <td><?= $user->user_email ?></td>
-            </tr>
-            <tr>
-              <td><strong>Role</strong>:</td>
-              <td><?= $user->role_name ?></td>
-            </tr>
-            <tr>
-              <td><strong>Last Login</strong>:</td>
-              <td><?= $user->user_last_login ?></td>
-            </tr>
-            <tr>
-              <td><strong>Member Since</strong>:</td>
-              <td><?= $user->user_created ?></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped m-0">
+            <tbody>
+              <tr>
+                <td width="160"><strong>Name</strong>:</td>
+                <td><?= $user->user_display_name ?></td>
+              </tr>
+              <tr>
+                <td><strong>Username</strong>:</td>
+                <td><?= $user->user_login ?></td>
+              </tr>
+              <tr>
+                <td><strong>Email</strong>:</td>
+                <td><?= $user->user_email ?></td>
+              </tr>
+              <tr>
+                <td><strong>Role</strong>:</td>
+                <td><?= $user->role_name ?></td>
+              </tr>
+              <tr>
+                <td><strong>Last Login</strong>:</td>
+                <td><?= $user->user_last_login ?></td>
+              </tr>
+              <tr>
+                <td><strong>Member Since</strong>:</td>
+                <td><?= $user->user_created ?></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+    </div>
+    <div class="card mb-3">
+      <div class="card-body">
+        <?= $accessManager->debug_permissions(); ?>
       </div>
     </div>
   </div>

@@ -6,13 +6,13 @@ $users = $dt->from('users')
   ->columns([
     'users.user_id',
     'users.user_image',
-    'users.user_name',
+    'users.user_login',
     'users.user_email',
     'roles.role_name',
     'users.user_status',
     'users.user_created'
   ])
-  ->searchColumns(['users.user_name', 'users.user_email', 'roles.role_name'])
+  ->searchColumns(['users.user_login', 'users.user_email', 'roles.role_name'])
   ->condition(
     'users.user_id != :currentUserId', 
     ':currentUserId', 

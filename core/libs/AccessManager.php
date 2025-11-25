@@ -13,7 +13,7 @@ class AccessManager {
    */
   protected function is_superadmin() {
     // Validar que haya usuario y que tenga nombre
-    if (!$this->user || empty($this->user->user_name))
+    if (!$this->user || empty($this->user->user_login))
       return false;
 
     // Validar que la constante esté definida y sea un array
@@ -22,7 +22,7 @@ class AccessManager {
 
     // Convertir todos los nombres a minúsculas y comparar
     $superadmins = array_map('strtolower', SUPERADMIN_USERNAMES);
-    return in_array(strtolower($this->user->user_name), $superadmins);
+    return in_array(strtolower($this->user->user_login), $superadmins);
   }
 
   /**
@@ -117,11 +117,11 @@ class AccessManager {
     return $stmt->fetchColumn() > 0;
   }
 
-  public function can_login($role_id = null, $user_name = null, $permission_name = "login-access") {
+  public function can_login($role_id = null, $user_login = null, $permission_name = "login-access") {
     // Permitir detectar superadmin directamente
-    if ($user_name && defined('SUPERADMIN_USERNAMES')) {
+    if ($user_login && defined('SUPERADMIN_USERNAMES')) {
       $superadmins = array_map('strtolower', SUPERADMIN_USERNAMES);
-      if (in_array(strtolower($user_name), $superadmins)) {
+      if (in_array(strtolower($user_login), $superadmins)) {
         return true;
       }
     }
@@ -159,7 +159,7 @@ class AccessManager {
       return;
     }
 
-    $userName = htmlspecialchars($this->user->user_name ?? '(sin nombre)');
+    $userName = htmlspecialchars($this->user->user_login ?? '(sin nombre)');
     $roleId   = htmlspecialchars($this->user->role_id ?? '?');
 
     echo "Usuario: {$userName}\n";

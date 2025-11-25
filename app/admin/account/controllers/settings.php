@@ -1,16 +1,49 @@
 <?php
 
+// Obtener ID
+$id_user = $_SESSION["user_id"];
+
+// Obtener user
+$query = "SELECT * FROM users WHERE user_id = :user_id";
+$stmt  = $connect->prepare($query);
+$stmt->bindParam(":user_id", $id_user);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_OBJ);
+
+// Obtener user meta
+$query = "
+  SELECT *  
+  FROM usermeta
+  WHERE usermeta.user_id = :user_id
+";
+$stmt  = $connect->prepare($query);
+$stmt->bindParam(":user_id", $user->user_id);
+$stmt->execute();
+$metadata = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+$usermeta = new stdClass();
+
+foreach ($metadata as $meta) {
+  $key   = $meta->usermeta_key;
+  $value = $meta->usermeta_value;
+
+  $usermeta->$key = $value;
+}
+
+// Formulario POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if (isset($_POST['update_profile'])) {
 
-    // Capturar los datos del formulario
+    // Datos de usuario
     $user_id           = $_POST['id'];
-    $user_email        = trim($_POST['user_email']);
-    $user_first_name   = trim($_POST['user_first_name']);
-    $user_last_name    = trim($_POST['user_last_name']);
-    $user_nickname     = trim($_POST['user_nickname']);
-    $user_display_name = trim($_POST['user_display_name']);
+    $user_email        = $_POST['user_email'];
+    $user_nickname     = $_POST['user_nickname'];
+    $user_display_name = $_POST['user_display_name'];
+
+    // Datos user meta
+    $usermeta_first_name = $_POST['user_first_name'];
+    $usermeta_last_name  = $_POST['user_last_name'];
 
     $update = false;
 
@@ -86,8 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       $query = "UPDATE users SET 
                   user_email = :user_email,
-                  user_first_name = :user_first_name,
-                  user_last_name = :user_last_name,
                   user_nickname = :user_nickname,
                   user_display_name = :user_display_name,
                   user_image = :user_image,
@@ -96,15 +127,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
       $stmt = $connect->prepare($query);
       $stmt->bindParam(':user_email', $user_email);
-      $stmt->bindParam(':user_first_name', $user_first_name);
-      $stmt->bindParam(':user_last_name', $user_last_name);
       $stmt->bindParam(':user_nickname', $user_nickname);
       $stmt->bindParam(':user_display_name', $user_display_name);
       $stmt->bindParam(':user_image', $user_image);
       $stmt->bindParam(':user_id', $user_id);
 
       if ($stmt->execute()) {
+
+        // UPDATE USERMETA
+        $usermeta_data = [
+          'first_name' => $usermeta_first_name,
+          'last_name'  => $usermeta_last_name,
+        ];
+
+        $query_meta = "
+          UPDATE usermeta 
+          SET usermeta_value = :value
+          WHERE user_id = :user_id AND usermeta_key = :key
+        ";
+        $stmt_meta  = $connect->prepare($query_meta);
+
+        foreach ($usermeta_data as $key => $value) {
+          $stmt_meta->bindParam(':value', $value);
+          $stmt_meta->bindParam(':user_id', $user_id);
+          $stmt_meta->bindParam(':key', $key);
+          $stmt_meta->execute();
+        }
+
         $notifier->add("Perfil actualizado correctamente.", "success");
+
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
       } else {
@@ -113,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
 
-  // 🔐 Cambio de contraseña (sin cambios)
+  // Cambio de contraseña (sin cambios)
   if (isset($_POST['change_password'])) {
     $currentPassword = trim($_POST['current_password']);
     $newPassword     = trim($_POST['password']);
@@ -158,11 +209,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
 }
-
-// Obtener datos del usuario logueado
-$id_user = $_SESSION["user_id"];
-$query   = "SELECT * FROM users WHERE user_id = :user_id";
-$stmt    = $connect->prepare($query);
-$stmt->bindParam(":user_id", $id_user);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_OBJ);
