@@ -1,52 +1,104 @@
 <?php
 
-function upload_file($file, $uploadDir, $options = []) {
-  $defaultOptions = [
-    'allowedTypes' => [
-      'pdf',
-      'docx',
-      'xlsx',
-      'txt'
-    ],
-    'maxSize'      => 5 * 1024 * 1024, // 5MB
-    'fileName'     => null // Nombre generado automáticamente
+class UploadFile {
+  private $file;
+  private $uploadDir;
+
+  private $allowedTypes = ['pdf', 'docx', 'xlsx', 'txt'];
+  private $maxSize = 5 * 1024 * 1024; // 5MB
+  private $customName = null;
+
+  private $result = [
+    'success'   => false,
+    'message'   => '',
+    'file_name' => null,
+    'file_path' => null
   ];
-  
-  $options        = array_merge($defaultOptions, $options);
 
-  // Verificar si se subió el archivo
-  if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
-    return ['success' => false, 'message' => 'Error al subir el archivo.'];
+  /** Cargar archivo desde $_FILES */
+  public function file(array $file) {
+    $this->file = $file;
+    return $this;
   }
 
-  // Validar tipo de archivo (basado en extensión)
-  $originalExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-  if (!in_array($originalExtension, $options['allowedTypes'])) {
-    return ['success' => false, 'message' => "La extensión .$originalExtension no está permitida. Extensiones permitidas: " . implode(", ", $options['allowedTypes']) . "."];
+  /** Directorio de destino */
+  public function dir(string $dir) {
+    $this->uploadDir = rtrim($dir, '/');
+    return $this;
   }
 
-  // Validar tamaño del archivo
-  if ($file['size'] > $options['maxSize']) {
-    return ['success' => false, 'message' => "El archivo excede el tamaño máximo permitido de " . ($options['maxSize'] / 1024 / 1024) . " MB."];
+  /** Extensiones permitidas */
+  public function allowedTypes(array $types) {
+    $this->allowedTypes = $types;
+    return $this;
   }
 
-  // Crear el directorio de subida si no existe
-  if (!is_dir($uploadDir)) {
-    if (!mkdir($uploadDir, 0755, true) && !is_dir($uploadDir)) {
-      return ['success' => false, 'message' => 'No se pudo crear el directorio de destino.'];
+  /** Tamaño máximo */
+  public function maxSize(int $bytes) {
+    $this->maxSize = $bytes;
+    return $this;
+  }
+
+  /** Nombre personalizado sin extensión */
+  public function name(string $name) {
+    $this->customName = $name;
+    return $this;
+  }
+
+  /** Ejecutar la subida */
+  public function upload() {
+    // Verificar archivo
+    if (!isset($this->file) || $this->file['error'] !== UPLOAD_ERR_OK) {
+      return $this->fail("Error al subir el archivo.");
     }
+
+    // Validar extensión
+    $ext = strtolower(pathinfo($this->file['name'], PATHINFO_EXTENSION));
+
+    if (!in_array($ext, $this->allowedTypes)) {
+      return $this->fail("La extensión .$ext no está permitida. Permitidas: " . implode(", ", $this->allowedTypes));
+    }
+
+    // Validar tamaño
+    if ($this->file['size'] > $this->maxSize) {
+      return $this->fail("El archivo excede el tamaño máximo de " . ($this->maxSize / 1024 / 1024) . " MB.");
+    }
+
+    // Crear directorio si no existe
+    if (!is_dir($this->uploadDir)) {
+      if (!mkdir($this->uploadDir, 0755, true) && !is_dir($this->uploadDir)) {
+        return $this->fail("No se pudo crear el directorio de destino.");
+      }
+    }
+
+    // Determinar nombre
+    $fileName = $this->customName
+      ? $this->customName . '.' . $ext
+      : uniqid("file_", true) . '.' . $ext;
+
+    $filePath = $this->uploadDir . "/" . $fileName;
+
+    // Mover archivo
+    if (!move_uploaded_file($this->file['tmp_name'], $filePath)) {
+      return $this->fail("Error al mover el archivo al directorio de destino.");
+    }
+
+    return $this->success("Archivo subido con éxito.", $fileName, $filePath);
   }
 
-  // Determinar el nombre del archivo
-  $fileName = $options['fileName']
-    ? $options['fileName'] . '.' . $originalExtension
-    : uniqid('file_', true) . '.' . $originalExtension;
-  $filePath = rtrim($uploadDir, '/') . '/' . $fileName;
-
-  // Mover el archivo al directorio de destino
-  if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-    return ['success' => false, 'message' => 'Error al mover el archivo al directorio de destino.'];
+  private function fail(string $msg) {
+    return $this->result = [
+      'success' => false,
+      'message' => $msg
+    ];
   }
 
-  return ['success' => true, "message" => "Archivo subido con éxito.", 'file_name' => $fileName, 'file_path' => $filePath];
+  private function success(string $msg, string $name, string $path) {
+    return $this->result = [
+      'success'   => true,
+      'message'   => $msg,
+      'file_name' => $name,
+      'file_path' => $path
+    ];
+  }
 }
