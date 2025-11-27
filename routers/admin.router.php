@@ -297,7 +297,16 @@ if (!$template) {
 
 // 5 Validar acceso
 if (!empty($template['auth']) && $template['auth']) {
-  $accessManager->ensure_access($template['path'], $template['title']);
+  if (AUTO_SYNC_ROLE) {
+    $accessManager->register_permission($template['path'], "Acceso a " . $template['title']);
+  }
+
+  $permiso = $accessManager->check_access($template['path']);
+
+  if (!$permiso->success) {
+    echo "<div style='color:red; font-weight:bold;'>{$permiso->message}</div>";
+    exit();
+  }
 }
 
 // 6 Cargar archivos

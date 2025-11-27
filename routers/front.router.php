@@ -56,7 +56,19 @@ switch ($segments[0]) {
 
 // Validar acceso
 if (!empty($template['auth']) && $template['auth']) {
-  $accessManager->ensure_access("front-" . $template['path'], "Front - " . $template['title']);
+  if (AUTO_SYNC_ROLE) {
+    $accessManager->register_permission("front-".$template['path'], "Acceso a " . $template['title']);
+  }
+
+  $permiso = $accessManager->check_access("front-".$template['path']);
+
+  // var_dump($permiso);
+  // exit();
+
+  if (!$permiso->success) {
+    echo "<div style='color:red; font-weight:bold;'>{$permiso->message}</div>";
+    exit();
+  }
 }
 
 // Cargar archivos
