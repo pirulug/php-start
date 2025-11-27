@@ -74,7 +74,7 @@
     </div>
     <div class="card mb-3">
       <div class="card-body">
-        <?= $accessManager->debug_permissions(); ?>
+        <?= debug_user_permissions_raw($connect,$user_session); ?>
       </div>
     </div>
   </div>
