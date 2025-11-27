@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (!$notifier->hasErrors()) {
     // Verificar si el usuario o correo existen
-    $query_check = "SELECT user_id FROM users WHERE user_email = :email OR user_name = :username";
+    $query_check = "SELECT user_id FROM users WHERE user_email = :email OR user_login = :username";
     $stmt_check  = $connect->prepare($query_check);
     $stmt_check->bindParam(':email', $email, PDO::PARAM_STR);
     $stmt_check->bindParam(':username', $username, PDO::PARAM_STR);
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       // Insertar usuario
       $query_insert = "
         INSERT INTO users (
-          user_name, 
+          user_login, 
           user_password, 
           user_email, 
           user_status, 
@@ -57,18 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($stmt_insert->execute()) {
 
         // Enviar correo de bienvenida con su contraseña
-        $subject = "Bienvenido a " . SITE_NAME ;
-        $body    = "
-          <h3>Hola {$username},</h3>
-          <p>Tu cuenta ha sido creada exitosamente.</p>
-          <p><strong>Correo:</strong> {$email}</p>
-          <p><strong>Contraseña:</strong> {$password}</p>
-          <hr>
-          <p>Te recomendamos cambiar tu contraseña al iniciar sesión por primera vez.</p>
-          <p>Atentamente,<br>El equipo de " . SITE_NAME . "</p>
-        ";
+        // $subject = "Bienvenido a " . SITE_NAME ;
+        // $body    = "
+        //   <h3>Hola {$username},</h3>
+        //   <p>Tu cuenta ha sido creada exitosamente.</p>
+        //   <p><strong>Correo:</strong> {$email}</p>
+        //   <p><strong>Contraseña:</strong> {$password}</p>
+        //   <hr>
+        //   <p>Te recomendamos cambiar tu contraseña al iniciar sesión por primera vez.</p>
+        //   <p>Atentamente,<br>El equipo de " . SITE_NAME . "</p>
+        // ";
 
-        $result = $mailService->send($email, $subject, $body);
+        // $result = $mailService->send($email, $subject, $body);
 
         // Si falla, simplemente mostrar aviso, pero no detener el registro
         if (!$result["success"]) {

@@ -36,7 +36,7 @@ if (isset($_COOKIE['php-start'])) {
       setcookie("php-start", $cipher->encrypt($user->user_id), time() + (30 * 24 * 60 * 60), "/");
 
       // Redirigir al perfil
-      $notifier->add("¡Bienvenido de nuevo, {$user->user_name}!", "success", "toast");
+      $notifier->add("¡Bienvenido de nuevo, {$user->user_login}!", "success", "toast");
       header("Location: " . SITE_URL . "/profile");
       exit();
 
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sign_in'])) {
         setcookie("php-start", $cipher->encrypt($user->user_id), time() + (30 * 24 * 60 * 60), "/");
       }
 
-      $notifier->add("¡Bienvenido de nuevo, {$user->user_name}!", "success", "toast");
+      $notifier->add("¡Bienvenido de nuevo, {$user->user_login}!", "success", "toast");
       header("Location: " . SITE_URL . "/profile");
       exit();
     } else {
