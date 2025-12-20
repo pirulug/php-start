@@ -1,64 +1,126 @@
-<form method="POST">
-  <div class="row g-3">
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body">
+<form method="POST" autocomplete="off">
 
-          <div class="mb-3">
-            <label class="form-label">Nombre del Rol</label>
-            <input type="text" name="role_name" class="form-control" required>
-          </div>
+  <div class="row g-4">
 
-          <div class="mb-3">
-            <label class="form-label">Descripción</label>
-            <textarea class="form-control" name="role_description" id=""></textarea>
-          </div>
+    <div class="col-12 col-md-4 col-xl-3">
+      <div class="card" style="position: sticky; top: 1rem;">
 
+        <div class="card-header bg-transparent py-3">
+          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-user-plus text-primary"></i>
+            Nuevo Rol
+          </h5>
         </div>
+
+        <div class="card-body">
+          <div class="mb-4">
+            <label class="form-label text-muted small text-uppercase fw-bold">Nombre del Rol <span
+                class="text-danger">*</span></label>
+            <div class="input-group">
+              <span class="input-group-text bg-transparent"><i class="fa-solid fa-signature"></i></span>
+              <input type="text" name="role_name" class="form-control" placeholder="Ej: Editor de Blog" required
+                autofocus>
+            </div>
+            <div class="form-text">El nombre visible para los usuarios.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-muted small text-uppercase fw-bold">Descripción</label>
+            <textarea class="form-control" name="role_description" rows="5"
+              placeholder="Describe las responsabilidades de este rol..."></textarea>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-12 col-md-8 col-xl-9">
       <div class="card">
+
+        <div class="card-header bg-transparent py-3">
+          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-list-check text-success"></i>
+            Asignar Permisos
+          </h5>
+        </div>
+
         <div class="card-body">
-          <h5>Permisos</h5>
 
           <?php foreach ($groupedPermissions as $groupName => $perms): ?>
-            <fieldset class="border p-3 mb-4 rounded">
-              <legend class="w-auto px-2 h6 text-primary"><?= $groupName ?></legend>
-              <div class="row g-3">
+            <div class="mb-5">
+
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-primary rounded-pill"><?= count($perms) ?></span>
+                  <h6 class="mb-0 text-uppercase fw-bold text-primary"><?= htmlspecialchars($groupName) ?></h6>
+                </div>
+
+                <button type="button" class="btn btn-sm btn-link text-decoration-none"
+                  onclick="toggleGroup('group-<?= md5($groupName) ?>')">
+                  <i class="fa-solid fa-check-double me-1"></i>Alternar grupo
+                </button>
+              </div>
+
+              <div class="row g-3" id="group-<?= md5($groupName) ?>">
                 <?php foreach ($perms as $perm): ?>
-                  <div class="col-md-3">
-                    <div class="form-check">
-                      <input id="<?= $perm->permission_key_name ?>-pr" class="form-check-input" type="checkbox"
+                  <div class="col-12 col-md-6 col-lg-4">
+
+                    <div
+                      class="form-check p-3 rounded h-100 bg-secondary bg-opacity-10 position-relative d-flex align-items-start gap-2">
+                      <input id="<?= $perm->permission_key_name ?>-pr" class="form-check-input mt-1" type="checkbox"
                         name="permissions[]" value="<?= $perm->permission_id ?>">
-                      <label class="form-check-label" for="<?= $perm->permission_key_name ?>-pr">
-                        <?= $perm->permission_name ?>
-                        <small class="text-muted d-block">
-                          <code><?= $perm->permission_key_name ?></code>
-                        </small>
+
+                      <label class="form-check-label w-100" for="<?= $perm->permission_key_name ?>-pr"
+                        style="cursor: pointer;">
+                        <span class="d-block fw-bold text-body">
+                          <?= $perm->permission_name ?>
+                        </span>
+                        <span class="d-block text-muted small font-monospace mt-1">
+                          <?= $perm->permission_key_name ?>
+                        </span>
                       </label>
                     </div>
+
                   </div>
                 <?php endforeach; ?>
               </div>
-            </fieldset>
-          <?php endforeach; ?>
 
+            </div>
+          <?php endforeach; ?>
 
         </div>
       </div>
     </div>
 
     <div class="col-12">
-      <div class="d-flex justify-content-between bg-body p-3 rounded">
-        <a href="<?= url_admin("permissions") ?>" class="btn btn-secondary">
-          Volver
+      <div class="d-flex justify-content-end gap-2 pt-2 pb-4">
+        <a href="<?= url_admin("permissions") ?>" class="btn btn-outline-secondary px-4">
+          Cancelar
         </a>
-        <button type="submit" class="btn btn-primary">
-          Actualizar
+        <button type="submit" class="btn btn-primary px-5">
+          <i class="fa-solid fa-plus me-2"></i>Crear Rol
         </button>
       </div>
     </div>
+
   </div>
 </form>
+
+<script>
+  /**
+   * Script para seleccionar/deseleccionar todos los checkboxes de un grupo
+   * Funciona buscando el ID del contenedor del grupo.
+   */
+  function toggleGroup(groupId) {
+    const container = document.getElementById(groupId);
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+
+    // Determinar si debemos marcar o desmarcar basado en el estado del primero
+    // (Si todos están marcados -> desmarcar. Si hay alguno sin marcar -> marcar todos)
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+    checkboxes.forEach(cb => {
+      cb.checked = !allChecked;
+    });
+  }
+</script>

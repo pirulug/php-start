@@ -15,7 +15,7 @@ SELECT
   p.permission_key_name
 FROM permissions p
 INNER JOIN permission_groups pg ON p.permission_group_id = pg.permission_group_id
-ORDER BY pg.permission_group_name, p.permission_name
+ORDER BY pg.permission_group_name, p.permission_key_name
 ";
 $stmt = $connect->prepare($sql);
 $stmt->execute();
