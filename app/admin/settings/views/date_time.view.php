@@ -1,263 +1,214 @@
-<form action="" method="POST">
+<form action="" method="POST" id="settingsForm">
 
-  <div class="card ">
+  <div class="card">
+    <div class="card-header   d-flex justify-content-between align-items-center py-3">
+      <h5 class="card-title mb-0 d-flex align-items-center gap-2">
+        <i class="fa-regular fa-clock text-primary"></i>
+        Configuración Regional
+      </h5>
+      <button class="btn btn-success btn-sm" type="submit" name="save">
+        <i class="fa-solid fa-save me-1"></i> Guardar
+      </button>
+    </div>
+
     <div class="card-body">
 
-      <!-- Timezone -->
-      <div class="mb-3">
-        <label for="timezone" class="form-label fw-semibold">Timezone</label>
-        <select class="form-select" id="site_timezone" name="site_timezone">
-          <?php echo timezone_select($optionsRaw['site_timezone'] ?? 'UTC'); ?>
-        </select>
+      <div class="mb-4">
+        <label for="site_timezone" class="form-label fw-bold text-body-emphasis">Zona Horaria del Sistema</label>
+        <div class="input-group">
+          <span class="input-group-text "><i class="fa-solid fa-earth-americas text-muted"></i></span>
+          <select class="form-select" id="site_timezone" name="site_timezone">
+            <?php echo timezone_select($optionsRaw['site_timezone'] ?? 'UTC'); ?>
+          </select>
+        </div>
+        <div class="form-text text-body-secondary">
+          Esta configuración afecta cómo se guardan y muestran las fechas en todo el sistema.
+        </div>
       </div>
 
-      <!-- Date Format -->
-      <div class="mb-3">
-        <label for="date_format" class="form-label fw-semibold">
-          Date Format
-        </label>
+      <hr class="border-secondary-subtle my-4">
 
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#datetimeFormatModal">
-          <i class="fa fa-info-circle"></i>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold text-body-emphasis mb-0">Formatos de Fecha y Hora</h6>
+        <button type="button" class="btn btn-outline-info btn-sm border-0" data-bs-toggle="modal"
+          data-bs-target="#datetimeFormatModal">
+          <i class="fa-solid fa-circle-question me-1"></i> Ver códigos de formato
         </button>
-
-        <input type="text" class="form-control" id="date_format" name="date_format"
-          value="<?= $optionsRaw["date_format"] ?? "" ?>" placeholder="Ejm: d F, Y">
-        <div class="form-text">-</div>
       </div>
 
-      <!-- Time Format -->
-      <div class="mb-3">
-        <label for="time_format" class="form-label fw-semibold">Time Format</label>
+      <div class="row g-3">
 
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#datetimeFormatModal">
-          <i class="fa fa-info-circle"></i>
-        </button>
+        <div class="col-md-6">
+          <label for="date_format" class="form-label small text-muted text-uppercase fw-bold">Fecha</label>
+          <div class="input-group">
+            <span class="input-group-text "><i class="fa-regular fa-calendar text-muted"></i></span>
+            <input type="text" class="form-control font-monospace" id="date_format" name="date_format"
+              value="<?= $optionsRaw["date_format"] ?? "" ?>" placeholder="d F, Y">
+          </div>
+          <div class="mt-2 p-2  rounded border small text-muted d-flex align-items-center">
+            <span class="badge bg-secondary me-2">Vista Previa</span>
+            <span id="preview_date" class="fw-medium text-body-emphasis">Cargando...</span>
+          </div>
+        </div>
 
-        <input type="text" class="form-control" id="time_format" name="time_format"
-          value="<?= $optionsRaw["time_format"] ?? "" ?>" placeholder="Ejm: h:m a">
-        <div class="form-text">-</div>
-      </div>
+        <div class="col-md-6">
+          <label for="time_format" class="form-label small text-muted text-uppercase fw-bold">Hora</label>
+          <div class="input-group">
+            <span class="input-group-text "><i class="fa-regular fa-clock text-muted"></i></span>
+            <input type="text" class="form-control font-monospace" id="time_format" name="time_format"
+              value="<?= $optionsRaw["time_format"] ?? "" ?>" placeholder="h:i a">
+          </div>
+          <div class="mt-2 p-2  rounded border small text-muted d-flex align-items-center">
+            <span class="badge bg-secondary me-2">Vista Previa</span>
+            <span id="preview_time" class="fw-medium text-body-emphasis">Cargando...</span>
+          </div>
+        </div>
 
-      <!-- DateTime Format -->
-      <div class="">
-        <label for="datetime_format" class="form-label fw-semibold">DateTime Format</label>
+        <div class="col-12">
+          <label for="datetime_format" class="form-label small text-muted text-uppercase fw-bold">Fecha y Hora
+            Completa</label>
+          <div class="input-group">
+            <span class="input-group-text "><i class="fa-solid fa-calendar-days text-muted"></i></span>
+            <input type="text" class="form-control font-monospace" id="datetime_format" name="datetime_format"
+              value="<?= $optionsRaw["datetime_format"] ?? "" ?>" placeholder="d M, Y - h:i a">
+          </div>
+          <div class="mt-2 p-2  rounded border small text-muted d-flex align-items-center">
+            <span class="badge bg-secondary me-2">Vista Previa</span>
+            <span id="preview_datetime" class="fw-medium text-body-emphasis">Cargando...</span>
+          </div>
+        </div>
 
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal" data-bs-target="#datetimeFormatModal">
-          <i class="fa fa-info-circle"></i>
-        </button>
-
-        <input type="text" class="form-control" id="datetime_format" name="datetime_format"
-          value="<?= $optionsRaw["datetime_format"] ?? "" ?>" placeholder="Ejm: h:m a - d M, Y">
-        <div class="form-text">-</div>
       </div>
     </div>
-  </div>
 
-  <div class="d-flex justify-content-between bg-body p-3 rounded mt-3">
-    <a href="<?= url_admin('users') ?>" class="btn btn-secondary">Cancelar</a>
-    <button class="btn btn-primary" type="submit" name="save">Actualizar</button>
-  </div>
+    <div class="card-footer  p-3 text-end">
+      <a href="<?= url_admin('users') ?>" class="btn btn-link text-decoration-none text-muted">Cancelar</a>
+    </div>
 
+  </div>
 </form>
 
-<!-- Modal Date Time Format -->
 <div class="modal fade" id="datetimeFormatModal" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5">
-          Date & Date Time Formats
-        </h1>
+      <div class="modal-header ">
+        <h5 class="modal-title">
+          <i class="fa-solid fa-code text-primary me-2"></i>Códigos de Formato PHP
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div class="alert alert-info">
-          Puedes usar los caracteres disponibles en la función <code>date()</code> de PHP.
-          Más información en la documentación oficial:
-          <a href="https://www.php.net/manual/es/function.date.php"
-            target="_blank">https://www.php.net/manual/es/function.date.php</a>
+      <div class="modal-body p-0">
+        <div class="alert alert-light  m-0 rounded-0">
+          <small><i class="fa-solid fa-info-circle me-1"></i> Estos caracteres son estándar de la función
+            <code>date()</code> de PHP.</small>
         </div>
-        <!-- =================== -->
-        <!-- SECCIÓN: FECHA -->
-        <!-- =================== -->
-        <h5 class="fw-semibold mt-4">Formatos de Fecha</h5>
+
         <div class="table-responsive">
-          <table class="table table-sm table-bordered align-middle">
-            <thead class="table-light">
+          <table class="table table-striped table-hover mb-0 align-middle text-sm">
+            <thead class="table-light sticky-top">
               <tr>
-                <th>Carácter</th>
+                <th style="width: 50px;">Cod</th>
                 <th>Descripción</th>
                 <th>Ejemplo</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="font-monospace">
               <tr>
-                <td><code>d</code></td>
-                <td>Día del mes (con ceros iniciales)</td>
-                <td>01–31</td>
+                <td colspan="3" class="-secondary fw-bold text-uppercase px-3 py-1 font-sans-serif">Días</td>
               </tr>
               <tr>
-                <td><code>j</code></td>
-                <td>Día del mes (sin ceros)</td>
-                <td>1–31</td>
+                <td class="text-primary fw-bold">d</td>
+                <td>Día del mes (01-31)</td>
+                <td>01</td>
               </tr>
               <tr>
-                <td><code>l</code></td>
-                <td>Nombre completo del día</td>
+                <td class="text-primary fw-bold">j</td>
+                <td>Día del mes (1-31)</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td class="text-primary fw-bold">l</td>
+                <td>Nombre del día completo</td>
                 <td>Lunes</td>
               </tr>
               <tr>
-                <td><code>D</code></td>
-                <td>Abreviatura del día</td>
+                <td class="text-primary fw-bold">D</td>
+                <td>Nombre del día corto</td>
                 <td>Lun</td>
               </tr>
+
               <tr>
-                <td><code>F</code></td>
-                <td>Nombre completo del mes</td>
-                <td>Octubre</td>
+                <td colspan="3" class="-secondary fw-bold text-uppercase px-3 py-1 font-sans-serif">Meses</td>
               </tr>
               <tr>
-                <td><code>M</code></td>
-                <td>Abreviatura del mes</td>
-                <td>Oct</td>
+                <td class="text-primary fw-bold">m</td>
+                <td>Mes numérico (01-12)</td>
+                <td>01</td>
               </tr>
               <tr>
-                <td><code>m</code></td>
-                <td>Mes numérico (con ceros)</td>
-                <td>01–12</td>
+                <td class="text-primary fw-bold">M</td>
+                <td>Nombre del mes corto</td>
+                <td>Ene</td>
               </tr>
               <tr>
-                <td><code>n</code></td>
-                <td>Mes numérico (sin ceros)</td>
-                <td>1–12</td>
+                <td class="text-primary fw-bold">F</td>
+                <td>Nombre del mes completo</td>
+                <td>Enero</td>
+              </tr>
+
+              <tr>
+                <td colspan="3" class="-secondary fw-bold text-uppercase px-3 py-1 font-sans-serif">Años</td>
               </tr>
               <tr>
-                <td><code>Y</code></td>
-                <td>Año completo</td>
+                <td class="text-primary fw-bold">Y</td>
+                <td>Año 4 dígitos</td>
                 <td>2025</td>
               </tr>
               <tr>
-                <td><code>y</code></td>
-                <td>Año corto</td>
+                <td class="text-primary fw-bold">y</td>
+                <td>Año 2 dígitos</td>
                 <td>25</td>
               </tr>
-              <tr>
-                <td><code>z</code></td>
-                <td>Día del año</td>
-                <td>0–365</td>
-              </tr>
-              <tr>
-                <td><code>W</code></td>
-                <td>Número de semana ISO-8601</td>
-                <td>1–52</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        <h6 class="mt-3 fw-bold">Ejemplo:</h6>
-        <pre><code>$fecha = date("d/m/Y");
-echo $fecha; // Resultado: 30/10/2025</code></pre>
-
-        <pre><code>$fecha = date("l, d F Y");
-echo $fecha; // Resultado: Jueves, 30 Octubre 2025</code></pre>
-
-        <!-- =================== -->
-        <!-- SECCIÓN: HORA -->
-        <!-- =================== -->
-        <h5 class="fw-semibold mt-5">Formatos de Hora</h5>
-        <div class="table-responsive">
-          <table class="table table-sm table-bordered align-middle">
-            <thead class="table-light">
               <tr>
-                <th>Carácter</th>
-                <th>Descripción</th>
-                <th>Ejemplo</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>H</code></td>
-                <td>Hora en formato 24h (con ceros)</td>
-                <td>00–23</td>
+                <td colspan="3" class="-secondary fw-bold text-uppercase px-3 py-1 font-sans-serif">Hora</td>
               </tr>
               <tr>
-                <td><code>G</code></td>
-                <td>Hora en formato 24h (sin ceros)</td>
-                <td>0–23</td>
+                <td class="text-danger fw-bold">H</td>
+                <td>Hora 24h (00-23)</td>
+                <td>14</td>
               </tr>
               <tr>
-                <td><code>h</code></td>
-                <td>Hora en formato 12h (con ceros)</td>
-                <td>01–12</td>
+                <td class="text-danger fw-bold">h</td>
+                <td>Hora 12h (01-12)</td>
+                <td>02</td>
               </tr>
               <tr>
-                <td><code>g</code></td>
-                <td>Hora en formato 12h (sin ceros)</td>
-                <td>1–12</td>
+                <td class="text-danger fw-bold">i</td>
+                <td>Minutos (00-59)</td>
+                <td>05</td>
               </tr>
               <tr>
-                <td><code>i</code></td>
-                <td>Minutos (con ceros)</td>
-                <td>00–59</td>
+                <td class="text-danger fw-bold">s</td>
+                <td>Segundos (00-59)</td>
+                <td>09</td>
               </tr>
               <tr>
-                <td><code>s</code></td>
-                <td>Segundos (con ceros)</td>
-                <td>00–59</td>
+                <td class="text-danger fw-bold">a</td>
+                <td>am / pm</td>
+                <td>pm</td>
               </tr>
               <tr>
-                <td><code>a</code></td>
-                <td>am / pm en minúsculas</td>
-                <td>am</td>
-              </tr>
-              <tr>
-                <td><code>A</code></td>
-                <td>AM / PM en mayúsculas</td>
+                <td class="text-danger fw-bold">A</td>
+                <td>AM / PM</td>
                 <td>PM</td>
               </tr>
-              <tr>
-                <td><code>e</code></td>
-                <td>Zona horaria</td>
-                <td>America/Lima</td>
-              </tr>
-              <tr>
-                <td><code>T</code></td>
-                <td>Abreviatura de zona horaria</td>
-                <td>PET</td>
-              </tr>
             </tbody>
           </table>
         </div>
-
-        <h6 class="mt-3 fw-bold">Ejemplo:</h6>
-        <pre><code>$hora = date("H:i:s");
-echo $hora; // Resultado: 16:45:32</code></pre>
-
-        <pre><code>$hora = date("h:i A");
-echo $hora; // Resultado: 04:45 PM</code></pre>
-
-        <!-- =================== -->
-        <!-- SECCIÓN: COMBINADOS -->
-        <!-- =================== -->
-        <h5 class="fw-semibold mt-5">Ejemplos de Fecha y Hora Combinadas</h5>
-        <pre><code>$fechaHora = date("Y-m-d H:i:s");
-echo $fechaHora; // Resultado: 2025-10-30 16:45:32</code></pre>
-
-        <pre><code>echo date("l, d F Y - h:i A");
-// Resultado: Jueves, 30 Octubre 2025 - 04:45 PM</code></pre>
-
-        <pre><code>echo date("d/m/Y g:i a");
-// Resultado: 30/10/2025 4:45 pm</code></pre>
-
-
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      <div class="modal-footer ">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Entendido</button>
       </div>
     </div>
   </div>
@@ -266,25 +217,31 @@ echo $fechaHora; // Resultado: 2025-10-30 16:45:32</code></pre>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const tzSelect = document.getElementById("site_timezone");
-    const dateInput = document.getElementById("date_format");
-    const timeInput = document.getElementById("time_format");
-    const datetimeInput = document.getElementById("datetime_format");
 
-    const dateExample = dateInput.nextElementSibling;
-    const timeExample = timeInput.nextElementSibling;
-    const datetimeExample = datetimeInput.nextElementSibling;
+    // Mapeo de Inputs con sus contenedores de vista previa
+    const inputs = [
+      { input: document.getElementById("date_format"), preview: document.getElementById("preview_date") },
+      { input: document.getElementById("time_format"), preview: document.getElementById("preview_time") },
+      { input: document.getElementById("datetime_format"), preview: document.getElementById("preview_datetime") }
+    ];
 
     /**
      * Devuelve la fecha/hora actual ajustada a la zona horaria seleccionada
      */
     function getDateInTimezone(timezone) {
-      const now = new Date();
-      const tzDateStr = now.toLocaleString('en-US', { timeZone: timezone });
-      return new Date(tzDateStr);
+      try {
+        const now = new Date();
+        const tzDateStr = now.toLocaleString('en-US', { timeZone: timezone });
+        return new Date(tzDateStr);
+      } catch (e) {
+        console.error("Timezone inválida, usando local", e);
+        return new Date();
+      }
     }
 
     /**
      * Emula parcialmente PHP date()
+     * Nota: Mantuve tu lógica intacta, solo me aseguro que funcione visualmente.
      */
     function phpDate(format, date) {
       const pad = (n, c = 2) => String(n).padStart(c, '0');
@@ -325,28 +282,34 @@ echo $fechaHora; // Resultado: 2025-10-30 16:45:32</code></pre>
     }
 
     /**
-     * Actualiza los ejemplos dinámicos
+     * Actualiza los ejemplos
      */
     function updateExamples() {
       const tz = tzSelect.value || 'UTC';
       const now = getDateInTimezone(tz);
 
-      const dateFormat = dateInput.value || 'd F, Y';
-      const timeFormat = timeInput.value || 'H:i:s';
-      const datetimeFormat = datetimeInput.value || 'd F, Y H:i';
-
-      dateExample.textContent = 'Ejemplo: ' + phpDate(dateFormat, now);
-      timeExample.textContent = 'Ejemplo: ' + phpDate(timeFormat, now);
-      datetimeExample.textContent = 'Ejemplo: ' + phpDate(datetimeFormat, now);
+      inputs.forEach(item => {
+        if (item.input && item.preview) {
+          const val = item.input.value;
+          // Si está vacío, mostramos placeholder visual
+          if (!val) {
+            item.preview.innerHTML = '<span class="text-muted fst-italic">Escribe un formato...</span>';
+          } else {
+            item.preview.textContent = phpDate(val, now);
+          }
+        }
+      });
     }
 
-    // Escucha cambios en los campos
-    [tzSelect, dateInput, timeInput, datetimeInput].forEach(el => {
-      el.addEventListener("input", updateExamples);
-      el.addEventListener("change", updateExamples);
+    // Event Listeners
+    tzSelect.addEventListener("change", updateExamples);
+    inputs.forEach(item => {
+      if (item.input) {
+        item.input.addEventListener("input", updateExamples);
+      }
     });
 
-    // Actualiza inicialmente
+    // Iniciar
     updateExamples();
   });
 </script>

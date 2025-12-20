@@ -1,39 +1,77 @@
-<div class="card border-primary mb-4">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="card-title mb-0">
-      <strong>Respaldos de Bases de Datos</strong>: Por favor respalda antes de restaurar a cualquier versión anterior.
-    </h5>
-    <a href="?action=backup" class="btn btn-primary">
-      <i class="fa fa-database me-1"></i> Respaldar Base de Datos
+<div class="card mb-4">
+  <div
+    class="card-header   d-flex flex-wrap justify-content-between align-items-center py-3">
+    <div>
+      <h5 class="card-title mb-0 text-body-emphasis d-flex align-items-center gap-2">
+        <i class="fa-solid fa-database text-primary"></i>
+        Respaldos de Base de Datos
+      </h5>
+      <small class="text-body-secondary">
+        Se recomienda respaldar antes de restaurar.
+      </small>
+    </div>
+    <a href="?action=backup" class="btn btn-primary btn-sm mt-2 mt-md-0">
+      <i class="fa fa-plus me-1"></i> Nuevo Respaldo
     </a>
   </div>
 
-  <div class="card-body">
-    <ul class="list-group">
+  <div class="card-body p-0">
+    <ul class="list-group list-group-flush">
       <?php if (empty($files)): ?>
-        <li class="list-group-item text-muted">No hay respaldos disponibles.</li>
+        <li class="list-group-item text-center py-5">
+          <div class="text-body-secondary mb-2">
+            <i class="fa-regular fa-folder-open fa-3x opacity-50"></i>
+          </div>
+          <p class="text-body-secondary mb-0">No hay respaldos disponibles.</p>
+        </li>
       <?php else: ?>
         <?php foreach ($files as $file):
-          $filename  = basename($file);
-          $timestamp = date("D d M Y h:i A", filemtime($file));
+          $filename = basename($file);
+          // Formato de fecha más legible
+          $timestamp = date("d/m/Y", filemtime($file));
+          $time      = date("h:i A", filemtime($file));
+          // Calculamos tamaño (opcional, mejora UX)
+          $filesize = round(filesize($file) / 1024, 2) . ' KB';
           ?>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <strong>Respaldo tomado el <span class="text-primary"><?= $timestamp ?></span></strong>
+          <li
+            class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-md-center p-3 gap-3">
+
+            <div class="d-flex align-items-center gap-3">
+              <div class="d-flex align-items-center justify-content-center bg-body-secondary rounded p-2"
+                style="width: 45px; height: 45px;">
+                <i class="fa-solid fa-file-zipper text-body-secondary fs-5"></i>
+              </div>
+              <div>
+                <div class="fw-bold text-body-emphasis">
+                  Respaldo del <?= $timestamp ?>
+                </div>
+                <div class="small text-body-secondary">
+                  <i class="fa-regular fa-clock me-1"></i><?= $time ?>
+                  <span class="mx-1">&bull;</span>
+                  <?= $filesize ?>
+                </div>
+              </div>
             </div>
-            <div class="btn-group">
-              <a href="?action=download&file=<?= urlencode($filename) ?>" class="btn btn-primary btn-sm">
-                <i class="fa fa-download me-1"></i> Descargar
+
+            <div class="btn-group" role="group" aria-label="Acciones de respaldo">
+              <a href="?action=download&file=<?= urlencode($filename) ?>" class="btn btn-outline-secondary btn-sm"
+                title="Descargar">
+                <i class="fa fa-download"></i> <span class="d-none d-lg-inline">Descargar</span>
               </a>
-              <a href="?action=restore&file=<?= urlencode($filename) ?>" class="btn btn-warning btn-sm"
-                onclick="return confirm('¿Seguro que deseas restaurar este respaldo?');">
-                <i class="fa fa-database me-1"></i> Restaurar
+
+              <a href="?action=restore&file=<?= urlencode($filename) ?>" class="btn btn-outline-warning btn-sm"
+                onclick="return confirm('ATENCIÓN: Esto sobrescribirá la base de datos actual. ¿Estás seguro?');"
+                title="Restaurar">
+                <i class="fa fa-rotate-left"></i> <span class="d-none d-lg-inline">Restaurar</span>
               </a>
-              <a href="?action=delete&file=<?= urlencode($filename) ?>" class="btn btn-danger btn-sm"
-                onclick="return confirm('¿Eliminar este respaldo permanentemente?');">
-                <i class="fa fa-trash me-1"></i> Borrar
+
+              <a href="?action=delete&file=<?= urlencode($filename) ?>" class="btn btn-outline-danger btn-sm"
+                onclick="return confirm('¿Eliminar este respaldo permanentemente? No se puede deshacer.');"
+                title="Eliminar">
+                <i class="fa fa-trash"></i>
               </a>
             </div>
+
           </li>
         <?php endforeach; ?>
       <?php endif; ?>

@@ -1,81 +1,123 @@
-<div class="row">
-  <div class="col-md-3">
+<div class="row g-4">
+
+  <div class="col-md-4 col-xl-3">
     <div class="card">
-      <div class="card-body">
-        <div class="text-center">
-          <img class="img-fluid rounded mb-1" src="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>"
-            alt="Profile Image">
+      <div class="card-body text-center">
+
+        <div class="mt-3 mb-4">
+          <img src="<?= SITE_URL ?>/uploads/user/<?= $user->user_image ?>" class="rounded-circle img-fluid border p-1"
+            style="width: 150px; height: 150px; object-fit: cover;" alt="Foto de <?= $user->user_display_name ?>">
         </div>
 
-        <h3 class="text-center"><?= $user->user_display_name ?></h3>
+        <h4 class="mb-1 fw-bold"><?= $user->user_display_name ?></h4>
+        <div class="mb-4">
+          <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
+            <?= $user->role_name ?>
+          </span>
+        </div>
 
-        <p class="text-muted text-center"><?= $user->role_name ?></p>
+        <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
+          <div class="text-start">
+            <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Último Acceso</small>
+            <span class="fw-medium small">
+              <i class="fa-regular fa-clock me-1 text-secondary"></i>
+              <?= $user->user_last_login ?>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
+          <div class="text-start">
+            <small class="text-muted d-block text-uppercase" style="font-size: 0.75rem;">Miembro Desde</small>
+            <span class="fw-medium small">
+              <i class="fa-regular fa-calendar me-1 text-secondary"></i>
+              <?= $user->user_created ?>
+            </span>
+          </div>
+        </div>
 
-        <ul class="list-group list-group-flush mb-1">
-          <li class="list-group-item">
-            <b>Username</b>
-            <a class="pull-right"><?= $user->user_login ?></a>
-          </li>
-          <li class="list-group-item">
-            <b>Last Login</b>
-            <a class="pull-right"><?= $user->user_last_login ?></a>
-          </li>
-          <li class="list-group-item">
-            <b>Member Since </b>
-            <a class="pull-right"><?= $user->user_created ?></a>
-          </li>
-        </ul>
-
-        <!-- <div class="d-grid">
-          <a href="" class="btn btn-primary btn-block">
-            <b>
-              <i class="fa fa-pencil"></i>
-              Edit
-            </b>
-          </a>
-        </div> -->
       </div>
     </div>
   </div>
-  <div class="col-md-9">
-    <div class="card mb-3">
+
+  <div class="col-md-8 col-xl-9">
+
+    <div class="card mb-4">
+      <div class="card-header bg-transparent border-bottom py-3">
+        <h5 class="card-title mb-0 d-flex align-items-center">
+          <i class="fa-regular fa-id-card me-2 text-primary"></i>
+          Información de Cuenta
+        </h5>
+      </div>
       <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-bordered table-striped m-0">
-            <tbody>
-              <tr>
-                <td width="160"><strong>Name</strong>:</td>
-                <td><?= $user->user_display_name ?></td>
-              </tr>
-              <tr>
-                <td><strong>Username</strong>:</td>
-                <td><?= $user->user_login ?></td>
-              </tr>
-              <tr>
-                <td><strong>Email</strong>:</td>
-                <td><?= $user->user_email ?></td>
-              </tr>
-              <tr>
-                <td><strong>Role</strong>:</td>
-                <td><?= $user->role_name ?></td>
-              </tr>
-              <tr>
-                <td><strong>Last Login</strong>:</td>
-                <td><?= $user->user_last_login ?></td>
-              </tr>
-              <tr>
-                <td><strong>Member Since</strong>:</td>
-                <td><?= $user->user_created ?></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="row g-4">
+
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start">
+              <div class="me-3 mt-1 text-secondary">
+                <i class="fa-solid fa-user-tag fa-lg"></i>
+              </div>
+              <div>
+                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Nombre de Usuario</small>
+                <div class="fs-6 fw-medium"><?= $user->user_login ?></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start">
+              <div class="me-3 mt-1 text-secondary">
+                <i class="fa-regular fa-envelope fa-lg"></i>
+              </div>
+              <div>
+                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Correo Electrónico</small>
+                <div class="fs-6 fw-medium text-break"><?= $user->user_email ?></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start">
+              <div class="me-3 mt-1 text-secondary">
+                <i class="fa-solid fa-shield-halved fa-lg"></i>
+              </div>
+              <div>
+                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Nivel de Permisos</small>
+                <div class="fs-6 fw-medium"><?= $user->role_name ?></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="d-flex align-items-start">
+              <div class="me-3 mt-1 text-secondary">
+                <i class="fa-solid fa-signal fa-lg"></i>
+              </div>
+              <div>
+                <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Estado</small>
+                <div class="text-success fw-bold">
+                  <i class="fa-solid fa-circle fa-2xs me-1"></i> Activo
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
-    <div class="card mb-3">
-      <div class="card-body">
-        <?= debug_user_permissions_raw($connect,$user_session); ?>
+
+    <div class="card border-warning-subtle">
+      <div class="card-header bg-warning-subtle border-bottom border-warning-subtle py-2">
+        <h6 class="card-title mb-0 text-warning-emphasis small text-uppercase fw-bold">
+          <i class="fa-solid fa-bug me-2"></i>Debug: Permisos del Usuario
+        </h6>
+      </div>
+      <div class="card-body bg-body-tertiary p-0">
+        <pre class="m-0 p-3 text-body-secondary small"
+          style="max-height: 200px; overflow-y: auto; font-family: var(--bs-font-monospace);">
+<?= debug_user_permissions_raw($connect, $user_session); ?>
+         </pre>
       </div>
     </div>
+
   </div>
 </div>
