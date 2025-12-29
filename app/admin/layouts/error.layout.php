@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- Primary Meta Tags-->
+  <title><?= get_block('title', 'Admin'); ?> | PiruAdmin</title>
+
+  <!-- Favicon-->
+  <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
+
+  <!-- Css -->
+  <link rel="stylesheet" href="<?= APP_URL ?>/static/assets/css/fontawesome.css" />
+  <link rel="stylesheet" href="<?= APP_URL ?>/static/assets/css/piruadmin.css" />
+
+  <link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/toastifyjs/toastifyjs.css" />
+  <link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.css" />
+
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem('theme');
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-bs-theme', theme);
+    })();
+
+  </script>
+
+  <?php echo get_block('css'); ?>
+</head>
+
+<body>
+  <!-- Loader-->
+  <div
+    class="show bg-body position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
+    id="spinner">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"><span
+        class="sr-only">Loading...</span></div>
+  </div>
+
+  <div class="wrapper">
+
+
+    <?php $notifier->showBootstrap() ?>
+
+    <?= $content; ?>
+
+
+  </div>
+  <!-- Dark & Ligth-->
+
+  <!-- Js -->
+  <script src="<?= APP_URL ?>/static/plugins/feathericons/feathericons.js"></script>
+  <script src="<?= APP_URL ?>/static/plugins/toastifyjs/toastifyjs.js"></script>
+  <script src="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.js"></script>
+  <script src="<?= APP_URL ?>/static/plugins/sweetalert2/sa.js"></script>
+  <script src="<?= APP_URL ?>/static/assets/js/piruadmin.js"></script>
+
+  <?php echo get_block('js'); ?>
+
+</body>
+
+</html>

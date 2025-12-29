@@ -1,33 +1,50 @@
-# Proteger el archivo .htaccess
+# ======================================================
+# Seguridad básica
+# ======================================================
+
+# Proteger .htaccess
 <Files ".htaccess">
-    Require all denied
+  Require all denied
 </Files>
 
-# Evitar la exploración de directorios
+# Evitar listado de directorios
 Options -Indexes
 
-# Evitar el acceso directo a los archivos .view.php
-<FilesMatch "\.view\.php$">
-    Require all denied
+# ======================================================
+# Bloqueo de archivos sensibles
+# ======================================================
+
+# Bloquear .env
+<FilesMatch "^\.env">
+  Require all denied
 </FilesMatch>
 
-# Proteger los archivos de configuración de PHP (por ejemplo, config.php, settings.php, etc.)
-<FilesMatch "(config.php|config.example.php)$">
-    Require all denied
+# Bloquear archivos internos del sistema
+<FilesMatch "\.(action|view|helper|config)\.php$">
+  Require all denied
 </FilesMatch>
 
-# Evitar el acceso a archivos sensibles (ej. README, LICENSE, etc.)
-<FilesMatch "^(README|LICENSE|CHANGELOG|UPGRADE).*$">
-    Require all denied
+# Bloquear archivos de configuración comunes
+<FilesMatch "(^|/)(config|settings|database|env)\.php$">
+  Require all denied
 </FilesMatch>
 
-# Habilitar reescritura
+# Bloquear documentación
+<FilesMatch "^(README|LICENSE|CHANGELOG|UPGRADE|INSTALL).*">
+  Require all denied
+</FilesMatch>
+
+# Bloquear backups y dumps
+<FilesMatch "\.(bak|old|orig|save|swp|sql|zip|tar|gz)$">
+  Require all denied
+</FilesMatch>
+
+# ======================================================
+# Front Controller
+# ======================================================
+
 RewriteEngine On
 
-# Excluir la carpeta admin/ de las reglas
-# RewriteCond %{REQUEST_URI} !^/admin/
-
-# Reescribir todas las peticiones al archivo index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [L]
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]

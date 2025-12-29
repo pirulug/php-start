@@ -1,181 +1,219 @@
 <?php
+
 class Notifier {
+  private string $message = '';
+  private string $type = 'success';
+  private string $method = 'bootstrap';
 
   public function __construct() {
-    if (session_status() == PHP_SESSION_NONE) {
+    if (session_status() === PHP_SESSION_NONE) {
       session_start();
     }
   }
 
-  /**
-   * Agregar una notificación a la sesión
-   * @param string $message Texto del mensaje
-   * @param string $type success | danger | primary | warning ...
-   * @param string $method bootstrap | sweetalert | toast (se permiten alias: bs, sa, tf)
-   */
-  public function add($message, $type = 'success', $method = 'bootstrap') {
-    // Alias para métodos
-    $aliases = [
-      'bs'       => 'bootstrap',
-      'sa'       => 'sweetalert',
-      'tf'       => 'toast',
-      'toastify' => 'toast',
+  /* ==========================================
+   * FLUENT - Construcción del mensaje
+   * ========================================== */
+
+  public function message(string $message) {
+    $this->message = $message;
+    return $this;
+  }
+
+  public function success(?string $message = null) {
+    if ($message !== null)
+      $this->message = $message;
+    $this->type = 'success';
+    return $this;
+  }
+
+  public function danger(?string $message = null) {
+    if ($message !== null)
+      $this->message = $message;
+    $this->type = 'danger';
+    return $this;
+  }
+
+  public function warning(?string $message = null) {
+    if ($message !== null)
+      $this->message = $message;
+    $this->type = 'warning';
+    return $this;
+  }
+
+  public function info(?string $message = null) {
+    if ($message !== null)
+      $this->message = $message;
+    $this->type = 'info';
+    return $this;
+  }
+
+  public function bootstrap() {
+    $this->method = 'bootstrap';
+    return $this;
+  }
+
+  public function toast() {
+    $this->method = 'toast';
+    return $this;
+  }
+
+  public function sweetalert() {
+    $this->method = 'sweetalert';
+    return $this;
+  }
+
+  /* ==========================================
+   * EJECUCIÓN
+   * ========================================== */
+
+  public function add() {
+    if ($this->message === '') {
+      throw new Exception('Notifier: mensaje requerido');
+    }
+
+    $_SESSION[$this->method][] = [
+      'message' => $this->message,
+      'type'    => $this->type
     ];
 
-    $method = strtolower($method);
-    if (isset($aliases[$method])) {
-      $method = $aliases[$method];
-    }
-
-    switch ($method) {
-      case 'bootstrap':
-        $this->storeBootstrap($message, $type);
-        break;
-      case 'sweetalert':
-        $this->storeSweetAlert($message, $type);
-        break;
-      case 'toast':
-        $this->storeToast($message, $type);
-        break;
-      default:
-        throw new Exception("Método de notificación no soportado: $method");
-    }
+    $this->reset();
+    return $this;
   }
 
-  /** ---------- Métodos privados de almacenamiento ---------- */
-
-  private function storeBootstrap($message, $type) {
-    $_SESSION['bootstrap'][] = ['message' => $message, 'type' => $type];
+  private function reset() {
+    $this->message = '';
+    $this->type    = 'success';
+    $this->method  = 'bootstrap';
   }
 
-  private function storeSweetAlert($message, $type) {
-    $_SESSION['sweetalert'][] = ['message' => $message, 'type' => $type];
+  /* ==========================================
+   * CONSULTA (can())
+   * ========================================== */
+
+  public function can(): NotifierCan {
+    return new NotifierCan();
   }
 
-  private function storeToast($message, $type) {
-    $_SESSION['toast'][] = ['message' => $message, 'type' => $type];
-  }
-
-  /** ---------- Métodos de visualización ---------- */
+  /* ==========================================
+   * RENDER
+   * ========================================== */
 
   public function showBootstrap() {
-    if (!empty($_SESSION['bootstrap'])) {
-      $messages = $_SESSION['bootstrap'];
+    if (empty($_SESSION['bootstrap']))
+      return;
 
-      // Agrupar mensajes por tipo
-      $grouped = [];
-      foreach ($messages as $msg) {
-        $type             = $msg['type'] ?? 'info';
-        $grouped[$type][] = $msg['message'];
-      }
-
-      // Mostrar alertas agrupadas
-      foreach ($grouped as $type => $msgs) {
-        // Si hay solo un mensaje, mostrar texto plano
-        if (count($msgs) === 1) {
-          echo "<div class='alert alert-{$type} alert-dismissible fade show' role='alert'>
-                        {$msgs[0]}
-                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                      </div>";
-        } else {
-          // Si hay varios, mostrar como lista
-          echo "<div class='alert alert-{$type} alert-dismissible fade show' role='alert'>
-                        <ul class='mb-0'>";
-          foreach ($msgs as $m) {
-            echo "<li>{$m}</li>";
-          }
-          echo "</ul>
-                        <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
-                      </div>";
-        }
-      }
-
-      // Limpiar mensajes después de mostrarlos
-      unset($_SESSION['bootstrap']);
+    $grouped = [];
+    foreach ($_SESSION['bootstrap'] as $msg) {
+      $grouped[$msg['type']][] = $msg['message'];
     }
+
+    foreach ($grouped as $type => $messages) {
+      echo "<div class='alert alert-{$type} alert-dismissible fade show'>";
+      if (count($messages) === 1) {
+        echo $messages[0];
+      } else {
+        echo "<ul class='mb-0'>";
+        foreach ($messages as $m)
+          echo "<li>{$m}</li>";
+        echo "</ul>";
+      }
+      echo "<button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>";
+    }
+
+    unset($_SESSION['bootstrap']);
   }
 
   public function showToasts() {
-    if (!empty($_SESSION['toast'])) {
-      echo "<script>";
-      foreach ($_SESSION['toast'] as $toast) {
-        $bgColor = $this->getToastColor($toast['type']);
-        echo "Toastify({
-                text: \"{$toast['message']}\",
-                close: true,
-                duration: 3000,
-                style: { background: \"$bgColor\" }
-              }).showToast();";
-      }
-      echo "</script>";
-      unset($_SESSION['toast']);
+    if (empty($_SESSION['toast']))
+      return;
+
+    echo "<script>";
+    foreach ($_SESSION['toast'] as $t) {
+      echo "Toastify({ text: \"{$t['message']}\", duration: 3000 }).showToast();";
     }
+    echo "</script>";
+
+    unset($_SESSION['toast']);
   }
 
   public function showSweetAlerts() {
-    if (!empty($_SESSION['sweetalert'])) {
-      echo "<script>";
-      foreach ($_SESSION['sweetalert'] as $alert) {
-        $icon = $this->getSweetAlertIcon($alert['type']);
-        echo "Swal.fire({
-                text: \"{$alert['message']}\",
-                icon: \"$icon\",
-                confirmButtonText: 'Aceptar'
-              });";
-      }
-      echo "</script>";
-      unset($_SESSION['sweetalert']);
+    if (empty($_SESSION['sweetalert']))
+      return;
+
+    echo "<script>";
+    foreach ($_SESSION['sweetalert'] as $a) {
+      echo "Swal.fire({ text: \"{$a['message']}\", icon: \"{$a['type']}\" });";
     }
+    echo "</script>";
+
+    unset($_SESSION['sweetalert']);
+  }
+}
+
+/* ==========================================================
+ * OBJETO CONSULTOR (can())
+ * ========================================================== */
+
+class NotifierCan {
+  private ?string $method = null;
+
+  public function bootstrap() {
+    $this->method = 'bootstrap';
+    return $this;
   }
 
-  /** ---------- Utilidades ---------- */
+  public function toast() {
+    $this->method = 'toast';
+    return $this;
+  }
 
-  public function has($method = 'bootstrap', $type = null) {
-    $messages = $_SESSION[$method] ?? [];
-    if ($type) {
-      foreach ($messages as $msg) {
+  public function sweetalert() {
+    $this->method = 'sweetalert';
+    return $this;
+  }
+
+  public function danger(): bool {
+    return $this->hasType('danger');
+  }
+
+  public function success(): bool {
+    return $this->hasType('success');
+  }
+
+  public function warning(): bool {
+    return $this->hasType('warning');
+  }
+
+  public function info(): bool {
+    return $this->hasType('info');
+  }
+
+  public function any(): bool {
+    $sources = $this->sources();
+    foreach ($sources as $src) {
+      if (!empty($_SESSION[$src]))
+        return true;
+    }
+    return false;
+  }
+
+  private function hasType(string $type): bool {
+    $sources = $this->sources();
+    foreach ($sources as $src) {
+      if (empty($_SESSION[$src]))
+        continue;
+      foreach ($_SESSION[$src] as $msg) {
         if ($msg['type'] === $type)
           return true;
       }
-      return false;
     }
-    return !empty($messages);
+    return false;
   }
 
-  public function hasErrors($method = 'bootstrap', $type = "danger") {
-    $messages = $_SESSION[$method] ?? [];
-    if ($type) {
-      foreach ($messages as $msg) {
-        if ($msg['type'] === $type)
-          return true;
-      }
-      return false;
-    }
-    return !empty($messages);
-  }
-
-  private function getSweetAlertIcon($type) {
-    $icons = [
-      'success' => 'success',
-      'danger'  => 'error',
-      'warning' => 'warning',
-      'info'    => 'info',
-      'primary' => 'question',
-    ];
-    return $icons[$type] ?? 'info';
-  }
-
-  private function getToastColor($type) {
-    $colors = [
-      'info'      => 'linear-gradient(to right, #00b09b, #96c93d)',
-      'success'   => 'linear-gradient(to right, #00b09b, #96c93d)',
-      'danger'    => 'linear-gradient(to right, #ff5f6d, #ffc371)',
-      'warning'   => 'linear-gradient(to right, #f7b733, #fc4a1a)',
-      'primary'   => 'linear-gradient(to right, #3498db, #2980b9)',
-      'secondary' => 'linear-gradient(to right, #95a5a6, #7f8c8d)',
-      'light'     => 'linear-gradient(to right, #ecf0f1, #bdc3c7)',
-      'dark'      => 'linear-gradient(to right, #34495e, #2c3e50)',
-    ];
-    return $colors[$type] ?? $colors['info'];
+  private function sources(): array {
+    return $this->method
+      ? [$this->method]
+      : ['bootstrap', 'toast', 'sweetalert'];
   }
 }

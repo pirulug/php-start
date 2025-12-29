@@ -1,42 +1,130 @@
 <?php
 
-// =============================================================
-// 0. Configuración 
-// =============================================================
-if (!file_exists(__DIR__ . "/config.php")) {
-  die("Te falta el archivo config.php");
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
 }
 
-require_once __DIR__ . "/config.php";
+const BASE_DIR = __DIR__;
 
-// =============================================================
-// 1. Cargar configuración e inicialización
-// =============================================================
-require_once __DIR__ . "/core/init.php";
+require_once BASE_DIR . "/config.php";
+require_once BASE_DIR . "/core/bootstrap/init.php";
+
+/*
+|--------------------------------------------------------------------------
+| Obtener URL limpia
+|--------------------------------------------------------------------------
+*/
+$url = isset($_GET['url']) ? trim($_GET['url'], '/') : '/';
+
+/*
+|--------------------------------------------------------------------------
+| Resolver ruta
+|--------------------------------------------------------------------------
+*/
+$route = Router::resolve($url);
+
+$requestedUrl = trim($_GET['url'] ?? '', '/');
+
+$isAdmin = str_starts_with($requestedUrl, PATH_ADMIN);
+$isApi   = str_starts_with($requestedUrl, PATH_API);
+$isAjax  = str_starts_with($requestedUrl, PATH_AJAX);
 
 
-// =============================================================
-// 2. Redirección si acceden directamente a /index.php
-// =============================================================
-if ($_SERVER['REQUEST_URI'] === "/index.php") {
-  header("Location: " . SITE_URL);
-  exit();
+if (!$route) {
+
+  http_response_code(404);
+
+  /*
+  |--------------------------------------------------------------------------
+  | API / AJAX → JSON
+  |--------------------------------------------------------------------------
+  */
+  if ($isApi || $isAjax) {
+
+    header('Content-Type: application/json; charset=utf-8');
+
+    echo json_encode([
+      'status'  => 404,
+      'success' => false,
+      'code'    => 'NOT_FOUND',
+      'message' => 'Recurso no encontrado',
+      'path'    => '/' . $requestedUrl
+    ]);
+
+    exit;
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | ADMIN → HTML personalizado
+  |--------------------------------------------------------------------------
+  */
+  if ($isAdmin) {
+
+    require_once admin_action('errors.404');
+
+    ob_start();
+    require_once admin_view('errors.404');
+    $content = ob_get_clean();
+
+    require_once admin_layout('error');
+    exit;
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | FRONT (fallback)
+  |--------------------------------------------------------------------------
+  */
+  echo 'Página no encontrada';
+  exit;
+}
+
+if (!empty($route['analytics'])) {
+
+  $analytics = new Analytics($connect);
+
+  $pageTitle = $route['analytics']['title'];
+  $pageUri   = $route['analytics']['uri']
+    ?? ($_SERVER['REQUEST_URI'] ?? '/');
+
+  $analytics->trackVisit($pageTitle, $pageUri);
+}
+
+foreach ($route['middlewares'] as [$middleware, $params]) {
+  call_user_func(
+    $middleware . '_middleware',
+    $route,
+    $params
+  );
+}
+
+/*
+|--------------------------------------------------------------------------
+| Ejecutar action
+|--------------------------------------------------------------------------
+*/
+if (!empty($route['action'])) {
+  if ($isApi || $isAjax) {
+    header('Content-Type: application/json; charset=utf-8');
+    require_once $route['action'];
+  }else{
+    require_once $route['action'];
+  }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Renderizar vista + layout
+|--------------------------------------------------------------------------
+*/
+if (!empty($route['view']) && !empty($route['layout'])) {
+
+  ob_start();
+  require_once $route['view'];
+  $content = ob_get_clean();
+
+  require_once $route['layout'];
 }
 
 
-// =============================================================
-// 3. Procesamiento de rutas amigables
-// =============================================================
-$request  = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-$segments = explode('/', $request);
-
-// Router principal
-if ($segments[0] === ADMIN_NAME) {
-  require "routers/admin.router.php";
-} elseif ($segments[0] === "api") {
-  require "routers/api.router.php";
-} elseif ($segments[0] === "ajax") {
-  require "routers/ajax.router.php";
-} else {
-  require "routers/front.router.php";
-}

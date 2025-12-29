@@ -4,38 +4,52 @@ declare(strict_types=1);
 
 class AntiXSS {
   /**
-   * Lista de patrones y reemplazos
-   * Usar array estático para evitar redefinirlos en cada instancia.
+   * Patrones peligrosos a eliminar
    */
-  private static array $patterns = [
-    '/<script\b[^>]*>(.*?)<\/script>/is'                => '', // Remover scripts
-    '/<iframe\b[^>]*>(.*?)<\/iframe>/is'                => '', // Remover iframes
-    '/<object\b[^>]*>(.*?)<\/object>/is'                => '', // Remover objects
-    '/<embed\b[^>]*>(.*?)<\/embed>/is'                  => '', // Remover embeds
-    '/<applet\b[^>]*>(.*?)<\/applet>/is'                => '', // Remover applets
-    '/<form\b[^>]*>(.*?)<\/form>/is'                    => '', // Remover forms
-    '/<img\b[^>]*src=["\']?javascript:[^"\']*["\']?/is' => '', // Remover img con javascript
-    '/<img\b[^>]*>/is'                                  => '', // Remover todas las imágenes (opcional, según necesidades)
+  private const PATTERNS = [
+    // Scripts y contenedores ejecutables
+    '/<\s*script\b[^>]*>.*?<\s*\/\s*script\s*>/is',
+    '/<\s*iframe\b[^>]*>.*?<\s*\/\s*iframe\s*>/is',
+    '/<\s*object\b[^>]*>.*?<\s*\/\s*object\s*>/is',
+    '/<\s*embed\b[^>]*>.*?<\s*\/\s*embed\s*>/is',
+    '/<\s*applet\b[^>]*>.*?<\s*\/\s*applet\s*>/is',
+    '/<\s*form\b[^>]*>.*?<\s*\/\s*form\s*>/is',
+
+    // Protocolos peligrosos
+    '/javascript\s*:/i',
+    '/vbscript\s*:/i',
+    '/data\s*:/i',
+
+    // Atributos on*
+    '/on\w+\s*=\s*"[^"]*"/i',
+    '/on\w+\s*=\s*\'[^\']*\'/i',
+    '/on\w+\s*=\s*[^\s>]+/i',
   ];
 
   /**
-   * Limpia el contenido de entradas maliciosas.
-   * 
-   * @param string $input Contenido a limpiar.
-   * @return string Contenido limpio.
+   * Limpia entradas potencialmente peligrosas (XSS)
    */
-  public function clean(string $input): string {
-    // Aplicar htmlspecialchars para evitar inyección básica
-    $sanitized = htmlspecialchars($input, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+  public function clean(string $input, bool $escape = true): string {
+    // Normalizar
+    $clean = trim($input);
 
-    // Aplicar patrones de limpieza
-    foreach (self::$patterns as $pattern => $replacement) {
-      // Solo aplicar si el patrón coincide
-      if (preg_match($pattern, $sanitized)) {
-        $sanitized = preg_replace($pattern, $replacement, $sanitized);
-      }
+    // Eliminar HTML peligroso
+    foreach (self::PATTERNS as $pattern) {
+      $clean = preg_replace($pattern, '', $clean);
     }
-    
-    return $sanitized;
+
+    // Eliminar tags restantes (defensivo)
+    $clean = strip_tags($clean);
+
+    // Escape final (para output en HTML)
+    if ($escape) {
+      $clean = htmlspecialchars(
+        $clean,
+        ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5,
+        'UTF-8'
+      );
+    }
+
+    return $clean;
   }
 }

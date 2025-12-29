@@ -1,206 +1,233 @@
 <?php
 
 class PaginatorPlus {
-  protected PDO $pdo;
-  protected string $table = '';
-  protected array $columns = ['*'];
-  protected array $joins = [];
-  protected array $searchColumns = [];
-  protected array $conditions = [];
-  protected string $orderColumn = 'id';
-  protected string $orderDirection = 'DESC';
-  protected int $perPage = 10;
-  protected int $currentPage = 1;
-  protected string $searchTerm = '';
-  protected int $fetchMode = PDO::FETCH_OBJ; // Por defecto devuelve objetos
+  protected $pdo;
 
-  public int $totalItems = 0;
-  public int $totalPages = 0;
+  protected $table;
+  protected $columns = ['*'];
+  protected $joins = [];
+  protected $wheres = [];
+  protected $bindings = [];
 
+  protected $searchColumns = [];
+  protected $searchTerm;
+
+  protected $groupBy = [];
+  protected $orderColumn = null;
+  protected $orderDirection = 'DESC';
+
+  protected $perPage = 10;
+  protected $currentPage = 1;
+
+  protected $compiledWhere = null;
+
+  public $totalItems = 0;
+  public $totalPages = 0;
+
+  /* --------------------------------------------------
+   * CONSTRUCTOR
+   * -------------------------------------------------- */
   public function __construct(PDO $pdo) {
     $this->pdo         = $pdo;
-    $this->searchTerm  = trim($_GET['search'] ?? '');
+    $this->searchTerm  = $_GET['search'] ?? '';
     $this->currentPage = max((int) ($_GET['page'] ?? 1), 1);
   }
 
-  public function from(string $table): self {
+  /* --------------------------------------------------
+   * FROM
+   * -------------------------------------------------- */
+  public function from($table) {
     $this->table = $table;
     return $this;
   }
 
-  public function columns(array $columns): self {
+  /* --------------------------------------------------
+   * SELECT
+   * -------------------------------------------------- */
+  public function select(array $columns) {
     $this->columns = $columns;
     return $this;
   }
 
-  public function join(string $sql): self {
-    $this->joins[] = $sql;
+  /* --------------------------------------------------
+   * JOIN
+   * -------------------------------------------------- */
+  public function join($table, $first, $operator, $second, $type = 'INNER') {
+    $this->joins[] = strtoupper($type) . " JOIN {$table} ON {$first} {$operator} {$second}";
     return $this;
   }
 
-  public function searchColumns(array $columns): self {
+  /* --------------------------------------------------
+   * WHERE
+   * -------------------------------------------------- */
+  public function where($column, $operator, $value) {
+    $key                  = ':w_' . count($this->bindings);
+    $this->wheres[]       = "{$column} {$operator} {$key}";
+    $this->bindings[$key] = $value;
+    return $this;
+  }
+
+  /* --------------------------------------------------
+   * SEARCH
+   * -------------------------------------------------- */
+  public function search(array $columns) {
     $this->searchColumns = $columns;
+
+    if ($this->searchTerm && $columns) {
+      $searchParts = [];
+
+      foreach ($columns as $col) {
+        $key                  = ':s_' . count($this->bindings);
+        $searchParts[]        = "{$col} LIKE {$key}";
+        $this->bindings[$key] = '%' . $this->searchTerm . '%';
+      }
+
+      $this->wheres[] = '(' . implode(' OR ', $searchParts) . ')';
+    }
+
     return $this;
   }
 
-  public function condition(string $sql, ?string $param = null, $value = null): self {
-    $this->conditions[] = compact('sql', 'param', 'value');
+  /* --------------------------------------------------
+   * GROUP BY
+   * -------------------------------------------------- */
+  public function groupBy($columns) {
+    $this->groupBy = (array) $columns;
     return $this;
   }
 
-  public function order(string $column, string $direction = 'DESC'): self {
+  /* --------------------------------------------------
+   * ORDER BY
+   * -------------------------------------------------- */
+  public function orderBy($column, $direction = 'DESC') {
     $this->orderColumn    = $column;
     $this->orderDirection = strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC';
     return $this;
   }
 
-  public function perPage(int $limit): self {
-    $this->perPage = $limit;
+  /* --------------------------------------------------
+   * PER PAGE
+   * -------------------------------------------------- */
+  public function perPage($perPage) {
+    $this->perPage = (int) $perPage;
     return $this;
   }
 
-  public function fetchMode(int $mode): self {
-    $this->fetchMode = $mode;
-    return $this;
-  }
+  /* --------------------------------------------------
+   * GET RESULTS
+   * -------------------------------------------------- */
+  public function get() {
+    $offset = ($this->currentPage - 1) * $this->perPage;
 
-  public function get(): array {
-    if (!$this->table) {
-      throw new Exception('No se ha definido la tabla con ->from()');
-    }
+    $where = $this->compileWhere();
 
-    $offset       = ($this->currentPage - 1) * $this->perPage;
-    $params       = [];
-    $whereClauses = [];
-
-    // Búsqueda
-    if ($this->searchTerm && $this->searchColumns) {
-      $parts = [];
-      foreach ($this->searchColumns as $i => $col) {
-        $key          = ":search$i";
-        $parts[]      = "$col LIKE $key";
-        $params[$key] = "%{$this->searchTerm}%";
-      }
-      $whereClauses[] = '(' . implode(' OR ', $parts) . ')';
-    }
-
-    // Condiciones adicionales
-    foreach ($this->conditions as $cond) {
-      $whereClauses[] = $cond['sql'];
-      if (!empty($cond['param'])) {
-        $params[$cond['param']] = $cond['value'];
-      }
-    }
-
-    $whereSQL = $whereClauses ? 'WHERE ' . implode(' AND ', $whereClauses) : '';
-    $joinSQL  = $this->joins ? ' ' . implode(' ', $this->joins) : '';
-    $colStr   = implode(', ', $this->columns);
-
-    // Consulta principal
-    $sql = "SELECT $colStr FROM {$this->table} $joinSQL $whereSQL
-            ORDER BY {$this->orderColumn} {$this->orderDirection}
-            LIMIT :offset, :limit";
+    $sql = "SELECT " . implode(', ', $this->columns)
+      . " FROM {$this->table}"
+      . ($this->joins ? ' ' . implode(' ', $this->joins) : '')
+      . ($where ? ' WHERE ' . $where : '')
+      . ($this->groupBy ? ' GROUP BY ' . implode(', ', $this->groupBy) : '')
+      . ($this->orderColumn ? " ORDER BY {$this->orderColumn} {$this->orderDirection}" : '')
+      . " LIMIT :offset, :limit";
 
     $stmt = $this->pdo->prepare($sql);
 
-    foreach ($params as $k => $v) {
-      $stmt->bindValue($k, $v);
+    foreach ($this->bindings as $key => $value) {
+      $stmt->bindValue($key, $value);
     }
 
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->bindValue(':limit', $this->perPage, PDO::PARAM_INT);
+
+    $stmt->execute();
+    $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+    $this->countTotal($where);
+
+    return $results;
+  }
+
+  /* --------------------------------------------------
+   * COMPILE WHERE (UNA SOLA VEZ)
+   * -------------------------------------------------- */
+  protected function compileWhere() {
+    if ($this->compiledWhere !== null) {
+      return $this->compiledWhere;
+    }
+
+    $this->compiledWhere = implode(' AND ', $this->wheres);
+    return $this->compiledWhere;
+  }
+
+  /* --------------------------------------------------
+   * COUNT TOTAL (REUSA WHERE)
+   * -------------------------------------------------- */
+  protected function countTotal($where) {
+    $sql = "SELECT COUNT(*) FROM {$this->table}"
+      . ($this->joins ? ' ' . implode(' ', $this->joins) : '')
+      . ($where ? ' WHERE ' . $where : '');
+
+    $stmt = $this->pdo->prepare($sql);
+
+    foreach ($this->bindings as $key => $value) {
+      $stmt->bindValue($key, $value);
+    }
+
     $stmt->execute();
 
-    $rows = $stmt->fetchAll($this->fetchMode);
-
-    // Conteo total
-    $countSQL  = "SELECT COUNT(*) FROM {$this->table} $joinSQL $whereSQL";
-    $countStmt = $this->pdo->prepare($countSQL);
-
-    foreach ($params as $k => $v) {
-      $countStmt->bindValue($k, $v);
-    }
-
-    $countStmt->execute();
-    $this->totalItems = (int) $countStmt->fetchColumn();
+    $this->totalItems = (int) $stmt->fetchColumn();
     $this->totalPages = (int) ceil($this->totalItems / $this->perPage);
-
-    return $rows;
   }
 
-  public function renderLinks(string $baseUrl = '?'): string {
-    if ($this->totalPages <= 1)
+  /* --------------------------------------------------
+   * RENDER LINKS (COMPLETO, SIN CAMBIOS)
+   * -------------------------------------------------- */
+  public function renderLinks($baseUrl = '?') {
+    if ($this->totalPages <= 1) {
       return '';
+    }
 
-    $html = '<nav><ul class="pagination justify-content-end m-0">';
-
+    $offset = ($this->currentPage - 1) * $this->perPage;
+    $limit  = $this->perPage;
     $search = urlencode($this->searchTerm);
     $page   = $this->currentPage;
-    $last   = $this->totalPages;
+    $total  = $this->totalPages;
 
-    // Botón "Primero" <<
-    $disabled = $page == 1 ? ' disabled' : '';
-    $html .= '<li class="page-item' . $disabled . '">
-              <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=1">&laquo;&laquo;</a>
-            </li>';
+    $html = '<div class="row">
+            <div class="col-md-6">
+                <p>Mostrando ' . ($offset + 1) . ' a ' . min($offset + $limit, $this->totalItems) . ' de ' . $this->totalItems . ' entradas</p>
+            </div>
+            <div class="col-md-6">
+                <ul class="pagination justify-content-end">';
 
-    // Botón "Anterior" <
-    $disabled = $page == 1 ? ' disabled' : '';
-    $html .= '<li class="page-item' . $disabled . '">
-              <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . ($page - 1) . '">&laquo;</a>
-            </li>';
+    if ($page > 1) {
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . ($page - 1) . '">Anterior</a></li>';
+    }
 
-    // Rango de páginas visible
-    $range = 2; // cantidad de páginas a mostrar alrededor de la actual
-    $start = max(1, $page - $range);
-    $end   = min($last, $page + $range);
-
-    // Mostrar primera página y puntos suspensivos si es necesario
-    if ($start > 1) {
+    if ($page > 3) {
       $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=1">1</a></li>';
-      if ($start > 2) {
+      if ($page > 4) {
         $html .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
       }
     }
 
-    // Páginas del rango
-    for ($i = $start; $i <= $end; $i++) {
-      $active = $i == $page ? ' active' : '';
-      $html .= "<li class='page-item{$active}'><a class='page-link' href='{$baseUrl}search={$search}&page={$i}'>{$i}</a></li>";
+    for ($i = max(1, $page - 2); $i <= min($page + 2, $total); $i++) {
+      $active  = $i === $page ? ' active' : '';
+      $html   .= '<li class="page-item' . $active . '"><a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . $i . '">' . $i . '</a></li>';
     }
 
-    // Mostrar puntos y última página
-    if ($end < $last) {
-      if ($end < $last - 1) {
+    if ($page < $total - 2) {
+      if ($page < $total - 3) {
         $html .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
       }
-      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . $last . '">' . $last . '</a></li>';
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . $total . '">' . $total . '</a></li>';
     }
 
-    // Botón "Siguiente" >
-    $disabled = $page == $last ? ' disabled' : '';
-    $html .= '<li class="page-item' . $disabled . '">
-              <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . ($page + 1) . '">&raquo;</a>
-            </li>';
+    if ($page < $total) {
+      $html .= '<li class="page-item"><a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . ($page + 1) . '">Siguiente</a></li>';
+    }
 
-    // Botón "Último" >>
-    $disabled = $page == $last ? ' disabled' : '';
-    $html .= '<li class="page-item' . $disabled . '">
-              <a class="page-link" href="' . $baseUrl . 'search=' . $search . '&page=' . $last . '">&raquo;&raquo;</a>
-            </li>';
-
-    $html .= '</ul></nav>';
+    $html .= '</ul></div></div>';
 
     return $html;
-  }
-
-  public function toJSON(): void {
-    $data = $this->get();
-    echo json_encode([
-      'page'       => $this->currentPage,
-      'totalPages' => $this->totalPages,
-      'totalItems' => $this->totalItems,
-      'data'       => $data
-    ], JSON_UNESCAPED_UNICODE);
   }
 }
