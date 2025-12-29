@@ -17,7 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute([':value' => $value, ':key' => $key]);
   }
 
-  $notifier->add('Configuración de reCAPTCHA actualizada correctamente.', 'success');
+  $notifier
+    ->message("Se actualizó de manera correcta")
+    ->bootstrap()
+    ->success()
+    ->add();
   header("Refresh:0");
   exit();
 }

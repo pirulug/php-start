@@ -17,7 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
   }
 
-  $notifier->add('Se actualizó de manera correcta', 'success');
+  $notifier
+    ->message("Se actualizó de manera correcta")
+    ->bootstrap()
+    ->success()
+    ->add();
   header("Refresh:0");
   exit();
 }

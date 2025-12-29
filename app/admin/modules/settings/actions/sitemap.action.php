@@ -41,5 +41,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $xml->asXML($file_path);
 
   // Mensaje de éxito
-  echo '<script>alert("Sitemap actualizado correctamente."); window.location.href = "";</script>';
+  $notifier
+    ->message("Se actualizó de manera correcta")
+    ->bootstrap()
+    ->success()
+    ->add();
+  header("Location:" . $_SERVER['REQUEST_URI']);
+  exit();
 }

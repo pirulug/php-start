@@ -13,7 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $content = $_POST["content"];
   file_put_contents($file_path, $content);
 
-  $notifier->add('Se actualizo de manera correcta', 'success', "toast");
+  $notifier
+    ->message("Se actualizó de manera correcta")
+    ->bootstrap()
+    ->success()
+    ->add();
   header("Location:" . $_SERVER['REQUEST_URI']);
   exit();
 }

@@ -3,7 +3,7 @@
 /******************************
  * VARIABLES Y CONFIGURACIÓN
  ******************************/
-$backupDir = BASE_DIR . '/uploads/backups';
+$backupDir = BASE_DIR . '/storage/uploads/backups';
 if (!is_dir($backupDir))
   mkdir($backupDir, 0777, true);
 $action = $_GET['action'] ?? '';
@@ -21,13 +21,13 @@ if ($action === 'backup') {
 
   foreach ($tables as $table) {
     // Crear tabla
-    $result    = $connect->query("SHOW CREATE TABLE `$table`")->fetch(PDO::FETCH_ASSOC);
+    $result     = $connect->query("SHOW CREATE TABLE `$table`")->fetch(PDO::FETCH_ASSOC);
     $sqlScript .= "\n\n" . $result['Create Table'] . ";\n\n";
 
     // Insertar datos
     $rows = $connect->query("SELECT * FROM `$table`")->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $row) {
-      $values    = array_map(function ($v) use ($connect) {
+      $values     = array_map(function ($v) use ($connect) {
         return $v === null ? "NULL" : $connect->quote($v);
       }, array_values($row));
       $sqlScript .= "INSERT INTO `$table` VALUES (" . implode(", ", $values) . ");\n";
@@ -36,6 +36,11 @@ if ($action === 'backup') {
   }
 
   file_put_contents($filepath, $sqlScript);
+  $notifier
+    ->message("Respaldo creado correctamente")
+    ->bootstrap()
+    ->success()
+    ->add();
   header("Location: " . $_SERVER['HTTP_REFERER']);
   exit;
 }
@@ -74,9 +79,18 @@ if ($action === 'restore' && !empty($_GET['file'])) {
       $connect->exec("SET FOREIGN_KEY_CHECKS = 1;");
 
     } catch (PDOException $e) {
-      die("Error durante la restauración: " . $e->getMessage());
+      $notifier
+        ->message("Error durante la restauración: " . $e->getMessage())
+        ->bootstrap()
+        ->danger()
+        ->add();
     }
   }
+  $notifier
+    ->message("Respaldo restaurado correctamente")
+    ->bootstrap()
+    ->success()
+    ->add();
   header("Location: " . $_SERVER['HTTP_REFERER']);
   exit;
 }
@@ -89,6 +103,12 @@ if ($action === 'delete' && !empty($_GET['file'])) {
   $filepath = "$backupDir/$file";
   if (file_exists($filepath))
     unlink($filepath);
+
+  $notifier
+    ->message("Respaldo eliminado correctamente")
+    ->bootstrap()
+    ->success()
+    ->add();
   header("Location: " . $_SERVER['HTTP_REFERER']);
   exit;
 }
