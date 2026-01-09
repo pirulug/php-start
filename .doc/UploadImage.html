@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>UploadImage - Documentación</title>
+</head>
+
+<body>
+
+  <h1>UploadImage</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>UploadImage</strong> permite subir y procesar imágenes en PHP
+    mediante una interfaz fluent (encadenamiento de métodos).
+  </p>
+  <p>
+    Soporta carga de imágenes desde <strong>formularios ($_FILES)</strong> o
+    desde una <strong>URL remota</strong>, con validación de tamaño, extensiones,
+    conversión de formato, optimización de calidad y generación de variantes redimensionadas.
+  </p>
+  <p>
+    Utiliza <strong>Imagick</strong> si está disponible y realiza fallback automático
+    a <strong>GD</strong> para la conversión básica de imágenes.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Subir imagen desde input file (uso básico)</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->upload();
+  </pre>
+
+  <h3>2. Subir imagen desde input file con conversión a WebP</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->convertTo('webp')
+  ->upload();
+  </pre>
+
+  <h3>3. Subir imagen con límite de tamaño personalizado</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->maxSize(1048576)
+  ->upload();
+  </pre>
+
+  <h3>4. Subir imagen permitiendo solo extensiones específicas</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->supported(['jpg', 'png'])
+  ->upload();
+  </pre>
+
+  <h3>5. Subir imagen con nombre personalizado</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->fileName('mi_imagen')
+  ->upload();
+  </pre>
+
+  <h3>6. Subir imagen con prefijo personalizado</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->prefix('poster_')
+  ->upload();
+  </pre>
+
+  <h3>7. Subir imagen con optimización de calidad</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->optimize(8)
+  ->upload();
+  </pre>
+
+  <h3>8. Redimensionar imagen principal por ancho</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->width(300)
+  ->upload();
+  </pre>
+
+  <h3>9. Redimensionar imagen principal por alto</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->height(400)
+  ->upload();
+  </pre>
+
+  <h3>10. Crear variantes redimensionadas</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->resize('thumb', 150, 150)
+  ->resize('medium', 300, 0)
+  ->resize('large', 0, 600)
+  ->upload();
+  </pre>
+
+  <h3>11. Subir imagen desde URL</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->url('https://example.com/image.jpg')
+  ->dir(__DIR__ . '/uploads')
+  ->upload();
+  </pre>
+
+  <h3>12. Subir imagen desde URL con conversión y resize</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->url('https://example.com/image.jpg')
+  ->dir(__DIR__ . '/uploads')
+  ->convertTo('webp')
+  ->width(400)
+  ->resize('thumb', 120, 120)
+  ->upload();
+  </pre>
+
+  <h3>13. Flujo completo recomendado</h3>
+  <pre>
+$upload = (new UploadImage())
+  ->file($_FILES['imagen'])
+  ->dir(__DIR__ . '/uploads')
+  ->supported(['jpg', 'png', 'webp'])
+  ->maxSize(2097152)
+  ->prefix('img_')
+  ->convertTo('webp')
+  ->optimize(7)
+  ->width(300)
+  ->resize('thumb', 120, 120)
+  ->resize('preview', 400, 0)
+  ->upload();
+  </pre>
+
+  <h2>Resultado del método upload()</h2>
+  <p>El método <strong>upload()</strong> retorna un array con la siguiente estructura:</p>
+
+  <pre>
+[
+  'success'   => true|false,
+  'message'   => string,
+  'file_name' => string,
+  'file_path' => string,
+  'resized'   => [
+    'key' => [
+      'file' => string,
+      'path' => string
+    ]
+  ]
+]
+  </pre>
+
+</body>
+
+</html>
