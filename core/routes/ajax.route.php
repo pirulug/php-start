@@ -8,4 +8,6 @@ Router::prefix(PATH_AJAX, CTX_AJAX, function () {
   Router::get('visitors')
     ->action(BASE_DIR . "/app/ajax/visitors.php");
 
+  Router::get("mail")
+    ->action(BASE_DIR . "/app/ajax/mail.php");
 });

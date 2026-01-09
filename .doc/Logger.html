@@ -12,17 +12,17 @@
 
   <h2>Descripción</h2>
   <p>
-    La clase <strong>Logger</strong> se encarga del registro y gestión de logs del sistema.
-    Permite almacenar mensajes informativos, advertencias, errores y mensajes de depuración
-    en archivos de texto organizados por fecha.
+    La clase <strong>Logger</strong> proporciona un sistema de logging estructurado
+    con niveles explícitos y soporte para subcarpetas automáticas por dominio.
   </p>
   <p>
-    Soporta distintos niveles de log, contexto adicional en formato estructurado y
-    detección automática del entorno de ejecución (web o CLI).
+    Permite registrar eventos del sistema en archivos diarios, organizados
+    opcionalmente por contexto o módulo (scope), facilitando la depuración,
+    auditoría y monitoreo de la aplicación.
   </p>
   <p>
-    Cada registro se almacena en un archivo diario (<em>YYYY-MM-DD.log</em>) dentro
-    del directorio configurado.
+    Cada entrada de log incluye fecha y hora, nivel, IP, ruta actual y
+    contexto adicional en formato estructurado.
   </p>
 
   <h2>Ejemplos de uso</h2>
@@ -32,121 +32,138 @@
 $logger = new Logger(__DIR__ . '/logs');
   </pre>
 
-  <h3>2. Registrar un mensaje informativo (INFO)</h3>
+  <h3>2. Registrar mensaje informativo (INFO)</h3>
   <pre>
 $logger
-  ->message('Aplicación iniciada')
+  ->info('Aplicación iniciada')
   ->write();
   </pre>
 
-  <h3>3. Registrar un mensaje con tipo específico</h3>
+  <h3>3. Registrar advertencia (WARNING)</h3>
   <pre>
 $logger
-  ->message('Usuario autenticado correctamente')
-  ->type('SUCCESS')
+  ->warning('Configuración incompleta')
   ->write();
   </pre>
 
-  <h3>4. Registrar una advertencia (WARNING)</h3>
+  <h3>4. Registrar error (ERROR)</h3>
   <pre>
 $logger
-  ->message('Intento de acceso no autorizado')
-  ->type('WARNING')
+  ->error('Error al conectar con la base de datos')
   ->write();
   </pre>
 
-  <h3>5. Registrar un error (ERROR)</h3>
+  <h3>5. Registrar mensaje de depuración (DEBUG)</h3>
   <pre>
 $logger
-  ->message('No se pudo conectar a la base de datos')
-  ->type('ERROR')
+  ->debug('Consulta SQL ejecutada')
   ->write();
   </pre>
 
-  <h3>6. Registrar información de depuración (DEBUG)</h3>
+  <h3>6. Registrar log con contexto adicional</h3>
   <pre>
 $logger
-  ->message('Resultado de la consulta SQL')
-  ->type('DEBUG')
-  ->write();
-  </pre>
-
-  <h3>7. Registrar un mensaje con contexto adicional</h3>
-  <pre>
-$logger
-  ->message('Creación de usuario')
-  ->type('INFO')
+  ->info('Usuario autenticado')
   ->with('user_id', 15)
-  ->with('email', 'usuario@example.com')
+  ->with('email', 'usuario@correo.com')
   ->write();
   </pre>
 
-  <h3>8. Registrar múltiples valores de contexto</h3>
-  <pre>
-$logger
-  ->message('Proceso de pago')
-  ->type('SUCCESS')
-  ->with('order_id', 1024)
-  ->with('amount', 59.99)
-  ->with('currency', 'USD')
-  ->write();
-  </pre>
-
-  <h3>9. Registrar una excepción</h3>
+  <h3>7. Registrar una excepción</h3>
   <pre>
 try {
   throw new Exception('Error de prueba');
 } catch (Throwable $e) {
   $logger
-    ->message('Excepción capturada')
-    ->type('ERROR')
+    ->error('Excepción capturada')
     ->with('exception', $e)
     ->write();
 }
   </pre>
 
-  <h3>10. Uso en scripts CLI</h3>
+  <h3>8. Uso de subcarpeta por dominio (scope)</h3>
   <pre>
 $logger
-  ->message('Script ejecutado desde consola')
-  ->type('INFO')
+  ->file('mail')
+  ->info('Correo enviado correctamente')
   ->write();
   </pre>
 
-  <h3>11. Flujo completo recomendado</h3>
+  <h3>9. Subcarpeta con error específico</h3>
   <pre>
 $logger
-  ->message('Actualización de perfil')
-  ->type('SUCCESS')
+  ->file('database')
+  ->error('Fallo en la consulta')
+  ->with('query', 'SELECT * FROM users')
+  ->write();
+  </pre>
+
+  <h3>10. Logs organizados por módulo</h3>
+  <pre>
+$logger
+  ->file('auth')
+  ->warning('Intento de acceso fallido')
+  ->with('ip', $_SERVER['REMOTE_ADDR'])
+  ->write();
+  </pre>
+
+  <h3>11. Uso en scripts CLI</h3>
+  <pre>
+$logger
+  ->file('cli')
+  ->info('Script ejecutado desde consola')
+  ->write();
+  </pre>
+
+  <h3>12. Flujo completo recomendado</h3>
+  <pre>
+$logger = new Logger(__DIR__ . '/logs');
+
+$logger
+  ->file('users')
+  ->info('Perfil actualizado')
   ->with('user_id', 20)
-  ->with('ip', $_SERVER['REMOTE_ADDR'] ?? 'CLI')
+  ->write();
+
+$logger
+  ->file('security')
+  ->warning('Intento sospechoso')
+  ->with('ip', $_SERVER['REMOTE_ADDR'])
   ->write();
   </pre>
 
-  <h2>Formato del archivo de log</h2>
-  <p>
-    Cada línea del archivo de log tiene el siguiente formato:
-  </p>
-
+  <h2>Estructura de archivos generada</h2>
   <pre>
-[YYYY-MM-DD HH:MM:SS] [TYPE] [IP] [ROUTE] Mensaje {contexto}
+logs/
+├── users/
+│   └── 2026-01-08.log
+├── security/
+│   └── 2026-01-08.log
+├── mail/
+│   └── 2026-01-08.log
+└── 2026-01-08.log
   </pre>
 
-  <h2>Niveles de log soportados</h2>
+  <h2>Formato del log</h2>
+  <pre>
+[YYYY-MM-DD HH:MM:SS] [LEVEL] [IP] [ROUTE] Mensaje {contexto}
+  </pre>
+
+  <h2>Niveles soportados</h2>
   <ul>
-    <li>ERROR</li>
-    <li>SUCCESS</li>
-    <li>WARNING</li>
     <li>INFO</li>
+    <li>WARNING</li>
+    <li>ERROR</li>
     <li>DEBUG</li>
   </ul>
 
-  <h2>Comportamiento interno</h2>
+  <h2>Notas de funcionamiento</h2>
   <ul>
-    <li>El directorio de logs se crea automáticamente si no existe</li>
-    <li>El contexto se normaliza para evitar errores de serialización</li>
-    <li>Las excepciones se almacenan como estructura de datos legible</li>
-    <li>Después de escribir un log, el estado interno se reinicia</li>
+    <li>Los logs se almacenan en archivos diarios por fecha</li>
+    <li>El dominio (scope) crea subcarpetas automáticamente</li>
+    <li>El contexto se serializa en JSON</li>
+    <li>Las excepciones se normalizan automáticamente</li>
+    <li>El estado interno se reinicia después de cada escritura</li>
   </ul>
 
 </body>

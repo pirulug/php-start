@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gravatar - Documentación</title>
+</head>
+
+<body>
+
+  <h1>Gravatar</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>Gravatar</strong> permite generar avatares de usuario
+    utilizando el servicio Gravatar a partir de una dirección de correo electrónico.
+  </p>
+  <p>
+    Proporciona una interfaz fluent para configurar el tamaño del avatar,
+    la imagen por defecto, el nivel de rating y atributos HTML personalizados.
+  </p>
+  <p>
+    Puede devolver tanto la URL del avatar como la etiqueta HTML &lt;img&gt;
+    lista para ser renderizada en una vista.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Uso básico con email y URL</h3>
+  <pre>
+$url = (new Gravatar())
+  ->email('usuario@correo.com')
+  ->url();
+  </pre>
+
+  <h3>2. Uso mediante factory estático make()</h3>
+  <pre>
+$url = Gravatar::make()
+  ->email('usuario@correo.com')
+  ->url();
+  </pre>
+
+  <h3>3. Uso rápido con factory estático email()</h3>
+  <pre>
+$url = Gravatar::email('usuario@correo.com')
+  ->url();
+  </pre>
+
+  <h3>4. Generar etiqueta &lt;img&gt; básica</h3>
+  <pre>
+$img = Gravatar::email('usuario@correo.com')
+  ->image();
+  </pre>
+
+  <h3>5. Definir tamaño personalizado</h3>
+  <pre>
+$img = Gravatar::email('usuario@correo.com')
+  ->size(300)
+  ->image();
+  </pre>
+
+  <h3>6. Definir imagen por defecto</h3>
+  <pre>
+$url = Gravatar::email('usuario@correo.com')
+  ->default('identicon')
+  ->url();
+  </pre>
+
+  <h3>7. Definir rating del avatar</h3>
+  <pre>
+$url = Gravatar::email('usuario@correo.com')
+  ->rating('pg')
+  ->url();
+  </pre>
+
+  <h3>8. Combinar tamaño, default y rating</h3>
+  <pre>
+$url = Gravatar::email('usuario@correo.com')
+  ->size(200)
+  ->default('retro')
+  ->rating('g')
+  ->url();
+  </pre>
+
+  <h3>9. Agregar atributos HTML personalizados</h3>
+  <pre>
+$img = Gravatar::email('usuario@correo.com')
+  ->attrs([
+    'class' => 'avatar rounded',
+    'alt'   => 'Avatar de usuario'
+  ])
+  ->image();
+  </pre>
+
+  <h3>10. Imagen con múltiples atributos HTML</h3>
+  <pre>
+$img = Gravatar::email('usuario@correo.com')
+  ->size(120)
+  ->default('monsterid')
+  ->attrs([
+    'class' => 'avatar-sm',
+    'alt'   => 'Perfil',
+    'loading' => 'lazy'
+  ])
+  ->image();
+  </pre>
+
+  <h3>11. Uso completo recomendado</h3>
+  <pre>
+$avatar = Gravatar::make()
+  ->email('usuario@correo.com')
+  ->size(150)
+  ->default('mp')
+  ->rating('g')
+  ->attrs([
+    'class' => 'avatar',
+    'alt'   => 'Usuario'
+  ])
+  ->image();
+  </pre>
+
+  <h3>12. Manejo de error por email no definido</h3>
+  <pre>
+try {
+  $url = (new Gravatar())->url();
+} catch (RuntimeException $e) {
+  echo $e->getMessage();
+}
+  </pre>
+
+  <h2>Valores comunes soportados</h2>
+  <ul>
+    <li>default: mp, identicon, retro, monsterid, wavatar</li>
+    <li>rating: g, pg, r, x</li>
+  </ul>
+
+  <h2>Notas de uso</h2>
+  <ul>
+    <li>El email se normaliza automáticamente en minúsculas</li>
+    <li>El hash del email se genera usando MD5</li>
+    <li>Los atributos HTML se escapan automáticamente</li>
+    <li>El método image() genera una etiqueta &lt;img&gt; completa</li>
+  </ul>
+
+</body>
+
+</html>

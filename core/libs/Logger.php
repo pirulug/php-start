@@ -3,48 +3,47 @@
 /**
  * Logger
  *
- * Clase encargada del registro y gestión de logs del sistema.
- * Permite almacenar mensajes informativos, advertencias y errores,
- * facilitando la depuración, auditoría y seguimiento de eventos.
- *
- * Soporta distintos niveles de log y formatos de salida.
+ * Sistema de logging con niveles explícitos y
+ * subcarpetas automáticas por dominio.
  *
  * @author Pirulug
  * @link   https://github.com/pirulug
  */
 class Logger {
 
-  protected string $path;
+  protected string $basePath;
   protected string $message = '';
-  protected string $type = 'INFO';
+  protected string $level = 'INFO';
   protected array $context = [];
-
-  protected array $levels = [
-    'ERROR',
-    'SUCCESS',
-    'WARNING',
-    'INFO',
-    'DEBUG'
-  ];
+  protected ?string $scope = null;
 
   public function __construct(string $path) {
-    $this->path = rtrim($path, '/');
+    $this->basePath = rtrim($path, '/');
 
-    if (!is_dir($this->path)) {
-      mkdir($this->path, 0755, true);
+    if (!is_dir($this->basePath)) {
+      mkdir($this->basePath, 0755, true);
     }
   }
 
-  public function message(string $message): self {
-    $this->reset();
-    $this->message = $message;
+  public function file(string $scope): self {
+    $this->scope = trim($scope);
     return $this;
   }
 
-  public function type(string $type): self {
-    $type       = strtoupper($type);
-    $this->type = in_array($type, $this->levels, true) ? $type : 'INFO';
-    return $this;
+  public function info(string $message): self {
+    return $this->setLevel('INFO', $message);
+  }
+
+  public function warning(string $message): self {
+    return $this->setLevel('WARNING', $message);
+  }
+
+  public function error(string $message): self {
+    return $this->setLevel('ERROR', $message);
+  }
+
+  public function debug(string $message): self {
+    return $this->setLevel('DEBUG', $message);
   }
 
   public function with(string $key, mixed $value): self {
@@ -53,18 +52,25 @@ class Logger {
   }
 
   public function write(): void {
-
     $dateTime = date('Y-m-d H:i:s');
     $day      = date('Y-m-d');
     $route    = $this->currentRoute();
     $ip       = $_SERVER['REMOTE_ADDR'] ?? 'CLI';
 
-    $file = $this->path . '/' . $day . '.log';
+    $dir = $this->scope
+      ? $this->basePath . '/' . $this->scope
+      : $this->basePath;
+
+    if (!is_dir($dir)) {
+      mkdir($dir, 0755, true);
+    }
+
+    $filePath = $dir . '/' . $day . '.log';
 
     $line = sprintf(
       '[%s] [%s] [%s] [%s] %s %s%s',
       $dateTime,
-      $this->type,
+      $this->level,
       $ip,
       $route,
       $this->message,
@@ -72,9 +78,15 @@ class Logger {
       PHP_EOL
     );
 
-    file_put_contents($file, $line, FILE_APPEND | LOCK_EX);
+    file_put_contents($filePath, $line, FILE_APPEND | LOCK_EX);
 
     $this->reset();
+  }
+
+  protected function setLevel(string $level, string $message): self {
+    $this->level   = $level;
+    $this->message = $message;
+    return $this;
   }
 
   protected function currentRoute(): string {
@@ -86,7 +98,6 @@ class Logger {
   }
 
   protected function normalize(mixed $value): mixed {
-
     if (is_resource($value)) {
       return 'RESOURCE';
     }
@@ -105,6 +116,8 @@ class Logger {
 
   protected function reset(): void {
     $this->context = [];
-    $this->type    = 'INFO';
+    $this->level   = 'INFO';
+    $this->message = '';
+    $this->scope   = null;
   }
 }
