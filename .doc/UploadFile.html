@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>UploadFile - Documentación</title>
+</head>
+
+<body>
+
+  <h1>UploadFile</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>UploadFile</strong> permite subir archivos en PHP de forma
+    segura mediante una interfaz fluent (encadenamiento de métodos).
+  </p>
+  <p>
+    Incluye validación de tamaño máximo, control de extensiones permitidas,
+    generación flexible de nombres de archivo y creación automática del
+    directorio de destino.
+  </p>
+  <p>
+    Está diseñada para trabajar con archivos enviados desde formularios HTML
+    utilizando <strong>$_FILES</strong>.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Subida básica de archivo</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->upload();
+  </pre>
+
+  <h3>2. Subir archivo con tipos permitidos personalizados</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->allowedTypes(['pdf', 'docx'])
+  ->upload();
+  </pre>
+
+  <h3>3. Subir archivo con tamaño máximo personalizado</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->maxSize(2097152)
+  ->upload();
+  </pre>
+
+  <h3>4. Subir archivo con nombre personalizado</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->name('documento_final')
+  ->upload();
+  </pre>
+
+  <h3>5. Subir archivo con prefijo personalizado</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->prefix('doc_')
+  ->upload();
+  </pre>
+
+  <h3>6. Subir archivo con nombre único automático</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->unique()
+  ->upload();
+  </pre>
+
+  <h3>7. Subir archivo usando hash del contenido</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->hash()
+  ->upload();
+  </pre>
+
+  <h3>8. Prioridad de generación de nombre</h3>
+  <p>
+    El orden de prioridad para el nombre del archivo es el siguiente:
+  </p>
+  <ol>
+    <li>hash() → SHA1 del contenido del archivo</li>
+    <li>unique() → ID único generado por PHP</li>
+    <li>name() → Nombre personalizado</li>
+    <li>Nombre único por defecto</li>
+  </ol>
+
+  <h3>9. Flujo completo recomendado</h3>
+  <pre>
+$upload = (new UploadFile())
+  ->file($_FILES['archivo'])
+  ->dir(__DIR__ . '/uploads')
+  ->allowedTypes(['pdf', 'docx', 'xlsx'])
+  ->maxSize(5242880)
+  ->prefix('file_')
+  ->hash()
+  ->upload();
+  </pre>
+
+  <h2>Resultado del método upload()</h2>
+  <p>
+    El método <strong>upload()</strong> retorna un array con la siguiente
+    estructura:
+  </p>
+
+  <pre>
+[
+  'success'   => true|false,
+  'message'   => string,
+  'file_name' => string,
+  'file_path' => string
+]
+  </pre>
+
+  <h2>Errores comunes</h2>
+  <ul>
+    <li>No se recibió ningún archivo</li>
+    <li>Error durante la subida del archivo</li>
+    <li>El archivo supera el tamaño máximo permitido</li>
+    <li>Extensión de archivo no permitida</li>
+    <li>No se pudo crear el directorio de destino</li>
+    <li>No se pudo mover el archivo al destino final</li>
+  </ul>
+
+</body>
+
+</html>

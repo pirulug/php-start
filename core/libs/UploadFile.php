@@ -1,104 +1,125 @@
 <?php
 
+/**
+ * UploadFile
+ *
+ * Clase responsable de la carga y validación de archivos.
+ * Permite definir extensiones permitidas, tamaño máximo,
+ * nombres personalizados, prefijos y generación de nombres únicos.
+ *
+ * @author Pirulug
+ * @link   https://github.com/pirulug
+ */
 class UploadFile {
-  private $file;
-  private $uploadDir;
 
-  private $allowedTypes = ['pdf', 'docx', 'xlsx', 'txt'];
-  private $maxSize = 5 * 1024 * 1024; // 5MB
-  private $customName = null;
+  private ?array $file = null;
+  private string $uploadDir;
 
-  private $result = [
-    'success'   => false,
-    'message'   => '',
-    'file_name' => null,
-    'file_path' => null
-  ];
+  private array $allowedTypes = ['pdf', 'docx', 'xlsx', 'txt'];
+  private int $maxSize = 5242880;
 
-  /** Cargar archivo desde $_FILES */
-  public function file(array $file) {
+  private ?string $customName = null;
+  private string $prefix = '';
+  private bool $useUnique = false;
+  private bool $useHash = false;
+
+  public function file(array $file): self {
     $this->file = $file;
     return $this;
   }
 
-  /** Directorio de destino */
-  public function dir(string $dir) {
+  public function dir(string $dir): self {
     $this->uploadDir = rtrim($dir, '/');
     return $this;
   }
 
-  /** Extensiones permitidas */
-  public function allowedTypes(array $types) {
-    $this->allowedTypes = $types;
+  public function allowedTypes(array $types): self {
+    $this->allowedTypes = array_map('strtolower', $types);
     return $this;
   }
 
-  /** Tamaño máximo */
-  public function maxSize(int $bytes) {
+  public function maxSize(int $bytes): self {
     $this->maxSize = $bytes;
     return $this;
   }
 
-  /** Nombre personalizado sin extensión */
-  public function name(string $name) {
-    $this->customName = $name;
+  public function name(string $name): self {
+    $this->customName = preg_replace('/\./', '', $name);
     return $this;
   }
 
-  /** Ejecutar la subida */
-  public function upload() {
-    // Verificar archivo
-    if (!isset($this->file) || $this->file['error'] !== UPLOAD_ERR_OK) {
-      return $this->fail("Error al subir el archivo.");
+  public function prefix(string $prefix): self {
+    $this->prefix = $prefix;
+    return $this;
+  }
+
+  public function unique(): self {
+    $this->useUnique = true;
+    $this->useHash   = false;
+    return $this;
+  }
+
+  public function hash(): self {
+    $this->useHash   = true;
+    $this->useUnique = false;
+    return $this;
+  }
+
+  public function upload(): array {
+
+    if (!$this->file || !isset($this->file['error'])) {
+      return $this->fail('No se recibió ningún archivo.');
     }
 
-    // Validar extensión
+    if ($this->file['error'] !== UPLOAD_ERR_OK) {
+      return $this->fail('Error al subir el archivo.');
+    }
+
+    if ($this->file['size'] > $this->maxSize) {
+      return $this->fail('El archivo excede el tamaño máximo permitido.');
+    }
+
     $ext = strtolower(pathinfo($this->file['name'], PATHINFO_EXTENSION));
 
-    if (!in_array($ext, $this->allowedTypes)) {
-      return $this->fail("La extensión .$ext no está permitida. Permitidas: " . implode(", ", $this->allowedTypes));
+    if (!$ext || !in_array($ext, $this->allowedTypes, true)) {
+      return $this->fail("Extensión .$ext no permitida.");
     }
 
-    // Validar tamaño
-    if ($this->file['size'] > $this->maxSize) {
-      return $this->fail("El archivo excede el tamaño máximo de " . ($this->maxSize / 1024 / 1024) . " MB.");
-    }
-
-    // Crear directorio si no existe
     if (!is_dir($this->uploadDir)) {
-      if (!mkdir($this->uploadDir, 0755, true) && !is_dir($this->uploadDir)) {
-        return $this->fail("No se pudo crear el directorio de destino.");
+      if (!mkdir($this->uploadDir, 0777, true) && !is_dir($this->uploadDir)) {
+        return $this->fail('No se pudo crear el directorio de destino.');
       }
     }
 
-    // Determinar nombre
-    $fileName = $this->customName
-      ? $this->customName . '.' . $ext
-      : uniqid("file_", true) . '.' . $ext;
-
-    $filePath = $this->uploadDir . "/" . $fileName;
-
-    // Mover archivo
-    if (!move_uploaded_file($this->file['tmp_name'], $filePath)) {
-      return $this->fail("Error al mover el archivo al directorio de destino.");
+    if ($this->useHash) {
+      $baseName = sha1_file($this->file['tmp_name']);
+    } elseif ($this->useUnique) {
+      $baseName = uniqid('file_', true);
+    } elseif ($this->customName) {
+      $baseName = $this->customName;
+    } else {
+      $baseName = uniqid('file_', true);
     }
 
-    return $this->success("Archivo subido con éxito.", $fileName, $filePath);
-  }
+    $fileName = $this->prefix . $baseName . '.' . $ext;
+    $filePath = $this->uploadDir . '/' . $fileName;
 
-  private function fail(string $msg) {
-    return $this->result = [
-      'success' => false,
-      'message' => $msg
+    if (!move_uploaded_file($this->file['tmp_name'], $filePath)) {
+      return $this->fail('No se pudo mover el archivo.');
+    }
+
+    return [
+      'success'   => true,
+      'message'   => 'Archivo subido correctamente.',
+      'file_name' => $fileName,
+      'file_path' => $filePath
     ];
   }
 
-  private function success(string $msg, string $name, string $path) {
-    return $this->result = [
-      'success'   => true,
-      'message'   => $msg,
-      'file_name' => $name,
-      'file_path' => $path
+  private function fail(string $message): array {
+    return [
+      'success' => false,
+      'message' => $message
     ];
   }
 }

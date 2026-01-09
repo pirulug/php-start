@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Cipher - Documentación</title>
+</head>
+
+<body>
+
+  <h1>Cipher</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>Cipher</strong> proporciona utilidades criptográficas
+    comunes para aplicaciones PHP mediante una interfaz fluent.
+  </p>
+  <p>
+    Permite cifrar y descifrar textos usando OpenSSL, generar y verificar hashes,
+    trabajar con contraseñas de forma segura y convertir números entre base 10
+    y representaciones alfanuméricas personalizadas.
+  </p>
+  <p>
+    Incluye validaciones estrictas para métodos de cifrado, claves, vectores de
+    inicialización y algoritmos hash soportados por PHP.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Configuración básica del cipher</h3>
+  <pre>
+$cipher = (new Cipher())
+  ->method('aes-256-cbc')
+  ->secretkey('mi_clave_secreta')
+  ->secretiv('1234567890123456');
+  </pre>
+
+  <h3>2. Cifrar un texto</h3>
+  <pre>
+$encrypted = $cipher->encrypt('Texto confidencial');
+  </pre>
+
+  <h3>3. Descifrar un texto</h3>
+  <pre>
+$decrypted = $cipher->decrypt($encrypted);
+  </pre>
+
+  <h3>4. Cifrado y descifrado en un solo flujo</h3>
+  <pre>
+$cipher = (new Cipher())
+  ->method('aes-256-cbc')
+  ->secretkey('clave')
+  ->secretiv('1234567890123456');
+
+$encrypted = $cipher->encrypt('Mensaje');
+$plainText = $cipher->decrypt($encrypted);
+  </pre>
+
+  <h3>5. Conversión de número base 10 a string alfabético</h3>
+  <pre>
+$result = (new Cipher())
+  ->b10ToBstr(12345);
+  </pre>
+
+  <h3>6. Conversión base 10 con distintos alfabetos</h3>
+  <pre>
+$lower = (new Cipher())->b10ToBstr(123, 'lowercase');
+$upper = (new Cipher())->b10ToBstr(123, 'uppercase');
+$nums  = (new Cipher())->b10ToBstr(123, 'numbers');
+$mixed = (new Cipher())->b10ToBstr(123, 'mixed');
+  </pre>
+
+  <h3>7. Conversión de string alfabético a base 10</h3>
+  <pre>
+$number = (new Cipher())
+  ->bstrToB10('abc');
+  </pre>
+
+  <h3>8. Conversión inversa con alfabetos personalizados</h3>
+  <pre>
+$number = (new Cipher())
+  ->bstrToB10('A1z', 'mixed');
+  </pre>
+
+  <h3>9. Generar hash de un valor</h3>
+  <pre>
+$hash = (new Cipher())
+  ->hash('valor_importante');
+  </pre>
+
+  <h3>10. Generar hash con algoritmo específico</h3>
+  <pre>
+$hash = (new Cipher())
+  ->hash('valor_importante', 'sha512');
+  </pre>
+
+  <h3>11. Verificar un hash</h3>
+  <pre>
+$isValid = (new Cipher())
+  ->verifyHash('valor_importante', $hash);
+  </pre>
+
+  <h3>12. Hash de contraseñas</h3>
+  <pre>
+$passwordHash = (new Cipher())
+  ->password('mi_password_segura');
+  </pre>
+
+  <h3>13. Verificar contraseña</h3>
+  <pre>
+$isCorrect = (new Cipher())
+  ->verifyPassword('mi_password_segura', $passwordHash);
+  </pre>
+
+  <h3>14. Verificar si una contraseña necesita rehash</h3>
+  <pre>
+$needsUpdate = (new Cipher())
+  ->needsRehash($passwordHash);
+  </pre>
+
+  <h3>15. Flujo completo recomendado</h3>
+  <pre>
+$cipher = (new Cipher())
+  ->method('aes-256-cbc')
+  ->secretkey('clave_ultra_secreta')
+  ->secretiv('1234567890123456');
+
+$token = $cipher->encrypt('user_id=15');
+$data  = $cipher->decrypt($token);
+
+$passHash = $cipher->password('password123');
+$isValid  = $cipher->verifyPassword('password123', $passHash);
+  </pre>
+
+  <h3>16. Manejo de errores por configuración incompleta</h3>
+  <pre>
+try {
+  (new Cipher())->encrypt('test');
+} catch (Throwable $e) {
+  echo $e->getMessage();
+}
+  </pre>
+
+</body>
+
+</html>

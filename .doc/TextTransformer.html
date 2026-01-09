@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>TextTransformer - Documentación</title>
+</head>
+
+<body>
+
+  <h1>TextTransformer</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>TextTransformer</strong> permite transformar y normalizar
+    textos mediante una interfaz fluent (encadenamiento de métodos).
+  </p>
+  <p>
+    Soporta reglas de reemplazo basadas en expresiones regulares, presets
+    predefinidos reutilizables, transformación de mayúsculas y minúsculas,
+    transliteración de caracteres Unicode y generación de identificadores cortos.
+  </p>
+  <p>
+    Está pensada para casos como generación de slugs, usernames seguros,
+    normalización de texto, IDs cortos y transformaciones personalizadas.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Uso básico</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Hola Mundo')
+  ->apply();
+  </pre>
+
+  <h3>2. Reemplazo personalizado con expresión regular</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Hola Mundo')
+  ->replace('/\s+/', '_')
+  ->apply();
+  </pre>
+
+  <h3>3. Convertir texto a minúsculas</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Hola Mundo')
+  ->lowercase()
+  ->apply();
+  </pre>
+
+  <h3>4. Convertir texto a mayúsculas</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Hola Mundo')
+  ->uppercase()
+  ->apply();
+  </pre>
+
+  <h3>5. Aplicar transliteración (acentos y caracteres especiales)</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Canción número uno')
+  ->transliterate()
+  ->apply();
+  </pre>
+
+  <h3>6. Generar un slug usando preset</h3>
+  <pre>
+$slug = (new TextTransformer())
+  ->text('Título del Artículo')
+  ->slug()
+  ->lowercase()
+  ->apply();
+  </pre>
+
+  <h3>7. Generar un username seguro</h3>
+  <pre>
+$username = (new TextTransformer())
+  ->text('Usuario Demo 123')
+  ->username()
+  ->lowercase()
+  ->apply();
+  </pre>
+
+  <h3>8. Aplicar preset leet</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Password')
+  ->leet()
+  ->apply();
+  </pre>
+
+  <h3>9. Aplicar preset safe</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Texto con símbolos !@#$')
+  ->safe()
+  ->apply();
+  </pre>
+
+  <h3>10. Encadenar múltiples presets</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Texto de Ejemplo!')
+  ->slug()
+  ->leet()
+  ->apply();
+  </pre>
+
+  <h3>11. Generar un identificador corto (shortId)</h3>
+  <pre>
+$id = (new TextTransformer())
+  ->shortId()
+  ->apply();
+  </pre>
+
+  <h3>12. Generar shortId con longitud personalizada</h3>
+  <pre>
+$id = (new TextTransformer())
+  ->shortId(12)
+  ->apply();
+  </pre>
+
+  <h3>13. Generar shortId con alfabeto personalizado</h3>
+  <pre>
+$id = (new TextTransformer())
+  ->shortId(6, 'abcdef0123456789')
+  ->apply();
+  </pre>
+
+  <h3>14. Resetear reglas personalizadas</h3>
+  <pre>
+$text = (new TextTransformer())
+  ->text('Texto Inicial')
+  ->replace('/\s+/', '-')
+  ->reset()
+  ->apply();
+  </pre>
+
+  <h3>15. Usar presets personalizados por configuración</h3>
+  <pre>
+$transformer = new TextTransformer([
+  'custom' => [
+    '/\s+/' => '.',
+    '/[^a-z0-9\.]/i' => ''
+  ]
+]);
+
+$result = $transformer
+  ->text('Texto Personalizado!')
+  ->custom()
+  ->apply();
+  </pre>
+
+  <h2>Presets disponibles por defecto</h2>
+  <ul>
+    <li>slug</li>
+    <li>username</li>
+    <li>leet</li>
+    <li>safe</li>
+  </ul>
+
+  <h2>Notas de funcionamiento</h2>
+  <ul>
+    <li>Las reglas se aplican en el orden en que fueron definidas</li>
+    <li>El método apply() devuelve siempre un string</li>
+    <li>Los presets se pueden invocar como métodos dinámicos</li>
+    <li>La transliteración requiere la extensión intl</li>
+    <li>Los caracteres finales '-' y '_' se eliminan automáticamente</li>
+  </ul>
+
+</body>
+
+</html>

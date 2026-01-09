@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * UploadImage
+ *
+ * Clase encargada de la carga, validación y procesamiento de imágenes.
+ * Permite definir extensiones permitidas, tamaño máximo, conversión de formato,
+ * calidad de salida, redimensionamiento, prefijos y generación de nombres únicos.
+ *
+ * @author Pirulug
+ * @link   https://github.com/pirulug
+ */
 class UploadImage {
 
   private ?array $file = null;

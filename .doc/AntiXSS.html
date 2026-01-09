@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>AntiXSS - Documentación</title>
+</head>
+
+<body>
+
+  <h1>AntiXSS</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>AntiXSS</strong> está diseñada para prevenir y mitigar
+    ataques de tipo Cross-Site Scripting (XSS) mediante la sanitización
+    y validación de datos de entrada y salida.
+  </p>
+  <p>
+    Elimina etiquetas y patrones comúnmente utilizados para la ejecución
+    de scripts maliciosos, neutraliza atributos peligrosos y permite
+    codificar caracteres especiales para un uso seguro en HTML.
+  </p>
+  <p>
+    Soporta la limpieza de cadenas individuales y de estructuras de datos
+    complejas como arrays multidimensionales, manteniendo una API simple
+    y reutilizable.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Limpieza básica de una cadena</h3>
+  <pre>
+$antixss = new AntiXSS();
+$safe = $antixss->clean($_POST['comentario']);
+  </pre>
+
+  <h3>2. Limpieza sin escapar caracteres HTML</h3>
+  <pre>
+$antixss = new AntiXSS();
+$text = $antixss->clean($_POST['contenido'], false);
+  </pre>
+
+  <h3>3. Limpieza de texto con etiquetas maliciosas</h3>
+  <pre>
+$input = '&lt;script&gt;alert("XSS")&lt;/script&gt; Texto seguro';
+$safe  = (new AntiXSS())->clean($input);
+  </pre>
+
+  <h3>4. Limpieza de atributos peligrosos</h3>
+  <pre>
+$input = '&lt;img src="x" onerror="alert(1)"&gt;';
+$safe  = (new AntiXSS())->clean($input);
+  </pre>
+
+  <h3>5. Limpieza de URLs maliciosas</h3>
+  <pre>
+$input = 'javascript:alert(1)';
+$safe  = (new AntiXSS())->clean($input);
+  </pre>
+
+  <h3>6. Limpieza de datos provenientes de formularios</h3>
+  <pre>
+$antixss = new AntiXSS();
+$data = $antixss->cleanArray($_POST);
+  </pre>
+
+  <h3>7. Limpieza de arrays anidados</h3>
+  <pre>
+$data = [
+  'nombre' => '&lt;b&gt;Juan&lt;/b&gt;',
+  'perfil' => [
+    'bio' => '&lt;script&gt;alert(1)&lt;/script&gt;Hola',
+    'web' => 'javascript:alert(2)'
+  ]
+];
+
+$cleanData = (new AntiXSS())->cleanArray($data);
+  </pre>
+
+  <h3>8. Uso combinado en entrada y salida</h3>
+  <pre>
+$antixss = new AntiXSS();
+
+$inputSeguro = $antixss->clean($_POST['mensaje']);
+echo $inputSeguro;
+  </pre>
+
+  <h3>9. Uso en APIs o servicios</h3>
+  <pre>
+$request = json_decode(file_get_contents('php://input'), true);
+$request = (new AntiXSS())->cleanArray($request);
+  </pre>
+
+  <h3>10. Flujo recomendado de seguridad</h3>
+  <pre>
+$antixss = new AntiXSS();
+
+$input  = $antixss->clean($_POST['input']);
+$output = $antixss->clean($input);
+
+echo $output;
+  </pre>
+
+  <h2>Comportamiento interno</h2>
+  <ul>
+    <li>Decodifica entidades HTML antes de aplicar filtros</li>
+    <li>Elimina etiquetas y atributos peligrosos mediante expresiones regulares</li>
+    <li>Normaliza espacios en blanco</li>
+    <li>Escapa caracteres HTML opcionalmente</li>
+    <li>Procesa arrays de forma recursiva</li>
+  </ul>
+
+  <h2>Notas de seguridad</h2>
+  <ul>
+    <li>Debe usarse como capa adicional, no como única defensa XSS</li>
+    <li>El parámetro escape controla si se codifican caracteres HTML</li>
+    <li>Ideal para sanitizar entradas de usuario y datos externos</li>
+  </ul>
+
+</body>
+
+</html>

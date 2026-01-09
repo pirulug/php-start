@@ -1,9 +1,24 @@
 <?php
 
+/**
+ * Notifier
+ *
+ * Clase encargada de la gestión y envío de notificaciones del sistema.
+ * Permite generar mensajes informativos, alertas y avisos al usuario
+ * a través de distintos canales de comunicación.
+ *
+ * Facilita la centralización de notificaciones internas, eventos
+ * del sistema y respuestas visuales o programáticas.
+ *
+ * @author Pirulug
+ * @link   https://github.com/pirulug
+ */
 class Notifier {
+
   private string $message = '';
   private string $type = 'success';
   private string $method = 'bootstrap';
+  private ?string $canMethod = null;
 
   public function __construct() {
     if (session_status() === PHP_SESSION_NONE) {
@@ -11,63 +26,59 @@ class Notifier {
     }
   }
 
-  /* ==========================================
-   * FLUENT - Construcción del mensaje
-   * ========================================== */
-
-  public function message(string $message) {
+  public function message(string $message): self {
     $this->message = $message;
     return $this;
   }
 
-  public function success(?string $message = null) {
-    if ($message !== null)
+  public function success(?string $message = null): self {
+    if ($message !== null) {
       $this->message = $message;
+    }
     $this->type = 'success';
     return $this;
   }
 
-  public function danger(?string $message = null) {
-    if ($message !== null)
+  public function danger(?string $message = null): self {
+    if ($message !== null) {
       $this->message = $message;
+    }
     $this->type = 'danger';
     return $this;
   }
 
-  public function warning(?string $message = null) {
-    if ($message !== null)
+  public function warning(?string $message = null): self {
+    if ($message !== null) {
       $this->message = $message;
+    }
     $this->type = 'warning';
     return $this;
   }
 
-  public function info(?string $message = null) {
-    if ($message !== null)
+  public function info(?string $message = null): self {
+    if ($message !== null) {
       $this->message = $message;
+    }
     $this->type = 'info';
     return $this;
   }
 
-  public function bootstrap() {
+  public function bootstrap(): self {
     $this->method = 'bootstrap';
     return $this;
   }
 
-  public function toast() {
+  public function toast(): self {
     $this->method = 'toast';
     return $this;
   }
 
-  public function sweetalert() {
+  public function sweetalert(): self {
     $this->method = 'sweetalert';
     return $this;
   }
 
-  /* ==========================================
-   * EJECUCIÓN
-   * ========================================== */
-
-  public function add() {
+  public function add(): self {
     if ($this->message === '') {
       throw new Exception('Notifier: mensaje requerido');
     }
@@ -81,27 +92,38 @@ class Notifier {
     return $this;
   }
 
-  private function reset() {
-    $this->message = '';
-    $this->type    = 'success';
-    $this->method  = 'bootstrap';
+  public function can(): self {
+    $this->canMethod = null;
+    return $this;
   }
 
-  /* ==========================================
-   * CONSULTA (can())
-   * ========================================== */
-
-  public function can(): NotifierCan {
-    return new NotifierCan();
+  public function any(): bool {
+    foreach ($this->sources() as $src) {
+      if (!empty($_SESSION[$src])) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  /* ==========================================
-   * RENDER
-   * ========================================== */
+  public function has(string $type): bool {
+    foreach ($this->sources() as $src) {
+      if (empty($_SESSION[$src])) {
+        continue;
+      }
+      foreach ($_SESSION[$src] as $msg) {
+        if ($msg['type'] === $type) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
-  public function showBootstrap() {
-    if (empty($_SESSION['bootstrap']))
+  public function showBootstrap(): void {
+    if (empty($_SESSION['bootstrap'])) {
       return;
+    }
 
     $grouped = [];
     foreach ($_SESSION['bootstrap'] as $msg) {
@@ -114,8 +136,9 @@ class Notifier {
         echo $messages[0];
       } else {
         echo "<ul class='mb-0'>";
-        foreach ($messages as $m)
+        foreach ($messages as $m) {
           echo "<li>{$m}</li>";
+        }
         echo "</ul>";
       }
       echo "<button type='button' class='btn-close' data-bs-dismiss='alert'></button></div>";
@@ -124,9 +147,10 @@ class Notifier {
     unset($_SESSION['bootstrap']);
   }
 
-  public function showToasts() {
-    if (empty($_SESSION['toast']))
+  public function showToasts(): void {
+    if (empty($_SESSION['toast'])) {
       return;
+    }
 
     echo "<script>";
     foreach ($_SESSION['toast'] as $t) {
@@ -137,9 +161,10 @@ class Notifier {
     unset($_SESSION['toast']);
   }
 
-  public function showSweetAlerts() {
-    if (empty($_SESSION['sweetalert']))
+  public function showSweetAlerts(): void {
+    if (empty($_SESSION['sweetalert'])) {
       return;
+    }
 
     echo "<script>";
     foreach ($_SESSION['sweetalert'] as $a) {
@@ -149,71 +174,16 @@ class Notifier {
 
     unset($_SESSION['sweetalert']);
   }
-}
 
-/* ==========================================================
- * OBJETO CONSULTOR (can())
- * ========================================================== */
-
-class NotifierCan {
-  private ?string $method = null;
-
-  public function bootstrap() {
-    $this->method = 'bootstrap';
-    return $this;
-  }
-
-  public function toast() {
-    $this->method = 'toast';
-    return $this;
-  }
-
-  public function sweetalert() {
-    $this->method = 'sweetalert';
-    return $this;
-  }
-
-  public function danger(): bool {
-    return $this->hasType('danger');
-  }
-
-  public function success(): bool {
-    return $this->hasType('success');
-  }
-
-  public function warning(): bool {
-    return $this->hasType('warning');
-  }
-
-  public function info(): bool {
-    return $this->hasType('info');
-  }
-
-  public function any(): bool {
-    $sources = $this->sources();
-    foreach ($sources as $src) {
-      if (!empty($_SESSION[$src]))
-        return true;
-    }
-    return false;
-  }
-
-  private function hasType(string $type): bool {
-    $sources = $this->sources();
-    foreach ($sources as $src) {
-      if (empty($_SESSION[$src]))
-        continue;
-      foreach ($_SESSION[$src] as $msg) {
-        if ($msg['type'] === $type)
-          return true;
-      }
-    }
-    return false;
+  private function reset(): void {
+    $this->message = '';
+    $this->type    = 'success';
+    $this->method  = 'bootstrap';
   }
 
   private function sources(): array {
-    return $this->method
-      ? [$this->method]
+    return $this->canMethod
+      ? [$this->canMethod]
       : ['bootstrap', 'toast', 'sweetalert'];
   }
 }

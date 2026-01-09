@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Notifier - Documentación</title>
+</head>
+
+<body>
+
+  <h1>Notifier</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>Notifier</strong> gestiona y centraliza las notificaciones
+    del sistema utilizando sesiones PHP.
+  </p>
+  <p>
+    Permite generar mensajes de éxito, error, advertencia e información,
+    almacenarlos por método de presentación y mostrarlos posteriormente
+    mediante Bootstrap Alerts, Toasts o SweetAlert.
+  </p>
+  <p>
+    Incluye métodos de validación para comprobar si existen notificaciones
+    pendientes o si existe un tipo específico antes de ejecutar lógica
+    condicional en la aplicación.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Crear una notificación básica</h3>
+  <pre>
+(new Notifier())
+  ->message('Operación realizada correctamente')
+  ->add();
+  </pre>
+
+  <h3>2. Notificación de éxito</h3>
+  <pre>
+(new Notifier())
+  ->success('Datos guardados correctamente')
+  ->add();
+  </pre>
+
+  <h3>3. Notificación de error (danger)</h3>
+  <pre>
+(new Notifier())
+  ->danger('Ocurrió un error')
+  ->add();
+  </pre>
+
+  <h3>4. Notificación de advertencia</h3>
+  <pre>
+(new Notifier())
+  ->warning('Advertencia importante')
+  ->add();
+  </pre>
+
+  <h3>5. Notificación informativa</h3>
+  <pre>
+(new Notifier())
+  ->info('Información del sistema')
+  ->add();
+  </pre>
+
+  <h3>6. Notificación usando Bootstrap (por defecto)</h3>
+  <pre>
+(new Notifier())
+  ->success('Mensaje Bootstrap')
+  ->bootstrap()
+  ->add();
+  </pre>
+
+  <h3>7. Notificación tipo Toast</h3>
+  <pre>
+(new Notifier())
+  ->info('Mensaje tipo Toast')
+  ->toast()
+  ->add();
+  </pre>
+
+  <h3>8. Notificación con SweetAlert</h3>
+  <pre>
+(new Notifier())
+  ->danger('Mensaje SweetAlert')
+  ->sweetalert()
+  ->add();
+  </pre>
+
+  <h3>9. Agregar múltiples notificaciones</h3>
+  <pre>
+$notifier = new Notifier();
+
+$notifier->success('Registro creado')->add();
+$notifier->info('Bienvenido')->add();
+$notifier->warning('Perfil incompleto')->add();
+  </pre>
+
+  <h3>10. Verificar si existen notificaciones</h3>
+  <pre>
+$notifier = new Notifier();
+
+if ($notifier->any()) {
+  echo 'Hay notificaciones pendientes';
+}
+  </pre>
+
+  <h3>11. Verificar si existe un tipo específico</h3>
+  <pre>
+$notifier = new Notifier();
+
+if ($notifier->has('danger')) {
+  echo 'Existen errores';
+}
+  </pre>
+
+  <h3>12. Uso del método can()</h3>
+  <p>
+    El método <strong>can()</strong> se utiliza para validar la existencia
+    de notificaciones antes de ejecutar acciones específicas.
+  </p>
+
+  <pre>
+$notifier = new Notifier();
+
+if ($notifier->can()->any()) {
+  echo 'Hay mensajes disponibles';
+}
+  </pre>
+
+  <h3>13. Uso de can() con validación de tipo</h3>
+  <pre>
+$notifier = new Notifier();
+
+if ($notifier->can()->has('danger')) {
+  echo 'Hay errores registrados';
+}
+  </pre>
+
+  <h3>14. Uso real con condición negativa (caso típico)</h3>
+  <pre>
+$notifier = new Notifier();
+
+if (!$notifier->can()->has('danger')) {
+  // Continuar flujo normal
+}
+  </pre>
+
+  <h3>15. Ejemplo solicitado: can() + danger()</h3>
+  <pre>
+$notifier = new Notifier();
+
+if (!$notifier->can()->danger()) {
+  // No hay mensajes de error
+}
+  </pre>
+
+  <h3>16. Mostrar notificaciones Bootstrap</h3>
+  <pre>
+(new Notifier())->showBootstrap();
+  </pre>
+
+  <h3>17. Mostrar notificaciones Toast</h3>
+  <pre>
+(new Notifier())->showToasts();
+  </pre>
+
+  <h3>18. Mostrar notificaciones SweetAlert</h3>
+  <pre>
+(new Notifier())->showSweetAlerts();
+  </pre>
+
+  <h3>19. Flujo completo recomendado</h3>
+  <pre>
+$notifier = new Notifier();
+
+$notifier->success('Operación correcta')->add();
+$notifier->warning('Advertencia')->toast()->add();
+
+if (!$notifier->can()->has('danger')) {
+  $notifier->showBootstrap();
+  $notifier->showToasts();
+}
+  </pre>
+
+</body>
+
+</html>

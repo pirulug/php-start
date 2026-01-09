@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>DataBase - Documentación</title>
+</head>
+
+<body>
+
+  <h1>DataBase</h1>
+
+  <h2>Descripción</h2>
+  <p>
+    La clase <strong>DataBase</strong> se encarga de la gestión y conexión a la
+    base de datos utilizando PDO, proporcionando una interfaz fluent para la
+    configuración de credenciales y parámetros de conexión.
+  </p>
+  <p>
+    Centraliza la creación de la conexión, aplica una configuración segura
+    por defecto y permite obtener la instancia de PDO de forma controlada.
+  </p>
+  <p>
+    Está pensada para simplificar el acceso a bases de datos MySQL y mantener
+    una arquitectura limpia y reutilizable dentro de la aplicación.
+  </p>
+
+  <h2>Ejemplos de uso</h2>
+
+  <h3>1. Configuración básica de conexión</h3>
+  <pre>
+$db = (new DataBase())
+  ->host('localhost')
+  ->name('mi_base_datos')
+  ->user('root')
+  ->password('secret')
+  ->connect();
+  </pre>
+
+  <h3>2. Configuración con charset personalizado</h3>
+  <pre>
+$db = (new DataBase())
+  ->host('localhost')
+  ->name('mi_base_datos')
+  ->user('root')
+  ->password('secret')
+  ->charset('utf8')
+  ->connect();
+  </pre>
+
+  <h3>3. Obtener la instancia PDO directamente</h3>
+  <pre>
+$pdo = (new DataBase())
+  ->host('localhost')
+  ->name('mi_base_datos')
+  ->user('root')
+  ->password('secret')
+  ->getConnection();
+  </pre>
+
+  <h3>4. Reutilización de la conexión</h3>
+  <pre>
+$db = (new DataBase())
+  ->host('localhost')
+  ->name('mi_base_datos')
+  ->user('root')
+  ->password('secret');
+
+$db->connect();
+$pdo = $db->getConnection();
+  </pre>
+
+  <h3>5. Uso en un repositorio o modelo</h3>
+  <pre>
+$db = (new DataBase())
+  ->host(DB_HOST)
+  ->name(DB_NAME)
+  ->user(DB_USER)
+  ->password(DB_PASS);
+
+$pdo = $db->getConnection();
+
+$stmt = $pdo->prepare('SELECT * FROM users');
+$stmt->execute();
+$users = $stmt->fetchAll();
+  </pre>
+
+  <h3>6. Manejo de errores de conexión</h3>
+  <pre>
+try {
+  $db = (new DataBase())
+    ->host('localhost')
+    ->name('mi_base_datos')
+    ->user('root')
+    ->password('secret')
+    ->connect();
+} catch (RuntimeException $e) {
+  echo $e->getMessage();
+}
+  </pre>
+
+  <h3>7. Uso con parámetros incompletos</h3>
+  <pre>
+try {
+  (new DataBase())
+    ->host('localhost')
+    ->name('mi_base_datos')
+    ->connect();
+} catch (RuntimeException $e) {
+  echo $e->getMessage();
+}
+  </pre>
+
+  <h3>8. Flujo completo recomendado</h3>
+  <pre>
+$db = (new DataBase())
+  ->host('localhost')
+  ->name('app_db')
+  ->user('app_user')
+  ->password('app_pass')
+  ->charset('utf8mb4');
+
+$pdo = $db->getConnection();
+  </pre>
+
+  <h2>Configuración interna aplicada a PDO</h2>
+  <ul>
+    <li>Modo de errores configurado como excepciones</li>
+    <li>Modo de obtención de resultados por defecto en array asociativo</li>
+    <li>Emulación de prepared statements deshabilitada</li>
+  </ul>
+
+  <h2>Notas de uso</h2>
+  <ul>
+    <li>La conexión se crea una sola vez por instancia</li>
+    <li>getConnection() conecta automáticamente si aún no existe conexión</li>
+    <li>El charset por defecto es utf8mb4</li>
+    <li>Diseñada para MySQL mediante PDO</li>
+  </ul>
+
+</body>
+
+</html>
