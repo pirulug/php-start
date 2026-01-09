@@ -16,7 +16,8 @@ class MailService {
     'email'      => null,
     'password'   => null,
     'port'       => null,
-    'encryption' => null
+    'encryption' => null,
+    'name'       => 'Sistema PHP-Start'
   ];
 
   private ?string $to = null;
@@ -57,6 +58,11 @@ class MailService {
     return $this;
   }
 
+  public function name($name) {
+    $this->config['name'] = trim($name);
+    return $this;
+  }
+
   public function init(): self {
     if (!$this->configIsValid()) {
       $this->initialized = false;
@@ -70,7 +76,7 @@ class MailService {
     $this->mail->Password   = $this->config['password'];
     $this->mail->Port       = $this->config['port'];
     $this->mail->SMTPSecure = $this->config['encryption'] ?: PHPMailer::ENCRYPTION_STARTTLS;
-    $this->mail->setFrom($this->config['email'], 'Sistema PHP-Start');
+    $this->mail->setFrom($this->config['email'], $this->config['name']);
 
     $this->initialized = true;
     return $this;

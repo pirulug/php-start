@@ -1,3 +1,7 @@
+<?php start_block("title") ?>
+SMTP
+<?php end_block() ?>
+
 <div class="card">
   <div class="card-header bg-transparent py-3">
     <h5 class="card-title mb-0 d-flex align-items-center gap-2">
@@ -66,10 +70,13 @@
 
       <div class="d-flex justify-content-between align-items-center pt-3">
         <button id="testMail" type="button" class="btn btn-outline-secondary d-flex align-items-center gap-2">
-          <i id="loading" class="fa fa-spinner fa-spin d-none"></i>
-          <i class="fa-solid fa-paper-plane"></i>
-          <span>Probar Conexión</span>
+          <span id="loading" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+
+          <i id="iconSend" class="fa-solid fa-paper-plane"></i>
+
+          <span id="btnText">Probar Conexión</span>
         </button>
+
 
         <button class="btn btn-primary px-4" type="submit">
           <i class="fa-solid fa-floppy-disk me-2"></i>Guardar
@@ -80,7 +87,7 @@
   </div>
 </div>
 
-
+<?php start_block("js") ?>
 <script>
   function togglePass() {
     const input = document.getElementById('smtpPass');
@@ -103,3 +110,4 @@
 </script>
 
 <script src="<?= APP_URL ?>/static/scripts/test-mail.js"></script>
+<?php end_block() ?>

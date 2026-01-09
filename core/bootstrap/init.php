@@ -54,6 +54,14 @@ if (isset($_SESSION['signin']) && $_SESSION['signin'] === true) {
 // Options
 $config = new SiteConfig($connect);
 
+// Mail
+define('MAIL_NAME', $config->get("site_name"));
+define('MAIL_HOST', $config->get("smtp_host"));
+define('MAIL_EMAIL', $config->get("smtp_email"));
+define('MAIL_PASSWORD', $config->get("smtp_password"));
+define('MAIL_PORT', $config->get("smtp_port"));
+define('MAIL_ENCRYPTION', $config->get("smtp_encryption"));
+
 // Timezone
 date_default_timezone_set($config->get('site_timezone', 'America/Lima'));
 

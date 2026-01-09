@@ -1,11 +1,5 @@
 <?php
 
-define('MAIL_HOST', 'mail.pirulug.pw');
-define('MAIL_EMAIL', 'no-reply@pirulug.pw');
-define('MAIL_PASSWORD', 'IB0]}]oynY=Qkgk*');
-define('MAIL_PORT', 587);
-define('MAIL_ENCRYPTION', 'tls');
-
 require_once BASE_DIR . '/core/services/MailService.php';
 
 // Validación del método HTTP
@@ -62,6 +56,7 @@ if (!empty($errors)) {
 try {
 
   $mail = (new MailService())
+    ->name(MAIL_NAME)
     ->host(MAIL_HOST)
     ->email(MAIL_EMAIL)
     ->password(MAIL_PASSWORD)
