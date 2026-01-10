@@ -27,6 +27,7 @@ if (isset($_COOKIE['php-start'])) {
 }
 
 $log->info("Usuario ha cerrado sesión")
+  ->file("dashboard")
   ->write();
 
 // 5. Redirigir al login

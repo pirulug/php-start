@@ -67,6 +67,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
 
+  // Validar contraseña
+  if (strlen($password) < 6) {
+    $notifier
+      ->message("La contraseña debe tener al menos 6 caracteres.")
+      ->danger()
+      ->bootstrap()
+      ->add();
+  }
+
   // Validar rol y estatus
   if (empty($role_id) && $role_id !== '') {
     $notifier
@@ -75,11 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ->bootstrap()
       ->add();
   }
-
-  // if (!in_array($role_id, [2, 3])) {
-  //   $notifier->add("Seleccionar rol.", "danger");
-  //   // $log->log('error', "Rol inválido", $role_id);
-  // }
 
   if (!in_array($user_status, [0, 1])) {
     $notifier
@@ -121,17 +125,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Si no hay errores, insertar
   if (!$notifier->can()->danger()) {
-    $hashed_password = $cipher->encrypt($password);
+    $hashed_password = $cipher->password($password);
 
     try {
       $query     = "INSERT INTO users 
-        (user_login, user_email, role_id, user_status, user_password, user_image, user_updated) 
+        (user_login, user_email, user_nickname, user_display_name, role_id, user_status, user_password, user_image, user_updated) 
         VALUES 
-        (:user_login, :user_email, :role_id, :user_status, :user_password, :user_image, CURRENT_TIME)";
+        (:user_login, :user_email, :user_nickname, :user_display_name, :role_id, :user_status, :user_password, :user_image, CURRENT_TIME)";
       $statement = $connect->prepare($query);
 
       $statement->bindParam(':user_login', $user_login);
       $statement->bindParam(':user_email', $user_email);
+      $statement->bindParam(':user_nickname', $user_login);
+      $statement->bindParam(':user_display_name', $user_login);
       $statement->bindParam(':role_id', $role_id);
       $statement->bindParam(':user_status', $user_status);
       $statement->bindParam(':user_password', $hashed_password);

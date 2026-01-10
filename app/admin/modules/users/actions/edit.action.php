@@ -110,15 +110,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
 
-  // Contraseña
-  if (strlen($user_password) < 6) {
+  if ($user_password === '') {
+    $user_password = $user->user_password;
+  } elseif (strlen($user_password) < 6) {
     $notifier
       ->message("La contraseña debe tener al menos 6 caracteres.")
       ->bootstrap()
       ->danger()
       ->add();
+    $user_password = $user->user_password;
   } else {
-    $user_password = $cipher->encrypt($user_password);
+    $user_password = $cipher->password($user_password);
   }
 
   // Validar selected

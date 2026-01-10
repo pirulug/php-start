@@ -187,40 +187,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Cambio de contraseña (sin cambios)
   if (isset($_POST['change_password'])) {
-    $currentPassword = trim($_POST['current_password']);
-    $newPassword     = trim($_POST['password']);
-    $confirmPassword = trim($_POST['confirm_password']);
-    $userId          = $_SESSION['user_id'];
 
-    if (empty($currentPassword)) {
+    $currentPassword = trim($_POST['current_password'] ?? '');
+    $newPassword     = trim($_POST['password'] ?? '');
+    $confirmPassword = trim($_POST['confirm_password'] ?? '');
+    $userId          = (int) $_SESSION['user_id'];
+
+    // Obtener contraseña actual desde la DB
+    $sql  = "SELECT user_password FROM users WHERE user_id = :user_id LIMIT 1";
+    $stmt = $connect->prepare($sql);
+    $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if (!$user) {
+      $notifier
+        ->message("Usuario no encontrado.")
+        ->danger()
+        ->bootstrap()
+        ->add();
+    }
+
+    // Validar contraseña actual
+    if ($currentPassword === '') {
       $notifier
         ->message("El campo 'Contraseña actual' no puede estar vacío.")
         ->danger()
         ->bootstrap()
         ->add();
-    } else {
-      $currentPasswordEncrypted = $cipher->encrypt($currentPassword);
-      $sql                      = "SELECT user_password FROM users WHERE user_id = :user_id";
-      $stmt                     = $connect->prepare($sql);
-      $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-      $stmt->execute();
-      $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-      if (!$user || $currentPasswordEncrypted !== $user->user_password) {
-        $notifier
-          ->message("La contraseña actual es incorrecta.")
-          ->danger()
-          ->bootstrap()
-          ->add();
-      }
-    }
-
-    if (empty($newPassword) || empty($confirmPassword)) {
+    } elseif (!$cipher->verifyPassword($currentPassword, $user->user_password)) {
       $notifier
-        ->message("El campo 'Nueva contraseña' y 'Confirmar contraseña' no pueden estar vacíos.")
+        ->message("La contraseña actual es incorrecta.")
         ->danger()
         ->bootstrap()
         ->add();
+    }
+
+    // Validar nueva contraseña
+    if ($newPassword === '' || $confirmPassword === '') {
+      $notifier
+        ->message("La nueva contraseña y la confirmación no pueden estar vacías.")
+        ->danger()
+        ->bootstrap()
+        ->add();
+
+    } elseif (strlen($newPassword) < 6) {
+      $notifier
+        ->message("La nueva contraseña debe tener al menos 6 caracteres.")
+        ->danger()
+        ->bootstrap()
+        ->add();
+
     } elseif ($newPassword !== $confirmPassword) {
       $notifier
         ->message("La nueva contraseña y la confirmación no coinciden.")
@@ -229,11 +247,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ->add();
     }
 
+    // Actualizar contraseña
     if (!$notifier->can()->danger()) {
-      $hashedPassword = $cipher->encrypt($newPassword);
-      $sql            = "UPDATE users SET user_password = :new_password WHERE user_id = :user_id";
-      $stmt           = $connect->prepare($sql);
-      $stmt->bindParam(':new_password', $hashedPassword, PDO::PARAM_STR);
+
+      $newHashedPassword = $cipher->password($newPassword);
+
+      $sql  = "UPDATE users SET user_password = :password WHERE user_id = :user_id";
+      $stmt = $connect->prepare($sql);
+      $stmt->bindParam(':password', $newHashedPassword, PDO::PARAM_STR);
       $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
       if ($stmt->execute()) {
@@ -242,8 +263,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           ->success()
           ->bootstrap()
           ->add();
-        header("Refresh: 0");
+
+        header("Location: " . $_SERVER['REQUEST_URI']);
         exit();
+
       } else {
         $notifier
           ->message("Hubo un error al actualizar la contraseña.")
@@ -251,6 +274,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           ->bootstrap()
           ->add();
       }
+    } else {
+      header("Location: " . $_SERVER['REQUEST_URI']);
+      exit();
     }
   }
 }
