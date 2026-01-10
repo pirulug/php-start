@@ -2,193 +2,227 @@
 
 Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
 
-  Router::get('login')
+  Router::route('')
     ->action(admin_action("auth.login"))
     ->view(admin_view("auth.login"))
-    ->layout(admin_layout("auth"));
+    ->layout(admin_layout("auth"))
+    ->register();
 
-  Router::get('logout')
-    ->action(admin_action("auth.logout"));
+  Router::route('login')
+    ->action(admin_action("auth.login"))
+    ->view(admin_view("auth.login"))
+    ->layout(admin_layout("auth"))
+    ->register();
 
-  Router::get('dashboard')
+  Router::route('logout')
+    ->action(admin_action("auth.logout"))
+    ->register();
+
+  Router::route('dashboard')
     ->action(admin_action("dashboard.dashboard"))
     ->view(admin_view("dashboard.dashboard"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'dashboard.dashboard');
+    ->permission("dashboard.dashboard")
+    ->register();
 
   // Account
-  Router::get('account/profile')
+  Router::route('account/profile')
     ->action(admin_action("account.profile"))
     ->view(admin_view("account.profile"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'account.profile');
+    ->permission( 'account.profile')
+    ->register();
 
-  Router::get('account/settings')
+  Router::route('account/settings')
     ->action(admin_action("account.settings"))
     ->view(admin_view("account.settings"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'account.settings');
+    ->permission( 'account.settings')
+    ->register();
 
   // Users
-  Router::get('users')
+  Router::route('users')
     ->action(admin_action("users.list"))
     ->view(admin_view("users.list"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'users.list');
+    ->permission( 'users.list')
+    ->register();
 
-  Router::get('user/new')
+  Router::route('user/new')
     ->action(admin_action("users.new"))
     ->view(admin_view("users.new"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'users.new');
+    ->permission( 'users.new')
+    ->register();
 
-  Router::get('user/edit/{id}')
+  Router::route('user/edit/{id}')
     ->action(admin_action("users.edit"))
     ->view(admin_view("users.edit"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'users.edit');
+    ->permission('users.edit')
+    ->register();
 
-  Router::get('user/delete/{id}')
+  Router::route('user/delete/{id}')
     ->action(admin_action("users.delete"))
     ->middleware('auth_admin')
-    ->middleware('permission', 'users.delete');
+    ->permission( 'users.delete')
+    ->register();
 
   // Roles
-  Router::get('roles')
+  Router::route('roles')
     ->middleware('auth_admin')
-    ->middleware('permission', 'roles.list')
+    ->permission( 'roles.list')
     ->action(admin_action("roles.list"))
     ->view(admin_view("roles.list"))
-    ->layout(admin_layout());
+    ->layout(admin_layout())
+    ->register();
 
-  Router::get('rol/new')
+  Router::route('rol/new')
     ->action(admin_action("roles.new"))
     ->view(admin_view("roles.new"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'roles.new');
+    ->permission( 'roles.new')
+    ->register();
 
-  Router::get('rol/edit/{id}')
+  Router::route('rol/edit/{id}')
     ->action(admin_action("roles.edit"))
     ->view(admin_view("roles.edit"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'roles.edit');
+    ->permission( 'roles.edit')
+    ->register();
 
-  Router::get('rol/delete/{id}')
+  Router::route('rol/delete/{id}')
     ->action(admin_action("roles.delete"))
     ->middleware('auth_admin')
-    ->middleware('permission', 'roles.delete');
+    ->permission( 'roles.delete')
+    ->register();
 
   // Permisions
-  Router::get('permissions')
+  Router::route('permissions')
     ->action(admin_action("permissions.list"))
     ->view(admin_view("permissions.list"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'permissions.list');
+    ->permission( 'permissions.list')
+    ->register();
 
-  Router::get('permission/new')
+  Router::route('permission/new')
     ->action(admin_action("permissions.new"))
     ->view(admin_view("permissions.new"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'permissions.new');
+    ->permission( 'permissions.new')
+    ->register();
 
-  Router::get('permission/edit/{id}')
+  Router::route('permission/edit/{id}')
     ->action(admin_action("permissions.edit"))
     ->view(admin_view("permissions.edit"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'permissions.edit');
+    ->permission( 'permissions.edit')
+    ->register();
 
-  Router::get('permission/delete/{id}')
+  Router::route('permission/delete/{id}')
     ->action(admin_action("permissions.delete"))
     ->middleware('auth_admin')
-    ->middleware('permission', 'permissions.delete');
+    ->permission( 'permissions.delete')
+    ->register();
 
   // Settings
-  Router::get('settings/general')
+  Router::route('settings/general')
     ->action(admin_action("settings.general"))
     ->view(admin_view("settings.general"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.general');
+    ->permission( 'settings.general')
+    ->register();
 
-  Router::get('settings/backups')
+  Router::route('settings/backups')
     ->action(admin_action("settings.backups"))
     ->view(admin_view("settings.backups"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.backups');
+    ->permission( 'settings.backups')
+    ->register();
 
-  Router::get('settings/brand')
+  Router::route('settings/brand')
     ->action(admin_action("settings.brand"))
     ->view(admin_view("settings.brand"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.brand');
+    ->permission( 'settings.brand')
+    ->register();
 
-  Router::get('settings/captcha')
+  Router::route('settings/captcha')
     ->action(admin_action("settings.captcha"))
     ->view(admin_view("settings.captcha"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.captcha');
+    ->permission( 'settings.captcha')
+    ->register();
 
-  Router::get('settings/date_time')
+  Router::route('settings/date_time')
     ->action(admin_action("settings.date_time"))
     ->view(admin_view("settings.date_time"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.date_time');
+    ->permission( 'settings.date_time')
+    ->register();
 
-  Router::get('settings/info')
+  Router::route('settings/info')
     ->action(admin_action("settings.info"))
     ->view(admin_view("settings.info"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.info');
+    ->permission( 'settings.info')
+    ->register();
 
-  Router::get('settings/robots')
+  Router::route('settings/robots')
     ->action(admin_action("settings.robots"))
     ->view(admin_view("settings.robots"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.robots');
+    ->permission( 'settings.robots')
+    ->register();
 
-  Router::get('settings/sitemap')
+  Router::route('settings/sitemap')
     ->action(admin_action("settings.sitemap"))
     ->view(admin_view("settings.sitemap"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.sitemap');
+    ->permission( 'settings.sitemap')
+    ->register();
 
-  Router::get('settings/smtp')
+  Router::route('settings/smtp')
     ->action(admin_action("settings.smtp"))
     ->view(admin_view("settings.smtp"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.smtp');
+    ->permission( 'settings.smtp')
+    ->register();
 
-  Router::get('settings/social')
+  Router::route('settings/social')
     ->action(admin_action("settings.social"))
     ->view(admin_view("settings.social"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.social');
+    ->permission( 'settings.social')
+    ->register();
 
-  Router::get('settings/visitors')
+  Router::route('settings/visitors')
     ->action(admin_action("settings.visitors"))
     ->view(admin_view("settings.visitors"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->middleware('permission', 'settings.visitors');
+    ->permission( 'settings.visitors')
+    ->register();
 });
 

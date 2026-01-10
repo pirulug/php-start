@@ -13,14 +13,22 @@ class Router {
    * PROPIEDAD DE INSTANCIA (BUILDER)
    * ========================================================= */
 
-  protected array $route;
+  protected array $route = [];
 
   /* =========================================================
-   * CONSTRUCTOR (INTERNO)
+   * CONSTRUCTOR (BUILDER)
    * ========================================================= */
 
-  protected function __construct(array &$route) {
-    $this->route = &$route;
+  protected function __construct(string $uri) {
+    $this->route = [
+      'uri'         => $uri,
+      'action'      => null,
+      'view'        => null,
+      'layout'      => null,
+      'middlewares' => [],
+      'analytics'   => null,
+      'context'     => self::$context,
+    ];
   }
 
   /* =========================================================
@@ -41,22 +49,20 @@ class Router {
   }
 
   /* =========================================================
-   * REGISTRO DE RUTAS (GET)
+   * DEFINICIÓN DE RUTA (PASIVA)
    * ========================================================= */
 
-  public static function get(string $uri): self {
+  public static function route(string $uri): self {
     $uri = self::buildUri($uri);
+    return new self($uri);
+  }
 
-    self::$routes[$uri] = [
-      'action'      => null,
-      'view'        => null,
-      'layout'      => null,
-      'middlewares' => [],
-      'analytics'   => null,
-      'context'     => self::$context,
-    ];
+  /* =========================================================
+   * REGISTRO FINAL
+   * ========================================================= */
 
-    return new self(self::$routes[$uri]);
+  public function register(): void {
+    self::$routes[$this->route['uri']] = $this->route;
   }
 
   /* =========================================================
@@ -83,6 +89,11 @@ class Router {
     return $this;
   }
 
+  public function permission(string $permission): self {
+    $this->route['middlewares'][] = ['permission', $permission];
+    return $this;
+  }
+
   public function analytic(string $title, ?string $uri = null): self {
     $this->route['analytics'] = [
       'title' => $title,
@@ -92,7 +103,7 @@ class Router {
   }
 
   /* =========================================================
-   * RESOLVER RUTA
+   * RESOLVER RUTA (PASIVO)
    * ========================================================= */
 
   public static function resolve(string $uri): ?array {
@@ -109,9 +120,13 @@ class Router {
 
         array_shift($matches);
 
+        $params = [];
+
         foreach ($paramNames[1] as $index => $name) {
-          $_GET[$name] = $matches[$index] ?? null;
+          $params[$name] = $matches[$index] ?? null;
         }
+
+        $route['params'] = $params;
 
         return $route;
       }

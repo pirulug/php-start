@@ -4,7 +4,7 @@
 // =============================================
 
 // Obtener ID del permiso
-$permission_id = $_GET['id'] ?? null;
+$permission_id = $args['id'] ?? null;
 
 if ($permission_id <= 0) {
   $notifier

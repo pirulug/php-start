@@ -25,6 +25,7 @@ $url = isset($_GET['url']) ? trim($_GET['url'], '/') : '/';
 |--------------------------------------------------------------------------
 */
 $route = Router::resolve($url);
+$args = $route['params'] ?? []; // Parametros de {name} = $args[{name}]
 
 $requestedUrl = trim($_GET['url'] ?? '', '/');
 
@@ -32,6 +33,15 @@ $isAdmin = str_starts_with($requestedUrl, PATH_ADMIN);
 $isApi   = str_starts_with($requestedUrl, PATH_API);
 $isAjax  = str_starts_with($requestedUrl, PATH_AJAX);
 
+// DEBUG ROUTER
+// var_dump($_GET);
+// echo "<pre>";
+// var_dump($route);
+// echo "</pre>";
+// var_dump($args);
+// // {id}
+// var_dump($args["id"]);
+// exit();
 
 if (!$route) {
 
@@ -111,7 +121,7 @@ if (!empty($route['action'])) {
   if ($isApi || $isAjax) {
     header('Content-Type: application/json; charset=utf-8');
     require_once $route['action'];
-  }else{
+  } else {
     require_once $route['action'];
   }
 }

@@ -4,7 +4,7 @@
 // =============================================
 
 // Verifica que se haya recibido un ID válido
-$rol_id = $_GET['id'] ?? null;
+$rol_id = $args['id'] ?? null;
 
 if ($rol_id <= 0) {
   $notifier

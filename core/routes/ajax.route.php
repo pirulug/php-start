@@ -3,11 +3,11 @@
 
 Router::prefix(PATH_AJAX, CTX_AJAX, function () {
 
-  // header('Content-Type: application/json; charset=utf-8');
+  Router::route('visitors')
+    ->action(BASE_DIR . "/app/ajax/visitors.php")
+    ->register();
 
-  Router::get('visitors')
-    ->action(BASE_DIR . "/app/ajax/visitors.php");
-
-  Router::get("mail")
-    ->action(BASE_DIR . "/app/ajax/mail.php");
+  Router::route("mail")
+    ->action(BASE_DIR . "/app/ajax/mail.php")
+    ->register();
 });

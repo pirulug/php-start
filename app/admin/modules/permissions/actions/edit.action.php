@@ -4,7 +4,7 @@
 // OBTENER ID DEL ROL
 // =============================================
 
-$permission_id = $_GET['id'] ?? null;
+$permission_id = $args['id'] ?? null;
 
 if ($permission_id <= 0) {
   // $notifier->add("No se ha especificado un rol válido.", "warning");

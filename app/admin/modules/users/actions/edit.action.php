@@ -1,6 +1,6 @@
 <?php
 
-$id = $_GET['id'] ?? null;
+$id = $args['id'] ?? null;
 
 // Verificar ID
 if (!isset($id) || $id == "") {
