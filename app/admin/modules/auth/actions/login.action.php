@@ -183,11 +183,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ->add();
 
       // Log de acceso
-      $log->message("Usuario {$user->user_login} ha iniciado sesión")
-        ->type("success")
-        ->with("user_id", $user->user_id)
-        ->with("user_login", $user->user_login)
-        ->write();
+      // $log->message("Usuario {$user->user_login} ha iniciado sesión")
+      //   ->type("success")
+      //   ->with("user_id", $user->user_id)
+      //   ->with("user_login", $user->user_login)
+      //   ->write();
 
       // Redirigir a la URL original si existe
       if (!empty($_SESSION['redirect_after_login'])) {
@@ -216,6 +216,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ->bootstrap()
         ->danger()
         ->add();
+
+      // header("Location: " . admin_route("login"));
+      // exit();
     }
+  } else {
+    // header("Location: " . admin_route("login"));
+    // exit();
   }
 }

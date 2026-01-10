@@ -15,7 +15,7 @@
             </div>
             <div class="flex-grow-1 mb-3">
               <input type="file" id="st_darklogo" name="st_darklogo" data-dropimg data-width="300" data-height="71"
-                data-default="<?= APP_URL . "/uploads/site/" . $optionsRaw['dark_logo'] ?>"
+                data-default="<?= APP_URL . "/storage/uploads/site/" . $optionsRaw['dark_logo'] ?>"
                 accept=".jpg,.jpeg,.png,.gif,.webp" data-required>
             </div>
             <div class="d-flex justify-content-between align-items-end mt-auto">
@@ -37,7 +37,7 @@
             </div>
             <div class="flex-grow-1 mb-3">
               <input type="file" id="st_whitelogo" name="st_whitelogo" data-dropimg data-width="300" data-height="71"
-                data-default="<?= APP_URL . "/uploads/site/" . $optionsRaw['white_logo'] ?>"
+                data-default="<?= APP_URL . "/storage/uploads/site/" . $optionsRaw['white_logo'] ?>"
                 accept=".jpg,.jpeg,.png,.gif,.webp" data-required>
             </div>
             <div class="d-flex justify-content-between align-items-end mt-auto">
@@ -62,7 +62,7 @@
             <label class="form-label fw-semibold">Favicon</label>
             <div class="mb-2">
               <input type="file" id="st_favicon" name="st_favicon" data-dropimg data-width="128" data-height="128"
-                data-default="<?= APP_URL . "/uploads/site/favicons/" . $st_favicon['favicon.ico'] ?>"
+                data-default="<?= APP_URL . "/storage/uploads/site/favicons/" . $st_favicon['favicon.ico'] ?>"
                 accept=".jpg,.jpeg,.png,.gif,.webp,.ico" data-required>
             </div>
             <div class="d-flex flex-wrap justify-content-between align-items-center mt-auto gap-2">
@@ -83,7 +83,7 @@
             </div>
             <div class="mb-2 flex-grow-1">
               <input type="file" id="st_og_image" name="st_og_image" data-dropimg data-width="1200" data-height="630"
-                data-default="<?= APP_URL ?>/uploads/site/<?= $optionsRaw['og_image'] ?>"
+                data-default="<?= APP_URL ?>/storage/uploads/site/<?= $optionsRaw['og_image'] ?>"
                 accept=".jpg,.jpeg,.png,.gif,.webp" data-required>
             </div>
             <div class="d-flex justify-content-between align-items-center mt-auto">

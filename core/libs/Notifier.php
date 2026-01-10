@@ -1,24 +1,13 @@
 <?php
 
-/**
- * Notifier
- *
- * Clase encargada de la gestión y envío de notificaciones del sistema.
- * Permite generar mensajes informativos, alertas y avisos al usuario
- * a través de distintos canales de comunicación.
- *
- * Facilita la centralización de notificaciones internas, eventos
- * del sistema y respuestas visuales o programáticas.
- *
- * @author Pirulug
- * @link   https://github.com/pirulug
- */
 class Notifier {
 
   private string $message = '';
   private string $type = 'success';
   private string $method = 'bootstrap';
-  private ?string $canMethod = null;
+
+  private bool $queryMode = false;
+  private ?string $queryMethod = null;
 
   public function __construct() {
     if (session_status() === PHP_SESSION_NONE) {
@@ -31,49 +20,45 @@ class Notifier {
     return $this;
   }
 
-  public function success(?string $message = null): self {
-    if ($message !== null) {
-      $this->message = $message;
-    }
-    $this->type = 'success';
-    return $this;
+  public function success(?string $message = null) {
+    return $this->handleType('success', $message);
   }
 
-  public function danger(?string $message = null): self {
-    if ($message !== null) {
-      $this->message = $message;
-    }
-    $this->type = 'danger';
-    return $this;
+  public function danger(?string $message = null) {
+    return $this->handleType('danger', $message);
   }
 
-  public function warning(?string $message = null): self {
-    if ($message !== null) {
-      $this->message = $message;
-    }
-    $this->type = 'warning';
-    return $this;
+  public function warning(?string $message = null) {
+    return $this->handleType('warning', $message);
   }
 
-  public function info(?string $message = null): self {
-    if ($message !== null) {
-      $this->message = $message;
-    }
-    $this->type = 'info';
-    return $this;
+  public function info(?string $message = null) {
+    return $this->handleType('info', $message);
   }
 
   public function bootstrap(): self {
+    if ($this->queryMode) {
+      $this->queryMethod = 'bootstrap';
+      return $this;
+    }
     $this->method = 'bootstrap';
     return $this;
   }
 
   public function toast(): self {
+    if ($this->queryMode) {
+      $this->queryMethod = 'toast';
+      return $this;
+    }
     $this->method = 'toast';
     return $this;
   }
 
   public function sweetalert(): self {
+    if ($this->queryMode) {
+      $this->queryMethod = 'sweetalert';
+      return $this;
+    }
     $this->method = 'sweetalert';
     return $this;
   }
@@ -93,12 +78,15 @@ class Notifier {
   }
 
   public function can(): self {
-    $this->canMethod = null;
+    $this->queryMode   = true;
+    $this->queryMethod = null;
     return $this;
   }
 
   public function any(): bool {
-    foreach ($this->sources() as $src) {
+    $sources = $this->querySources();
+    $this->resetQuery();
+    foreach ($sources as $src) {
       if (!empty($_SESSION[$src])) {
         return true;
       }
@@ -106,18 +94,48 @@ class Notifier {
     return false;
   }
 
-  public function has(string $type): bool {
-    foreach ($this->sources() as $src) {
-      if (empty($_SESSION[$src])) {
-        continue;
-      }
-      foreach ($_SESSION[$src] as $msg) {
-        if ($msg['type'] === $type) {
-          return true;
+  private function handleType(string $type, ?string $message) {
+
+    if ($this->queryMode) {
+      $sources = $this->querySources();
+      $this->resetQuery();
+
+      foreach ($sources as $src) {
+        if (empty($_SESSION[$src])) {
+          continue;
+        }
+        foreach ($_SESSION[$src] as $msg) {
+          if ($msg['type'] === $type) {
+            return true;
+          }
         }
       }
+      return false;
     }
-    return false;
+
+    if ($message !== null) {
+      $this->message = $message;
+    }
+
+    $this->type = $type;
+    return $this;
+  }
+
+  private function querySources(): array {
+    return $this->queryMethod
+      ? [$this->queryMethod]
+      : ['bootstrap', 'toast', 'sweetalert'];
+  }
+
+  private function reset(): void {
+    $this->message = '';
+    $this->type    = 'success';
+    $this->method  = 'bootstrap';
+  }
+
+  private function resetQuery(): void {
+    $this->queryMode   = false;
+    $this->queryMethod = null;
   }
 
   public function showBootstrap(): void {
@@ -173,17 +191,5 @@ class Notifier {
     echo "</script>";
 
     unset($_SESSION['sweetalert']);
-  }
-
-  private function reset(): void {
-    $this->message = '';
-    $this->type    = 'success';
-    $this->method  = 'bootstrap';
-  }
-
-  private function sources(): array {
-    return $this->canMethod
-      ? [$this->canMethod]
-      : ['bootstrap', 'toast', 'sweetalert'];
   }
 }

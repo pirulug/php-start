@@ -26,8 +26,7 @@ if (isset($_COOKIE['php-start'])) {
   setcookie('php-start', '', time() - 3600, "/");
 }
 
-$log->message("Usuario ha cerrado sesión")
-  ->type("info")
+$log->info("Usuario ha cerrado sesión")
   ->write();
 
 // 5. Redirigir al login

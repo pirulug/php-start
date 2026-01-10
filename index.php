@@ -9,6 +9,9 @@ const BASE_DIR = __DIR__;
 require_once BASE_DIR . "/config.php";
 require_once BASE_DIR . "/core/bootstrap/init.php";
 
+// echo $cipher->encrypt("admin123");
+// exit();
+
 /*
 |--------------------------------------------------------------------------
 | Obtener URL limpia

@@ -2,7 +2,11 @@
 
 
 if (!extension_loaded("imagick")) {
-  $notifier->add("Imagick no está instalado o se encuentra deshabilitado. Recomendamos instalarlo o habilitarlo para optimizar la generación del favicon y mejorar el procesamiento de imágenes.", "warning");
+  $notifier
+    ->message("Imagick no está instalado o se encuentra deshabilitado. Recomendamos instalarlo o habilitarlo para optimizar la generación del favicon y mejorar el procesamiento de imágenes.")
+    ->warning()
+    ->bootstrap()
+    ->add();
 }
 
 // Obtener datos de options
@@ -13,8 +17,8 @@ $optionsRaw = $connect->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
 $st_favicon = json_decode($optionsRaw['favicon'] ?? '{}', true);
 
 // Ruta de subida
-$uploadPathLogo    = BASE_DIR . '/uploads/site/';
-$uploadPathFavicon = BASE_DIR . '/uploads/site/favicons/';
+$uploadPathLogo    = BASE_DIR . '/storage/uploads/site/';
+$uploadPathFavicon = BASE_DIR . '/storage/uploads/site/favicons/';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -27,7 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $upFavicon = $_FILES['st_favicon'];
 
     if (mime_content_type($upFavicon['tmp_name']) !== 'image/png') {
-      $notifier->add("El archivo debe ser un PNG válido.", "danger");
+      $notifier
+        ->message("El archivo debe ser un PNG válido.")
+        ->danger()
+        ->bootstrap()
+        ->add();
     } else {
       try {
         // 1. Generar nuevos favicons
@@ -58,23 +66,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':value', $newFavicon);
         $stmt->execute();
 
-        $notifier->add("Favicon actualizado correctamente.", "success");
+        $notifier
+          ->message("Favicon actualizado correctamente.")
+          ->success()
+          ->bootstrap()
+          ->add();
         header("Location: " . $_SERVER['REQUEST_URI']);
         exit;
 
       } catch (Exception $e) {
-        $notifier->add("Error al generar favicon: " . $e->getMessage(), "danger");
+        $notifier
+          ->message("Error al generar favicon: " . $e->getMessage())
+          ->success()
+          ->bootstrap()
+          ->add();
       }
     }
   }
 
   // =============== LOGO CLARO ===============
   if (!empty($_FILES['st_whitelogo']) && $_FILES['st_whitelogo']['size'] > 0) {
-    $upWhiteLogo  = $_FILES['st_whitelogo'];
-    $whitelogo    = upload_image($upWhiteLogo, $uploadPathLogo, 320, 71, [
-      'convertTo' => 'webp',
-      'prefix'    => 'st_logo_light_'
-    ]);
+    $upWhiteLogo = $_FILES['st_whitelogo'];
+
+    $whitelogo = (new UploadImage())
+      ->file($upWhiteLogo)
+      ->dir($uploadPathLogo)
+      ->convertTo("webp")
+      ->width(320)
+      ->height(71)
+      ->prefix("st_logo_light_")
+      ->upload();
+
     $st_whitelogo = $whitelogo['file_name'];
 
     $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = 'white_logo'");
@@ -85,18 +107,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       unlink($uploadPathLogo . $optionsRaw['white_logo']);
     }
 
-    $notifier->add("Logo claro actualizado correctamente.", "success");
+    $notifier
+      ->message("Logo claro actualizado correctamente.")
+      ->success()
+      ->bootstrap()
+      ->add();
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
   }
 
   // =============== LOGO OSCURO ===============
   if (!empty($_FILES['st_darklogo']) && $_FILES['st_darklogo']['size'] > 0) {
-    $upDarkLogo  = $_FILES['st_darklogo'];
-    $darklogo    = upload_image($upDarkLogo, $uploadPathLogo, 320, 71, [
-      'convertTo' => 'webp',
-      'prefix'    => 'st_logo_dark_'
-    ]);
+    $upDarkLogo = $_FILES['st_darklogo'];
+
+    $darklogo = (new UploadImage())
+      ->file($upDarkLogo)
+      ->dir($uploadPathLogo)
+      ->convertTo("webp")
+      ->width(320)
+      ->height(71)
+      ->prefix("st_logo_dark_")
+      ->upload();
+
     $st_darklogo = $darklogo['file_name'];
 
     $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = 'dark_logo'");
@@ -107,7 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       unlink($uploadPathLogo . $optionsRaw['dark_logo']);
     }
 
-    $notifier->add("Logo oscuro actualizado correctamente.", "success");
+    $notifier
+      ->message("Logo oscuro actualizado correctamente.")
+      ->success()
+      ->bootstrap()
+      ->add();
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
   }
@@ -115,10 +151,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // =============== OG IMAGE ===============
   if (!empty($_FILES['st_og_image']) && $_FILES['st_og_image']['size'] > 0) {
     $upOGImage   = $_FILES['st_og_image'];
-    $ogImage     = upload_image($upOGImage, $uploadPathLogo, 1200, 630, [
-      'convertTo' => 'webp',
-      'prefix'    => 'og_image_'
-    ]);
+
+    $ogImage = (new UploadImage())
+      ->file($upOGImage)
+      ->dir($uploadPathLogo)
+      ->convertTo("webp")
+      ->width(1200)
+      ->height(630)
+      ->prefix("og_image_")
+      ->upload();
+
     $st_og_image = $ogImage['file_name'];
 
     $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = 'og_image'");
@@ -129,7 +171,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       unlink($uploadPathLogo . $optionsRaw['og_image']);
     }
 
-    $notifier->add("Imagen Open Graph actualizada correctamente.", "success");
+    $notifier
+      ->message("Imagen Open Graph actualizada correctamente.")
+      ->success()
+      ->bootstrap()
+      ->add();
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
   }
