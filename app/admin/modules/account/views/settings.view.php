@@ -70,13 +70,20 @@
               </div>
 
               <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                  <label class="form-label small text-muted">Nombre</label>
-                  <input type="text" name="user_first_name" class="form-control" value="<?= $usermeta->first_name ?>">
+                <div class="col-md-12">
+                  <label class="form-label small text-muted">Nombres</label>
+                  <input type="text" name="user_first_name" class="form-control"
+                    value="<?= $usermeta->first_name ?? "" ?>">
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label small text-muted">Apellidos</label>
-                  <input type="text" name="user_last_name" class="form-control" value="<?= $usermeta->last_name ?>">
+                  <label class="form-label small text-muted">Primer Apellido</label>
+                  <input type="text" name="user_last_name" class="form-control"
+                    value="<?= $usermeta->last_name ?? "" ?>">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-muted">Segundo Apellido</label>
+                  <input type="text" name="user_second_last_name" class="form-control"
+                    value="<?= $usermeta->second_last_name ?? "" ?>">
                 </div>
               </div>
 
@@ -95,8 +102,13 @@
                       $user->user_nickname,
                       $usermeta->first_name,
                       $usermeta->last_name,
+                      $usermeta->second_last_name,
+
                       trim($usermeta->first_name . ' ' . $usermeta->last_name),
                       trim($usermeta->last_name . ' ' . $usermeta->first_name),
+
+                      trim($usermeta->first_name . ' ' . $usermeta->last_name . ' ' . $usermeta->second_last_name),
+                      trim($usermeta->last_name . ' ' . $usermeta->second_last_name . ' ' . $usermeta->first_name),
                     ];
                     $display_options = array_unique(array_filter($display_options));
                     foreach ($display_options as $option):

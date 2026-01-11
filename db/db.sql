@@ -123,6 +123,7 @@ CREATE TABLE usermeta (
   user_id INT NOT NULL,
   usermeta_key VARCHAR(150) NOT NULL,
   usermeta_value TEXT NULL,
+  KEY uniq_user_meta (user_id, usermeta_key);
   FOREIGN KEY (user_id) REFERENCES users(user_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

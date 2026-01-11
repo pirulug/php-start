@@ -42,8 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user_display_name = $_POST['user_display_name'];
 
     // Datos user meta
-    $usermeta_first_name = $_POST['user_first_name'];
-    $usermeta_last_name  = $_POST['user_last_name'];
+    $usermeta_first_name       = $_POST['user_first_name'];
+    $usermeta_last_name        = $_POST['user_last_name'];
+    $usermeta_second_last_name = $_POST['user_second_last_name'];
 
     $update = false;
 
@@ -149,14 +150,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // UPDATE USERMETA
         $usermeta_data = [
-          'first_name' => $usermeta_first_name,
-          'last_name'  => $usermeta_last_name,
+          'first_name'       => $usermeta_first_name,
+          'last_name'        => $usermeta_last_name,
+          'second_last_name' => $usermeta_second_last_name,
         ];
 
         $query_meta = "
-          UPDATE usermeta 
-          SET usermeta_value = :value
-          WHERE user_id = :user_id AND usermeta_key = :key
+          INSERT INTO usermeta (user_id, usermeta_key, usermeta_value)
+          VALUES (:user_id, :key, :value)
+          ON DUPLICATE KEY UPDATE
+            usermeta_value = VALUES(usermeta_value)
         ";
         $stmt_meta  = $connect->prepare($query_meta);
 
