@@ -18,6 +18,10 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->action(admin_action("auth.logout"))
     ->register();
 
+  Router::route('test')
+    ->action(admin_action("test.index"))
+    ->register();
+
   Router::route('dashboard')
     ->action(admin_action("dashboard.dashboard"))
     ->view(admin_view("dashboard.dashboard"))

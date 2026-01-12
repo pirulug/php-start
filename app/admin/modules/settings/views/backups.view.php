@@ -1,21 +1,17 @@
-<div class="card mb-4">
-  <div
-    class="card-header   d-flex flex-wrap justify-content-between align-items-center py-3">
+<?php start_block("title"); ?>
+Respaldos de Base de Datos
+<?php end_block(); ?>
+
+<div class="card">
+  <div class="card-header   d-flex flex-wrap justify-content-between align-items-center">
     <div>
-      <h5 class="card-title mb-0 text-body-emphasis d-flex align-items-center gap-2">
-        <i class="fa-solid fa-database text-primary"></i>
-        Respaldos de Base de Datos
-      </h5>
-      <small class="text-body-secondary">
-        Se recomienda respaldar antes de restaurar.
-      </small>
     </div>
-    <a href="?action=backup" class="btn btn-primary btn-sm mt-2 mt-md-0">
+    <a href="?action=backup" class="btn btn-primary ">
       <i class="fa fa-plus me-1"></i> Nuevo Respaldo
     </a>
   </div>
 
-  <div class="card-body p-0">
+  <div class="card-body">
     <ul class="list-group list-group-flush">
       <?php if (empty($files)): ?>
         <li class="list-group-item text-center py-5">
@@ -34,12 +30,12 @@
           $filesize = round(filesize($file) / 1024, 2) . ' KB';
           ?>
           <li
-            class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-md-center p-3 gap-3">
+            class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
 
             <div class="d-flex align-items-center gap-3">
-              <div class="d-flex align-items-center justify-content-center bg-body-secondary rounded p-2"
+              <div class="d-flex align-items-center justify-content-center bg-primary rounded p-2"
                 style="width: 45px; height: 45px;">
-                <i class="fa-solid fa-file-zipper text-body-secondary fs-5"></i>
+                <i class="fa-solid fa-file-zipper text-white"></i>
               </div>
               <div>
                 <div class="fw-bold text-body-emphasis">
@@ -54,18 +50,17 @@
             </div>
 
             <div class="btn-group" role="group" aria-label="Acciones de respaldo">
-              <a href="?action=download&file=<?= urlencode($filename) ?>" class="btn btn-outline-secondary btn-sm"
-                title="Descargar">
+              <a href="?action=download&file=<?= urlencode($filename) ?>" class="btn btn-outline-success" title="Descargar">
                 <i class="fa fa-download"></i> <span class="d-none d-lg-inline">Descargar</span>
               </a>
 
-              <a href="?action=restore&file=<?= urlencode($filename) ?>" class="btn btn-outline-warning btn-sm"
+              <a href="?action=restore&file=<?= urlencode($filename) ?>" class="btn btn-outline-warning"
                 onclick="return confirm('ATENCIÓN: Esto sobrescribirá la base de datos actual. ¿Estás seguro?');"
                 title="Restaurar">
                 <i class="fa fa-rotate-left"></i> <span class="d-none d-lg-inline">Restaurar</span>
               </a>
 
-              <a href="?action=delete&file=<?= urlencode($filename) ?>" class="btn btn-outline-danger btn-sm"
+              <a href="?action=delete&file=<?= urlencode($filename) ?>" class="btn btn-outline-danger"
                 onclick="return confirm('¿Eliminar este respaldo permanentemente? No se puede deshacer.');"
                 title="Eliminar">
                 <i class="fa fa-trash"></i>

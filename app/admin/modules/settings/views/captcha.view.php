@@ -1,14 +1,21 @@
+<?php start_block("title"); ?>
+Google reCAPTCHA v3
+<?php end_block(); ?>
+
+<?php start_block("js"); ?>
+
+<?php end_block(); ?>
+
+<?php start_block("css"); ?>
+
+<?php end_block(); ?>
+
+
 <form action="" method="post" autocomplete="off">
 
   <div class="card">
-    <div class="card-header bg-transparent py-3">
-      <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-        <i class="fa-brands fa-google text-primary"></i>
-        Google reCAPTCHA v3
-      </h5>
-    </div>
 
-    <div class="card-body p-4">
+    <div class="card-body">
 
       <div class="d-flex justify-content-between align-items-center mb-4 p-3 border rounded bg-light bg-opacity-10">
         <div>
@@ -61,7 +68,8 @@
 
     <div class="card-footer bg-transparent py-3 text-end">
       <button type="submit" class="btn btn-primary px-4">
-        <i class="fa-solid fa-floppy-disk me-2"></i>Guardar Cambios
+        <i class="fa-solid fa-floppy-disk me-2"></i>
+        Guardar Cambios
       </button>
     </div>
   </div>
@@ -73,11 +81,9 @@
     const checkbox = document.getElementById('google_recaptcha_enabled');
     const keysSection = document.getElementById('recaptcha_keys_section');
 
-    // Función Toggle optimizada usando clases de Bootstrap
     checkbox.addEventListener('change', function () {
       if (this.checked) {
         keysSection.classList.remove('d-none');
-        // Pequeña animación de entrada (opcional, usa solo clases CSS standard)
         keysSection.classList.add('fade-in');
       } else {
         keysSection.classList.add('d-none');

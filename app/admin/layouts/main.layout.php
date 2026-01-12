@@ -118,11 +118,13 @@
 
       <!-- Content-->
       <main class="content">
-        <div class="mb-3">
-          <h1 class="h3 d-inline align-middle">
-            <?= get_block('title', 'Admin'); ?>
-          </h1>
-        </div>
+        <?php if (has_block('title')): ?>
+          <div class="mb-3">
+            <h1 class="h3 d-inline align-middle">
+              <?= get_block('title'); ?>
+            </h1>
+          </div>
+        <?php endif; ?>
 
         <?php $notifier->showBootstrap() ?>
 

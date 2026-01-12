@@ -1,3 +1,20 @@
+<?php start_block("title") ?>
+Sitemap.xml
+<?php end_block() ?>
+
+<?php start_block("css") ?>
+<style>
+  .border-dashed {
+    border-style: dashed !important;
+    border-width: 2px !important;
+  }
+
+  .border-dashed:hover {
+    background-color: var(--bs-primary-bg-subtle);
+  }
+</style>
+<?php end_block() ?>
+
 <div class="card mb-4">
   <div class="card-header   d-flex justify-content-between align-items-center py-3">
     <h5 class="card-title mb-0 d-flex align-items-center gap-2">
@@ -33,6 +50,7 @@
   </div>
 </div>
 
+<?php start_block("js") ?>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     // Obtenemos los datos de PHP
@@ -129,15 +147,4 @@
     addPageField(container);
   }
 </script>
-
-<style>
-  /* Estilo opcional para el botón de agregar */
-  .border-dashed {
-    border-style: dashed !important;
-    border-width: 2px !important;
-  }
-
-  .border-dashed:hover {
-    background-color: var(--bs-primary-bg-subtle);
-  }
-</style>
+<?php end_block() ?>

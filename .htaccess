@@ -30,7 +30,7 @@ Options -Indexes
 </FilesMatch>
 
 # Bloquear documentación
-<FilesMatch "^(README|LICENSE|CHANGELOG|UPGRADE|INSTALL).*">
+<FilesMatch "^(README|LICENSE|CHANGELOG|UPGRADE).*">
   Require all denied
 </FilesMatch>
 

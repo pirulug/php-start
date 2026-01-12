@@ -42,7 +42,7 @@
                 </div>
                 <div class="me-4">
                   <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
-                    data-default="<?= APP_URL ?>/uploads/user/<?= $user->user_image ?>"
+                    data-default="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>"
                     accept=".jpg,.jpeg,.png,.gif,.webp">
 
                 </div>

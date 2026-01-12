@@ -1,5 +1,9 @@
+<?php start_block("title"); ?>
+Dashboard Analítico
+<?php end_block(); ?>
+
+<?php start_block("css"); ?>
 <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
   .icon-box {
@@ -69,241 +73,238 @@
     font-weight: 500;
   }
 </style>
+<?php end_block(); ?>
 
-<div class="container-fluid py-4">
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h4 class="fw-bold mb-0 text-dark">Dashboard Analítico</h4>
-      <p class="text-muted small mb-0">Vista general del rendimiento en tiempo real</p>
-    </div>
-    <button class="btn btn-primary  border" onclick="loadAnalytics()">
-      <i class="fa-solid fa-rotate me-2"></i> Actualizar
-    </button>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
   </div>
-
-  <div class="row g-4 mb-4" id="summary-cards">
-    <div class="col-md-3 col-sm-6">
-      <div class="card h-100">
-        <div class="card-body d-flex align-items-center">
-          <div class="icon-box bg-soft-primary me-3">
-            <i class="fa-solid fa-users"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0" id="totalVisitors">...</h3>
-            <span class="text-label">Visitantes Totales</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="card h-100">
-        <div class="card-body d-flex align-items-center">
-          <div class="icon-box bg-soft-success me-3">
-            <i class="fa-regular fa-file-lines"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0" id="totalPages">...</h3>
-            <span class="text-label">Páginas Vistas</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="card h-100">
-        <div class="card-body d-flex align-items-center">
-          <div class="icon-box bg-soft-info me-3">
-            <i class="fa-solid fa-stopwatch"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0" id="totalSessions">...</h3>
-            <span class="text-label">Sesiones Totales</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="card h-100">
-        <div class="card-body d-flex align-items-center">
-          <div class="icon-box bg-soft-warning me-3">
-            <i class="fa-solid fa-bolt"></i>
-          </div>
-          <div>
-            <h3 class="fw-bold mb-0" id="usersOnline">...</h3>
-            <span class="text-label text-success">● En Línea Ahora</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-4 mb-4">
-    <div class="col-lg-4">
-      <div class="card h-100">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <span>Resumen de Tráfico</span>
-          <i class="fa-solid fa-chart-pie text-muted"></i>
-        </div>
-        <div class="card-body">
-          <div class="text-center mb-4 py-3 bg-light rounded-3 border border-light">
-            <span class="d-block text-muted small mb-1">Visitantes Activos</span>
-            <span class="display-4 fw-bold text-dark" id="summaryOnline">0</span>
-          </div>
-          <div class="table-responsive">
-            <table class="table table-modern table-hover align-middle">
-              <thead>
-                <tr>
-                  <th>Periodo</th>
-                  <th class="text-center">Visitantes</th>
-                  <th class="text-end">Visitas</th>
-                </tr>
-              </thead>
-              <tbody id="summaryTraffic">
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-8">
-      <div class="card h-100">
-        <div class="card-header">
-          Evolución de Visitas
-        </div>
-        <div class="card-body">
-          <div class="row g-4">
-            <div class="col-12">
-              <p class="text-label mb-2">Este Mes (Por Días)</p>
-              <div class="chart-container" style="height: 200px;"><canvas id="chartMonthDays"></canvas></div>
-            </div>
-            <div class="col-md-6">
-              <p class="text-label mb-2">Este Año (Por Meses)</p>
-              <div class="chart-container" style="height: 180px;"><canvas id="chartYearMonths"></canvas></div>
-            </div>
-            <div class="col-md-6">
-              <p class="text-label mb-2">Histórico (Últimos 10 Años)</p>
-              <div class="chart-container" style="height: 180px;"><canvas id="chartYears"></canvas></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-4 mb-4">
-    <div class="col-lg-8">
-      <div class="card h-100">
-        <div class="card-header">Tendencia (Últimos 30 días)</div>
-        <div class="card-body chart-container">
-          <canvas id="chartTrend"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="card h-100">
-        <div class="card-header">Top 5 Páginas</div>
-        <div class="card-body chart-container">
-          <canvas id="chartPages"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-4 mb-4">
-    <div class="col-lg-4">
-      <div class="card h-100">
-        <div class="card-header">Países</div>
-        <div class="card-body chart-container position-relative">
-          <canvas id="chartCountries"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="card h-100">
-        <div class="card-header">Navegadores</div>
-        <div class="card-body chart-container position-relative">
-          <canvas id="chartBrowsers"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4">
-      <div class="card h-100">
-        <div class="card-header">Sistemas Operativos</div>
-        <div class="card-body chart-container position-relative">
-          <canvas id="chartPlatforms"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-4 mb-4">
-    <div class="col-md-6">
-      <div class="card h-100">
-        <div class="card-header">Dispositivos</div>
-        <div class="card-body chart-container">
-          <canvas id="chartDevices"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card h-100">
-        <div class="card-header">Fuentes de Tráfico</div>
-        <div class="card-body chart-container">
-          <canvas id="chartReferers"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-4">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <span>Usuarios Online (Detalle)</span>
-          <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Live</span>
-        </div>
-        <div class="table-responsive">
-          <table class="table table-modern table-hover mb-0" id="tableOnline">
-            <thead class="bg-light">
-              <tr>
-                <th>IP</th>
-                <th>País</th>
-                <th>Navegador</th>
-                <th>Plataforma</th>
-                <th>Página Actual</th>
-                <th>Última Actividad</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">Últimas Sesiones</div>
-        <div class="table-responsive">
-          <table class="table table-modern table-hover mb-0" id="tableSessions">
-            <thead class="bg-light">
-              <tr>
-                <th>País</th>
-                <th>Navegador</th>
-                <th>Plataforma</th>
-                <th>Página Inicial</th>
-                <th>Hora</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <button class="btn btn-primary" onclick="loadAnalytics()">
+    <i class="fa-solid fa-rotate me-2"></i> Actualizar
+  </button>
 </div>
 
+<div class="row g-4 mb-3" id="summary-cards">
+  <div class="col-md-3 col-sm-6">
+    <div class="card h-100">
+      <div class="card-body d-flex align-items-center">
+        <div class="icon-box bg-soft-primary me-3">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="totalVisitors">...</h3>
+          <span class="text-label">Visitantes Totales</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card h-100">
+      <div class="card-body d-flex align-items-center">
+        <div class="icon-box bg-soft-success me-3">
+          <i class="fa-regular fa-file-lines"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="totalPages">...</h3>
+          <span class="text-label">Páginas Vistas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card h-100">
+      <div class="card-body d-flex align-items-center">
+        <div class="icon-box bg-soft-info me-3">
+          <i class="fa-solid fa-stopwatch"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="totalSessions">...</h3>
+          <span class="text-label">Sesiones Totales</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card h-100">
+      <div class="card-body d-flex align-items-center">
+        <div class="icon-box bg-soft-warning me-3">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="usersOnline">...</h3>
+          <span class="text-label text-success">● En Línea Ahora</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-3">
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Resumen de Tráfico</span>
+        <i class="fa-solid fa-chart-pie text-muted"></i>
+      </div>
+      <div class="card-body">
+        <div class="text-center mb-3 py-3 bg-light rounded-3 border border-light">
+          <span class="d-block text-muted small mb-1">Visitantes Activos</span>
+          <span class="display-4 fw-bold " id="summaryOnline">0</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-modern table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Periodo</th>
+                <th class="text-center">Visitantes</th>
+                <th class="text-end">Visitas</th>
+              </tr>
+            </thead>
+            <tbody id="summaryTraffic">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-header">
+        Evolución de Visitas
+      </div>
+      <div class="card-body">
+        <div class="row g-4">
+          <div class="col-12">
+            <p class="text-label mb-2">Este Mes (Por Días)</p>
+            <div class="chart-container" style="height: 200px;"><canvas id="chartMonthDays"></canvas></div>
+          </div>
+          <div class="col-md-6">
+            <p class="text-label mb-2">Este Año (Por Meses)</p>
+            <div class="chart-container" style="height: 180px;"><canvas id="chartYearMonths"></canvas></div>
+          </div>
+          <div class="col-md-6">
+            <p class="text-label mb-2">Histórico (Últimos 10 Años)</p>
+            <div class="chart-container" style="height: 180px;"><canvas id="chartYears"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-3">
+  <div class="col-lg-8">
+    <div class="card h-100">
+      <div class="card-header">Tendencia (Últimos 30 días)</div>
+      <div class="card-body chart-container">
+        <canvas id="chartTrend"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header">Top 5 Páginas</div>
+      <div class="card-body chart-container">
+        <canvas id="chartPages"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-3">
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header">Países</div>
+      <div class="card-body chart-container position-relative">
+        <canvas id="chartCountries"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header">Navegadores</div>
+      <div class="card-body chart-container position-relative">
+        <canvas id="chartBrowsers"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card h-100">
+      <div class="card-header">Sistemas Operativos</div>
+      <div class="card-body chart-container position-relative">
+        <canvas id="chartPlatforms"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-3">
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">Dispositivos</div>
+      <div class="card-body chart-container">
+        <canvas id="chartDevices"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header">Fuentes de Tráfico</div>
+      <div class="card-body chart-container">
+        <canvas id="chartReferers"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Usuarios Online (Detalle)</span>
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Live</span>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-modern table-hover mb-0" id="tableOnline">
+          <thead class="bg-light">
+            <tr>
+              <th>IP</th>
+              <th>País</th>
+              <th>Navegador</th>
+              <th>Plataforma</th>
+              <th>Página Actual</th>
+              <th>Última Actividad</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">Últimas Sesiones</div>
+      <div class="table-responsive">
+        <table class="table table-modern table-hover mb-0" id="tableSessions">
+          <thead class="bg-light">
+            <tr>
+              <th>País</th>
+              <th>Navegador</th>
+              <th>Plataforma</th>
+              <th>Página Inicial</th>
+              <th>Hora</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php start_block("js"); ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
   // =============================================
@@ -483,8 +484,8 @@
   };
   const osIcons = {
     windows: 'fa-brands fa-windows text-primary',
-    mac: 'fa-brands fa-apple text-dark',
-    ios: 'fa-solid fa-mobile-screen-button text-dark',
+    mac: 'fa-brands fa-apple ',
+    ios: 'fa-solid fa-mobile-screen-button ',
     android: 'fa-brands fa-android text-success',
     linux: 'fa-brands fa-linux text-secondary'
   };
@@ -670,7 +671,7 @@
       tbody.innerHTML = resumen.map(r => `
             <tr>
                 <td class="text-start fw-medium text-secondary">${r.label}</td>
-                <td class="text-center fw-bold text-dark">${r.v.visitors ?? 0}</td>
+                <td class="text-center fw-bold ">${r.v.visitors ?? 0}</td>
                 <td class="text-end text-muted">${r.v.visits ?? 0}</td>
             </tr>
         `).join('');
@@ -684,3 +685,4 @@
   loadAnalytics();
   setInterval(loadAnalytics, 30000);
 </script>
+<?php end_block(); ?>

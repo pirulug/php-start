@@ -1,3 +1,7 @@
+<?php start_block("title"); ?>
+General
+<?php end_block(); ?>
+
 <link rel="stylesheet" href="<?= APP_URL . "/static/plugins/tagify/tagify.css" ?>">
 
 <form action="" method="POST" enctype="multipart/form-data">

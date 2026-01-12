@@ -8,68 +8,57 @@ if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
 // AUTO LOGIN CON COOKIE 
 if (isset($_COOKIE['php-start'])) {
   try {
-    // Intentar descifrar el user_id
-    $user_id = $cipher->decrypt($_COOKIE['php-start']);
+    $data = $cipher->decrypt($_COOKIE['php-start']);
 
-    // Validar que sea numérico (protección adicional)
-    if (!is_numeric($user_id)) {
-      throw new Exception("ID inválido en cookie");
+    if (!str_contains($data, ':')) {
+      throw new Exception('Formato inválido');
     }
 
-    // $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1 AND role_id IN (1, 2)";
-    $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1";
-    $stmt  = $connect->prepare($query);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
+    [$user_id, $token] = explode(':', $data, 2);
 
-    if ($stmt->rowCount() === 1) {
-      $user = $stmt->fetch(PDO::FETCH_OBJ);
-
-      // Verificar si puede loguearse
-      if (!can_user_login($connect, $user->user_id)) {
-
-        $notifier->message("No tienes permisos para acceder al sistema.")
-          ->bootstrap()
-          ->danger()
-          ->add();
-
-        return;
-      }
-
-      $_SESSION['user_id'] = $user->user_id;
-      $_SESSION['signin']  = true;
-
-      // Actualizar en la base de datos en last login
-      $query = "
-          UPDATE users 
-          SET 
-            user_last_login = NOW()
-          WHERE 
-            user_id = :user_id";
-      $stmt  = $connect->prepare($query);
-      $stmt->bindParam(":user_id", $user->user_id);
-      $stmt->execute();
-
-      // Redirigir a la URL original si existe
-      if (!empty($_SESSION['redirect_after_login'])) {
-
-        $redirect = $_SESSION['redirect_after_login'];
-        unset($_SESSION['redirect_after_login']);
-
-        header("Location: " . $redirect);
-        exit;
-      }
-
-      header("Location: " . admin_route("dashboard"));
-      exit();
-
-    } else {
-      // Usuario no existe o está inactivo => borrar cookie
-      setcookie("php-start", "", time() - 3600, "/");
+    if (!is_numeric($user_id) || empty($token)) {
+      throw new Exception('Datos inválidos');
     }
+
+    $stmt = $connect->prepare("
+      SELECT u.*, um.usermeta_value AS token_hash
+      FROM users u
+      LEFT JOIN usermeta um
+        ON um.user_id = u.user_id
+        AND um.usermeta_key = 'remember_token'
+      WHERE u.user_id = :user_id
+      AND u.user_status = 1
+      LIMIT 1
+    ");
+    $stmt->execute([':user_id' => $user_id]);
+
+    if (!$stmt->rowCount()) {
+      throw new Exception('Usuario no válido');
+    }
+
+    $user = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if (
+      empty($user->token_hash) ||
+      !hash_equals($user->token_hash, hash('sha256', $token))
+    ) {
+      throw new Exception('Token inválido');
+    }
+
+    // LOGIN OK
+    $_SESSION['user_id'] = $user->user_id;
+    $_SESSION['signin']  = true;
+
+    $notifier
+      ->message("Bienbenido {$user->user_nickname}")
+      ->success()
+      ->bootstrap()
+      ->add();
+    header("Location: " . admin_route("dashboard"));
+    exit();
+
   } catch (Exception $e) {
-    // Error al descifrar => cookie corrupta o manipulada => eliminar
-    setcookie("php-start", "", time() - 3600, "/");
+    setcookie('php-start', '', time() - 3600, '/');
   }
 }
 
@@ -151,9 +140,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $_SESSION['signin']  = true;
 
       if ($remember_me) {
+        $token      = bin2hex(random_bytes(32));
+        $tokenHash  = hash('sha256', $token);
+        $cookieData = $user->user_id . ':' . $token;
+
+        // UPSERT usermeta
+        $stmt = $connect->prepare("
+          INSERT INTO usermeta (user_id, usermeta_key, usermeta_value)
+          VALUES (:user_id, 'remember_token', :value)
+          ON DUPLICATE KEY UPDATE
+            usermeta_value = VALUES(usermeta_value)
+        ");
+        $stmt->execute([
+          ':user_id' => $user->user_id,
+          ':value'   => $tokenHash
+        ]);
+
+        // Cookie cifrada
         setcookie(
           'php-start',
-          $cipher->encrypt((string) $user->user_id),
+          $cipher->encrypt($cookieData),
           [
             'expires'  => time() + (30 * 24 * 60 * 60),
             'path'     => '/',

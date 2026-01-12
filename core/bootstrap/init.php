@@ -20,6 +20,7 @@ require_once BASE_DIR . "/core/middlewares/auth_home.middleware.php";
 require_once BASE_DIR . "/core/middlewares/permission.middleware.php";
 
 // Routes
+require_once BASE_DIR . "/core/routes/install.route.php";
 require_once BASE_DIR . "/core/routes/home.route.php";
 require_once BASE_DIR . "/core/routes/admin.route.php";
 require_once BASE_DIR . "/core/routes/api.route.php";

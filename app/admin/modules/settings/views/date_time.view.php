@@ -1,3 +1,7 @@
+<?php start_block("title"); ?>
+Date Time
+<?php end_block(); ?>
+
 <form action="" method="POST" id="settingsForm">
 
   <div class="card">
@@ -6,9 +10,7 @@
         <i class="fa-regular fa-clock text-primary"></i>
         Configuración Regional
       </h5>
-      <button class="btn btn-success btn-sm" type="submit" name="save">
-        <i class="fa-solid fa-save me-1"></i> Guardar
-      </button>
+
     </div>
 
     <div class="card-body">
@@ -81,8 +83,14 @@
       </div>
     </div>
 
-    <div class="card-footer  p-3 text-end">
-      <a href="<?= admin_route('users') ?>" class="btn btn-link text-decoration-none text-muted">Cancelar</a>
+    <div class="card-footer text-end">
+      <a href="<?= admin_route('users') ?>" class="btn btn-secondary">
+        <i class="fa fa-arrow-left me-1"></i>
+        Cancelar
+      </a>
+      <button class="btn btn-primary" type="submit" name="save">
+        <i class="fa-solid fa-save me-1"></i> Guardar
+      </button>
     </div>
 
   </div>

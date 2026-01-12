@@ -101,11 +101,8 @@ SMTP
     }
   }
 
-  // Lógica visual para el botón de carga (sin CSS extra, usando d-none de bootstrap)
   document.getElementById('testMail').addEventListener('click', function () {
     const iconLoad = document.getElementById('loading');
-    // Ejemplo visual:
-    // iconLoad.classList.remove('d-none');
   });
 </script>
 

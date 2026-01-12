@@ -1,3 +1,7 @@
+<?php start_block("title") ?>
+Robots.txt
+<?php end_block() ?>
+
 <div class="card">
   <div class="card-body">
 

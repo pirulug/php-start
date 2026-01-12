@@ -1,141 +1,227 @@
 <?php
 
 if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
-  header("Location: " . home_route());
+  header("Location: " . home_route("profile"));
   exit();
 }
 
-// --- AUTO LOGIN CON COOKIE ---
+// AUTO LOGIN CON COOKIE 
 if (isset($_COOKIE['php-start'])) {
   try {
-    // Intentar descifrar el user_id
-    $user_id = $cipher->decrypt($_COOKIE['php-start']);
+    $data = $cipher->decrypt($_COOKIE['php-start']);
 
-    // Validar que sea numérico (protección adicional)
-    if (!is_numeric($user_id)) {
-      throw new Exception("ID inválido en cookie");
+    if (!str_contains($data, ':')) {
+      throw new Exception('Formato inválido');
     }
 
-    $query = "SELECT * FROM users WHERE user_id = :user_id AND user_status = 1 AND role_id IN (1, 2)";
-    $stmt  = $connect->prepare($query);
-    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-    $stmt->execute();
+    [$user_id, $token] = explode(':', $data, 2);
 
-    if ($stmt->rowCount() === 1) {
-      $user = $stmt->fetch(PDO::FETCH_OBJ);
-
-      // Actualizar última conexión
-      $update = $connect->prepare("
-        UPDATE users 
-        SET user_last_login = NOW() 
-        WHERE user_id = :user_id
-      ");
-      $update->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
-      $update->execute();
-
-      // Crear sesión
-      $_SESSION['user_id'] = $user->user_id;
-      $_SESSION['signin']  = true;
-
-      // Renovar cookie
-      setcookie("php-start", $cipher->encrypt($user->user_id), time() + (30 * 24 * 60 * 60), "/");
-
-      // Redirigir al perfil
-      // $notifier->add("¡Bienvenido de nuevo, {$user->user_login}!", "success", "toast");
-      $notifier->
-        message("¡Bienvenido de nuevo, {$user->user_login}!")
-        ->toast()
-        ->success()
-        ->add();
-
-      header("Location: " . APP_URL . "/profile");
-      exit();
-
-    } else {
-      // Usuario no existe o está inactivo => borrar cookie
-      setcookie("php-start", "", time() - 3600, "/");
+    if (!is_numeric($user_id) || empty($token)) {
+      throw new Exception('Datos inválidos');
     }
+
+    $stmt = $connect->prepare("
+      SELECT u.*, um.usermeta_value AS token_hash
+      FROM users u
+      LEFT JOIN usermeta um
+        ON um.user_id = u.user_id
+        AND um.usermeta_key = 'remember_token'
+      WHERE u.user_id = :user_id
+      AND u.user_status = 1
+      LIMIT 1
+    ");
+    $stmt->execute([':user_id' => $user_id]);
+
+    if (!$stmt->rowCount()) {
+      throw new Exception('Usuario no válido');
+    }
+
+    $user = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if (
+      empty($user->token_hash) ||
+      !hash_equals($user->token_hash, hash('sha256', $token))
+    ) {
+      throw new Exception('Token inválido');
+    }
+
+    // LOGIN OK
+    $_SESSION['user_id'] = $user->user_id;
+    $_SESSION['signin']  = true;
+
+    $notifier
+      ->message("Bienbenido {$user->user_nickname}")
+      ->success()
+      ->toast()
+      ->add();
+    header("Location: " . home_route("profile"));
+    exit();
+
   } catch (Exception $e) {
-    // Error al descifrar => cookie corrupta o manipulada => eliminar
-    setcookie("php-start", "", time() - 3600, "/");
+    setcookie('php-start', '', time() - 3600, '/');
   }
 }
 
-// --- LOGIN NORMAL ---
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sign_in'])) {
-  $login       = clear_data($_POST['login'] ?? '');
-  $password    = clear_data($_POST['password'] ?? '');
-  $remember_me = isset($_POST['remember']);
+// LOGIN
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+  $user_login    = clear_data($_POST['login']);
+  $user_password = clear_data($_POST['password']);
+  $remember_me   = isset($_POST['remember']);
 
-  // Validar usuario
-  if (empty($login)) {
-    $notifier
-      ->message("El campo usuario o correo es obligatorio")
+  // =========================================================
+  // ACCESS CONTROL (rate limit)
+  // =========================================================
+  $rate = (new LoginRateLimiter($connect))
+    ->fromPost($user_login)
+    ->resolveUser()
+    ->load();
+
+  if ($rate->isBlocked()) {
+    $notifier->message($rate->getBlockedMessage())
+      ->toast()
+      ->danger()
+      ->add();
+    return;
+  }
+
+  // VALIDACIONES
+  if ($user_login === '') {
+    $notifier->message("El campo usuario es obligatorio")
       ->toast()
       ->danger()
       ->add();
   }
 
-  // Validar contraseña
-  if (empty($password)) {
-    $notifier
-      ->message("El campo contraseña es obligatorio")
+  if ($user_password === '') {
+    $notifier->message("El campo contraseña es obligatorio")
       ->toast()
       ->danger()
       ->add();
-  } else {
-    $password = $cipher->encrypt($password);
   }
 
-  // Si no hay errores, comprobar usuario y contraseña
+  // PROCESO LOGIN
   if (!$notifier->can()->danger()) {
+
     $query = "
       SELECT *
       FROM users
-      WHERE (user_email = :email OR user_login = :user_login)
-        AND user_password = :password
+      WHERE (user_email = :user_email OR user_login = :user_login)
         AND user_status = 1
+      LIMIT 1
     ";
-
-    $stmt = $connect->prepare($query);
-    $stmt->bindParam(':email', $login, PDO::PARAM_STR);
-    $stmt->bindParam(':user_login', $login, PDO::PARAM_STR);
-    $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+    $stmt  = $connect->prepare($query);
+    $stmt->bindParam(':user_email', $user_login);
+    $stmt->bindParam(':user_login', $user_login);
     $stmt->execute();
 
     if ($stmt->rowCount() === 1) {
+
       $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-      // Actualizar última conexión
-      $update = $connect->prepare("
-        UPDATE users 
-        SET user_last_login = NOW() 
-        WHERE user_id = :user_id
-      ");
-      $update->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
-      $update->execute();
+      // Verificar contraseña (CLAVE)
+      if (!$cipher->verifyPassword($user_password, $user->user_password)) {
 
-      // Crear sesión
+        $rate->failed();
+
+        $notifier->message("Usuario o contraseña incorrectos")
+          ->toast()
+          ->danger()
+          ->add();
+        return;
+      }
+
+      if (!can_user_login($connect, $user->user_id)) {
+        $notifier->message("No tienes permisos para acceder al sistema.")
+          ->toast()
+          ->danger()
+          ->add();
+        return;
+      }
+
+      // LOGIN OK
       $_SESSION['user_id'] = $user->user_id;
       $_SESSION['signin']  = true;
 
-      // Recordar usuario
       if ($remember_me) {
-        setcookie("php-start", $cipher->encrypt($user->user_id), time() + (30 * 24 * 60 * 60), "/");
+        $token      = bin2hex(random_bytes(32));
+        $tokenHash  = hash('sha256', $token);
+        $cookieData = $user->user_id . ':' . $token;
+
+        // UPSERT usermeta
+        $stmt = $connect->prepare("
+          INSERT INTO usermeta (user_id, usermeta_key, usermeta_value)
+          VALUES (:user_id, 'remember_token', :value)
+          ON DUPLICATE KEY UPDATE
+            usermeta_value = VALUES(usermeta_value)
+        ");
+        $stmt->execute([
+          ':user_id' => $user->user_id,
+          ':value'   => $tokenHash
+        ]);
+
+        // Cookie cifrada
+        setcookie(
+          'php-start',
+          $cipher->encrypt($cookieData),
+          [
+            'expires'  => time() + (30 * 24 * 60 * 60),
+            'path'     => '/',
+            'secure'   => !empty($_SERVER['HTTPS']),
+            'httponly' => true,
+            'samesite' => 'Lax'
+          ]
+        );
       }
 
-      $notifier->
-        message("¡Bienvenido de nuevo, {$user->user_login}!")
+      $stmt = $connect->prepare(
+        "UPDATE users SET user_last_login = NOW() WHERE user_id = :user_id"
+      );
+      $stmt->bindParam(':user_id', $user->user_id);
+      $stmt->execute();
+
+      // =========================================================
+      // ACCESS CONTROL → login exitoso
+      // =========================================================
+      $rate->success();
+
+      // Notificación de bienvenida
+      $notifier->message("¡Bienvenido de nuevo, {$user->user_login}!")
         ->toast()
         ->success()
         ->add();
 
-      header("Location: " . APP_URL . "/profile");
-      exit();
+      // log
+      $log->info("Usuario {$user->user_login} ha iniciado sesión")
+        ->file("home")
+        ->with("user_id", $user->user_id)
+        ->with("user_login", $user->user_login)
+        ->write();
+
+      // Redirigir a la URL original si existe
+      if (!empty($_SESSION['redirect_after_login'])) {
+
+        $redirect = $_SESSION['redirect_after_login'];
+        unset($_SESSION['redirect_after_login']);
+
+        header("Location: " . $redirect);
+        exit;
+      }
+
+      header("Location: " . home_route("profile"));
+      exit;
+
     } else {
-      $notifier->
-        message("Correo o contraseña incorrectos")
+      // =========================================================
+      // ACCESS CONTROL → fallo (IP + login)
+      // =========================================================
+      $rate->failed();
+
+      if ($rate->isBruteForce()) {
+        $rate->blockIpPermanently();
+      }
+
+      $notifier->message("Usuario o contraseña incorrectos")
         ->toast()
         ->danger()
         ->add();

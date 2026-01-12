@@ -261,6 +261,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
       if ($stmt->execute()) {
+
+        $stmt = $connect->prepare("
+          UPDATE usermeta
+          SET usermeta_value = NULL
+          WHERE user_id = :user_id
+          AND usermeta_key = 'remember_token'
+        ");
+        $stmt->execute([
+          ':user_id' => $userId
+        ]);
+
         $notifier
           ->message("La contraseña se ha actualizado correctamente.")
           ->success()

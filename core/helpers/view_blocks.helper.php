@@ -31,3 +31,8 @@ function end_block() {
 function get_block($name, $default = '') {
   return $GLOBALS['__view_blocks'][$name] ?? $default;
 }
+
+function has_block($name) {
+  return isset($GLOBALS['__view_blocks'][$name])
+    && trim($GLOBALS['__view_blocks'][$name]) !== '';
+}
