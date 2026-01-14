@@ -4,20 +4,43 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-const BASE_DIR = __DIR__;
+define('BASE_DIR', __DIR__);
 
 require_once BASE_DIR . "/config.php";
-require_once BASE_DIR . "/core/bootstrap/init.php";
-
-// echo $cipher->encrypt("admin123");
-// exit();
+require_once BASE_DIR . "/core/config/path.config.php";
+require_once BASE_DIR . "/core/config/security.config.php";
 
 /*
 |--------------------------------------------------------------------------
 | Obtener URL limpia
 |--------------------------------------------------------------------------
 */
-$url = isset($_GET['url']) ? trim($_GET['url'], '/') : '/';
+$url          = isset($_GET['url']) ? trim($_GET['url'], '/') : '/';
+$requestedUrl = trim($_GET['url'] ?? '', '/');
+
+/*
+|--------------------------------------------------------------------------
+| Detectar contexto
+|--------------------------------------------------------------------------
+*/
+$isAdmin = str_starts_with($requestedUrl, PATH_ADMIN);
+$isApi   = str_starts_with($requestedUrl, PATH_API);
+$isAjax  = str_starts_with($requestedUrl, PATH_AJAX);
+
+/*
+|--------------------------------------------------------------------------
+| Cargar bootstrap según contexto
+|--------------------------------------------------------------------------
+*/
+if ($isAdmin) {
+  require_once BASE_DIR . "/core/bootstrap/admin.php";
+} elseif ($isApi) {
+  require_once BASE_DIR . "/core/bootstrap/api.php";
+} elseif ($isAjax) {
+  require_once BASE_DIR . "/core/bootstrap/ajax.php";
+} else {
+  require_once BASE_DIR . "/core/bootstrap/home.php";
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -25,33 +48,18 @@ $url = isset($_GET['url']) ? trim($_GET['url'], '/') : '/';
 |--------------------------------------------------------------------------
 */
 $route = Router::resolve($url);
-$args = $route['params'] ?? []; // Parametros de {name} = $args[{name}]
+$args  = $route['params'] ?? [];
 
-$requestedUrl = trim($_GET['url'] ?? '', '/');
-
-$isAdmin = str_starts_with($requestedUrl, PATH_ADMIN);
-$isApi   = str_starts_with($requestedUrl, PATH_API);
-$isAjax  = str_starts_with($requestedUrl, PATH_AJAX);
-
-// DEBUG ROUTER
-// var_dump($_GET);
-// echo "<pre>";
-// var_dump($route);
-// echo "</pre>";
-// var_dump($args);
-// // {id}
-// var_dump($args["id"]);
-// exit();
-
+/*
+|--------------------------------------------------------------------------
+| Ruta no encontrada
+|--------------------------------------------------------------------------
+*/
 if (!$route) {
 
   http_response_code(404);
 
-  /*
-  |--------------------------------------------------------------------------
-  | API / AJAX → JSON
-  |--------------------------------------------------------------------------
-  */
+  // API / AJAX → JSON
   if ($isApi || $isAjax) {
 
     header('Content-Type: application/json; charset=utf-8');
@@ -67,11 +75,7 @@ if (!$route) {
     exit;
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | ADMIN → HTML personalizado
-  |--------------------------------------------------------------------------
-  */
+  // ADMIN → Vista de error
   if ($isAdmin) {
 
     require_once admin_action('errors.404');
@@ -84,15 +88,16 @@ if (!$route) {
     exit;
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | FRONT (fallback)
-  |--------------------------------------------------------------------------
-  */
+  // FRONT
   echo 'Página no encontrada';
   exit;
 }
 
+/*
+|--------------------------------------------------------------------------
+| Analytics
+|--------------------------------------------------------------------------
+*/
 if (!empty($route['analytics'])) {
 
   $analytics = new Analytics($connect);
@@ -104,6 +109,11 @@ if (!empty($route['analytics'])) {
   $analytics->trackVisit($pageTitle, $pageUri);
 }
 
+/*
+|--------------------------------------------------------------------------
+| Ejecutar middlewares
+|--------------------------------------------------------------------------
+*/
 foreach ($route['middlewares'] as [$middleware, $params]) {
   call_user_func(
     $middleware . '_middleware',
@@ -118,12 +128,12 @@ foreach ($route['middlewares'] as [$middleware, $params]) {
 |--------------------------------------------------------------------------
 */
 if (!empty($route['action'])) {
+
   if ($isApi || $isAjax) {
     header('Content-Type: application/json; charset=utf-8');
-    require_once $route['action'];
-  } else {
-    require_once $route['action'];
   }
+
+  require_once $route['action'];
 }
 
 /*
@@ -139,5 +149,3 @@ if (!empty($route['view']) && !empty($route['layout'])) {
 
   require_once $route['layout'];
 }
-
-

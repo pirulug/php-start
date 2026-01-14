@@ -77,6 +77,7 @@ INSERT INTO options (option_key, option_value) VALUES
 ('white_logo', 'st_logo_light_6962747f29c46870091717.webp'),
 ('dark_logo', 'st_logo_dark_69627476f0736557823395.webp'),
 ('og_image', 'og_image_6962748bb0c10821618393.webp'),
+('loader', false),
 ('smtp_host', 'mail.pirulug.pw'),
 ('smtp_email', 'no-reply@pirulug.pw'),
 ('smtp_password', 'IB0]}]oynY=Qkgk*'),

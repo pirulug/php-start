@@ -13,5 +13,6 @@ Router::prefix(PATH_AJAX, CTX_AJAX, function () {
 
   Router::route("datatable")
     ->action(BASE_DIR . "/app/ajax/datatable.php")
+    ->middleware("auth_ajax")
     ->register();
 });
