@@ -30,13 +30,22 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->permission("dashboard.dashboard")
     ->register();
 
+  // Plugins
+  Router::route('plugins/datatable')
+    ->action(admin_action("plugins.datatable"))
+    ->view(admin_view("plugins.datatable"))
+    ->layout(admin_layout())
+    ->middleware('auth_admin')
+    ->permission("plugins.datatable")
+    ->register();
+
   // Account
   Router::route('account/profile')
     ->action(admin_action("account.profile"))
     ->view(admin_view("account.profile"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'account.profile')
+    ->permission('account.profile')
     ->register();
 
   Router::route('account/settings')
@@ -44,7 +53,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("account.settings"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'account.settings')
+    ->permission('account.settings')
     ->register();
 
   // Users
@@ -53,7 +62,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("users.list"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'users.list')
+    ->permission('users.list')
     ->register();
 
   Router::route('user/new')
@@ -61,7 +70,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("users.new"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'users.new')
+    ->permission('users.new')
     ->register();
 
   Router::route('user/edit/{id}')
@@ -75,13 +84,13 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
   Router::route('user/delete/{id}')
     ->action(admin_action("users.delete"))
     ->middleware('auth_admin')
-    ->permission( 'users.delete')
+    ->permission('users.delete')
     ->register();
 
   // Roles
   Router::route('roles')
     ->middleware('auth_admin')
-    ->permission( 'roles.list')
+    ->permission('roles.list')
     ->action(admin_action("roles.list"))
     ->view(admin_view("roles.list"))
     ->layout(admin_layout())
@@ -92,7 +101,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("roles.new"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'roles.new')
+    ->permission('roles.new')
     ->register();
 
   Router::route('rol/edit/{id}')
@@ -100,13 +109,13 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("roles.edit"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'roles.edit')
+    ->permission('roles.edit')
     ->register();
 
   Router::route('rol/delete/{id}')
     ->action(admin_action("roles.delete"))
     ->middleware('auth_admin')
-    ->permission( 'roles.delete')
+    ->permission('roles.delete')
     ->register();
 
   // Permisions
@@ -115,7 +124,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("permissions.list"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'permissions.list')
+    ->permission('permissions.list')
     ->register();
 
   Router::route('permission/new')
@@ -123,7 +132,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("permissions.new"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'permissions.new')
+    ->permission('permissions.new')
     ->register();
 
   Router::route('permission/edit/{id}')
@@ -131,13 +140,13 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("permissions.edit"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'permissions.edit')
+    ->permission('permissions.edit')
     ->register();
 
   Router::route('permission/delete/{id}')
     ->action(admin_action("permissions.delete"))
     ->middleware('auth_admin')
-    ->permission( 'permissions.delete')
+    ->permission('permissions.delete')
     ->register();
 
   // Settings
@@ -146,7 +155,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.general"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.general')
+    ->permission('settings.general')
     ->register();
 
   Router::route('settings/backups')
@@ -154,7 +163,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.backups"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.backups')
+    ->permission('settings.backups')
     ->register();
 
   Router::route('settings/brand')
@@ -162,7 +171,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.brand"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.brand')
+    ->permission('settings.brand')
     ->register();
 
   Router::route('settings/captcha')
@@ -170,7 +179,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.captcha"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.captcha')
+    ->permission('settings.captcha')
     ->register();
 
   Router::route('settings/date_time')
@@ -178,7 +187,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.date_time"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.date_time')
+    ->permission('settings.date_time')
     ->register();
 
   Router::route('settings/info')
@@ -186,7 +195,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.info"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.info')
+    ->permission('settings.info')
     ->register();
 
   Router::route('settings/robots')
@@ -194,7 +203,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.robots"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.robots')
+    ->permission('settings.robots')
     ->register();
 
   Router::route('settings/sitemap')
@@ -202,7 +211,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.sitemap"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.sitemap')
+    ->permission('settings.sitemap')
     ->register();
 
   Router::route('settings/smtp')
@@ -210,7 +219,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.smtp"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.smtp')
+    ->permission('settings.smtp')
     ->register();
 
   Router::route('settings/social')
@@ -218,7 +227,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.social"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.social')
+    ->permission('settings.social')
     ->register();
 
   Router::route('settings/visitors')
@@ -226,7 +235,7 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->view(admin_view("settings.visitors"))
     ->layout(admin_layout())
     ->middleware('auth_admin')
-    ->permission( 'settings.visitors')
+    ->permission('settings.visitors')
     ->register();
 });
 

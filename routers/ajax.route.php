@@ -10,4 +10,8 @@ Router::prefix(PATH_AJAX, CTX_AJAX, function () {
   Router::route("mail")
     ->action(BASE_DIR . "/app/ajax/mail.php")
     ->register();
+
+  Router::route("datatable")
+    ->action(BASE_DIR . "/app/ajax/datatable.php")
+    ->register();
 });

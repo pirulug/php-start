@@ -4,7 +4,16 @@ Sidebar::item('Dashboard', admin_route('dashboard'))
   ->icon('sliders')
   ->can('dashboard.dashboard');
 
-// Sidebar::header('Pages');
+// Sidebar::header('Plugin');
+
+Sidebar::group('Plugins', 'lock', function ($group) {
+
+  $group->item('Datatables', admin_route('plugins/datatable'))
+    ->can('roles.new');
+
+});
+
+// Sidebar::header('Configuración');
 
 $users = Sidebar::group('Users', 'user');
 
