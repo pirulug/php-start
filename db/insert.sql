@@ -55,7 +55,12 @@ INSERT INTO users (
 INSERT INTO usermeta (user_id, usermeta_key, usermeta_value) VALUES
 (1, 'first_name', 'Administrador'),
 (1, 'last_name', ''),
-(1, 'second_last_name', '');
+(1, 'second_last_name', ''),
+(1, 'remember_token', ''),
+(2, 'first_name', 'Jhon'),
+(2, 'last_name', 'Doe'),
+(2, 'second_last_name', 'Plus'),
+(2, 'remember_token', '');
 
 -- OPTIONS
 INSERT INTO options (option_key, option_value) VALUES
