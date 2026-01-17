@@ -32,23 +32,16 @@ Editar Usuarios
 
   <input type="hidden" name="user_id" value="<?= $cipher->encrypt($user->user_id) ?>">
 
-  <div class="row g-4">
+  <div class="row g-3">
 
     <div class="col-12 col-lg-8">
       <div class="card h-100">
-
-        <div class="card-header bg-transparent py-3">
-          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-user-pen text-primary"></i>
-            Editar Cuenta
-          </h5>
-        </div>
 
         <div class="card-body">
           <div class="row g-3">
 
             <div class="col-12 col-md-6">
-              <label class="form-label text-muted small text-uppercase fw-bold">Nombre</label>
+              <label class="form-label ">Nombre</label>
               <div class="input-group">
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-user"></i></span>
                 <input type="text" name="user_login" class="form-control"
@@ -57,7 +50,7 @@ Editar Usuarios
             </div>
 
             <div class="col-12 col-md-6">
-              <label class="form-label text-muted small text-uppercase fw-bold">Email</label>
+              <label class="form-label ">Email</label>
               <div class="input-group">
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-envelope"></i></span>
                 <input type="text" name="user_email" class="form-control"
@@ -66,7 +59,7 @@ Editar Usuarios
             </div>
 
             <div class="col-12">
-              <label class="form-label text-muted small text-uppercase fw-bold">Contraseña</label>
+              <label class="form-label ">Contraseña</label>
               <div class="input-group">
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-key"></i></span>
                 <input class="form-control" type="password" name="user_password" id="user_password"
@@ -79,7 +72,7 @@ Editar Usuarios
             </div>
 
             <div class="col-12">
-              <label class="form-label text-muted small text-uppercase fw-bold">Rol Asignado</label>
+              <label class="form-label ">Rol Asignado</label>
               <?php if ($roles): ?>
                 <div class="input-group">
                   <span class="input-group-text bg-transparent"><i class="fa-solid fa-shield-halved"></i></span>
@@ -102,7 +95,7 @@ Editar Usuarios
             </div>
 
             <div>
-              <label class="form-label text-muted small text-uppercase fw-bold">Estado</label>
+              <label class="form-label ">Estado</label>
               <div class="input-group">
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-power-off"></i></span>
                 <select class="form-select" name="user_status" required>
@@ -115,7 +108,6 @@ Editar Usuarios
                 </select>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -123,32 +115,22 @@ Editar Usuarios
 
     <div class="col-12 col-lg-4">
       <div class="card h-100">
-
-        <div class="card-header bg-transparent py-3">
-          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-image-portrait text-success"></i>
-            Perfil
-          </h5>
-        </div>
-
         <div class="card-body d-flex flex-column gap-4">
-
           <div>
-            <label class="form-label text-muted small text-uppercase fw-bold mb-2">Avatar</label>
-
+            <label class="form-label  mb-2">Avatar</label>
             <div
               class="p-4 rounded bg-secondary bg-opacity-10 d-flex justify-content-center align-items-center flex-column">
               <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
-                data-default="<?= APP_URL ?>/uploads/user/<?= $user->user_image ?>" accept=".jpg,.jpeg,.png,.gif,.webp">
+                data-default="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>"
+                accept=".jpg,.jpeg,.png,.gif,.webp">
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
     <div class="col-12">
-      <div class="d-flex justify-content-end gap-2 py-3">
+      <div class="d-flex justify-content-end gap-2 p-3 bg-body rounded">
         <a href="<?= admin_route('users') ?>" class="btn btn-outline-secondary px-4">
           Cancelar
         </a>

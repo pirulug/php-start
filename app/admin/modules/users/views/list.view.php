@@ -11,16 +11,7 @@ Listar Usuarios
 <div class="card">
   <div class="card-body">
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-
-      <div>
-        <h5 class="card-title mb-1 d-flex align-items-center gap-2">
-          <i class="fa-solid fa-users text-primary"></i>
-          Directorio de Usuarios
-        </h5>
-        <div class="text-muted small">Gestión de accesos y perfiles</div>
-      </div>
-
+    <div class="mb-3">
       <form method="get" class="d-flex" style="min-width: 280px;">
         <div class="input-group">
           <span class="input-group-text bg-transparent text-secondary">
@@ -37,14 +28,14 @@ Listar Usuarios
       <table class="table table-hover align-middle">
         <thead>
           <tr>
-            <th scope="col" class="text-muted small text-uppercase fw-bold ps-3">Usuario</th>
-            <th scope="col" class="text-muted small text-uppercase fw-bold">Rol</th>
-            <th scope="col" class="text-muted small text-uppercase fw-bold">Estado</th>
-            <th scope="col" class="text-muted small text-uppercase fw-bold text-end pe-3">Acciones</th>
+            <th scope="col" class=" ps-3">Usuario</th>
+            <th scope="col" class="">Rol</th>
+            <th scope="col" class="">Estado</th>
+            <th scope="col" class=" text-end pe-3">Acciones</th>
           </tr>
         </thead>
 
-        <tbody class="table-group-divider">
+        <tbody>
 
           <?php if (count($users) > 0): ?>
             <?php foreach ($users as $user): ?>
@@ -52,9 +43,9 @@ Listar Usuarios
                 <td class="ps-3 py-3">
                   <div class="d-flex align-items-center gap-3">
                     <div class="position-relative">
-                      <?php if (!empty($user->user_image) && file_exists(APP_URL . "/uploads/user/" . $user->user_image)): ?>
-                        <img src="<?= APP_URL . "/uploads/user/" . $user->user_image ?>" alt="Avatar" class="rounded-circle"
-                          style="width: 48px; height: 48px; object-fit: cover;">
+                      <?php if (!empty($user->user_image) && file_exists(BASE_DIR . "/storage/uploads/user/" . ($user->user_image))): ?>
+                        <img src="<?= APP_URL . "/storage/uploads/user/" . $user->user_image ?>" alt="Avatar"
+                          class="rounded-circle" style="width: 48px; height: 48px; object-fit: cover;">
                       <?php else: ?>
                         <div
                           class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center text-secondary fw-bold"
@@ -134,9 +125,7 @@ Listar Usuarios
     </div>
 
     <?php if (count($users) > 0): ?>
-      <div class="d-flex justify-content-end mt-4 pt-3 border-top border-light">
-        <?= $dt->renderLinks('?') ?>
-      </div>
+      <?= $dt->renderLinks('?') ?>
     <?php endif; ?>
 
   </div>

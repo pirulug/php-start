@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
     if (!$notifier->can()->danger()) {
 
-      $upload_path = BASE_DIR . '/uploads/user/';
+      $upload_path = BASE_DIR . '/storage/uploads/user/';
 
       $user_image = (new UploadImage())
         ->file($_FILES['user_image'])
@@ -158,7 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ->upload();
 
       if (!$user_image['success']) {
-        // $notifier->add($user_image['message'], "danger");
         $notifier
           ->message($user_image['message'])
           ->bootstrap()

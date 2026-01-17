@@ -32,34 +32,30 @@ Nuevo Usuarios
 
 <form id="formNewUser" enctype="multipart/form-data" action="" method="post" autocomplete="off">
 
-  <div class="row g-4">
+  <div class="row g-3">
 
     <div class="col-12 col-lg-8">
       <div class="card h-100">
-
-        <div class="card-header bg-transparent py-3">
-          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-user-plus text-primary"></i>
-            Información de Cuenta
-          </h5>
-        </div>
 
         <div class="card-body">
 
           <div class="row g-3">
             <div class="col-12 col-md-6">
-              <label class="form-label text-muted small text-uppercase fw-bold">Usuario <span
-                  class="text-danger">*</span></label>
+              <label class="form-label ">
+                Usuario
+                <span class="text-danger">*</span>
+              </label>
               <div class="input-group">
-                <span class="input-group-text bg-transparent"><i class="fa-solid fa-user"></i></span>
+                <span class="input-group-text bg-transparent">
+                  <i class="fa-solid fa-user"></i>
+                </span>
                 <input type="text" name="user_login" class="form-control" placeholder="Ej: jdoe"
                   value="<?= isset($_POST['user_login']) ? htmlspecialchars($_POST['user_login']) : '' ?>" required>
               </div>
             </div>
 
             <div class="col-12 col-md-6">
-              <label class="form-label text-muted small text-uppercase fw-bold">Email <span
-                  class="text-danger">*</span></label>
+              <label class="form-label ">Email <span class="text-danger">*</span></label>
               <div class="input-group">
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-envelope"></i></span>
                 <input type="email" name="user_email" class="form-control" placeholder="nombre@correo.com"
@@ -68,9 +64,11 @@ Nuevo Usuarios
             </div>
 
             <div class="col-12">
-              <label class="form-label text-muted small text-uppercase fw-bold">Contraseña</label>
+              <label class="form-label ">Contraseña</label>
               <div class="input-group">
-                <span class="input-group-text bg-transparent"><i class="fa-solid fa-key"></i></span>
+                <span class="input-group-text bg-transparent">
+                  <i class="fa-solid fa-key"></i>
+                </span>
                 <input class="form-control" type="password" name="user_password" id="user_password"
                   placeholder="••••••••"
                   value="<?= isset($_POST['user_password']) ? htmlspecialchars($_POST['user_password']) : '' ?>">
@@ -82,8 +80,7 @@ Nuevo Usuarios
             </div>
 
             <div class="col-12">
-              <label class="form-label text-muted small text-uppercase fw-bold">Rol de Usuario <span
-                  class="text-danger">*</span></label>
+              <label class="form-label ">Rol de Usuario <span class="text-danger">*</span></label>
               <?php if ($roles): ?>
                 <div class="input-group">
                   <span class="input-group-text bg-transparent"><i class="fa-solid fa-shield-halved"></i></span>
@@ -105,7 +102,7 @@ Nuevo Usuarios
             </div>
 
             <div>
-              <label class="form-label text-muted small text-uppercase fw-bold">Estado de la cuenta</label>
+              <label class="form-label ">Estado de la cuenta</label>
               <div class="input-group">
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-power-off"></i></span>
                 <select class="form-select" name="user_status" required>
@@ -113,7 +110,8 @@ Nuevo Usuarios
                     🟢 Activo
                   </option>
                   <option value="0" <?= isset($_POST['user_status']) && $_POST['user_status'] == 2 ? 'selected' : '' ?>
-                    <?= !isset($_POST['user_status']) ? 'selected' : '' ?>> 🔴 Inactivo / Pendiente
+                    <?= !isset($_POST['user_status']) ? 'selected' : '' ?>>
+                    🔴 Inactivo / Pendiente
                   </option>
                 </select>
               </div>
@@ -126,19 +124,9 @@ Nuevo Usuarios
 
     <div class="col-12 col-lg-4">
       <div class="card h-100">
-
-        <div class="card-header bg-transparent py-3">
-          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-id-badge text-success"></i>
-            Perfil y Estado
-          </h5>
-        </div>
-
-        <div class="card-body d-flex flex-column gap-4">
-
+        <div class="card-body">
           <div>
-            <label class="form-label text-muted small text-uppercase fw-bold mb-2">Imagen de Perfil</label>
-
+            <label class="form-label  mb-2">Imagen de Perfil</label>
             <div
               class="p-4 rounded bg-secondary bg-opacity-10 d-flex justify-content-center align-items-center flex-column">
               <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
@@ -148,16 +136,13 @@ Nuevo Usuarios
               </small> -->
             </div>
           </div>
-
-
-
         </div>
       </div>
     </div>
 
     <div class="col-12">
-      <div class="d-flex justify-content-end gap-2 py-3">
-        <a href="<?= APP_URL ?>/panel/users" class="btn btn-outline-secondary px-4">
+      <div class="d-flex justify-content-end gap-2 p-3 bg-body rounded">
+        <a href="<?= admin_route("users") ?>" class="btn btn-outline-secondary px-4">
           Cancelar
         </a>
         <button class="btn btn-primary px-5" type="submit" name="save">

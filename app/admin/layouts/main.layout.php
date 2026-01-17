@@ -34,7 +34,6 @@
 </head>
 
 <body>
-  <!-- Loader-->
   <?php if ($config->get("loader")): ?>
     <?php require_once BASE_DIR . '/app/Admin/Layouts/partials/loader.php'; ?>
   <?php endif; ?>

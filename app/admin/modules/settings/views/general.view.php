@@ -1,8 +1,10 @@
 <?php start_block("title"); ?>
-General
+Información General
 <?php end_block(); ?>
 
+<?php start_block("css"); ?>
 <link rel="stylesheet" href="<?= APP_URL . "/static/plugins/tagify/tagify.css" ?>">
+<?php end_block(); ?>
 
 <form action="" method="POST" enctype="multipart/form-data">
   <div class="card">
@@ -85,6 +87,7 @@ General
   </div>
 </form>
 
+<?php start_block("js"); ?>
 <script src="<?= APP_URL . "/static/plugins/tagify/tagify.js" ?>"></script>
 <script>
   // Inicialización de Tagify con estilos ajustados a Bootstrap
@@ -101,3 +104,4 @@ General
     });
   }
 </script>
+<?php end_block(); ?>

@@ -11,19 +11,13 @@ Listar Roles
 <div class="card">
   <div class="card-body">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="card-title mb-0 fw-bold">
-        <i class="fa-solid fa-users-gear text-primary me-2"></i>Gestión de Roles
-      </h5>
-
-      <form method="get" class="d-flex" style="max-width: 300px;">
+    <div class="mb-3">
+      <form method="get">
         <div class="input-group">
-          <span class="input-group-text bg-transparent">
-            <i class="fa-solid fa-magnifying-glass text-secondary"></i>
-          </span>
           <input type="text" name="search" class="form-control" placeholder="Buscar rol..."
             value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
           <button class="btn btn-primary">
+            <i class="fa-solid fa-search"></i>
             Buscar
           </button>
         </div>
@@ -34,13 +28,13 @@ Listar Roles
       <table class="table table-hover align-middle">
         <thead>
           <tr>
-            <th scope="col" class="text-secondary text-uppercase small" style="width: 80px;">ID</th>
-            <th scope="col" class="text-secondary text-uppercase small">Nombre</th>
-            <th scope="col" class="text-secondary text-uppercase small">Descripción</th>
-            <th scope="col" class="text-end text-secondary text-uppercase small" style="width: 150px;">Acciones</th>
+            <th scope="col" class="" style="width: 80px;">ID</th>
+            <th scope="col" class="">Nombre</th>
+            <th scope="col" class="">Descripción</th>
+            <th scope="col" class="text-end " style="width: 150px;">Acciones</th>
           </tr>
         </thead>
-        <tbody class="table-group-divider">
+        <tbody>
           <?php foreach ($roles as $data): ?>
             <tr>
               <td>

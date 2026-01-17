@@ -29,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ]);
   }
 
-  // $notifier->add('Se actualizó correctamente.', 'success');
   $notifier
     ->message('Se actualizó correctamente.')
     ->bootstrap()

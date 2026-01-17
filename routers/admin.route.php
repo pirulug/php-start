@@ -158,6 +158,14 @@ Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
     ->permission('settings.general')
     ->register();
 
+  Router::route('settings/options')
+    ->action(admin_action("settings.options"))
+    ->view(admin_view("settings.options"))
+    ->layout(admin_layout())
+    ->middleware('auth_admin')
+    ->permission('settings.options')
+    ->register();
+
   Router::route('settings/backups')
     ->action(admin_action("settings.backups"))
     ->view(admin_view("settings.backups"))
