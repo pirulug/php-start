@@ -22,13 +22,29 @@ $isMemoryLimitOk = $memoryLimit >= $minMemoryLimit;
 $executionTime     = (int) ini_get('max_execution_time');
 $isExecutionTimeOk = $executionTime >= $maxExecutionTime;
 
-// --- Datos del Servidor ---
-$freeSpaceMb  = round(disk_free_space("/") / 1024 / 1024);
-$totalSpaceMb = round(disk_total_space("/") / 1024 / 1024);
-$usedSpaceMb  = $totalSpaceMb - $freeSpaceMb;
-$diskPercent  = round(($usedSpaceMb / $totalSpaceMb) * 100);
-// Color de barra de disco: Verde < 70%, Amarillo < 90%, Rojo > 90%
-$diskClass = $diskPercent > 90 ? 'bg-danger' : ($diskPercent > 70 ? 'bg-warning' : 'bg-success');
+// --- Datos del Servidor (CORREGIDO open_basedir) ---
+$diskPath = $_SERVER['DOCUMENT_ROOT'];
+
+$freeBytes  = @disk_free_space($diskPath);
+$totalBytes = @disk_total_space($diskPath);
+
+if ($freeBytes === false || $totalBytes === false || $totalBytes <= 0) {
+  $freeSpaceMb  = 0;
+  $totalSpaceMb = 0;
+  $usedSpaceMb  = 0;
+  $diskPercent  = 0;
+  $diskClass    = 'bg-secondary';
+} else {
+  $freeSpaceMb  = round($freeBytes / 1024 / 1024);
+  $totalSpaceMb = round($totalBytes / 1024 / 1024);
+  $usedSpaceMb  = $totalSpaceMb - $freeSpaceMb;
+  $diskPercent  = round(($usedSpaceMb / $totalSpaceMb) * 100);
+
+  // Color de barra de disco
+  $diskClass = $diskPercent > 90
+    ? 'bg-danger'
+    : ($diskPercent > 70 ? 'bg-warning' : 'bg-success');
+}
 
 // --- Base de Datos ---
 try {
@@ -43,7 +59,8 @@ try {
   $dbType    = 'No conectado';
   $isDbOk    = false;
 }
-$isDbVersionOk = version_compare($dbVersion, $minDbVersion, '>=');
+
+$isDbVersionOk = $isDbOk && version_compare($dbVersion, $minDbVersion, '>=');
 
 // --- Estado Global ---
 $systemHealthy = $isPhpVersionOk && $areExtensionsOk && $isMemoryLimitOk && $isDbVersionOk;
@@ -55,4 +72,3 @@ function getStatusBadge($condition, $successText = 'OK', $failText = 'Error') {
   }
   return '<span class="badge bg-danger-subtle text-danger border border-danger-subtle"><i class="fa-solid fa-xmark me-1"></i> ' . $failText . '</span>';
 }
-?>

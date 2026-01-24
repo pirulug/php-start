@@ -35,13 +35,13 @@
 
 <body>
   <?php if ($config->get("loader")): ?>
-    <?php require_once BASE_DIR . '/app/Admin/Layouts/partials/loader.php'; ?>
+    <?php require_once BASE_DIR . '/app/admin/layouts/partials/loader.php'; ?>
   <?php endif; ?>
 
   <div class="wrapper">
 
-    <?php require_once BASE_DIR . '/app/Admin/Layouts/partials/sidebar.menu.php'; ?>
-    <?php require_once BASE_DIR . '/app/Admin/Layouts/partials/sidebar.php'; ?>
+    <?php require_once BASE_DIR . '/app/admin/layouts/partials/sidebar.menu.php'; ?>
+    <?php require_once BASE_DIR . '/app/admin/layouts/partials/sidebar.php'; ?>
 
 
     <div class="main">
