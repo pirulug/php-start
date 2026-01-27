@@ -81,6 +81,10 @@ Dashboard Analítico
   <button class="btn btn-primary" onclick="loadAnalytics()">
     <i class="fa-solid fa-rotate me-2"></i> Actualizar
   </button>
+  <button class="btn btn-primary" onclick="resolverPaisesDesconocidos()">
+    <i class="fa fa-rotate"></i>
+    Paises
+  </button>
 </div>
 
 <div class="row g-4 mb-3" id="summary-cards">
@@ -497,7 +501,7 @@ Dashboard Analítico
     'colombia': 'co', 'ecuador': 'ec', 'guyana': 'gy', 'paraguay': 'py',
     'peru': 'pe', 'suriname': 'sr', 'uruguay': 'uy', 'venezuela': 've', 'french guiana': 'gf',
     // América del Norte y Central
-    'canada': 'ca', 'estados unidos': 'us', 'eeuu': 'us', 'usa': 'us', 'united states': 'us', 'mexico': 'mx',
+    'canada': 'ca', 'estados unidos': 'us', 'united states of america':'us', 'eeuu': 'us', 'usa': 'us', 'united states': 'us', 'mexico': 'mx',
     'belize': 'bz', 'costa rica': 'cr', 'el salvador': 'sv', 'guatemala': 'gt', 'honduras': 'hn',
     'nicaragua': 'ni', 'panama': 'pa', 'bahamas': 'bs', 'barbados': 'bb', 'cuba': 'cu',
     'dominican republic': 'do', 'republica dominicana': 'do', 'haiti': 'ht', 'jamaica': 'jm',
@@ -685,4 +689,37 @@ Dashboard Analítico
   loadAnalytics();
   setInterval(loadAnalytics, 30000);
 </script>
+
+<script>
+  /**
+   * Resuelve países desconocidos desde el backend
+   * Endpoint: /ajax/country
+   */
+  function resolverPaisesDesconocidos(limit = 50) {
+
+    fetch('/ajax/country', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        limit: limit
+      })
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error HTTP ' + response.status);
+        }
+        return response.json();
+      })
+      .then(json => {
+        console.log('Países actualizados:', json.updated ?? 0);
+        loadAnalytics()
+      })
+      .catch(error => {
+        console.error('Error al resolver países:', error);
+      });
+  }
+</script>
+
 <?php end_block(); ?>

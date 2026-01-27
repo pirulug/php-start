@@ -100,13 +100,31 @@ if (!$route) {
 */
 if (!empty($route['analytics'])) {
 
-  $analytics = new Analytics($connect);
+  function get_api() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP']))
+      return $_SERVER['HTTP_CLIENT_IP'];
+    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+      return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+    return $_SERVER['REMOTE_ADDR'] ?? null;
+  }
 
   $pageTitle = $route['analytics']['title'];
   $pageUri   = $route['analytics']['uri']
     ?? ($_SERVER['REQUEST_URI'] ?? '/');
+    
+  $ip        = get_api() ?? "0.0.0.0";
 
-  $analytics->trackVisit($pageTitle, $pageUri);
+  $log->info("Ip del cliente")
+    ->file("analytics")
+    ->with("Page Title", $pageTitle)
+    ->with("Page URL", $pageUri)
+    ->with("IP", $ip)
+    ->write();
+
+  $analytics = (new Analytics($connect))
+    ->geoApiUrl('https://ipapi.pirulug.pw/api/v1/{ip}');
+
+  $analytics->trackVisit($pageTitle, $pageUri, $ip);
 }
 
 /*

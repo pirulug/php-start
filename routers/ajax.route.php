@@ -15,4 +15,8 @@ Router::prefix(PATH_AJAX, CTX_AJAX, function () {
     ->action(BASE_DIR . "/app/ajax/datatable.php")
     ->middleware("auth_ajax")
     ->register();
+
+  Router::route("country")
+    ->action(BASE_DIR . "/app/ajax/country.php")
+    ->register();
 });
