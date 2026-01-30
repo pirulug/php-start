@@ -6,7 +6,11 @@
 $totalVisitors = $connect->query("SELECT COUNT(*) FROM visitors")->fetchColumn();
 $totalPages    = $connect->query("SELECT COUNT(*) FROM visitor_pages")->fetchColumn();
 $totalSessions = $connect->query("SELECT COUNT(*) FROM visitor_sessions")->fetchColumn();
-$usersOnline   = $connect->query("SELECT COUNT(*) FROM visitor_useronline WHERE visitor_useronline_last_activity > (NOW() - INTERVAL 5 MINUTE)")->fetchColumn();
+$usersOnline   = $connect->query("
+  SELECT COUNT(*)
+  FROM visitor_useronlines
+  WHERE visitor_useronline_last_activity > (NOW() - INTERVAL 5 MINUTE)
+")->fetchColumn();
 
 // ===============================================
 // Resumen de tráfico (visitas y visitantes)
@@ -35,19 +39,21 @@ $summary = [
 $monthDays = $connect->query("
   SELECT DAY(visitor_last_visit) AS day, SUM(visitor_total_hits) AS visits
   FROM visitors
-  WHERE YEAR(visitor_last_visit)=YEAR(CURDATE()) AND MONTH(visitor_last_visit)=MONTH(CURDATE())
-  GROUP BY day ORDER BY day
+  WHERE YEAR(visitor_last_visit)=YEAR(CURDATE())
+    AND MONTH(visitor_last_visit)=MONTH(CURDATE())
+  GROUP BY day
+  ORDER BY day
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // ===============================================
 // Visitas por mes del año actual
 // ===============================================
 $yearMonths = $connect->query("
-  SELECT MONTHNAME(visitor_last_visit) AS month, SUM(visitor_total_hits) AS visits
+  SELECT MONTH(visitor_last_visit) AS month, SUM(visitor_total_hits) AS visits
   FROM visitors
   WHERE YEAR(visitor_last_visit)=YEAR(CURDATE())
-  GROUP BY MONTH(visitor_last_visit)
-  ORDER BY MONTH(visitor_last_visit)
+  GROUP BY month
+  ORDER BY month
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // ===============================================
@@ -67,7 +73,7 @@ $lastYears = $connect->query("
 $trafficTrend = $connect->query("
   SELECT 
     DATE(visitor_last_visit) AS date,
-    COUNT(*) AS visitors,
+    COUNT(DISTINCT visitor_id) AS visitors,
     SUM(visitor_total_hits) AS visits
   FROM visitors
   WHERE visitor_last_visit >= (NOW() - INTERVAL 30 DAY)
@@ -79,9 +85,10 @@ $trafficTrend = $connect->query("
 // Páginas más vistas
 // ===============================================
 $topPages = $connect->query("
-  SELECT visitor_pages_title AS title, visitor_pages_total_views AS views
+  SELECT visitor_page_title AS title, visitor_page_total_views AS views
   FROM visitor_pages
-  ORDER BY views DESC LIMIT 5
+  ORDER BY visitor_page_total_views DESC
+  LIMIT 5
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // ===============================================
@@ -92,7 +99,8 @@ $countries = $connect->query("
   FROM visitors
   WHERE visitor_country IS NOT NULL AND visitor_country <> ''
   GROUP BY country
-  ORDER BY total DESC LIMIT 10
+  ORDER BY total DESC
+  LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // ===============================================
@@ -100,8 +108,12 @@ $countries = $connect->query("
 // ===============================================
 $recentVisitors = $connect->query("
   SELECT 
-    visitor_ip, visitor_country, visitor_city,
-    visitor_browser, visitor_platform, visitor_last_visit
+    visitor_ip,
+    visitor_country,
+    visitor_city,
+    visitor_browser,
+    visitor_platform,
+    visitor_last_visit
   FROM visitors
   ORDER BY visitor_last_visit DESC
   LIMIT 10
@@ -111,11 +123,16 @@ $recentVisitors = $connect->query("
 // Últimas sesiones
 // ===============================================
 $recentSessions = $connect->query("
-  SELECT v.visitor_country, v.visitor_browser, v.visitor_platform,
-         s.visitor_sessions_start_page, s.visitor_sessions_start_time
+  SELECT 
+    v.visitor_country,
+    v.visitor_browser,
+    v.visitor_platform,
+    s.visitor_session_start_page,
+    s.visitor_session_start_time
   FROM visitor_sessions s
-  JOIN visitors v ON s.visitor_sessions_visitor_id = v.visitor_id
-  ORDER BY s.visitor_sessions_start_time DESC LIMIT 10
+  JOIN visitors v ON s.visitor_session_visitor_id = v.visitor_id
+  ORDER BY s.visitor_session_start_time DESC
+  LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // ===============================================
@@ -124,14 +141,14 @@ $recentSessions = $connect->query("
 $onlineUsers = $connect->query("
   SELECT 
     u.visitor_useronline_ip,
-    p.visitor_pages_title,
+    p.visitor_page_title,
     u.visitor_useronline_last_activity,
     v.visitor_country,
     v.visitor_browser,
     v.visitor_platform
-  FROM visitor_useronline u
+  FROM visitor_useronlines u
   JOIN visitors v ON u.visitor_useronline_visitor_id = v.visitor_id
-  LEFT JOIN visitor_pages p ON u.visitor_useronline_page_id = p.visitor_pages_id
+  LEFT JOIN visitor_pages p ON u.visitor_useronline_page_id = p.visitor_page_id
   WHERE u.visitor_useronline_last_activity > (NOW() - INTERVAL 5 MINUTE)
   ORDER BY u.visitor_useronline_last_activity DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
@@ -177,7 +194,8 @@ $referers = $connect->query("
   FROM visitors
   WHERE visitor_referer IS NOT NULL AND visitor_referer <> ''
   GROUP BY referer
-  ORDER BY total DESC LIMIT 10
+  ORDER BY total DESC
+  LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // ===============================================
@@ -214,11 +232,10 @@ echo json_encode([
   'devices'        => $devices,
   'referers'       => $referers,
   'byHour'         => $visitorsByHour,
-
-  'summary' => $summary,
-  'monthDays' => $monthDays,
-  'yearMonths' => $yearMonths,
-  'lastYears' => $lastYears
-  
+  'summary'        => $summary,
+  'monthDays'      => $monthDays,
+  'yearMonths'     => $yearMonths,
+  'lastYears'      => $lastYears
 ], JSON_UNESCAPED_UNICODE);
+
 ?>

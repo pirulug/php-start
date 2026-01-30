@@ -150,7 +150,7 @@ Dashboard Analítico
         <i class="fa-solid fa-chart-pie text-muted"></i>
       </div>
       <div class="card-body">
-        <div class="text-center mb-3 py-3 bg-light rounded-3 border border-light">
+        <div class="text-center mb-3 py-3  rounded-3 border border-light">
           <span class="d-block text-muted small mb-1">Visitantes Activos</span>
           <span class="display-4 fw-bold " id="summaryOnline">0</span>
         </div>
@@ -270,7 +270,7 @@ Dashboard Analítico
       </div>
       <div class="table-responsive">
         <table class="table table-modern table-hover mb-0" id="tableOnline">
-          <thead class="bg-light">
+          <thead class="">
             <tr>
               <th>IP</th>
               <th>País</th>
@@ -291,7 +291,7 @@ Dashboard Analítico
       <div class="card-header">Últimas Sesiones</div>
       <div class="table-responsive">
         <table class="table table-modern table-hover mb-0" id="tableSessions">
-          <thead class="bg-light">
+          <thead class="">
             <tr>
               <th>País</th>
               <th>Navegador</th>
