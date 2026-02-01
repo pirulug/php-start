@@ -1,5 +1,11 @@
 <?php
 
+if (file_exists(__DIR__ . '/DEPLOY')) {
+  http_response_code(503);
+  header('Retry-After: 300'); // 5 minutos
+  exit('Página en mantenimiento. Volvemos en breve.');
+}
+
 define('APP_START', microtime(true));
 
 if (session_status() === PHP_SESSION_NONE) {

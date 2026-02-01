@@ -22,9 +22,10 @@ MAX_WORKERS = 3
 # ======================
 LOCAL_ROOT = Path(__file__).resolve().parents[1]
 TRASH_DIR_NAME = "_deleted"
+DEPLOY_FILE = "DEPLOY"
 
 # ======================
-# EXCLUSIONES (IGNORA TODO SU CONTENIDO)
+# EXCLUSIONES
 # ======================
 IGNORED = {
     "deploy",
@@ -42,12 +43,14 @@ IGNORED = {
     "storage/logs",
     "storage/uploads",
     "__pycache__",
+    DEPLOY_FILE,
 }
 
-# ======================
 REMOTE_DIR_CACHE = set()
 DIR_LOCK = Lock()
 
+# ======================
+# SSH
 # ======================
 def open_ssh():
     ssh = paramiko.SSHClient()
@@ -63,7 +66,7 @@ def open_ssh():
             pass
     raise RuntimeError("No se pudo conectar por SSH")
 
-
+# ======================
 def find_public_html(sftp, base="/home"):
     for user in sftp.listdir(base):
         path = f"{base}/{user}/public_html"
@@ -74,7 +77,36 @@ def find_public_html(sftp, base="/home"):
             pass
     return None
 
+# ======================
+# MANTENIMIENTO
+# ======================
+def enable_maintenance(remote_root):
+    ssh = open_ssh()
+    sftp = ssh.open_sftp()
+    try:
+        with sftp.file(f"{remote_root}/{DEPLOY_FILE}", "w") as f:
+            f.write("deploying")
+        print("✔ Modo mantenimiento ACTIVADO")
+    finally:
+        sftp.close()
+        ssh.close()
 
+
+def disable_maintenance(remote_root):
+    ssh = open_ssh()
+    sftp = ssh.open_sftp()
+    try:
+        sftp.remove(f"{remote_root}/{DEPLOY_FILE}")
+        print("✔ Modo mantenimiento DESACTIVADO")
+    except FileNotFoundError:
+        pass
+    finally:
+        sftp.close()
+        ssh.close()
+
+# ======================
+# IGNORE
+# ======================
 def should_ignore_local(path: Path) -> bool:
     relative = path.relative_to(LOCAL_ROOT).as_posix()
     for ignore in IGNORED:
@@ -90,7 +122,7 @@ def should_ignore_remote(remote_path: str, remote_root: str) -> bool:
             return True
     return False
 
-
+# ======================
 def ensure_remote_dir(sftp, remote_path):
     with DIR_LOCK:
         if remote_path in REMOTE_DIR_CACHE:
@@ -109,9 +141,8 @@ def ensure_remote_dir(sftp, remote_path):
                     pass
             REMOTE_DIR_CACHE.add(current)
 
-
 # ======================
-# RSYNC UPLOAD
+# UPLOAD
 # ======================
 def upload_file(task):
     local_file, remote_file = task
@@ -130,15 +161,15 @@ def upload_file(task):
             ensure_remote_dir(sftp, os.path.dirname(remote_file))
             sftp.put(str(local_file), remote_file)
             return f"Subido: {remote_file}"
+
         return f"OK: {remote_file}"
 
     finally:
         sftp.close()
         ssh.close()
 
-
 # ======================
-# LISTADO REMOTO (IGNORA IGNORED)
+# LISTADO REMOTO
 # ======================
 def list_remote_files(sftp, root):
     files = set()
@@ -158,9 +189,8 @@ def list_remote_files(sftp, root):
     walk(root)
     return files
 
-
 # ======================
-# PAPELERA REMOTA
+# PAPELERA
 # ======================
 def move_to_trash(remote_file, remote_root):
     ssh = open_ssh()
@@ -178,7 +208,6 @@ def move_to_trash(remote_file, remote_root):
         sftp.close()
         ssh.close()
 
-
 # ======================
 def sync_project():
     ssh = open_ssh()
@@ -188,56 +217,62 @@ def sync_project():
     if not remote_root:
         raise RuntimeError("No se encontró public_html")
 
-    print("Remote root:", remote_root)
-    print("Local root :", LOCAL_ROOT)
-
-    # -------- LOCAL FILES --------
-    upload_tasks = []
-    local_set = set()
-
-    for root, dirs, files in os.walk(LOCAL_ROOT):
-        root_path = Path(root)
-
-        if should_ignore_local(root_path):
-            dirs[:] = []
-            continue
-
-        relative = root_path.relative_to(LOCAL_ROOT).as_posix()
-        remote_path = remote_root if relative == "." else f"{remote_root}/{relative}"
-
-        for file in files:
-            local_file = root_path / file
-            if should_ignore_local(local_file):
-                continue
-
-            remote_file = f"{remote_path}/{file}"
-            upload_tasks.append((local_file, remote_file))
-            local_set.add(remote_file)
-
-    # -------- REMOTE FILES --------
-    remote_set = list_remote_files(sftp, remote_root)
-
     sftp.close()
     ssh.close()
 
-    # -------- UPLOAD --------
-    print(f"Archivos locales: {len(upload_tasks)}")
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        for f in as_completed(executor.submit(upload_file, t) for t in upload_tasks):
-            print(f.result())
+    enable_maintenance(remote_root)
 
-    # -------- TRASH --------
-    to_trash = remote_set - local_set
-    if to_trash:
-        print(f"Moviendo {len(to_trash)} archivos a _deleted/ ...")
+    try:
+        print("Remote root:", remote_root)
+        print("Local root :", LOCAL_ROOT)
+
+        upload_tasks = []
+        local_set = set()
+
+        for root, dirs, files in os.walk(LOCAL_ROOT):
+            root_path = Path(root)
+
+            if should_ignore_local(root_path):
+                dirs[:] = []
+                continue
+
+            relative = root_path.relative_to(LOCAL_ROOT).as_posix()
+            remote_path = remote_root if relative == "." else f"{remote_root}/{relative}"
+
+            for file in files:
+                local_file = root_path / file
+                if should_ignore_local(local_file):
+                    continue
+
+                remote_file = f"{remote_path}/{file}"
+                upload_tasks.append((local_file, remote_file))
+                local_set.add(remote_file)
+
+        ssh = open_ssh()
+        sftp = ssh.open_sftp()
+        remote_set = list_remote_files(sftp, remote_root)
+        sftp.close()
+        ssh.close()
+
+        print(f"Archivos locales: {len(upload_tasks)}")
+
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            for f in as_completed(
-                executor.submit(move_to_trash, r, remote_root) for r in to_trash
-            ):
+            for f in as_completed(executor.submit(upload_file, t) for t in upload_tasks):
                 print(f.result())
 
-    print("RSYNC COMPLETADO (con papelera)")
+        to_trash = remote_set - local_set
+        if to_trash:
+            print(f"Moviendo {len(to_trash)} archivos a _deleted/")
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                for f in as_completed(
+                    executor.submit(move_to_trash, r, remote_root) for r in to_trash
+                ):
+                    print(f.result())
 
+        print("RSYNC COMPLETADO (con papelera)")
+
+    finally:
+        disable_maintenance(remote_root)
 
 # ======================
 if __name__ == "__main__":
