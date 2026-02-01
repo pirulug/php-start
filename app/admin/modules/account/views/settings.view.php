@@ -1,3 +1,7 @@
+<?php start_block("title") ?>
+Configuración
+<?php end_block() ?>
+
 <link rel="stylesheet" href="<?= APP_URL . "/static/plugins/dropzone/dropimg.css" ?>">
 
 <div class="row g-4">

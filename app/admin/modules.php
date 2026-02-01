@@ -9,5 +9,6 @@ return [
   'users'       => true,
   'analytics'   => true,
   'settings'    => true,
+  'account'     => true,
   // 'test'        => true,
 ];

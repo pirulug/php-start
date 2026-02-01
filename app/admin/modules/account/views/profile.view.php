@@ -1,3 +1,7 @@
+<?php start_block("title") ?>
+Perfil
+<?php end_block() ?>
+
 <div class="row g-4">
 
   <div class="col-md-4 col-xl-3">
