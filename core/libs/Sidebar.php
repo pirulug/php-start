@@ -204,7 +204,7 @@ class Sidebar
     echo '<span class="align-middle">' . $group['text'] . '</span>';
     echo '</a>';
 
-    echo '<ul id="' . $id . '" class="sidebar-dropdown list-unstyled collapse' . ($active ? ' show' : '') . '">';
+    echo '<ul id="' . $id . '" class="sidebar-dropdown list-unstyled collapse' . ($active ? ' show' : '') . '" data-bs-parent="#sidebar">';
 
     foreach ($visibleItems as $item) {
       self::renderItem($item);
