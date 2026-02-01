@@ -1,6 +1,6 @@
 <?php
 
-if (file_exists(__DIR__ . '/DEPLOY')) {
+if (file_exists(__DIR__ . '/MAINTENANCE')) {
   http_response_code(503);
   header('Retry-After: 300'); // 5 minutos
   exit('Página en mantenimiento. Volvemos en breve.');

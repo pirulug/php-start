@@ -22,7 +22,7 @@ MAX_WORKERS = 3
 # ======================
 LOCAL_ROOT = Path(__file__).resolve().parents[1]
 TRASH_DIR_NAME = "_deleted"
-DEPLOY_FILE = "DEPLOY"
+DEPLOY_FILE = "MAINTENANCE"
 
 # ======================
 # EXCLUSIONES
