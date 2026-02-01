@@ -82,16 +82,16 @@
                 <td class="ps-4">
                   <div class="d-flex flex-column">
                     <span
-                      class="fw-bold text-body"><?= htmlspecialchars($page->visitor_pages_title ?? 'Sin título') ?></span>
-                    <a href="<?= htmlspecialchars($page->visitor_pages_uri) ?>" target="_blank"
+                      class="fw-bold text-body"><?= htmlspecialchars($page->visitor_page_title ?? 'Sin título') ?></span>
+                    <a href="<?= htmlspecialchars($page->visitor_page_uri) ?>" target="_blank"
                       class="small text-muted text-decoration-none">
-                      <?= htmlspecialchars($page->visitor_pages_uri) ?>
+                      <?= htmlspecialchars($page->visitor_page_uri) ?>
                     </a>
                   </div>
                 </td>
                 <td>
                   <?php
-                  $badgeColor = match ($page->visitor_pages_type) {
+                  $badgeColor = match ($page->visitor_page_type) {
                     'page' => 'bg-primary',
                     'article' => 'bg-success',
                     'api' => 'bg-secondary',
@@ -100,11 +100,11 @@
                   };
                   ?>
                   <span class="badge rounded-pill bg-opacity-10 text-body <?= $badgeColor ?> text-opacity-75">
-                    <?= ucfirst($page->visitor_pages_type) ?>
+                    <?= ucfirst($page->visitor_page_type) ?>
                   </span>
                 </td>
                 <td class="text-end pe-4 fw-bold text-primary">
-                  <?= number_format($page->visitor_pages_total_views) ?>
+                  <?= number_format($page->visitor_page_total_views) ?>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -174,8 +174,8 @@
             <?php foreach ($recent_users as $user): ?>
               <tr>
                 <td class="ps-4" style="width: 60px;">
-                  <img src="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>" class="rounded-circle" width="40"
-                    height="40" style="object-fit:cover;">
+                  <img src="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>" class="rounded-circle"
+                    width="40" height="40" style="object-fit:cover;">
                 </td>
                 <td>
                   <div class="d-flex flex-column">
