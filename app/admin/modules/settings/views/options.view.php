@@ -19,13 +19,19 @@ Opciones General
             <label for="loader" class="form-label">Loader</label>
             <select name="loader" id="loader" class="form-select">
               <option value="">- Seleccionar -</option>
-              <option value="true" <?= $optionsRaw["loader"] ? "" : "selected" ?>>Mostras</option>
-              <option value="false" <?= $optionsRaw["loader"] ? "selected" : "" ?>>No Mostras</option>
+
+              <option value="true" <?= ($optionsRaw['loader'] === 'true') ? 'selected' : '' ?>>
+                Mostrar
+              </option>
+
+              <option value="false" <?= ($optionsRaw['loader'] === 'false') ? 'selected' : '' ?>>
+                No mostrar
+              </option>
             </select>
+
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
