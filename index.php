@@ -1,10 +1,13 @@
 <?php
 
+define('APP_START', microtime(true));
+
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
 define('BASE_DIR', __DIR__);
+define('CACHE_ROTE', true);
 
 require_once BASE_DIR . "/config.php";
 require_once BASE_DIR . "/core/config/path.config.php";
@@ -111,8 +114,8 @@ if (!empty($route['analytics'])) {
   $pageTitle = $route['analytics']['title'];
   $pageUri   = $route['analytics']['uri']
     ?? ($_SERVER['REQUEST_URI'] ?? '/');
-    
-  $ip        = get_api() ?? "0.0.0.0";
+
+  $ip = get_api() ?? "0.0.0.0";
 
   $log->info("Ip del cliente")
     ->file("analytics")
@@ -167,3 +170,7 @@ if (!empty($route['view']) && !empty($route['layout'])) {
 
   require_once $route['layout'];
 }
+
+$log->info(round((microtime(true) - APP_START) * 1000, 2) . ' ms')
+  ->file("index")
+  ->write();

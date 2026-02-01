@@ -12,3 +12,7 @@ install
 comander
 
 .doc/p
+
+deploy/config.py
+
+__pycache__
