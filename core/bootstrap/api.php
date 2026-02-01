@@ -7,4 +7,4 @@ require_once __DIR__ . '/base.php';
 require_once BASE_DIR . "/core/middlewares/auth_api.middleware.php";
 
 // Rutas API
-require_once BASE_DIR . '/routers/api.route.php';
+require_once BASE_DIR . '/core/routers/api.route.php';
