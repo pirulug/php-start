@@ -639,7 +639,7 @@ Dashboard Analítico
                 <td>${getBrowserIcon(s.visitor_browser)} <span class="text-muted ms-1">${s.visitor_browser ?? '-'}</span></td>
                 <td>${getOSIcon(s.visitor_platform)} <span class="text-muted ms-1">${s.visitor_platform ?? '-'}</span></td>
                 <td><span class="text-truncate d-inline-block" style="max-width: 150px;">${s.visitor_sessions_start_page ?? '-'}</span></td>
-                <td class="text-end text-muted small">${s.visitor_sessions_start_time}</td>
+                <td class="text-end text-muted small">${s.visitor_session_start_time}</td>
             </tr>
             `).join('');
       } else {
