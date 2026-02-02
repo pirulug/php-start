@@ -13,7 +13,6 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 define('BASE_DIR', __DIR__);
-define('CACHE_ROTE', true);
 
 require_once BASE_DIR . "/config.php";
 require_once BASE_DIR . "/core/config/path.config.php";

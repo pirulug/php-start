@@ -15,7 +15,7 @@ PORT = config.FTP_PORT
 USER = config.FTP_USER
 PASSWORD = config.FTP_PASSWORD
 
-MAX_WORKERS = 3
+MAX_WORKERS = 2
 
 # ======================
 # RUTAS

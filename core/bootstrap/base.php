@@ -3,16 +3,18 @@
 // Configuración base
 require_once BASE_DIR . "/core/config/path.config.php";
 require_once BASE_DIR . "/core/config/security.config.php";
+require_once BASE_DIR . "/core/config/cache.config.php";
+
+// Functions
+require_once BASE_DIR . "/core/functions/load_routes.php";
+require_once BASE_DIR . "/core/functions/get_user_session.php";
+require_once BASE_DIR . "/core/functions/view_blocks.php";
 
 // Libs
-foreach (glob(BASE_DIR . '/core/libs/*.php') as $file) {
-  require_once $file;
-}
+loadCoreFiles('libs');
 
 // Helpers
-foreach (glob(BASE_DIR . '/core/helpers/*.php') as $file) {
-  require_once $file;
-}
+loadCoreFiles('helpers');
 
 // Base de datos
 $db = (new DataBase())
@@ -46,11 +48,11 @@ if (isset($_SESSION['signin']) && $_SESSION['signin'] === true) {
 $config = new SiteConfig($connect);
 
 // Mail
-define('MAIL_NAME',       $config->get("site_name"));
-define('MAIL_HOST',       $config->get("smtp_host"));
-define('MAIL_EMAIL',      $config->get("smtp_email"));
-define('MAIL_PASSWORD',   $config->get("smtp_password"));
-define('MAIL_PORT',       $config->get("smtp_port"));
+define('MAIL_NAME', $config->get("site_name"));
+define('MAIL_HOST', $config->get("smtp_host"));
+define('MAIL_EMAIL', $config->get("smtp_email"));
+define('MAIL_PASSWORD', $config->get("smtp_password"));
+define('MAIL_PORT', $config->get("smtp_port"));
 define('MAIL_ENCRYPTION', $config->get("smtp_encryption"));
 
 // Timezone

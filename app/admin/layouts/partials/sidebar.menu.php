@@ -1,19 +1,6 @@
 <?php
 
-$modules = require BASE_DIR . '/app/admin/modules.php';
-
-foreach ($modules as $module => $enabled) {
-
-  if (!$enabled) {
-    continue;
-  }
-
-  $menu = BASE_DIR . "/app/admin/modules/{$module}/menu.php";
-
-  if (is_file($menu)) {
-    require_once $menu;
-  }
-}
+loadAdminMenu();
 
 // Header
 // Sidebar::header('Plugin');
