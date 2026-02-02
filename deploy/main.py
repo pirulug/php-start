@@ -40,8 +40,7 @@ IGNORED = {
     "LICENSE",
     "README.md",
     ".gitignore",
-    "storage/logs",
-    "storage/uploads",
+    "storage",
     "__pycache__",
     DEPLOY_FILE,
 }

@@ -83,9 +83,12 @@ INSERT INTO options (option_key, option_value) VALUES
 ('smtp_password', 'IB0]}]oynY=Qkgk*'),
 ('smtp_port', '587'),
 ('smtp_encryption', 'tls'),
-('google_recaptcha_enabled', '0'),
 ('google_recaptcha_site_key', '-'),
 ('google_recaptcha_secret_key', '-'),
+('cloudflare_turnstile_site_key', '-'),
+('cloudflare_turnstile_secret_key', '-'),
+('captcha_enabled', '0'),
+('captcha_type', 'vanilla'), -- // vanilla | recaptcha
 ('facebook', 'https://facebook.com'),
 ('twitter', 'https://twitter.com'),
 ('instagram', 'https://instagram.com'),
