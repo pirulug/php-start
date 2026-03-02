@@ -16,6 +16,9 @@ loadCoreFiles('libs');
 // Helpers
 loadCoreFiles('helpers');
 
+// Application
+loadCoreFiles('application');
+
 // Base de datos
 $db = (new DataBase())
   ->host(DB_HOST)
@@ -62,3 +65,4 @@ date_default_timezone_set(
 
 // Logger
 $log = new Logger(BASE_DIR . '/storage/logs');
+
