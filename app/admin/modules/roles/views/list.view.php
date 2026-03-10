@@ -25,13 +25,13 @@ Listar Roles
     </div>
 
     <div class="table-responsive">
-      <table class="table table-hover align-middle">
+      <table class="table table-hover align-middle m-0">
         <thead>
           <tr>
             <th scope="col" class="" style="width: 80px;">ID</th>
             <th scope="col" class="">Nombre</th>
             <th scope="col" class="">Descripción</th>
-            <th scope="col" class="text-end " style="width: 150px;">Acciones</th>
+            <th scope="col" class="text-end ">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -53,17 +53,17 @@ Listar Roles
               </td>
 
               <td class="text-end">
-                <div class="btn-group btn-group-sm">
-                  <a href="rol/edit/<?= $data->role_id ?>" class="btn btn-outline-primary" data-bs-toggle="tooltip"
-                    title="Editar">
+                <div class="">
+                  <a href="rol/edit/<?= $data->role_id ?>" class="btn btn-sm btn-success">
                     <i class="fa fa-pen"></i>
+                    Editar
                   </a>
 
-                  <button class="btn btn-outline-danger" sa-title="¿Eliminar rol?"
+                  <button class="btn btn-sm btn-danger" sa-title="¿Eliminar rol?"
                     sa-text="Esta acción no se puede deshacer." sa-icon="warning" sa-confirm-btn-text="Sí, eliminar"
-                    sa-cancel-btn-text="No, cancelar" sa-redirect-url="rol/delete/<?= $data->role_id ?>"
-                    data-bs-toggle="tooltip" title="Eliminar">
+                    sa-cancel-btn-text="No, cancelar" sa-redirect-url="rol/delete/<?= $data->role_id ?>">
                     <i class="fa fa-trash"></i>
+                    Eliminar
                   </button>
                 </div>
               </td>

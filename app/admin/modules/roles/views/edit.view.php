@@ -7,15 +7,10 @@ Editar Rol
 
 <?php start_block('js'); ?>
 <script>
-  /**
-   * Permite marcar/desmarcar todo un grupo visualmente.
-   * UX Vital para roles con muchos permisos.
-   */
   function toggleGroup(groupId) {
     const container = document.getElementById(groupId);
     const checkboxes = container.querySelectorAll('input[type="checkbox"]');
 
-    // Lógica inteligente: Si hay alguno desmarcado, los marca todos. Si todos están marcados, los desmarca.
     const allChecked = Array.from(checkboxes).every(cb => cb.checked);
 
     checkboxes.forEach(cb => {
@@ -30,14 +25,7 @@ Editar Rol
   <div class="row g-4">
 
     <div class="col-12 col-md-4 col-xl-3">
-      <div class="card h-100" style="position: sticky; top: 1rem;">
-
-        <div class="card-header bg-transparent py-3">
-          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-user-gear text-primary"></i>
-            Datos del Rol
-          </h5>
-        </div>
+      <div class="card" style="position: sticky; top: 1rem;">
 
         <div class="card-body">
           <div class="mb-4">
@@ -90,7 +78,7 @@ Editar Rol
               <?php foreach ($contexts as $contextKey => $perms): ?>
                 <div class="border rounded mb-3">
 
-                  <div class="px-3 py-2 bg-light d-flex justify-content-between align-items-center">
+                  <div class="px-3 py-2 bg-secondary rounded-top d-flex justify-content-between align-items-center">
                     <span class="badge bg-secondary text-uppercase">
                       <?= htmlspecialchars($perms[0]->permission_context_name) ?>
                     </span>
@@ -134,16 +122,16 @@ Editar Rol
     </div>
 
     <div class="col-12">
-      <div class="d-flex justify-content-end gap-2 pt-2 pb-4">
-        <a href="roles.php" class="btn btn-outline-secondary px-4">
+      <div class="bg-body rounded p-3 d-flex justify-content-end gap-2">
+        <a href="<?= admin_route("roles") ?>" class="btn btn-outline-secondary px-4">
           Cancelar
         </a>
         <button type="submit" class="btn btn-primary px-5">
-          <i class="fa-solid fa-floppy-disk me-2"></i>Guardar Cambios
+          <i class="fa-solid fa-floppy-disk me-2"></i>
+          Guardar Cambios
         </button>
       </div>
     </div>
 
   </div>
 </form>
-

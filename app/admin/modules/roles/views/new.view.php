@@ -7,16 +7,10 @@ Nuevo Rol
 
 <?php start_block('js'); ?>
 <script>
-  /**
-   * Script para seleccionar/deseleccionar todos los checkboxes de un grupo
-   * Funciona buscando el ID del contenedor del grupo.
-   */
   function toggleGroup(groupId) {
     const container = document.getElementById(groupId);
     const checkboxes = container.querySelectorAll('input[type="checkbox"]');
 
-    // Determinar si debemos marcar o desmarcar basado en el estado del primero
-    // (Si todos están marcados -> desmarcar. Si hay alguno sin marcar -> marcar todos)
     const allChecked = Array.from(checkboxes).every(cb => cb.checked);
 
     checkboxes.forEach(cb => {
@@ -32,13 +26,6 @@ Nuevo Rol
 
     <div class="col-12 col-md-4 col-xl-3">
       <div class="card" style="position: sticky; top: 1rem;">
-
-        <div class="card-header bg-transparent py-3">
-          <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-            <i class="fa-solid fa-user-plus text-primary"></i>
-            Nuevo Rol
-          </h5>
-        </div>
 
         <div class="card-body">
           <div class="mb-4">
@@ -90,14 +77,15 @@ Nuevo Rol
                 <div class="border rounded mb-3">
 
                   <!-- CONTEXTO -->
-                  <div class="px-3 py-2 bg-light d-flex justify-content-between align-items-center">
+                  <div class="px-3 py-2 bg-secondary rounded-top d-flex justify-content-between align-items-center">
                     <span class="badge bg-secondary text-uppercase">
                       <?= htmlspecialchars($perms[0]->permission_context_name) ?>
                     </span>
 
-                    <button type="button" class="btn btn-sm btn-link text-decoration-none"
+                    <button type="button" class="btn btn-sm btn-link fw-bold text-decoration-none"
                       onclick="toggleGroup('ctx-<?= md5($groupName . $contextKey) ?>')">
-                      <i class="fa-solid fa-check-double me-1"></i>Alternar contexto
+                      <i class="fa-solid fa-check-double me-1"></i>
+                      Alternar contexto
                     </button>
                   </div>
 
@@ -135,12 +123,13 @@ Nuevo Rol
     </div>
 
     <div class="col-12">
-      <div class="d-flex justify-content-end gap-2 pt-2 pb-4">
+      <div class="bg-body p-3 rounded d-flex justify-content-end gap-2">
         <a href="<?= admin_route("permissions") ?>" class="btn btn-outline-secondary px-4">
           Cancelar
         </a>
         <button type="submit" class="btn btn-primary px-5">
-          <i class="fa-solid fa-plus me-2"></i>Crear Rol
+          <i class="fa-solid fa-plus me-2"></i>
+          Crear Rol
         </button>
       </div>
     </div>
