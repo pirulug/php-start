@@ -54,7 +54,7 @@ Listar Roles
 
               <td class="text-end">
                 <div class="">
-                  <a href="rol/edit/<?= $data->role_id ?>" class="btn btn-sm btn-success">
+                  <!-- <a href="rol/edit/<?= $data->role_id ?>" class="btn btn-sm btn-success">
                     <i class="fa fa-pen"></i>
                     Editar
                   </a>
@@ -64,7 +64,16 @@ Listar Roles
                     sa-cancel-btn-text="No, cancelar" sa-redirect-url="rol/delete/<?= $data->role_id ?>">
                     <i class="fa fa-trash"></i>
                     Eliminar
-                  </button>
+                  </button> -->
+
+                  <?= ActionBtn::edit(admin_route("rol/edit", [$cipher->encrypt($data->role_id)]))
+                    ->can('roles.edit') ?>
+
+                  <?= ActionBtn::delete(admin_route("rol/delete", [$cipher->encrypt($data->role_id)]))
+                    ->can('roles.delete')
+                    ->saTitle('¿Eliminar a ' . $data->role_name . '?')
+                    ->saText('No podrás recuperar sus datos.') ?>
+
                 </div>
               </td>
             </tr>

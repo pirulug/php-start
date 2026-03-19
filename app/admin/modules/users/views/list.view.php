@@ -88,20 +88,23 @@ Listar Usuarios
                 </td>
 
                 <td class="text-end pe-3">
-                  <div class="btn-group">
-                    <a href="user/edit/<?= $cipher->encrypt($user->user_id) ?>" class="btn btn-sm btn-outline-secondary"
-                      data-bs-toggle="tooltip" title="Editar cuenta">
-                      <i class="fa-solid fa-pen"></i>
-                    </a>
 
-                    <button class="btn btn-sm btn-outline-danger" sa-title="¿Eliminar a <?= ($user->user_login) ?>?"
-                      sa-text="Esta acción eliminará el acceso del usuario permanentemente." sa-icon="warning"
-                      sa-confirm-btn-text="Sí, eliminar" sa-cancel-btn-text="Cancelar"
-                      sa-redirect-url="user/delete/<?= $cipher->encrypt($user->user_id) ?>" data-bs-toggle="tooltip"
-                      title="Eliminar usuario">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                  </div>
+                  <?= ActionBtn::edit(admin_route("user/edit", [$cipher->encrypt($user->user_id)]))
+                    ->can('users.edit') ?>
+
+                  <?php if ($user->user_status == 1): ?>
+                    <?= ActionBtn::deactivate(admin_route("user/deactivate", [$cipher->encrypt($user->user_id)]))
+                      ->can('users.deactivate') ?>
+                  <?php else: ?>
+                    <?= ActionBtn::active(admin_route("user/deactivate", [$cipher->encrypt($user->user_id)]))
+                      ->can('users.deactivate') ?>
+                  <?php endif; ?>
+
+                  <?= ActionBtn::delete(admin_route("user/delete", [$cipher->encrypt($user->user_id)]))
+                    ->can('users.delete')
+                    ->saTitle('¿Eliminar a ' . $user->user_login . '?')
+                    ->saText('No podrás recuperar sus datos.') ?>
+
                 </td>
               </tr>
             <?php endforeach; ?>

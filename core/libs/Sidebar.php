@@ -1,7 +1,6 @@
 <?php
 
-class Sidebar
-{
+class Sidebar {
   /* =========================================================
    * ESTADO INTERNO
    * ========================================================= */
@@ -14,8 +13,7 @@ class Sidebar
    * HEADER
    * ========================================================= */
 
-  public static function header(string $text): void
-  {
+  public static function header(string $text): void {
     self::$items[] = [
       'type' => 'header',
       'text' => $text,
@@ -26,22 +24,22 @@ class Sidebar
    * ITEM
    * ========================================================= */
 
-  public static function item(string $text, string $url): self
-  {
+  public static function item(string $text, string $url): self {
     $item = [
-      'type'       => 'item',
-      'text'       => $text,
-      'url'        => self::normalizeUrl($url),
-      'icon'       => null,
-      'permission' => null,
-      'context'    => CTX_ADMIN,
+      'type'            => 'item',
+      'text'            => $text,
+      'url'             => self::normalizeUrl($url),
+      'icon'            => null,
+      'permission'      => null,
+      'context'         => CTX_ADMIN,
+      'active_patterns' => [],
     ];
 
     if (self::$currentGroupIndex !== null) {
       self::$items[self::$currentGroupIndex]['items'][] = $item;
-      self::$lastItemIndex = count(self::$items[self::$currentGroupIndex]['items']) - 1;
+      self::$lastItemIndex                              = count(self::$items[self::$currentGroupIndex]['items']) - 1;
     } else {
-      self::$items[] = $item;
+      self::$items[]       = $item;
       self::$lastItemIndex = count(self::$items) - 1;
     }
 
@@ -66,7 +64,7 @@ class Sidebar
       'context'    => CTX_ADMIN,
     ];
 
-    self::$items[] = $group;
+    self::$items[]           = $group;
     self::$currentGroupIndex = count(self::$items) - 1;
 
     $instance = new self();
@@ -83,8 +81,7 @@ class Sidebar
    * CHAINING
    * ========================================================= */
 
-  public function icon(string $icon): self
-  {
+  public function icon(string $icon): self {
     if (self::$lastItemIndex === null) {
       return $this;
     }
@@ -98,8 +95,7 @@ class Sidebar
     return $this;
   }
 
-  public function can(string $permission, string $context = CTX_ADMIN): self
-  {
+  public function can(string $permission, string $context = CTX_ADMIN): self {
     if (self::$lastItemIndex === null) {
       return $this;
     }
@@ -115,14 +111,38 @@ class Sidebar
     return $this;
   }
 
+  /**
+   * (Opcional) Permite definir rutas extra de forma manual.
+   */
+  public function activeWhen(...$patterns): self {
+    if (self::$lastItemIndex === null) {
+      return $this;
+    }
+
+    $parsedPatterns = [];
+    foreach ($patterns as $pattern) {
+      if (is_array($pattern)) {
+        $parsedPatterns = array_merge($parsedPatterns, $pattern);
+      } else {
+        $parsedPatterns[] = $pattern;
+      }
+    }
+
+    if (self::$currentGroupIndex !== null) {
+      self::$items[self::$currentGroupIndex]['items'][self::$lastItemIndex]['active_patterns'] = $parsedPatterns;
+    } else {
+      self::$items[self::$lastItemIndex]['active_patterns'] = $parsedPatterns;
+    }
+
+    return $this;
+  }
+
   /* =========================================================
    * RENDER
    * ========================================================= */
 
-  public static function render(): void
-  {
+  public static function render(): void {
     foreach (self::$items as $item) {
-
       if (!is_array($item) || !isset($item['type'])) {
         continue;
       }
@@ -148,13 +168,13 @@ class Sidebar
    * INTERNAL RENDERERS
    * ========================================================= */
 
-  protected static function renderItem(array $item): void
-  {
+  protected static function renderItem(array $item): void {
     if (!self::isVisible($item)) {
       return;
     }
 
-    $active = self::isActive($item['url']);
+    // Un item individual solo se marca como activo si hay coincidencia exacta o manual
+    $active = self::isActive($item['url'], $item['active_patterns'] ?? []);
 
     echo '<li class="sidebar-item' . ($active ? ' active' : '') . '">';
     echo '<a class="sidebar-link" href="' . $item['url'] . '">';
@@ -167,26 +187,34 @@ class Sidebar
     echo '</a></li>';
   }
 
-  protected static function renderGroup(array $group): void
-  {
+  protected static function renderGroup(array $group): void {
     if ($group['permission'] && !can($group['permission'], $group['context'])) {
       return;
     }
 
     $visibleItems = array_filter(
       $group['items'],
-      fn ($item) => is_array($item) && self::isVisible($item)
+      fn($item) => is_array($item) && self::isVisible($item)
     );
 
     if (empty($visibleItems)) {
       return;
     }
 
-    $active = false;
+    $active  = false;
+    $current = '/' . trim($_GET['url'] ?? '', '/');
+
     foreach ($visibleItems as $item) {
-      if (self::isActive($item['url'])) {
+      // 1. Si algún ítem es la ruta exacta
+      if (self::isActive($item['url'], $item['active_patterns'] ?? [])) {
         $active = true;
         break;
+      }
+
+      // 2. Si estamos en una vista interna del módulo (Ej: /panel/cash/close/5), 
+      // iluminamos el grupo para mantener el menú abierto
+      if (self::isModuleAutoMatch($current, $item['url'])) {
+        $active = true;
       }
     }
 
@@ -214,22 +242,64 @@ class Sidebar
   }
 
   /* =========================================================
-   * HELPERS
+   * HELPERS Y NÚCLEO DE INFERENCIA AUTOMÁTICA
    * ========================================================= */
 
-  protected static function normalizeUrl(string $url): string
-  {
+  protected static function normalizeUrl(string $url): string {
     return '/' . trim($url, '/');
   }
 
-  protected static function isActive(string $url): bool
-  {
+  /**
+   * Determina si un menú debe estar activo basado en coincidencias exactas o prefijos configurados
+   */
+  protected static function isActive(string $url, array $patterns = []): bool {
     $current = '/' . trim($_GET['url'] ?? '', '/');
-    return $current === $url || str_starts_with($current, $url . '/');
+
+    if ($current === $url || str_starts_with($current, $url . '/')) {
+      return true;
+    }
+
+    foreach ($patterns as $pattern) {
+      $np = self::normalizeUrl($pattern);
+      if ($current === $np || str_starts_with($current, $np . '/')) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
-  protected static function isVisible(array $item): bool
-  {
+  /**
+   * Compara dinámicamente si la URL actual pertenece al mismo módulo general de la URL del menú
+   */
+  protected static function isModuleAutoMatch(string $current, string $url): bool {
+    $currentParts = array_values(array_filter(explode('/', $current)));
+    $urlParts     = array_values(array_filter(explode('/', $url)));
+
+    if (empty($currentParts) || empty($urlParts)) {
+      return false;
+    }
+
+    // Verificar que compartan la misma ruta base (ej. 'panel', 'admin')
+    if ($currentParts[0] !== $urlParts[0]) {
+      return false;
+    }
+
+    // El módulo está en la posición 1 (ej: panel/cashs -> cashs, panel/cash/close -> cash)
+    $currentModule = $currentParts[1] ?? '';
+    $urlModule     = $urlParts[1] ?? '';
+
+    if ($currentModule === '' || $urlModule === '')
+      return false;
+
+    // Remover sufijos plurales comunes ('s', 'es', 'y', 'i') para igualar la raíz semántica
+    $currentRoot = rtrim($currentModule, 'seyi');
+    $urlRoot     = rtrim($urlModule, 'seyi');
+
+    return $currentRoot === $urlRoot;
+  }
+
+  protected static function isVisible(array $item): bool {
     if (!empty($item['permission']) && !can($item['permission'], $item['context'])) {
       return false;
     }

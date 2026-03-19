@@ -4,7 +4,7 @@
 // OBTENER ID DEL ROL
 // =============================================
 
-$rol_id = $args['id'] ?? null;
+$rol_id = $cipher->decrypt($args['id']) ?? null;
 
 if ($rol_id <= 0) {
   $notifier

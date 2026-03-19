@@ -24,6 +24,12 @@ Router::route('user/edit/{id}')
   ->permission('users.edit')
   ->register();
 
+Router::route('user/deactivate/{id}')
+  ->action(admin_action("users.deactivate"))
+  ->middleware('auth_admin')
+  ->permission('users.deactivate')
+  ->register();
+
 Router::route('user/delete/{id}')
   ->action(admin_action("users.delete"))
   ->middleware('auth_admin')
