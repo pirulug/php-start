@@ -9,8 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $email     = clear_data($_POST['email'] ?? '');
   $username  = clear_data($_POST['username'] ?? '');
-  $password  = clear_data($_POST['password'] ?? '');
-  $password2 = clear_data($_POST['password_confirmation'] ?? '');
+  $password  = $_POST['password'] ?? '';
+  $password2 = $_POST['password_confirmation'] ?? '';
 
   /*
   |--------------------------------------------------------------------------

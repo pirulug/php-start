@@ -9,8 +9,6 @@ install
 
 *.copy.*
 
-comander
-
 .doc/p
 
 deploy/config.py

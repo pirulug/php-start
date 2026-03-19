@@ -65,8 +65,8 @@ if (isset($_COOKIE['php-start'])) {
 // LOGIN
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  $user_login    = clear_data($_POST['login']);
-  $user_password = clear_data($_POST['password']);
+  $user_login    = clear_data($_POST['login'] ?? '');
+  $user_password = $_POST['password'] ?? '';
   $remember_me   = isset($_POST['remember']);
 
   // =========================================================

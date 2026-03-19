@@ -108,11 +108,8 @@ if (!$route) {
 */
 if (!empty($route['analytics'])) {
 
+  // Obtener IP real del cliente de forma segura (sin spoofing)
   function get_api() {
-    if (!empty($_SERVER['HTTP_CLIENT_IP']))
-      return $_SERVER['HTTP_CLIENT_IP'];
-    if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-      return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
     return $_SERVER['REMOTE_ADDR'] ?? null;
   }
 
