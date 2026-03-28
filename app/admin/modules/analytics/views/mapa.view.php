@@ -2,7 +2,9 @@
 Mapa de visitas
 <?php end_block() ?>
 
-<form method="get" class="row g-2 mb-3 align-items-end">
+<div class="card    mb-3">
+  <div class="card-body">
+    <form method="get" class="row g-2 mb-0 align-items-end">
   <div class="col-md-3">
     <label class="form-label">Rango</label>
     <select name="range_type" class="form-select" onchange="this.form.submit()">
@@ -57,9 +59,15 @@ Mapa de visitas
   <div class="col-md-1 d-grid">
     <button class="btn btn-primary">Filtrar</button>
   </div>
-</form>
+    </form>
+  </div>
+</div>
 
-<div id="visitorsMap" style="width:100%; height:440px;"></div>
+<div class="card    mb-3">
+  <div class="card-body p-0">
+    <div id="visitorsMap" style="width:100%; height:440px;"></div>
+  </div>
+</div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"></script>

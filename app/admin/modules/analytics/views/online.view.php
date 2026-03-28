@@ -2,10 +2,11 @@
 Visitantes en linea
 <?php end_block() ?>
 
-<div class="card">
+<div class="card   ">
   <div class="card-body">
-    <table class="table">
-      <thead>
+    <div class="table-responsive">
+      <table class="table table-borderless table-hover align-middle">
+        <thead>
         <tr>
           <th scope="col" class="wps-pd-l">
             <span class="wps-order">Última visualización</span>

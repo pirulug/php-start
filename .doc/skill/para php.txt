@@ -1,0 +1,6 @@
+ayudame a corregir mi php 
+no agreges ni quites columnas
+dame el codigo completo como te estoy pasando 
+no hages cosas que no se te pidan
+- Las consultas simpre tienen que ser FETCH_OBJ
+- Las Consultas tienen que ser bimparam

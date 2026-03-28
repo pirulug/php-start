@@ -12,50 +12,7 @@ Dashboard Analítico
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
     font-size: 1.2rem;
-  }
-
-  .bg-soft-primary {
-    background-color: var(--primary-soft);
-    color: #0d6efd;
-  }
-
-  .bg-soft-success {
-    background-color: var(--success-soft);
-    color: #198754;
-  }
-
-  .bg-soft-warning {
-    background-color: var(--warning-soft);
-    color: #ffc107;
-  }
-
-  .bg-soft-info {
-    background-color: var(--info-soft);
-    color: #0dcaf0;
-  }
-
-  /* Tablas Minimalistas */
-  .table-modern thead th {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #8898aa;
-    font-weight: 600;
-    border-bottom: 1px solid #e9ecef;
-    padding-bottom: 10px;
-  }
-
-  .table-modern td {
-    vertical-align: middle;
-    padding: 12px 8px;
-    font-size: 0.9rem;
-    border-bottom: 1px solid #f3f3f3;
-  }
-
-  .table-modern tr:last-child td {
-    border-bottom: none;
   }
 
   /* Ajuste de Gráficos */
@@ -64,13 +21,6 @@ Dashboard Analítico
     height: 250px;
     /* Altura uniforme */
     width: 100%;
-  }
-
-  /* Utilidad para textos pequeños */
-  .text-label {
-    font-size: 0.8rem;
-    color: #6c757d;
-    font-weight: 500;
   }
 </style>
 <?php end_block(); ?>
@@ -89,53 +39,53 @@ Dashboard Analítico
 
 <div class="row g-4 mb-3" id="summary-cards">
   <div class="col-md-3 col-sm-6">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-soft-primary me-3">
+        <div class="icon-box bg-primary-subtle text-primary rounded-3 me-3">
           <i class="fa-solid fa-users"></i>
         </div>
         <div>
           <h3 class="fw-bold mb-0" id="totalVisitors">...</h3>
-          <span class="text-label">Visitantes Totales</span>
+          <span class="text-body-secondary small fw-medium">Visitantes Totales</span>
         </div>
       </div>
     </div>
   </div>
   <div class="col-md-3 col-sm-6">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-soft-success me-3">
+        <div class="icon-box bg-success-subtle text-success rounded-3 me-3">
           <i class="fa-regular fa-file-lines"></i>
         </div>
         <div>
           <h3 class="fw-bold mb-0" id="totalPages">...</h3>
-          <span class="text-label">Páginas Vistas</span>
+          <span class="text-body-secondary small fw-medium">Páginas Vistas</span>
         </div>
       </div>
     </div>
   </div>
   <div class="col-md-3 col-sm-6">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-soft-info me-3">
+        <div class="icon-box bg-info-subtle text-info rounded-3 me-3">
           <i class="fa-solid fa-stopwatch"></i>
         </div>
         <div>
           <h3 class="fw-bold mb-0" id="totalSessions">...</h3>
-          <span class="text-label">Sesiones Totales</span>
+          <span class="text-body-secondary small fw-medium">Sesiones Totales</span>
         </div>
       </div>
     </div>
   </div>
   <div class="col-md-3 col-sm-6">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-soft-warning me-3">
+        <div class="icon-box bg-warning-subtle text-warning rounded-3 me-3">
           <i class="fa-solid fa-bolt"></i>
         </div>
         <div>
           <h3 class="fw-bold mb-0" id="usersOnline">...</h3>
-          <span class="text-label text-success">● En Línea Ahora</span>
+          <span class="text-body-secondary small fw-medium text-success">● En Línea Ahora</span>
         </div>
       </div>
     </div>
@@ -144,7 +94,7 @@ Dashboard Analítico
 
 <div class="row g-4 mb-3">
   <div class="col-lg-4">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header d-flex justify-content-between align-items-center">
         <span>Resumen de Tráfico</span>
         <i class="fa-solid fa-chart-pie text-muted"></i>
@@ -155,7 +105,7 @@ Dashboard Analítico
           <span class="display-4 fw-bold " id="summaryOnline">0</span>
         </div>
         <div class="table-responsive">
-          <table class="table table-modern table-hover align-middle">
+          <table class="table table-borderless table-hover align-middle">
             <thead>
               <tr>
                 <th>Periodo</th>
@@ -172,22 +122,22 @@ Dashboard Analítico
   </div>
 
   <div class="col-lg-8">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">
         Evolución de Visitas
       </div>
       <div class="card-body">
         <div class="row g-4">
           <div class="col-12">
-            <p class="text-label mb-2">Este Mes (Por Días)</p>
+            <p class="text-body-secondary small fw-medium mb-2">Este Mes (Por Días)</p>
             <div class="chart-container" style="height: 200px;"><canvas id="chartMonthDays"></canvas></div>
           </div>
           <div class="col-md-6">
-            <p class="text-label mb-2">Este Año (Por Meses)</p>
+            <p class="text-body-secondary small fw-medium mb-2">Este Año (Por Meses)</p>
             <div class="chart-container" style="height: 180px;"><canvas id="chartYearMonths"></canvas></div>
           </div>
           <div class="col-md-6">
-            <p class="text-label mb-2">Histórico (Últimos 10 Años)</p>
+            <p class="text-body-secondary small fw-medium mb-2">Histórico (Últimos 10 Años)</p>
             <div class="chart-container" style="height: 180px;"><canvas id="chartYears"></canvas></div>
           </div>
         </div>
@@ -198,7 +148,7 @@ Dashboard Analítico
 
 <div class="row g-4 mb-3">
   <div class="col-lg-8">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">Tendencia (Últimos 30 días)</div>
       <div class="card-body chart-container">
         <canvas id="chartTrend"></canvas>
@@ -206,7 +156,7 @@ Dashboard Analítico
     </div>
   </div>
   <div class="col-lg-4">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">Top 5 Páginas</div>
       <div class="card-body chart-container">
         <canvas id="chartPages"></canvas>
@@ -217,7 +167,7 @@ Dashboard Analítico
 
 <div class="row g-4 mb-3">
   <div class="col-lg-4">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">Países</div>
       <div class="card-body chart-container position-relative">
         <canvas id="chartCountries"></canvas>
@@ -225,7 +175,7 @@ Dashboard Analítico
     </div>
   </div>
   <div class="col-lg-4">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">Navegadores</div>
       <div class="card-body chart-container position-relative">
         <canvas id="chartBrowsers"></canvas>
@@ -233,7 +183,7 @@ Dashboard Analítico
     </div>
   </div>
   <div class="col-lg-4">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">Sistemas Operativos</div>
       <div class="card-body chart-container position-relative">
         <canvas id="chartPlatforms"></canvas>
@@ -244,7 +194,7 @@ Dashboard Analítico
 
 <div class="row g-4 mb-3">
   <div class="col-md-6">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">Dispositivos</div>
       <div class="card-body chart-container">
         <canvas id="chartDevices"></canvas>
@@ -252,7 +202,7 @@ Dashboard Analítico
     </div>
   </div>
   <div class="col-md-6">
-    <div class="card h-100">
+    <div class="card h-100   ">
       <div class="card-header">Fuentes de Tráfico</div>
       <div class="card-body chart-container">
         <canvas id="chartReferers"></canvas>
@@ -263,13 +213,13 @@ Dashboard Analítico
 
 <div class="row g-4">
   <div class="col-12">
-    <div class="card">
+    <div class="card   ">
       <div class="card-header d-flex justify-content-between align-items-center">
         <span>Usuarios Online (Detalle)</span>
         <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Live</span>
       </div>
       <div class="table-responsive">
-        <table class="table table-modern table-hover mb-0" id="tableOnline">
+        <table class="table table-borderless table-hover mb-0" id="tableOnline">
           <thead class="">
             <tr>
               <th>IP</th>
@@ -287,10 +237,10 @@ Dashboard Analítico
   </div>
 
   <div class="col-12">
-    <div class="card">
+    <div class="card   ">
       <div class="card-header">Últimas Sesiones</div>
       <div class="table-responsive">
-        <table class="table table-modern table-hover mb-0" id="tableSessions">
+        <table class="table table-borderless table-hover mb-0" id="tableSessions">
           <thead class="">
             <tr>
               <th>País</th>
@@ -314,9 +264,13 @@ Dashboard Analítico
   // =============================================
   // CONFIGURACIÓN ESTÉTICA GLOBAL (UI/UX)
   // =============================================
+  function getCSSVar(name, fallback) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  }
+
   Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-  Chart.defaults.color = '#8898aa';
-  Chart.defaults.scale.grid.color = '#f3f3f3';
+  Chart.defaults.color = getCSSVar('--bs-body-color', '#8898aa');
+  Chart.defaults.scale.grid.color = getCSSVar('--bs-border-color', '#f3f3f3');
 
   // Opciones compartidas para limpiar los gráficos (Minimalismo)
   const commonOptions = {
@@ -325,7 +279,11 @@ Dashboard Analítico
     plugins: {
       legend: { display: false }, // Ocultamos leyenda por defecto (más limpio)
       tooltip: {
-        backgroundColor: '#1e293b',
+        backgroundColor: getCSSVar('--bs-body-bg', '#1e293b'),
+        titleColor: getCSSVar('--bs-body-color', '#ffffff'),
+        bodyColor: getCSSVar('--bs-body-color', '#ffffff'),
+        borderColor: getCSSVar('--bs-border-color', '#475569'),
+        borderWidth: 1,
         padding: 12,
         titleFont: { size: 13 },
         bodyFont: { size: 13 },
@@ -336,12 +294,12 @@ Dashboard Analítico
     scales: {
       x: {
         grid: { display: false, drawBorder: false }, // Sin líneas verticales
-        ticks: { font: { size: 11 } }
+        ticks: { font: { size: 11 }, color: getCSSVar('--bs-secondary-color', '#6c757d') }
       },
       y: {
         beginAtZero: true,
-        grid: { borderDash: [3, 3], drawBorder: false }, // Líneas horizontales punteadas suaves
-        ticks: { padding: 10, font: { size: 11 } }
+        grid: { borderDash: [3, 3], drawBorder: false, color: getCSSVar('--bs-border-color', '#e2e8f0') }, // Líneas horizontales punteadas suaves
+        ticks: { padding: 10, font: { size: 11 }, color: getCSSVar('--bs-secondary-color', '#6c757d') }
       }
     },
     elements: {

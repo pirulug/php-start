@@ -53,9 +53,11 @@
         </button>
         <div class="offcanvas offcanvas-start" id="navbarResponsive">
           <div class="offcanvas-header">
-            <a class="navbar-brand" href="<?= "" ?>">
-              <img class="brand-logo-ligth" src="" alt="Logo Light" class="logo-light" height="40">
-              <img class="brand-logo-dark" src="" alt="Logo Dark" class="logo-dark d-none" height="40">
+            <a class="navbar-brand" href="<?= home_route() ?>">
+              <img class="brand-logo-ligth" src="<?= APP_URL . "/storage/uploads/site/" . $config->logo()->{"light"} ?>"
+                alt="Logo Light" class="logo-light" height="40">
+              <img class="brand-logo-dark" src="<?= APP_URL . "/storage/uploads/site/" . $config->logo()->{"dark"} ?>"
+                alt="Logo Dark" class="logo-dark d-none" height="40">
             </a>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>

@@ -161,6 +161,22 @@
   <script src="<?= APP_URL ?>/static/plugins/sweetalert2/sa.js"></script>
   <script src="<?= APP_URL ?>/static/assets/js/piruadmin.js"></script>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const sidebar = document.getElementById('sidebar');
+      const activeItem = document.querySelector('.sidebar-item.active');
+
+      if (sidebar && activeItem) {
+        setTimeout(() => {
+          activeItem.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }, 100);
+      }
+    });
+  </script>
+
   <?php echo get_block('js'); ?>
 
 </body>

@@ -58,7 +58,8 @@ class Analytics {
       ON DUPLICATE KEY UPDATE
         visitor_total_hits = visitor_total_hits + 1,
         visitor_last_visit = CURRENT_TIMESTAMP,
-        visitor_referer    = VALUES(visitor_referer)
+        visitor_referer    = VALUES(visitor_referer),
+        visitor_id         = LAST_INSERT_ID(visitor_id)
     ";
 
     $stmt = $this->connect->prepare($sql);
@@ -71,47 +72,24 @@ class Analytics {
       ':referer'  => $referer,
     ]);
 
-    $stmt = $this->connect->prepare("
-      SELECT visitor_id
-      FROM visitors
-      WHERE visitor_ip = :ip
-        AND visitor_user_agent = :ua
-      LIMIT 1
-    ");
-    $stmt->execute([':ip' => $ip, ':ua' => $userAgent]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $row ? (int) $row['visitor_id'] : null;
+    return (int) $this->connect->lastInsertId();
   }
 
   private function registerPage(string $uri, ?string $title): int {
     $stmt = $this->connect->prepare("
-      SELECT visitor_page_id
-      FROM visitor_pages
-      WHERE visitor_page_uri = ?
-      LIMIT 1
-    ");
-    $stmt->execute([$uri]);
-    $page = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($page) {
-      $this->connect->prepare("
-        UPDATE visitor_pages
-        SET visitor_page_total_views = visitor_page_total_views + 1,
-            visitor_page_last_viewed = CURRENT_TIMESTAMP
-        WHERE visitor_page_id = ?
-      ")->execute([$page['visitor_page_id']]);
-      return (int) $page['visitor_page_id'];
-    }
-
-    $this->connect->prepare("
       INSERT INTO visitor_pages (
         visitor_page_uri,
         visitor_page_title,
         visitor_page_total_views,
         visitor_page_unique_visitors
       ) VALUES (?, ?, 1, 1)
-    ")->execute([$uri, $title]);
+      ON DUPLICATE KEY UPDATE
+        visitor_page_total_views = visitor_page_total_views + 1,
+        visitor_page_last_viewed = CURRENT_TIMESTAMP,
+        visitor_page_title = VALUES(visitor_page_title),
+        visitor_page_id = LAST_INSERT_ID(visitor_page_id)
+    ");
+    $stmt->execute([$uri, $title]);
 
     return (int) $this->connect->lastInsertId();
   }
@@ -182,10 +160,12 @@ class Analytics {
       ':ref' => $referer
     ]);
 
-    $this->connect->query("
-      DELETE FROM visitor_useronlines
-      WHERE visitor_useronline_last_activity < (CURRENT_TIMESTAMP - INTERVAL 10 MINUTE)
-    ");
+    if (mt_rand(1, 10) === 1) {
+      $this->connect->query("
+        DELETE FROM visitor_useronlines
+        WHERE visitor_useronline_last_activity < (CURRENT_TIMESTAMP - INTERVAL 10 MINUTE)
+      ");
+    }
   }
 
   private function getLocationFromAPI(string $ip): array {

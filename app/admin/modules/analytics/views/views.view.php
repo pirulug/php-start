@@ -2,7 +2,7 @@
 Vistas
 <?php end_block() ?>
 
-<div class="card">
+<div class="card   ">
   <div class="card-body">
     <div class="mb-3">
       <a href="?range=day"
@@ -41,7 +41,7 @@ Vistas
       });
     </script>
 
-    <table class="table table-bordered table-hover align-middle mt-4">
+    <table class="table table-borderless table-hover align-middle mt-4">
       <thead>
         <tr>
           <th>Ver hora</th>

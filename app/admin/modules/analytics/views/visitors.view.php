@@ -2,10 +2,11 @@
 Visitantes
 <?php end_block() ?>
 
-<div class="card">
+<div class="card   ">
   <div class="card-body">
-    <table class="table table-bordered table-hover align-middle">
-      <thead>
+    <div class="table-responsive">
+      <table class="table table-borderless table-hover align-middle">
+        <thead>
         <tr>
           <th>Última visualización</th>
           <th>Información para visitantes</th>
