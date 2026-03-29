@@ -6,9 +6,9 @@ if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
 }
 
 // AUTO LOGIN CON COOKIE 
-if (isset($_COOKIE['php-start'])) {
+if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
   try {
-    $data = $cipher->decrypt($_COOKIE['php-start']);
+    $data = $cipher->decrypt($_COOKIE[COOKIE_PREFIX . 'auth']);
 
     if (!str_contains($data, ':')) {
       throw new Exception('Formato inválido');
@@ -58,7 +58,7 @@ if (isset($_COOKIE['php-start'])) {
     exit();
 
   } catch (Exception $e) {
-    setcookie('php-start', '', time() - 3600, '/');
+    setcookie(COOKIE_PREFIX . 'auth', '', time() - 3600, '/');
   }
 }
 
@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Cookie cifrada
         setcookie(
-          'php-start',
+          COOKIE_PREFIX . 'auth',
           $cipher->encrypt($cookieData),
           [
             'expires'  => time() + (30 * 24 * 60 * 60),

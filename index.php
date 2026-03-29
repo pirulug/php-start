@@ -7,16 +7,16 @@ if (file_exists(__DIR__ . '/MAINTENANCE')) {
 }
 
 define('APP_START', microtime(true));
-
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
-}
-
 define('BASE_DIR', __DIR__);
 
 require_once BASE_DIR . "/config.php";
 require_once BASE_DIR . "/core/config/path.config.php";
 require_once BASE_DIR . "/core/config/security.config.php";
+
+if (session_status() === PHP_SESSION_NONE) {
+  session_name(COOKIE_PREFIX . 'session');
+  session_start();
+}
 
 /*
 |--------------------------------------------------------------------------

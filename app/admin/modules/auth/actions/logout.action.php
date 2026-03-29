@@ -22,8 +22,8 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // 4. Eliminar la cookie de "recordarme"
-if (isset($_COOKIE['php-start'])) {
-  setcookie('php-start', '', time() - 3600, "/");
+if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
+  setcookie(COOKIE_PREFIX . 'auth', '', time() - 3600, "/");
 }
 
 $log->info("Usuario ha cerrado sesión")
