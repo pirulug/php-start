@@ -50,10 +50,18 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
     $_SESSION['signin']  = true;
 
     $notifier
-      ->message("Bienbenido {$user->user_nickname}")
+      ->message("Bienvenido {$user->user_nickname}")
       ->success()
       ->toast()
       ->add();
+      
+    if (!empty($_SESSION['redirect_after_login'])) {
+      $redirect = $_SESSION['redirect_after_login'];
+      unset($_SESSION['redirect_after_login']);
+      header("Location: " . $redirect);
+      exit;
+    }
+
     header("Location: " . home_route("profile"));
     exit();
 

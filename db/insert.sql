@@ -22,22 +22,20 @@ INSERT INTO permissions (
   permission_group_id,
   permission_context_id
 ) VALUES
-('Dashboard', 'dashboard.dashboard', 'Acceso al dashboard', 1, 1)
-('Acceso al panel de administracion', 'auth.login', '', 1, 1)
-('User new', 'user.new', '', 1, 1)
-('Perfil', 'account.profile', '', 1, 1)
-('Cambiar perfil', 'account.settings', '', 1, 1)
+('Dashboard Panel', 'dashboard.dashboard', 'Acceso al dashboard administrativo', 1, 1),
+('Acceso al panel', 'auth.login', 'Permite loguearse en el panel', 1, 1),
+('Perfil Admin', 'account.profile', 'Ver perfil en administración', 1, 1),
+('Configuración Admin', 'account.settings', 'Configuración de cuenta en administración', 1, 1),
+('Ver Perfil', 'account.profile', 'Ver perfil en el frontend', 1, 2),
+('Editar Perfil', 'account.edit', 'Editar perfil en el frontend', 1, 2);
 
 -- ROLE PERMISSIONS
+-- 1: Administrador, 2: Usuario
+-- Permisos: 1-4 (admin), 5-6 (front)
 INSERT INTO role_permissions (role_id, permission_id) 
 VALUES
-(1, 1)
-(1, 1)
-(2, 1)
-(1, 6)
-(2, 6)
-(2, 9)
-(2, 10);
+(1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), -- Admin tiene todo
+(2, 5), (2, 6); -- Usuario solo tiene perfil en el frontend
 
 -- USERS
 INSERT INTO users (
