@@ -227,7 +227,7 @@ Editar Permiso
           <div class="mb-3">
             <label for="permission_description" class="form-label fw-medium">Descripción</label>
             <textarea class="form-control" name="permission_description" id="permission_description"
-              rows="3"><?= htmlspecialchars($permission->permission_description) ?></textarea>
+              rows="3"><?= htmlspecialchars($permission->permission_description ?? '') ?></textarea>
           </div>
 
         </div>

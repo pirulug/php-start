@@ -97,7 +97,7 @@
                   Perfil
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="<?= admin_route("account/settings") ?>">
+                <a class="dropdown-item" href="<?= admin_route("account/settings/profile") ?>">
                   <i class="align-middle me-1" data-feather="settings"></i>
                   Settings
                 </a>
