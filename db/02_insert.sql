@@ -71,7 +71,7 @@ INSERT INTO options (option_key, option_value) VALUES
 ('date_format', 'd/m/Y'),
 ('time_format', 'H:i a'),
 ('datetime_format', 'd/m/Y - H:i a'),
-('favicon', '{\"android-chrome-192x192\":\"android-chrome-192x192-2283b9d2.png\",\"android-chrome-512x512\":\"android-chrome-512x512,2283b9d2.png\",\"apple-touch-icon\":\"apple-touch-icon-2283b9d2.png\",\"favicon-16x16\":\"favicon-16x16-2283b9d2.png\",\"favicon-32x32\":\"favicon-32x32-2283b9d2.png\",\"favicon.ico\":\"favicon-2283b9d2.ico\",\"webmanifest\":\"site-2283b9d2.webmanifest\"}');
+('favicon', '{"android-chrome-192x192":"android-chrome-192x192-2283b9d2.png","android-chrome-512x512":"android-chrome-512x512,2283b9d2.png","apple-touch-icon":"apple-touch-icon-2283b9d2.png","favicon-16x16":"favicon-16x16-2283b9d2.png","favicon-32x32":"favicon-32x32-2283b9d2.png","favicon.ico":"favicon-2283b9d2.ico","webmanifest":"site-2283b9d2.webmanifest"}'),
 ('white_logo', 'st_logo_light_6962747f29c46870091717.webp'),
 ('dark_logo', 'st_logo_dark_69627476f0736557823395.webp'),
 ('og_image', 'og_image_6962748bb0c10821618393.webp'),

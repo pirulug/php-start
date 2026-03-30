@@ -179,10 +179,43 @@ $productsGroup-&gt;item('Lista de Products', admin_route('products'))-&gt;can('p
                 <code>front</code>, <code>api</code> y <code>ajax</code>.</li>
             <li><strong>Integridad:</strong> Mantiene los IDs de permisos existentes para evitar conflictos con las
                 asignaciones de roles.</li>
-            <li><strong>Agrupación:</strong> Los permisos nuevos se asignan automáticamente al grupo "Sistema".</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h2>🚀 Migrador de Base de Datos (<code>migrate.php</code>)</h2>
+        <p>Utilidad para ejecutar archivos SQL de forma secuencial y automatizada. Ideal para instalaciones rápidas o actualizaciones de esquema.</p>
+        <pre>php comander/migrate.php [fresh]</pre>
+        <p><strong>Comandos:</strong></p>
+        <ul>
+            <li><code>php comander/migrate.php</code>: Ejecuta en orden alfabético/numérico todos los archivos <code>.sql</code> que comiencen con un número en la carpeta <code>db/</code>.</li>
+            <li><code>php comander/migrate.php fresh</code>: Borra <strong>todas</strong> las tablas de la base de datos y vuelve a ejecutar los archivos de la carpeta <code>db/</code>. ⚠️ <em>Usa esto solo en desarrollo.</em></li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h2>📦 Respaldo de Base de Datos (<code>backup.php</code>)</h2>
+        <p>Genera un volcado completo (esquema y datos) de la base de datos actual en un archivo SQL portable.</p>
+        <pre>php comander/backup.php</pre>
+        <p><strong>Características:</strong></p>
+        <ul>
+            <li><strong>Portabilidad:</strong> No requiere <code>mysqldump</code> instalado en el sistema, utiliza el motor nativo de PDO.</li>
+            <li><strong>Ubicación:</strong> Guarda los archivos en <code>db/backup_YYYY-MM-DD_HHMMSS.sql</code>.</li>
+            <li><strong>Aislamiento:</strong> Estos archivos son ignorados automáticamente por el migrador (ya que no empiezan por un número).</li>
+        </ul>
+    </div>
+
+    <div class="feature-box">
+        <h2>🧹 Limpiador de Caché (<code>reset-cache.php</code>)</h2>
+        <p>Elimina todos los archivos temporales generados por el framework para forzar una recarga limpia de configuraciones y rutas.</p>
+        <pre>php comander/reset-cache.php</pre>
+        <p><strong>¿Qué limpia?</strong></p>
+        <ul>
+            <li><strong>Rutas:</strong> Borra la caché de rutas del sistema (<code>storage/cache/router.cache.php</code>), permitiendo que nuevos cambios en <code>router.php</code> se reflejen de inmediato si el sistema tiene activado el modo producción.</li>
         </ul>
     </div>
 
 </body>
+
 
 </html>
