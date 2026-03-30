@@ -62,7 +62,7 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
       exit;
     }
 
-    header("Location: " . home_route("profile"));
+    header("Location: " . home_route("account/profile"));
     exit();
 
   } catch (Exception $e) {
@@ -139,13 +139,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return;
       }
 
-      if (!can_user_login($connect, $user->user_id)) {
-        $notifier->message("No tienes permisos para acceder al sistema.")
-          ->toast()
-          ->danger()
-          ->add();
-        return;
-      }
+      // if (!can_user_login($connect, $user->user_id)) {
+      //   $notifier->message("No tienes permisos para acceder al sistema.")
+      //     ->toast()
+      //     ->danger()
+      //     ->add();
+      //   return;
+      // }
 
       // LOGIN OK
       $_SESSION['user_id'] = $user->user_id;
@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
       }
 
-      header("Location: " . home_route("profile"));
+      header("Location: " . home_route("account/profile"));
       exit;
 
     } else {

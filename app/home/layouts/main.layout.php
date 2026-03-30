@@ -34,6 +34,7 @@
 
   </script>
 
+  <?php echo get_block('css'); ?>
 </head>
 
 <body>
@@ -98,7 +99,7 @@
                 <?php endif; ?>
 
                 <li class="nav-item">
-                  <a class="nav-link" href="<?= home_route("profile") ?>">
+                  <a class="nav-link" href="<?= home_route("account/profile") ?>">
                     <i class="fa fa-user"></i>
                     Mi Perfil
                   </a>
@@ -157,6 +158,8 @@
 
   <script src="<?= APP_URL ?>/static/plugins/toastifyjs/toastifyjs.js"></script>
   <script src="<?= APP_URL ?>/static/assets/js/piruui.js"></script>
+
+  <?php echo get_block('js'); ?>
 
   <?= $notifier->showToasts(); ?>
 

@@ -68,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } else {
 
-      // Encriptar contraseña
-      $encrypted_password = $cipher->encrypt($password);
+      // Hashing de contraseña (SEGURO)
+      $hashed_password = $cipher->password($password);
 
       // Insertar usuario
       $query_insert = "
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       $stmt_insert = $connect->prepare($query_insert);
       $stmt_insert->bindParam(':username', $username, PDO::PARAM_STR);
-      $stmt_insert->bindParam(':password', $encrypted_password, PDO::PARAM_STR);
+      $stmt_insert->bindParam(':password', $hashed_password, PDO::PARAM_STR);
       $stmt_insert->bindParam(':email', $email, PDO::PARAM_STR);
 
       if ($stmt_insert->execute()) {
@@ -103,8 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           ->success()
           ->add();
 
-        header("Location: " . APP_URL . "/signin");
+        header("Location: " . home_route("signin"));
         exit();
+
 
       } else {
 

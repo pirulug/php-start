@@ -85,6 +85,7 @@ if (!$notifier->can()->danger()) {
 ### Restricciones Críticas
 Para asegurar la compatibilidad con el **Dark Mode**, tienes **PROHIBIDO** usar estas clases de Bootstrap:
 - ❌ `.shadow` (usa bordes nativos).
+- ❌ `.shadow-sm` (usa bordes nativos).
 - ❌ `.bg-white` o `.bg-light`.
 - ❌ `.text-white` o `.text-light`.
 - ❌ `.border-0` en elementos `.card`.

@@ -15,3 +15,18 @@ Router::route('signup')
 Router::route('signout')
   ->action(home_action("auth.signout"))
   ->register();
+
+Router::route('reset-password')
+  ->analytic("Recuperar Contraseña")
+  ->view(home_view("auth.reset"))
+  ->layout(home_layout())
+  ->register();
+
+
+Router::route('reset-password/confirm/{token}')
+  ->analytic("Establecer Nueva Contraseña")
+  ->action(home_action("auth.reset_password"))
+  ->view(home_view("auth.reset_password"))
+  ->layout(home_layout())
+  ->register();
+

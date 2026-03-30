@@ -37,10 +37,11 @@ Profile
           </div>
 
           <div class="d-grid mt-4">
-            <a href="<?= APP_URL ?>/profile/edit" class="btn btn-primary">
+            <a href="<?= home_route("account/settings/profile") ?>" class="btn btn-primary">
               <i class="fa fa-pencil me-2"></i> Editar Perfil
             </a>
           </div>
+
         </div>
       </div>
     </div>
