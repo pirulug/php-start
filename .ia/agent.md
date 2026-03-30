@@ -89,6 +89,7 @@ Para asegurar la compatibilidad con el **Dark Mode**, tienes **PROHIBIDO** usar 
 - ❌ `.bg-white` o `.bg-light`.
 - ❌ `.text-white` o `.text-light`.
 - ❌ `.border-0` en elementos `.card`.
+- ❌ `.rounded` en elementos `.card` ya que tine su borde redondeado por defecto.
 - ❌ `.btn-group` en columnas de acción de tablas (usa botones individuales).
 
 ### Bloques de Template
