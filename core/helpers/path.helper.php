@@ -153,3 +153,80 @@ function home_layout(string $name = 'main', string $ext = '.layout.php'): string
 
   return $path;
 }
+
+/* =========================================================
+ * API
+ * ========================================================= */
+
+function api_action(string $name, string $ext = '.php'): string {
+  return resolve_module_path(
+    BASE_DIR . '/app/api',
+    'actions',
+    $name,
+    $ext,
+    'api action'
+  );
+}
+
+function api_view(string $name, string $ext = '.view.php'): string {
+  return resolve_module_path(
+    BASE_DIR . '/app/api',
+    'views',
+    $name,
+    $ext,
+    'api view'
+  );
+}
+
+function api_layout(string $name = 'main', string $ext = '.layout.php'): string {
+  $path = BASE_DIR . '/app/api/layouts/' . $name . $ext;
+
+  if (!file_exists($path)) {
+    path_error('api layout', [
+      'Motivo' => 'Layout no encontrado',
+      'Layout' => $name . $ext,
+      'Ruta'   => $path
+    ]);
+  }
+
+  return $path;
+}
+
+/* =========================================================
+ * AJAX
+ * ========================================================= */
+
+function ajax_action(string $name, string $ext = '.php'): string {
+  return resolve_module_path(
+    BASE_DIR . '/app/ajax',
+    'actions',
+    $name,
+    $ext,
+    'ajax action'
+  );
+}
+
+function ajax_view(string $name, string $ext = '.view.php'): string {
+  return resolve_module_path(
+    BASE_DIR . '/app/ajax',
+    'views',
+    $name,
+    $ext,
+    'ajax view'
+  );
+}
+
+function ajax_layout(string $name = 'main', string $ext = '.layout.php'): string {
+  $path = BASE_DIR . '/app/ajax/layouts/' . $name . $ext;
+
+  if (!file_exists($path)) {
+    path_error('ajax layout', [
+      'Motivo' => 'Layout no encontrado',
+      'Layout' => $name . $ext,
+      'Ruta'   => $path
+    ]);
+  }
+
+  return $path;
+}
+

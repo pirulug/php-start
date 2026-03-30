@@ -1,9 +1,9 @@
 <?php
 
 Router::route('visitors')
-  ->action(BASE_DIR . "/app/ajax/analytics/actions/visitors.php")
+  ->action(ajax_action('analytics.visitors'))
   ->register();
 
 Router::route("country")
-  ->action(BASE_DIR . "/app/ajax/analytics/actions/country.php")
-  ->register();
+  ->action(ajax_action("analytics.country"))
+  ->register();

@@ -67,11 +67,17 @@ if (!$route) {
 
   http_response_code(404);
 
-  // API / AJAX → JSON
+  // 1. RECURSOS ESTÁTICOS (Imágenes, CSS, JS, etc.)
+  $staticExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'css', 'js', 'woff', 'woff2', 'ttf', 'mp4', 'pdf'];
+  $extension        = strtolower(pathinfo($requestedUrl, PATHINFO_EXTENSION));
+
+  if (in_array($extension, $staticExtensions)) {
+    exit;
+  }
+
+  // 2. API / AJAX → JSON
   if ($isApi || $isAjax) {
-
     header('Content-Type: application/json; charset=utf-8');
-
     echo json_encode([
       'status'  => 404,
       'success' => false,
@@ -79,25 +85,25 @@ if (!$route) {
       'message' => 'Recurso no encontrado',
       'path'    => '/' . $requestedUrl
     ]);
-
     exit;
   }
 
-  // ADMIN → Vista de error
+  // 3. ADMIN → Vista de error
   if ($isAdmin) {
-
     require_once admin_action('errors.404');
-
     ob_start();
     require_once admin_view('errors.404');
     $content = ob_get_clean();
-
     require_once admin_layout('error');
     exit;
   }
 
-  // FRONT
-  echo 'Página no encontrada';
+  // 4. FRONT
+  require_once home_action('errors.404');
+  ob_start();
+  require_once home_view('errors.404');
+  $content = ob_get_clean();
+  require_once home_layout(); // Por defecto usa 'main'
   exit;
 }
 

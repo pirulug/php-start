@@ -1,6 +1,6 @@
 <?php
 
 Router::route("datatable")
-  ->action(BASE_DIR . "/app/ajax/datatable/actions/datatable.php")
+  ->action(ajax_action("datatable.datatable"))
   ->middleware("auth_ajax")
-  ->register();
+  ->register();
