@@ -116,11 +116,17 @@
       <main class="content">
         <?php if (has_block('title')): ?>
           <div class="mb-3">
-            <h1 class="h3 d-inline align-middle">
-              <?= get_block('title'); ?>
-            </h1>
+            <div class="d-flex justify-content-between align-items-center">
+              <h1 class="h3 d-inline align-middle">
+                <?= get_block('title'); ?>
+              </h1>
+              <?php if (has_block('breadcrumb')): ?>
+                <?= get_block('breadcrumb'); ?>
+              <?php endif; ?>
+            </div>
           </div>
         <?php endif; ?>
+
 
         <?php $notifier->showBootstrap() ?>
 

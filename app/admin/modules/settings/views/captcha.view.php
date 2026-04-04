@@ -1,5 +1,13 @@
-<?php start_block("title"); ?>
-Configuración de Captcha
+<?php start_block('title'); ?>
+Ajustes de Captcha
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
+  ['label' => 'Captcha']
+]) ?>
 <?php end_block(); ?>
 
 <?php start_block("css"); ?>

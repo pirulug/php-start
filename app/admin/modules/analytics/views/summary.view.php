@@ -1,5 +1,12 @@
-<?php start_block("title"); ?>
-Dashboard Analítico
+<?php start_block('title'); ?>
+Resumen de Analítica
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Analítica']
+]) ?>
 <?php end_block(); ?>
 
 <?php start_block("css"); ?>

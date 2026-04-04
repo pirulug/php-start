@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-Seguridad - Configuración
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Seguridad
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Cuenta', 'link' => admin_route('account/profile')],
+  ['label' => 'Seguridad']
+]) ?>
+<?php end_block(); ?>
 
 <div class="row g-4">
 

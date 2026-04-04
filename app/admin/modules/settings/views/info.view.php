@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-Información del sistema
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Información del Sistema
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
+  ['label' => 'Información']
+]) ?>
+<?php end_block(); ?>
 
 <div class="row g-3 mb-4">
   <div class="col-md-3">

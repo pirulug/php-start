@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-SMTP
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Ajustes SMTP
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
+  ['label' => 'Correo (SMTP)']
+]) ?>
+<?php end_block(); ?>
 
 <div class="card">
   <div class="card-header bg-transparent py-3">

@@ -2,6 +2,14 @@
 Editar Permiso
 <?php end_block(); ?>
 
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Permisos', 'link' => admin_route('permissions')],
+  ['label' => 'Editar']
+]) ?>
+<?php end_block(); ?>
+
 <?php start_block('css'); ?>
 <style>
   /* Estilos para inputs readonly en modo oscuro/claro */

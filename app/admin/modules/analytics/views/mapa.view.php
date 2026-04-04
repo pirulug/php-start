@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-Mapa de visitas
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Mapa de Visitantes
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Analítica', 'link' => admin_route('analytics/summary')],
+  ['label' => 'Mapa']
+]) ?>
+<?php end_block(); ?>
 
 <div class="card    mb-3">
   <div class="card-body">

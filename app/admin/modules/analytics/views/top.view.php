@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-Top de visitantes
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Top Páginas
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Analítica', 'link' => admin_route('analytics/summary')],
+  ['label' => 'Top']
+]) ?>
+<?php end_block(); ?>
 
 <div class="card   ">
   <div class="card-body">

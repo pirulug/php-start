@@ -2,6 +2,14 @@
 Usuarios
 <?php end_block(); ?>
 
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Plugins'],
+  ['label' => 'DataTable']
+]) ?>
+<?php end_block(); ?>
+
 <?php start_block("css"); ?>
 <link href="/static/assets/css/datatables.css" rel="stylesheet" crossorigin="anonymous" />
 <?php end_block(); ?>

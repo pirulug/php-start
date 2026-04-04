@@ -1,6 +1,14 @@
 <?php start_block("title") ?>
-Sitemap.xml
+Gestión de Sitemap
 <?php end_block() ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
+  ['label' => 'Sitemap']
+]) ?>
+<?php end_block(); ?>
 
 <?php start_block("css") ?>
 <style>

@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-Visitantes en linea
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Usuarios en Línea
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Analítica', 'link' => admin_route('analytics/summary')],
+  ['label' => 'Online']
+]) ?>
+<?php end_block(); ?>
 
 <div class="card   ">
   <div class="card-body">

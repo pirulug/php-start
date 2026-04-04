@@ -1,5 +1,13 @@
-<?php start_block("title"); ?>
-Captchas
+<?php start_block('title'); ?>
+Captcha Plugin
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Plugins'],
+  ['label' => 'Captcha']
+]) ?>
 <?php end_block(); ?>
 
 <div class="card mt-3">

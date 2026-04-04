@@ -1,5 +1,13 @@
 <?php start_block('title'); ?>
-Editar Rol
+Editar Roles
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Roles', 'link' => admin_route('roles')],
+  ['label' => 'Editar']
+]) ?>
 <?php end_block(); ?>
 
 <?php start_block('css'); ?>

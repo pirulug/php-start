@@ -1,5 +1,12 @@
-<?php start_block("title"); ?>
-Información General
+<?php start_block('title'); ?>
+Ajustes Generales
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes']
+]) ?>
 <?php end_block(); ?>
 
 <?php start_block("css"); ?>

@@ -2,6 +2,14 @@
 Nuevo Usuarios
 <?php end_block(); ?>
 
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Usuarios', 'link' => admin_route('users')],
+  ['label' => 'Nuevo']
+]) ?>
+<?php end_block(); ?>
+
 <?php start_block('css'); ?>
 <link rel="stylesheet" href="<?= APP_URL . "/static/plugins/dropzone/dropimg.css" ?>">
 <?php end_block(); ?>

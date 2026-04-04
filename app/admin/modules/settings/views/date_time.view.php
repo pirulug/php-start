@@ -1,5 +1,13 @@
 <?php start_block("title"); ?>
-Date Time
+Fecha y Hora
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
+  ['label' => 'Fecha y Hora']
+]) ?>
 <?php end_block(); ?>
 
 <form action="" method="POST" id="settingsForm">

@@ -1,6 +1,13 @@
-<?php start_block("title") ?>
-Perfil
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Mi Cuenta
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Cuenta']
+]) ?>
+<?php end_block(); ?>
 
 <div class="row g-4">
 

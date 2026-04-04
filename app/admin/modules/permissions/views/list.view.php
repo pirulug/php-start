@@ -1,5 +1,12 @@
 <?php start_block('title'); ?>
-Lista de Permisos
+Listar Permisos
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Permisos']
+]) ?>
 <?php end_block(); ?>
 
 <?php start_block('css'); ?>

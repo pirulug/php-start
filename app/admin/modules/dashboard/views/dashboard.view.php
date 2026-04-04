@@ -1,3 +1,13 @@
+<?php start_block("title"); ?>
+Dashboard
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard']
+]) ?>
+<?php end_block(); ?>
+
 <div class="row g-4 mb-4">
 
   <div class="col-12 col-sm-6 col-xl-3">

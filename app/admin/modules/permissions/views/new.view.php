@@ -2,6 +2,14 @@
 Nuevo Permiso
 <?php end_block(); ?>
 
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Permisos', 'link' => admin_route('permissions')],
+  ['label' => 'Nuevo']
+]) ?>
+<?php end_block(); ?>
+
 <?php start_block('css'); ?>
 <style>
   /* Ajustes sutiles para inputs de solo lectura en dark mode */

@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-Visitantes
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Listado de Visitantes
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Analítica', 'link' => admin_route('analytics/summary')],
+  ['label' => 'Visitantes']
+]) ?>
+<?php end_block(); ?>
 
 <div class="card   ">
   <div class="card-body">

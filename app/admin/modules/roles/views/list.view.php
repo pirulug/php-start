@@ -2,6 +2,13 @@
 Listar Roles
 <?php end_block(); ?>
 
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Roles']
+]) ?>
+<?php end_block(); ?>
+
 <?php start_block('css'); ?>
 <?php end_block(); ?>
 

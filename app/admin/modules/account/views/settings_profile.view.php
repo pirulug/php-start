@@ -1,6 +1,14 @@
-<?php start_block("title") ?>
-Perfil - Configuración
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Perfil
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Cuenta', 'link' => admin_route('account/profile')],
+  ['label' => 'Perfil']
+]) ?>
+<?php end_block(); ?>
 
 <link rel="stylesheet" href="<?= APP_URL . "/static/plugins/dropzone/dropimg.css" ?>">
 

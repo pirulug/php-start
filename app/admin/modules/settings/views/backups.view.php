@@ -1,5 +1,13 @@
-<?php start_block("title"); ?>
-Respaldos de Base de Datos
+<?php start_block('title'); ?>
+Backups
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
+  ['label' => 'Backups']
+]) ?>
 <?php end_block(); ?>
 
 <div class="card">
