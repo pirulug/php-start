@@ -7,12 +7,12 @@ $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Obtener los datos del formulario y limpiarlos
-  $user_login  = ($_POST['user_login']);
-  $user_email  = ($_POST['user_email']);
-  $role_id     = ($_POST['role_id']);
-  $user_status = ($_POST['user_status']);
-  $password    = ($_POST['user_password']);
+  // Obtener los datos del formulario y limpiarlos (Arquitectura Action)
+  $user_login  = trim($_POST['user_login'] ?? '');
+  $user_email  = trim($_POST['user_email'] ?? '');
+  $role_id     = trim($_POST['role_id'] ?? '');
+  $user_status = trim($_POST['user_status'] ?? '');
+  $password    = trim($_POST['user_password'] ?? '');
 
   // Validar el nombre de usuario
   if (strlen($user_login) < 4) {
@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $statement = $connect->prepare($query);
       $statement->bindParam(':user_login', $user_login);
       $statement->execute();
-      $result = $statement->fetch(PDO::FETCH_ASSOC);
+      $result = $statement->fetch(PDO::FETCH_OBJ);
 
-      if ($result['count'] > 0) {
+      if ($result && $result->count > 0) {
         $notifier
           ->message("El nombre de usuario ya está en uso.")
           ->danger()
@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $statement = $connect->prepare($query);
       $statement->bindParam(':user_email', $user_email);
       $statement->execute();
-      $result = $statement->fetch(PDO::FETCH_ASSOC);
+      $result = $statement->fetch(PDO::FETCH_OBJ);
 
-      if ($result['count'] > 0) {
+      if ($result && $result->count > 0) {
         $notifier
           ->message("El email ya está registrado.")
           ->danger()
@@ -97,11 +97,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
     if (!$notifier->can()->danger()) {
 
-      $upload_path = BASE_DIR . '/uploads/user/';
+      $upload_path = BASE_DIR . '/storage/uploads/user/';
 
       $user_image = (new UploadImage())
         ->file($_FILES['user_image'])
         ->dir($upload_path)
+        ->prefix('u_')
         ->convertTo("webp")
         ->width(100)
         ->height(100)

@@ -1,162 +1,201 @@
 (function () {
-  function getIconSVG() {
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7 9H5l3-3 3 3H9v5H7V9zm5-4c0-.44-.91-3-4.5-3C5.08 2 3 3.92 3 6 1.02 6 0 7.52 0 9c0 1.53 1 3 3 3h3v-1.3H3c-1.62 0-1.7-1.42-1.7-1.7 0-.17.05-1.7 1.7-1.7h1.3V6c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V12h2c2.08 0 4-1.16 4-3.5C16 6.06 14.08 5 12 5z"/></svg>`;
-  }
+  /**
+   * DropImg - A modern, lightweight image upload previewer.
+   * Author: Antigravity AI
+   */
+  
+  const ICONS = {
+    upload: '<i class="fa-solid fa-cloud-arrow-up"></i>',
+    change: '<i class="fa-solid fa-rotate"></i>',
+    remove: '<i class="fa-solid fa-xmark"></i>',
+    error: '<i class="fa-solid fa-triangle-exclamation"></i>'
+  };
 
   function initDropImg() {
     document.querySelectorAll("[data-dropimg]").forEach((input) => {
       if (input.dataset.dropimgInit) return;
-      input.dataset.dropimgInit = true;
 
+      // Configuration
       const width = parseInt(input.getAttribute("data-width")) || 300;
       const height = parseInt(input.getAttribute("data-height")) || 200;
       const defaultImg = input.getAttribute("data-default") || null;
-      const accepted = (input.getAttribute("accept") || "")
-        .split(",")
-        .map((ext) => ext.trim().toLowerCase());
+      const aspect = input.getAttribute("data-aspect") || "square";
+      const maxSizeMB = parseFloat(input.getAttribute("data-max-size")) || 2;
+      const acceptedAttr = input.getAttribute("accept") || "image/*";
+      const accepted = acceptedAttr.split(",").map((ext) => ext.trim().toLowerCase());
+      const isWildcard = accepted.some(a => a === "image/*");
 
-      // 📌 Crear contenedor principal
+      // Encapsulation Container
+      const container = document.createElement("div");
+      container.className = "dropimg-content";
+
+      // Main Drop Zone
       const zone = document.createElement("div");
       zone.className = "dropimg-zone";
-      zone.style.aspectRatio = `${width} / ${height}`;
-      zone.style.maxWidth = width + "px";
-      zone.style.width = "100%";
+      if (aspect === "circle") zone.classList.add("dropimg-circle");
+      
+      zone.style.aspectRatio = aspect === "circle" ? "1 / 1" : `${width} / ${height}`;
 
-      // 📌 Crear preview
-      const preview = document.createElement("div");
-      preview.className = "dropimg-preview";
-      preview.innerHTML = `<span class="dropimg-text">SELECCIONAR ARCHIVO</span>`;
-      zone.appendChild(preview);
-
-      // 📌 Reemplazar input
-      input.parentNode.replaceChild(zone, input);
-      zone.appendChild(input);
-      input.style.display = "none";
-
-      // 📌 Mensajes
-      const recommend = document.createElement("small");
-      recommend.className = "dropimg-recommend";
-      recommend.innerHTML = `TAMAÑO RECOMENDADO: <b>${width} x ${height} píxeles</b>`;
-      zone.insertAdjacentElement("afterend", recommend);
-
-      const errorMsg = document.createElement("small");
-      errorMsg.className = "dropimg-error";
-      errorMsg.style.display = "none";
-      zone.insertAdjacentElement("afterend", errorMsg);
-
-      // 📌 Centrar dentro del padre
-      const parent = zone.parentNode;
-      parent.style.display = "flex";
-      parent.style.alignItems = "center";
-      parent.style.justifyContent = "center";
-      parent.style.flexDirection = "column";
-
-      // 📌 Ajuste de clases según tamaño
-      if (width <= 150 || height <= 150) {
-        zone.classList.add("small");
-      }
-      if (width <= 100 || height <= 100) {
-        zone.classList.add("tiny");
-        preview.innerHTML = `<span class="dropimg-text">${getIconSVG()}</span>`;
+      if (aspect === "circle") {
+        zone.style.width = width + "px";
+        zone.style.height = width + "px";
+        zone.style.minWidth = width + "px";
+        zone.classList.add("flex-shrink-0");
+      } else {
+        zone.style.maxWidth = width + "px";
+        zone.style.width = "100%";
       }
 
-      // 📌 Imagen por defecto
-      if (defaultImg) {
-        preview.style.backgroundImage = `url(${defaultImg})`;
-        if (zone.classList.contains("tiny")) {
-          preview.innerHTML = `<span class="dropimg-text">${getIconSVG()}</span>`;
-        } else {
-          preview.innerHTML = `<span class="dropimg-text">CAMBIAR ARCHIVO</span>`;
-        }
-      }
-
-      // 📌 Eventos
-      zone.addEventListener("click", () => input.click());
-
-      zone.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        zone.style.borderColor = "#3498db";
-      });
-
-      zone.addEventListener("dragleave", () => {
-        zone.style.borderColor = "#bbb";
-      });
-
-      zone.addEventListener("drop", (e) => {
-        e.preventDefault();
-        zone.style.borderColor = "#bbb";
-        input.files = e.dataTransfer.files;
-        validarArchivo(input.files[0]);
-      });
-
-      input.addEventListener("change", () => {
-        if (input.files.length > 0) {
-          validarArchivo(input.files[0]);
-        }
-      });
-
-      // Validar requerido al enviar formulario (solo 1 vez por formulario)
-      const form = input.closest("form");
-
-      if (form && !form.dataset.dropimgReqInit) {
-        form.dataset.dropimgReqInit = true;
-
-        form.addEventListener("submit", (e) => {
-          // Buscar SOLO los inputs dentro del formulario enviado
-          const inputs = form.querySelectorAll("[data-dropimg]");
-
-          inputs.forEach((inp) => {
-            const zone = inp.parentNode;
-            const errorMsg = zone.parentNode.querySelector(".dropimg-error");
-
-            if (inp.hasAttribute("data-required") && inp.files.length === 0) {
-              e.preventDefault();
-              errorMsg.textContent = "Debes seleccionar un archivo.";
-              errorMsg.style.display = "block";
-            } else {
-              errorMsg.style.display = "none";
-            }
-          });
-        });
-      }
-
-      // Validar archivo según accept
-      function validarArchivo(file) {
-        if (!file) return;
-
-        const ext = "." + file.name.split(".").pop().toLowerCase();
-        if (!accepted.includes(ext)) {
-          errorMsg.style.display = "block";
-          errorMsg.textContent = `El archivo "${file.name
-            }" no es válido. Solo se permiten: ${accepted.join(", ")}`;
-          errorMsg.textContent = `El archivo no es válido. Solo se permiten: ${accepted.join(", ")}`;
-          input.value = ""; // limpiar input
-          return;
-        }
-
+      try {
+        // Internal Elements
+        const preview = document.createElement("div");
+        preview.className = "dropimg-preview";
+        
+        const errorMsg = document.createElement("small");
+        errorMsg.className = "dropimg-error";
         errorMsg.style.display = "none";
-        mostrarPreview(file);
-      }
 
-      // Mostrar preview
-      function mostrarPreview(file) {
-        if (!file.type.startsWith("image/")) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          preview.style.backgroundImage = `url(${e.target.result})`;
-          if (zone.classList.contains("tiny")) {
-            preview.innerHTML = `<span class="dropimg-text">${getIconSVG()}</span>`;
+        const removeBtn = document.createElement("div");
+        removeBtn.className = "dropimg-remove";
+        removeBtn.innerHTML = ICONS.remove;
+        removeBtn.title = "Eliminar imagen";
+
+        // UI Update Helper
+        const updatePreviewUI = (bg = null) => {
+          if (bg) {
+            preview.style.backgroundImage = `url(${bg})`;
+            preview.innerHTML = `<div class="dropimg-overlay"><span class="dropimg-text">${ICONS.change} <span>CAMBIAR</span></span></div>`;
+            container.appendChild(removeBtn);
           } else {
-            preview.innerHTML = `<span class="dropimg-text">CAMBIAR ARCHIVO</span>`;
+            preview.style.backgroundImage = "none";
+            preview.innerHTML = `<span class="dropimg-text">${ICONS.upload} <span>SUBIR IMAGEN</span></span>`;
+            if (removeBtn.parentNode) removeBtn.parentNode.removeChild(removeBtn);
           }
         };
-        reader.readAsDataURL(file);
+
+        // File Validation Helper
+        const validateFile = (file) => {
+          if (!file) return;
+          const ext = "." + file.name.split(".").pop().toLowerCase();
+          const isValidExt = accepted.includes(ext);
+          const isImageType = file.type.startsWith("image/");
+          
+          if (!isWildcard && !isValidExt && !isImageType) {
+            showError(`Formato no válido. Use: ${accepted.join(", ")}`);
+            return;
+          }
+          if (isWildcard && !isImageType) {
+            showError("El archivo debe ser una imagen.");
+            return;
+          }
+          if (file.size > maxSizeMB * 1024 * 1024) {
+            showError(`Imagen muy pesada. Máximo: ${maxSizeMB}MB`);
+            return;
+          }
+          hideError();
+          showPreview(file);
+        };
+
+        const showPreview = (file) => {
+          const reader = new FileReader();
+          reader.onload = (e) => updatePreviewUI(e.target.result);
+          reader.readAsDataURL(file);
+        };
+
+        const showError = (msg) => {
+          errorMsg.innerHTML = `${ICONS.error} ${msg}`;
+          errorMsg.style.display = "block";
+          input.value = "";
+          updatePreviewUI(defaultImg);
+        };
+
+        const hideError = () => errorMsg.style.display = "none";
+
+        // Event Listeners
+        removeBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          input.value = "";
+          updatePreviewUI(null);
+        });
+
+        zone.addEventListener("click", () => input.click());
+
+        ["dragenter", "dragover"].forEach(name => {
+          zone.addEventListener(name, (e) => {
+            e.preventDefault(); e.stopPropagation();
+            zone.classList.add("drag-over");
+          });
+        });
+
+        ["dragleave", "drop"].forEach(name => {
+          zone.addEventListener(name, (e) => {
+            e.preventDefault(); e.stopPropagation();
+            zone.classList.remove("drag-over");
+          });
+        });
+
+        zone.addEventListener("drop", (e) => {
+          if (e.dataTransfer.files.length) {
+            input.files = e.dataTransfer.files;
+            validateFile(e.dataTransfer.files[0]);
+          }
+        });
+
+        input.addEventListener("change", () => {
+          if (input.files.length) validateFile(input.files[0]);
+        });
+
+        // Form Validation
+        const form = input.closest("form");
+        if (form && !form.dataset.dropimgReqInit) {
+          form.dataset.dropimgReqInit = true;
+          form.addEventListener("submit", (e) => {
+            form.querySelectorAll("[data-dropimg]").forEach(inp => {
+              if (inp.hasAttribute("data-required") && !inp.files.length && !inp.getAttribute("data-default")) {
+                e.preventDefault();
+                const err = inp.closest(".dropimg-content")?.querySelector(".dropimg-error");
+                if (err) {
+                  err.textContent = "Debes seleccionar una imagen.";
+                  err.style.display = "block";
+                }
+              }
+            });
+          });
+        }
+
+        // Assembly & Replacement
+        zone.appendChild(preview);
+        container.appendChild(zone);
+
+        if (!input.hasAttribute("data-no-recommend")) {
+          const recommend = document.createElement("small");
+          recommend.className = "dropimg-recommend";
+          const formatsText = isWildcard ? "CUALQUIER IMAGEN" : accepted.join(", ").toUpperCase().replace(/\./g, "");
+          recommend.innerHTML = `<div>RECOMENDADO: <b>${width} x ${height}px</b></div>
+                                 <div style="margin-top: 4px; opacity: 0.8;">FORMATOS: <b>${formatsText}</b> (Máx: ${maxSizeMB}MB)</div>`;
+          container.appendChild(recommend);
+        }
+        container.appendChild(errorMsg);
+
+        // Success: Replace DOM
+        const parent = input.parentNode;
+        if (parent) {
+          parent.replaceChild(container, input);
+          zone.appendChild(input);
+          input.style.display = "none";
+          input.dataset.dropimgInit = "true";
+          updatePreviewUI(defaultImg);
+        }
+
+      } catch (err) {
+        console.error("DropImg Init failed:", err);
+        input.style.display = "block"; // Fallback to normal input
       }
-
-
     });
   }
 
-  // Exportar librería global
   window.DropImg = { init: initDropImg };
+  document.addEventListener("DOMContentLoaded", initDropImg);
 })();
+
+

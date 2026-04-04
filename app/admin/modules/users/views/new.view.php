@@ -115,11 +115,10 @@ Nuevo Usuarios
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-power-off"></i></span>
                 <select class="form-select" name="user_status" required>
                   <option value="1" <?= isset($_POST['user_status']) && $_POST['user_status'] == 1 ? 'selected' : '' ?>>
-                    🟢 Activo
+                    Activo
                   </option>
-                  <option value="0" <?= isset($_POST['user_status']) && $_POST['user_status'] == 2 ? 'selected' : '' ?>
-                    <?= !isset($_POST['user_status']) ? 'selected' : '' ?>>
-                    🔴 Inactivo / Pendiente
+                  <option value="0" <?= (isset($_POST['user_status']) && $_POST['user_status'] == 0) || !isset($_POST['user_status']) ? 'selected' : '' ?>>
+                    Inactivo / Pendiente
                   </option>
                 </select>
               </div>
@@ -131,19 +130,18 @@ Nuevo Usuarios
     </div>
 
     <div class="col-12 col-lg-4">
-      <div class="card h-100">
+      <div class="card">
         <div class="card-body">
-          <div>
-            <label class="form-label  mb-2">Imagen de Perfil</label>
-            <div
-              class="p-4 rounded bg-secondary bg-opacity-10 d-flex justify-content-center align-items-center flex-column">
-              <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
-                accept=".jpg,.jpeg,.png,.gif,.webp">
-              <!-- <small class="text-muted mt-2 text-center" style="font-size: 0.75rem;">
-                Formatos: JPG, PNG, WEBP
-              </small> -->
-            </div>
-          </div>
+          <label class="form-label fw-bold mb-3 text-uppercase small tracking-wider">Imagen de Perfil</label>
+          <input type="file" id="user_image" name="user_image" 
+            data-dropimg 
+            data-width="150" 
+            data-height="150"
+            data-aspect="circle"
+            accept="image/*">
+          <p class="text-muted small mt-3 text-center">
+            Sube una foto cuadrada para mejores resultados.
+          </p>
         </div>
       </div>
     </div>

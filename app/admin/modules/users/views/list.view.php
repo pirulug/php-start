@@ -5,7 +5,7 @@ Listar Usuarios
 <?php start_block('breadcrumb'); ?>
 <?php render_breadcrumb([
   ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
-  ['label' => 'Usuarios']
+  ['label' => 'Usuarios', 'link' => admin_route('users')]
 ]) ?>
 <?php end_block(); ?>
 
@@ -25,7 +25,7 @@ Listar Usuarios
             <i class="fa-solid fa-magnifying-glass"></i>
           </span>
           <input type="text" name="search" class="form-control" placeholder="Buscar por nombre o email..."
-            value="<?= ($_GET['search'] ?? '') ?>">
+            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
           <button class="btn btn-primary px-3">Buscar</button>
         </div>
       </form>
@@ -64,10 +64,10 @@ Listar Usuarios
 
                     <div class="d-flex flex-column">
                       <span class="fw-bold text-body">
-                        <?= ($user->user_login) ?>
+                        <?= htmlspecialchars($user->user_login) ?>
                       </span>
                       <span class="text-muted small">
-                        <?= ($user->user_email) ?>
+                        <?= htmlspecialchars($user->user_email) ?>
                       </span>
                     </div>
                   </div>
@@ -76,7 +76,7 @@ Listar Usuarios
                 <td>
                   <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary fw-bold px-3 py-2">
                     <i class="fa-solid fa-shield-cat me-1"></i>
-                    <?= ($user->role_name) ?>
+                    <?= htmlspecialchars($user->role_name) ?>
                   </span>
                 </td>
 
@@ -134,8 +134,51 @@ Listar Usuarios
       </table>
     </div>
 
-    <?php if (count($users) > 0): ?>
-      <?= $dt->renderLinks('?') ?>
+    <!-- Paginación Manual Bootstrap 5 -->
+    <?php if ($total_pages > 1): ?>
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center mb-0">
+          <?php
+          $url_params = $_GET;
+          unset($url_params['p']);
+          $base_query = http_build_query($url_params);
+          $base_url = "?" . ($base_query ? $base_query . "&" : "");
+
+          if ($p > 1): ?>
+            <li class="page-item">
+              <a class="page-link link-body" href="<?= $base_url ?>p=1" title="Primero">Primero</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link link-body" href="<?= $base_url ?>p=<?= ($p - 1) ?>" aria-label="Anterior">
+                <i class="fa-solid fa-chevron-left small"></i>
+              </a>
+            </li>
+          <?php endif; ?>
+
+          <?php
+          $range = 2;
+          for ($i = 1; $i <= $total_pages; $i++):
+            if ($i == 1 || $i == $total_pages || ($i >= $p - $range && $i <= $p + $range)): ?>
+              <li class="page-item <?= ($i == $p) ? 'active' : '' ?>">
+                <a class="page-link" href="<?= $base_url ?>p=<?= $i ?>"><?= $i ?></a>
+              </li>
+            <?php elseif ($i == $p - $range - 1 || $i == $p + $range + 1): ?>
+              <li class="page-item disabled"><span class="page-link">...</span></li>
+            <?php endif;
+          endfor; ?>
+
+          <?php if ($p < $total_pages): ?>
+            <li class="page-item">
+              <a class="page-link link-body" href="<?= $base_url ?>p=<?= ($p + 1) ?>" aria-label="Siguiente">
+                <i class="fa-solid fa-chevron-right small"></i>
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link link-body" href="<?= $base_url ?>p=<?= $total_pages ?>" title="Último">Último</a>
+            </li>
+          <?php endif; ?>
+        </ul>
+      </nav>
     <?php endif; ?>
 
   </div>

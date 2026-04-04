@@ -51,14 +51,13 @@ $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Obtener los datos del formulario y limpiarlos
-  $user_id       = $cipher->decrypt(clear_data($_POST['user_id']));
-  $user_login    = clear_data($_POST['user_login']);
-  $user_email    = clear_data($_POST['user_email']);
-  $role_id       = clear_data($_POST['role_id']);
-  $user_status   = clear_data($_POST['user_status']);
-  $user_password = clear_data($_POST['user_password']);
-  // $user_password_save = cleardata($_POST['user_password_save']);
+  // Obtener los datos del formulario y limpiarlos (Arquitectura Action)
+  $user_id       = $cipher->decrypt(trim($_POST['user_id'] ?? ''));
+  $user_login    = trim($_POST['user_login'] ?? '');
+  $user_email    = trim($_POST['user_email'] ?? '');
+  $role_id       = trim($_POST['role_id'] ?? '');
+  $user_status   = trim($_POST['user_status'] ?? '');
+  $user_password = trim($_POST['user_password'] ?? '');
 
   // Validar el nombre de usuario (mínimo 4 caracteres)
   if (strlen($user_login) < 4) {
@@ -132,10 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ->add();
   }
 
-  // Validar selected
-  if (!in_array($user_status, [1, 2])) {
+  // Validar estatus (0: Inactivo, 1: Activo)
+  if (!in_array($user_status, [0, 1])) {
     $notifier
-      ->message("Seleccionar estatus.")
+      ->message("Seleccionar un estatus válido.")
       ->bootstrap()
       ->danger()
       ->add();
@@ -206,11 +205,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute();
 
     $notifier
-      ->message("Usuario se actualizo correctamente.")
+      ->message("El usuario se actualizó correctamente.")
       ->bootstrap()
       ->success()
       ->add();
-    header("Location: " . $_SERVER['HTTP_REFERER']);
+    header("Location: " . admin_route("users"));
     exit();
   }
 }

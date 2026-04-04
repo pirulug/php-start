@@ -108,10 +108,10 @@ Editar Usuarios
                 <span class="input-group-text bg-transparent"><i class="fa-solid fa-power-off"></i></span>
                 <select class="form-select" name="user_status" required>
                   <option value="1" <?= $user->user_status == 1 ? 'selected' : '' ?>>
-                    🟢 Activo
+                    Activo
                   </option>
-                  <option value="2" <?= $user->user_status == 2 ? 'selected' : '' ?>>
-                    🔴 Inactivo
+                  <option value="0" <?= $user->user_status == 0 ? 'selected' : '' ?>>
+                    Inactivo
                   </option>
                 </select>
               </div>
@@ -122,17 +122,19 @@ Editar Usuarios
     </div>
 
     <div class="col-12 col-lg-4">
-      <div class="card h-100">
-        <div class="card-body d-flex flex-column gap-4">
-          <div>
-            <label class="form-label  mb-2">Avatar</label>
-            <div
-              class="p-4 rounded bg-secondary bg-opacity-10 d-flex justify-content-center align-items-center flex-column">
-              <input type="file" id="user_image" name="user_image" data-dropimg data-width="100" data-height="100"
-                data-default="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>"
-                accept=".jpg,.jpeg,.png,.gif,.webp">
-            </div>
-          </div>
+      <div class="card">
+        <div class="card-body d-flex flex-column align-items-center justify-content-center">
+          <label class="form-label fw-bold mb-3 text-uppercase small tracking-wider">Avatar del Usuario</label>
+          <input type="file" id="user_image" name="user_image" 
+            data-dropimg 
+            data-width="150" 
+            data-height="150"
+            data-aspect="circle"
+            data-default="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>"
+            accept="image/*">
+          <p class="text-muted small mt-3 text-center">
+            Pulsa para cambiar o arrastra una nueva imagen.
+          </p>
         </div>
       </div>
     </div>

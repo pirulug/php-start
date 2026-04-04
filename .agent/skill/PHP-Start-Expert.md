@@ -13,7 +13,7 @@ El framework utiliza un patrón `Action-View` interconectado y mediado por Contr
 
 ## 2. Base de Datos y PDO (Reglas Inquebrantables)
 - La conexión PDO Global SIEMPRE está disponible sin inyectarla dentro de las variables en los actions (es la variable global instanciada `$connect`).
-- **NUNCA** uses `query()`. Todas, absolutamente todas las consultas con inputs variables deben ser blindadas con `prepare()` y enlazadas con `bindParam()` o `bindValue()`.
+- **NUNCA** uses `query()`. Todas, absolutamente todas las consultas con inputs variables deben ser blindadas con `prepare()` y enlazadas con `bindParam()`.
 - Tienes ESTRICTAMENTE PROHIBIDO usar *fetch* de clave asociativa nativo. **Siempre utiliza orientación de objetos con `PDO::FETCH_OBJ`** (`$stmt->fetch(PDO::FETCH_OBJ)` o `$stmt->fetchAll(PDO::FETCH_OBJ)`).
 
 ## 3. Recepción de Variables por Seguridad
