@@ -1,6 +1,15 @@
 # ======================================================
-# Seguridad básica
-# ======================================================
+# Seguridad básica y Ofuscación
+# ==========================================
+
+# Ocultar rastro tecnológico
+ServerSignature Off
+
+<IfModule mod_headers.c>
+  Header unset X-Powered-By
+  Header unset Server
+  Header unset X-Generator
+</IfModule>
 
 # Proteger .htaccess
 <Files ".htaccess">

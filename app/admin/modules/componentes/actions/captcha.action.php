@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $notifier->message($texto)->bootstrap()->info()->add();
 
-  header("Location: " . admin_route("plugins/captcha"));
+  header("Location: " . admin_route("componentes/captcha"));
   exit();
-
 }

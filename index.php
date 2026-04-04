@@ -1,4 +1,5 @@
 <?php
+header_remove('X-Powered-By');
 
 if (file_exists(__DIR__ . '/MAINTENANCE')) {
   http_response_code(503);
@@ -14,7 +15,7 @@ require_once BASE_DIR . "/core/config/path.config.php";
 require_once BASE_DIR . "/core/config/security.config.php";
 
 if (session_status() === PHP_SESSION_NONE) {
-  session_name(COOKIE_PREFIX . 'session');
+  session_name('__sid');
   session_start();
 }
 

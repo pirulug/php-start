@@ -3,12 +3,13 @@
 return [
   'auth'        => true,
   'dashboard'   => true,
-  'plugins'     => true,
+  'componentes' => true,
+  'users'       => true,
   'roles'       => true,
   'permissions' => true,
-  'users'       => true,
   'analytics'   => true,
   'settings'    => true,
   'account'     => true,
+  'captcha'     => true,
   // 'test'        => true,
 ];

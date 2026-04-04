@@ -143,7 +143,7 @@ class Captcha {
       }
     }
 
-    imagepng($img);
+    imagewebp($img);
     imagedestroy($img);
   }
 

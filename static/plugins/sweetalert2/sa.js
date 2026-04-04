@@ -1,50 +1,95 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // Selecciona todos los botones con atributos personalizados para SweetAlert2
-  document.querySelectorAll("[sa-title]").forEach((button) => {
-    button.addEventListener("click", () => {
-      // Obtén los atributos personalizados del botón
-      const title = button.getAttribute("sa-title") || "Sin título";
-      const text = button.getAttribute("sa-text") || "";
-      const icon = button.getAttribute("sa-icon") || "info";
-      const confirmButtonText =
-        button.getAttribute("sa-confirm-btn-text") || "Aceptar";
-      const cancelButtonText = button.getAttribute("sa-cancel-btn-text") || "";
-      const redirectUrl = button.getAttribute("sa-redirect-url") || null;
-      const timer = parseInt(button.getAttribute("sa-timer"), 10) || 0; // Timer en milisegundos
-      const showConfirmButton =
-        button.getAttribute("sa-show-confirm-btn") !== "false"; // Determina si mostrar el botón de confirmar
-      const showCancelButton =
-        button.getAttribute("sa-show-cancel-btn") !== "false"; // Determina si mostrar el botón de cancelar
+/**
+ * PiruSA - Helper de SweetAlert2 para PhpStart
+ * 
+ * Gestiona alertas dinámicas mediante atributos data y eventos delegados.
+ * Soporta redirecciones, envíos de formularios y alertas automáticas (flash).
+ */
 
-      // Configura el objeto de opciones de SweetAlert2
-      const options = {
-        title,
-        text,
-        icon,
-        showConfirmButton,
-        confirmButtonText,
-        showCancelButton,
-        cancelButtonText,
-        timer: timer > 0 ? timer : null, // Solo se agrega el timer si es mayor a 0
-        allowOutsideClick: true, // Permite cerrar al hacer clic fuera del modal
-        allowEscapeKey: true, // Permite cerrar con la tecla ESC
-        reverseButtons: false, // Invierte los botones (Cancelar primero, luego Confirmar)
-      };
+const PiruSA = {
 
-      // Muestra el modal
-      Swal.fire(options).then((result) => {
-        if (result.isConfirmed) {
-          if (redirectUrl) {
-            window.location.href = redirectUrl; // Redirigir al confirmar
-          } else {
-            console.log(
-              "Confirmado, pero no se proporcionó URL de redirección."
-            );
-          }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          console.log("Cancelado");
+  /**
+   * Inicialización global
+   */
+  init: function () {
+    this.bindEvents();
+    this.checkFlashMessages();
+  },
+
+  /**
+   * Delegación de eventos para elementos con atributos sa-*
+   */
+  bindEvents: function () {
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('[sa-title]');
+      if (target) {
+        e.preventDefault();
+        this.fire(target);
+      }
+    });
+  },
+
+  /**
+   * Ejecuta la alerta basada en los atributos del elemento
+   * @param {HTMLElement} el 
+   */
+  fire: function (el) {
+    const options = {
+      title: el.getAttribute('sa-title') || '¿Estás seguro?',
+      text: el.getAttribute('sa-text') || '',
+      icon: el.getAttribute('sa-icon') || 'info',
+      showCancelButton: el.getAttribute('sa-show-cancel-btn') !== 'false',
+      confirmButtonText: el.getAttribute('sa-confirm-btn-text') || 'Aceptar',
+      cancelButtonText: el.getAttribute('sa-cancel-btn-text') || 'Cancelar',
+      confirmButtonColor: 'var(--bs-primary)',
+      cancelButtonColor: 'var(--bs-secondary)',
+      timer: parseInt(el.getAttribute('sa-timer'), 10) || null,
+      showConfirmButton: el.getAttribute('sa-show-confirm-btn') !== 'false',
+      allowOutsideClick: el.getAttribute('sa-allow-outside') !== 'false',
+      customClass: {
+        confirmButton: 'btn btn-primary px-4',
+        cancelButton: 'btn btn-outline-secondary px-4'
+      },
+      buttonsStyling: false
+    };
+
+    const redirectUrl = el.getAttribute('sa-redirect-url');
+    const formId = el.getAttribute('sa-form-id');
+
+    Swal.fire(options).then((result) => {
+      if (result.isConfirmed) {
+        if (formId) {
+          const form = document.getElementById(formId);
+          if (form) form.submit();
+        } else if (redirectUrl) {
+          window.location.href = redirectUrl;
         }
+      }
+    });
+  },
+
+  /**
+   * Busca elementos con data-sa-flash para mostrar alertas automáticas al cargar
+   */
+  checkFlashMessages: function () {
+    const flashElements = document.querySelectorAll('[data-sa-flash]');
+    flashElements.forEach(el => {
+      const type = el.getAttribute('data-sa-type') || 'info';
+      const title = el.getAttribute('data-sa-title') || 'Mensaje';
+      const text = el.getAttribute('data-sa-text') || '';
+
+      Swal.fire({
+        icon: type,
+        title: title,
+        text: text,
+        toast: el.hasAttribute('data-sa-toast'),
+        position: el.getAttribute('data-sa-position') || 'center',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: !el.hasAttribute('data-sa-toast')
       });
     });
-  });
-});
+  }
+};
+
+// Auto-inicialización
+document.addEventListener('DOMContentLoaded', () => PiruSA.init());
