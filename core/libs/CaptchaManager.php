@@ -60,7 +60,7 @@ class CaptchaManager {
       case 'vanilla':
         return '
                     <div class="mb-3">
-                        <img src="' . admin_route("captcha/img.webp") . '" class="d-block mb-2 rounded border" height="45">
+                        <img src="' . home_route("captcha/img.webp") . '" class="d-block mb-2 rounded border" height="45">
                         <input type="text" name="captcha" class="form-control" placeholder="Ingresa el código" required>
                     </div>
                 ';

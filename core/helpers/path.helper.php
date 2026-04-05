@@ -230,3 +230,21 @@ function ajax_layout(string $name = 'main', string $ext = '.layout.php'): string
   return $path;
 }
 
+/* =========================================================
+ * CORE
+ * ========================================================= */
+
+function core_action(string $name, string $ext = '.php'): string {
+  $path = BASE_DIR . '/core/actions/' . $name . $ext;
+
+  if (!file_exists($path)) {
+    path_error('core action', [
+      'Motivo'  => 'Archivo no encontrado',
+      'Archivo' => $name . $ext,
+      'Ruta'    => $path
+    ]);
+  }
+
+  return $path;
+}
+

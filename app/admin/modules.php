@@ -10,6 +10,5 @@ return [
   'analytics'   => true,
   'settings'    => true,
   'account'     => true,
-  'captcha'     => true,
   // 'test'        => true,
 ];

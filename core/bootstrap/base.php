@@ -19,6 +19,9 @@ loadCoreFiles('helpers');
 // Application
 loadCoreFiles('application');
 
+// Routers
+require_once BASE_DIR . "/core/routers/global.route.php";
+
 // Base de datos
 $db = (new DataBase())
   ->host(DB_HOST)
