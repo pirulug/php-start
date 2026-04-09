@@ -45,54 +45,80 @@ Resumen de Analítica
 </div>
 
 <div class="row g-4 mb-3" id="summary-cards">
-  <div class="col-md-3 col-sm-6">
-    <div class="card h-100   ">
+  <div class="col-md-2 col-sm-6">
+    <div class="card h-100">
       <div class="card-body d-flex align-items-center">
         <div class="icon-box bg-primary-subtle text-primary rounded-3 me-3">
           <i class="fa-solid fa-users"></i>
         </div>
         <div>
           <h3 class="fw-bold mb-0" id="totalVisitors">...</h3>
-          <span class="text-body-secondary small fw-medium">Visitantes Totales</span>
+          <span class="text-body-secondary small fw-medium">Visitantes</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-3 col-sm-6">
-    <div class="card h-100   ">
+  <div class="col-md-2 col-sm-6">
+    <div class="card h-100">
       <div class="card-body d-flex align-items-center">
         <div class="icon-box bg-success-subtle text-success rounded-3 me-3">
           <i class="fa-regular fa-file-lines"></i>
         </div>
         <div>
           <h3 class="fw-bold mb-0" id="totalPages">...</h3>
-          <span class="text-body-secondary small fw-medium">Páginas Vistas</span>
+          <span class="text-body-secondary small fw-medium">Vistas</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-3 col-sm-6">
-    <div class="card h-100   ">
+  <div class="col-md-2 col-sm-6">
+    <div class="card h-100">
       <div class="card-body d-flex align-items-center">
         <div class="icon-box bg-info-subtle text-info rounded-3 me-3">
           <i class="fa-solid fa-stopwatch"></i>
         </div>
         <div>
-          <h3 class="fw-bold mb-0" id="totalSessions">...</h3>
-          <span class="text-body-secondary small fw-medium">Sesiones Totales</span>
+          <h3 class="fw-bold mb-0" id="avgDuration">...</h3>
+          <span class="text-body-secondary small fw-medium">Duración Media</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-3 col-sm-6">
-    <div class="card h-100   ">
+  <div class="col-md-2 col-sm-6">
+    <div class="card h-100">
+      <div class="card-body d-flex align-items-center">
+        <div class="icon-box bg-danger-subtle text-danger rounded-3 me-3">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="bounceRate">...</h3>
+          <span class="text-body-secondary small fw-medium">Rebote</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-sm-6">
+    <div class="card h-100">
       <div class="card-body d-flex align-items-center">
         <div class="icon-box bg-warning-subtle text-warning rounded-3 me-3">
           <i class="fa-solid fa-bolt"></i>
         </div>
         <div>
           <h3 class="fw-bold mb-0" id="usersOnline">...</h3>
-          <span class="text-body-secondary small fw-medium text-success">● En Línea Ahora</span>
+          <span class="text-body-secondary small fw-medium text-success">● En Línea</span>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="col-md-2 col-sm-6">
+    <div class="card h-100">
+      <div class="card-body d-flex align-items-center">
+        <div class="icon-box bg-secondary-subtle text-secondary rounded-3 me-3">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" id="totalSessions">...</h3>
+          <span class="text-body-secondary small fw-medium">Sesiones</span>
         </div>
       </div>
     </div>
@@ -551,6 +577,8 @@ Resumen de Analítica
       document.getElementById('totalPages').textContent = data.totals.pages.toLocaleString();
       document.getElementById('totalSessions').textContent = data.totals.sessions.toLocaleString();
       document.getElementById('usersOnline').textContent = data.totals.online.toLocaleString();
+      document.getElementById('bounceRate').textContent = data.totals.bounce_rate + '%';
+      document.getElementById('avgDuration').textContent = data.totals.avg_duration;
       document.getElementById('summaryOnline').textContent = data.totals.online ?? 0;
 
       // 2. Gráficos

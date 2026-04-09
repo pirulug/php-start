@@ -30,6 +30,7 @@ IGNORED = {
     ".git",
     ".doc",
     ".env",
+    ".agent",
     "node_modules",
     # "comander",
     "install",

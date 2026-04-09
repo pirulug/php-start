@@ -111,7 +111,9 @@ function loadCoreFiles(string $type) {
       $cacheBuffer = "<?php\n\n";
 
       foreach (glob($corePath) as $coreFile) {
-        $cacheBuffer .= "require_once " . var_export($coreFile, true) . ";\n";
+        $relativePath = str_replace(BASE_DIR, '', $coreFile);
+        $relativePath = str_replace('\\', '/', $relativePath); // Normalizar a slash
+        $cacheBuffer .= "require_once BASE_DIR . " . var_export($relativePath, true) . ";\n";
       }
 
       file_put_contents($coreCacheFile, $cacheBuffer);
