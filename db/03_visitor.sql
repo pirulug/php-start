@@ -32,6 +32,7 @@ CREATE TABLE visitors (
   visitor_last_visit DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   visitor_total_hits INT DEFAULT 0,
   UNIQUE KEY uniq_visitor_ip_ua (visitor_ip, visitor_user_agent(255)),
+  INDEX idx_visitor_ip (visitor_ip),
   INDEX idx_visitor_country (visitor_country)
 );
 

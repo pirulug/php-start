@@ -18,7 +18,7 @@ Ajustes Generales
     <div class="card-body">
       <div class="row g-4">
 
-        <div class="col-lg-7 border-end-lg">
+        <div class="col-lg-12">
           <h6 class="text-primary fw-bold mb-3"><i class="fa-solid fa-sliders me-2"></i>Información General</h6>
 
           <div class="mb-3">
@@ -40,47 +40,6 @@ Ajustes Generales
             <input class="form-control" id="tag-input" type="text" value='<?= $optionsRaw['site_keywords'] ?? "" ?>'
               name="st_keywords" placeholder="Escribe y presiona Enter">
           </div>
-        </div>
-
-        <div class="col-lg-5">
-          <h6 class="text-primary fw-bold mb-3"><i class="fa-solid fa-share-nodes me-2"></i>Redes Sociales</h6>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Facebook</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-facebook text-primary"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["facebook"] ?? "" ?>" name="st_facebook"
-                placeholder="URL o Usuario">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Twitter / X</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-x-twitter"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["twitter"] ?? "" ?>" name="st_twitter"
-                placeholder="@usuario">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Instagram</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-instagram text-danger"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["instagram"] ?? "" ?>" name="st_instagram"
-                placeholder="@usuario">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Youtube</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-youtube text-danger"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["youtube"] ?? "" ?>" name="st_youtube"
-                placeholder="Canal URL">
-            </div>
-          </div>
-
         </div>
       </div>
     </div>

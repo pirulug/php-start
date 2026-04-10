@@ -5,7 +5,13 @@ Sidebar::group('Settings', 'settings', function ($group) {
   $group->item('General', admin_route('settings/general'))
     ->can('settings.new');
 
-  $group->item('Opciones', admin_route('settings/options'))
+  $group->item('Social', admin_route('settings/social'))
+    ->can('settings.social');
+
+  $group->item('SEO & Tracking', admin_route('settings/seo'))
+    ->can('settings.general');
+
+  $group->item('Sistema', admin_route('settings/options'))
     ->can('settings.options');
 
   $group->item('Date & Time', admin_route('settings/date_time'))

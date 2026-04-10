@@ -14,12 +14,9 @@ foreach ($rowsRaw as $row) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $option_updates = [
-    'facebook'  => clear_data($_POST['st_facebook']  ?? ''),
-    'twitter'   => clear_data($_POST['st_twitter']   ?? ''),
-    'instagram' => clear_data($_POST['st_instagram'] ?? ''),
-    'youtube'   => clear_data($_POST['st_youtube']   ?? ''),
-    'linkedin'  => clear_data($_POST['st_linkedin']  ?? ''),
-    'tiktok'    => clear_data($_POST['st_tiktok']    ?? ''),
+    'google_analytics_id'   => clear_data($_POST['ga_id']  ?? ''),
+    'meta_pixel_id'         => clear_data($_POST['meta_id'] ?? ''),
+    'google_search_console' => clear_data($_POST['gsc_id'] ?? ''),
   ];
 
   // Actualizar cada opción siguiendo estrictamente los estándares de seguridad
@@ -39,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   $notifier
-    ->message('Redes sociales actualizadas.')
+    ->message('Configuracion de tracking actualizada.')
     ->bootstrap()
     ->success()
     ->add();

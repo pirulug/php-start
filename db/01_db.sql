@@ -110,6 +110,6 @@ CREATE TABLE user_access (
 -- =========================================================
 CREATE TABLE options (
   option_id INT AUTO_INCREMENT PRIMARY KEY,
-  option_key VARCHAR(100) NULL,
+  option_key VARCHAR(100) NOT NULL UNIQUE,
   option_value TEXT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

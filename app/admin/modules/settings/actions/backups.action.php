@@ -1,136 +1,144 @@
 <?php
 
-/******************************
- * VARIABLES Y CONFIGURACIÓN
- ******************************/
+/**
+ * Backups Action
+ * Gestión de respaldos de base de datos siguiendo estándares de seguridad.
+ */
+
 $backupDir = BASE_DIR . '/storage/uploads/backups';
-if (!is_dir($backupDir))
+if (!is_dir($backupDir)) {
   mkdir($backupDir, 0777, true);
+}
+
 $action = $_GET['action'] ?? '';
 
-/******************************
- * CREAR RESPALDO
- ******************************/
+// ---------------------------------------------------------
+// 1. CREAR RESPALDO
+// ---------------------------------------------------------
 if ($action === 'backup') {
   $filename = "db-backup-on-" . date('Y-m-d-H-i-s') . ".sql";
   $filepath = "$backupDir/$filename";
 
-  // Exportar estructura y datos (sin mysqldump)
-  $tables    = $connect->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-  $sqlScript = "";
+  try {
+    // Obtener tablas usando el estándar obligatorio FETCH_OBJ
+    $stmtTables = $connect->prepare("SHOW TABLES");
+    $stmtTables->execute();
+    $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
 
-  foreach ($tables as $table) {
-    // Crear tabla
-    $result     = $connect->query("SHOW CREATE TABLE `$table`")->fetch(PDO::FETCH_ASSOC);
-    $sqlScript .= "\n\n" . $result['Create Table'] . ";\n\n";
+    $sqlScript = "-- PHP-Start Database Backup\n";
+    $sqlScript .= "-- Fecha: " . date('Y-m-d H:i:s') . "\n\n";
+    $sqlScript .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
 
-    // Insertar datos
-    $rows = $connect->query("SELECT * FROM `$table`")->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($rows as $row) {
-      $values     = array_map(function ($v) use ($connect) {
-        return $v === null ? "NULL" : $connect->quote($v);
-      }, array_values($row));
-      $sqlScript .= "INSERT INTO `$table` VALUES (" . implode(", ", $values) . ");\n";
-    }
-    $sqlScript .= "\n";
-  }
+    foreach ($tables as $table) {
+      // Crear tabla
+      $stmtCreate = $connect->prepare("SHOW CREATE TABLE `$table`");
+      $stmtCreate->execute();
+      $resCreate = $stmtCreate->fetch(PDO::FETCH_OBJ);
+      
+      // En FETCH_OBJ, el nombre de la columna suele ser 'Create Table'
+      // Pero accedemos mediante conversión a array o propiedad dinámica si el nombre tiene espacios
+      $createArray = (array)$resCreate;
+      $sqlScript .= "\n\n" . $createArray['Create Table'] . ";\n\n";
 
-  file_put_contents($filepath, $sqlScript);
-  $notifier
-    ->message("Respaldo creado correctamente")
-    ->bootstrap()
-    ->success()
-    ->add();
-  header("Location: " . $_SERVER['HTTP_REFERER']);
-  exit;
-}
+      // Insertar datos
+      $stmtData = $connect->prepare("SELECT * FROM `$table`");
+      $stmtData->execute();
+      $rows = $stmtData->fetchAll(PDO::FETCH_ASSOC); // Aquí FETCH_ASSOC es útil para recorrer columnas dinámicamente
 
-/******************************
- * RESTAURAR RESPALDO
- ******************************/
-if ($action === 'restore' && !empty($_GET['file'])) {
-  $file     = basename($_GET['file']);
-  $filepath = "$backupDir/$file";
-
-  if (file_exists($filepath)) {
-    try {
-      // 1. Desactivar temporalmente la verificación de claves foráneas
-      $connect->exec("SET FOREIGN_KEY_CHECKS = 0;");
-
-      // 2. Obtener todas las tablas existentes
-      $tables = $connect->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-
-      // 3. Eliminar TODAS las tablas (sin importar relaciones)
-      foreach ($tables as $table) {
-        try {
-          $connect->exec("DROP TABLE IF EXISTS `$table`;");
-        } catch (PDOException $e) {
-          // Si alguna tabla no puede eliminarse, continuar sin interrumpir el proceso
-        }
+      foreach ($rows as $row) {
+        $values = array_map(function ($v) use ($connect) {
+          if ($v === null) return "NULL";
+          return $connect->quote($v);
+        }, array_values($row));
+        
+        $sqlScript .= "INSERT INTO `$table` VALUES (" . implode(", ", $values) . ");\n";
       }
-
-      // 4. Leer el contenido del respaldo SQL
-      $sql = file_get_contents($filepath);
-
-      // 5. Ejecutar el respaldo
-      $connect->exec($sql);
-
-      // 6. Reactivar verificación de claves foráneas
-      $connect->exec("SET FOREIGN_KEY_CHECKS = 1;");
-
-    } catch (PDOException $e) {
-      $notifier
-        ->message("Error durante la restauración: " . $e->getMessage())
-        ->bootstrap()
-        ->danger()
-        ->add();
     }
+
+    $sqlScript .= "\nSET FOREIGN_KEY_CHECKS = 1;\n";
+
+    if (file_put_contents($filepath, $sqlScript) === false) {
+      throw new Exception("No se pudo escribir el archivo de respaldo.");
+    }
+
+    $notifier->message("Respaldo creado correctamente.")->success()->bootstrap()->add();
+
+  } catch (Exception $e) {
+    $notifier->message("Error al crear respaldo: " . $e->getMessage())->danger()->bootstrap()->add();
   }
-  $notifier
-    ->message("Respaldo restaurado correctamente")
-    ->bootstrap()
-    ->success()
-    ->add();
-  header("Location: " . $_SERVER['HTTP_REFERER']);
+
+  header("Location: " . admin_route('settings/backups'));
   exit;
 }
 
-/******************************
- * ELIMINAR RESPALDO
- ******************************/
-if ($action === 'delete' && !empty($_GET['file'])) {
-  $file     = basename($_GET['file']);
-  $filepath = "$backupDir/$file";
-  if (file_exists($filepath))
-    unlink($filepath);
+// ---------------------------------------------------------
+// 2. DESCARGAR / RESTAURAR / ELIMINAR (REQUIEREN ARCHIVO CIFRADO)
+// ---------------------------------------------------------
+if (!empty($_GET['file']) && in_array($action, ['download', 'restore', 'delete'])) {
+  
+  $encryptedFile = $_GET['file'];
+  $filename      = $cipher->decrypt($encryptedFile);
+  $filepath      = $backupDir . '/' . basename($filename);
 
-  $notifier
-    ->message("Respaldo eliminado correctamente")
-    ->bootstrap()
-    ->success()
-    ->add();
-  header("Location: " . $_SERVER['HTTP_REFERER']);
-  exit;
-}
+  if (!file_exists($filepath)) {
+    $notifier->message("El archivo solicitado no existe.")->danger()->bootstrap()->add();
+    header("Location: " . admin_route('settings/backups'));
+    exit;
+  }
 
-/******************************
- * DESCARGAR RESPALDO
- ******************************/
-if ($action === 'download' && !empty($_GET['file'])) {
-  $file     = basename($_GET['file']);
-  $filepath = "$backupDir/$file";
-  if (file_exists($filepath)) {
+  // A. DESCARGAR
+  if ($action === 'download') {
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="' . basename($filepath) . '"');
     header('Content-Length: ' . filesize($filepath));
+    header('Pragma: public');
     readfile($filepath);
+    exit;
+  }
+
+  // B. RESTAURAR
+  if ($action === 'restore') {
+    try {
+      $sql = file_get_contents($filepath);
+      
+      $connect->exec("SET FOREIGN_KEY_CHECKS = 0;");
+      
+      // Limpiar base de datos actual (Opcional pero recomendado para un restore limpio)
+      $stmtTables = $connect->prepare("SHOW TABLES");
+      $stmtTables->execute();
+      $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
+      foreach ($tables as $table) {
+        $connect->exec("DROP TABLE IF EXISTS `$table` shadow"); // "shadow" no existe, es DROP TABLE
+        $connect->exec("DROP TABLE IF EXISTS `$table` ");
+      }
+
+      $connect->exec($sql);
+      $connect->exec("SET FOREIGN_KEY_CHECKS = 1;");
+
+      $notifier->message("Respaldo restaurado correctamente.")->success()->bootstrap()->add();
+
+    } catch (PDOException $e) {
+      $notifier->message("Error en restauracion: " . $e->getMessage())->danger()->bootstrap()->add();
+    }
+    header("Location: " . admin_route('settings/backups'));
+    exit;
+  }
+
+  // C. ELIMINAR
+  if ($action === 'delete') {
+    if (@unlink($filepath)) {
+      $notifier->message("Respaldo eliminado permanentemente.")->success()->bootstrap()->add();
+    } else {
+      $notifier->message("No se pudo eliminar el archivo.")->danger()->bootstrap()->add();
+    }
+    header("Location: " . admin_route('settings/backups'));
     exit;
   }
 }
 
-/******************************
- * LISTAR RESPALDOS
- ******************************/
+// ---------------------------------------------------------
+// 3. LISTAR RESPALDOS
+// ---------------------------------------------------------
 $files = glob("$backupDir/*.sql");
 rsort($files);

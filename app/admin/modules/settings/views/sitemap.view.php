@@ -1,158 +1,184 @@
 <?php start_block("title") ?>
-Gestión de Sitemap
+Gestion de Sitemap
 <?php end_block() ?>
 
 <?php start_block('breadcrumb'); ?>
 <?php render_breadcrumb([
   ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
   ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
-  ['label' => 'Sitemap']
+  ['label' => 'Sitemap XML']
 ]) ?>
 <?php end_block(); ?>
 
 <?php start_block("css") ?>
 <style>
-  .border-dashed {
-    border-style: dashed !important;
-    border-width: 2px !important;
+  .sitemap-row:hover {
+    background-color: #f8f9fa;
   }
-
-  .border-dashed:hover {
-    background-color: var(--bs-primary-bg-subtle);
+  [data-bs-theme="dark"] .sitemap-row:hover {
+    background-color: #2b3035;
+  }
+  .priority-badge {
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.8rem;
+    background-color: #fcd;
+    color: #f05;
+    border: 1px solid #f9b;
+  }
+  [data-bs-theme="dark"] .priority-badge {
+    background-color: #301;
+    color: #f69;
+    border-color: #903;
+  }
+  .btn-add-row {
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+    color: #6c757d;
+  }
+  .btn-add-row:hover {
+    border-color: #f05;
+    background-color: #fcd;
+    color: #f05;
+  }
+  [data-bs-theme="dark"] .btn-add-row {
+    border-color: #495057;
+  }
+  [data-bs-theme="dark"] .btn-add-row:hover {
+    background-color: #330011;
   }
 </style>
 <?php end_block() ?>
 
-<div class="card mb-4">
-  <div class="card-header   d-flex justify-content-between align-items-center py-3">
-    <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-      <i class="fa-solid fa-sitemap text-primary"></i>
-      Editor de Sitemap
-    </h5>
-    <button type="submit" form="sitemapForm" class="btn btn-success btn-sm">
-      <i class="fa-solid fa-save me-1"></i> Guardar Cambios
-    </button>
-  </div>
-
-  <div class="card-body p-0">
-    <form id="sitemapForm" method="POST">
-
-      <div class="d-none d-lg-flex   px-3 py-2 fw-bold text-body-secondary small text-uppercase">
-        <div class="col-5 ps-2">URL del Sitio</div>
-        <div class="col-2">Modificación</div>
-        <div class="col-2">Frecuencia</div>
-        <div class="col-2">Prioridad</div>
-        <div class="col-1 text-end">Acción</div>
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center py-3">
+        <div>
+          <h6 class="card-title mb-0 fw-bold"><i class="fa-solid fa-sitemap me-2"></i>Editor de Sitemap XML</h6>
+          <small class="text-muted">Configura manualmente la indexacion de tus paginas principales.</small>
+        </div>
+        <div>
+           <?= ActionBtn::save()->attrs('form="sitemapForm"')->text('Guardar Cambios')->render() ?>
+        </div>
       </div>
 
-      <div id="url-container" class="list-group list-group-flush">
+      <div class="card-body p-0">
+        <form id="sitemapForm" method="POST">
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead class="bg-body-tertiary">
+                <tr>
+                  <th class="ps-4">URL del Sitio</th>
+                  <th style="width: 180px;">Ultima Modificacion</th>
+                  <th style="width: 150px;">Frecuencia</th>
+                  <th style="width: 120px;">Prioridad</th>
+                  <th class="text-end pe-4" style="width: 80px;">Accion</th>
+                </tr>
+              </thead>
+              <tbody id="url-container">
+                <!-- Filas dinamicas se cargan aqui -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="p-4">
+            <button type="button" class="btn btn-add-row w-100 py-3 fw-bold text-uppercase small" onclick="addNewPage()">
+              <i class="fa-solid fa-plus-circle me-1"></i> Agregar Nueva URL al Sitemap
+            </button>
+          </div>
+        </form>
       </div>
 
-      <div class="p-3 ">
-        <button type="button" class="btn btn-outline-primary w-100 border-dashed" onclick="addNewPage()">
-          <i class="fa-solid fa-plus me-1"></i> Agregar Nueva Página
-        </button>
+      <div class="card-footer py-3">
+          <p class="mb-0 small text-muted">
+            <i class="fa-solid fa-circle-info me-1"></i> 
+            El archivo se guardara en la raiz de tu sitio como <code>sitemap.xml</code>. Google y otros buscadores lo leeran automaticamente.
+          </p>
       </div>
-
-    </form>
+    </div>
   </div>
 </div>
 
 <?php start_block("js") ?>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    // Obtenemos los datos de PHP
     const pages = <?php echo json_encode($pages); ?>;
     const container = document.getElementById("url-container");
 
-    // Si hay páginas, las cargamos. Si no, agregamos una vacía por defecto.
     if (pages.length > 0) {
       pages.forEach((page) => addPageField(container, page));
     } else {
-      addPageField(container);
+      addPageField(container, { loc: '<?= APP_URL ?>', lastmod: '<?= date('Y-m-d') ?>', priority: '1.0', changefreq: 'daily' });
     }
   });
 
-  // Función para agregar fila
   function addPageField(container, page = {}) {
-    // Valores por defecto
     const url = page.loc || '';
-    const lastmod = page.lastmod || '';
+    const lastmod = page.lastmod || '<?= date('Y-m-d') ?>';
     const priority = page.priority || '0.5';
     const freq = page.changefreq || 'monthly';
 
-    const div = document.createElement("div");
-    div.classList.add("list-group-item", "page-row", "p-3");
+    const tr = document.createElement("tr");
+    tr.classList.add("sitemap-row");
 
-    // HTML de la fila
-    div.innerHTML = `
-      <div class="row g-2 align-items-center">
-        
-        <div class="col-12 col-lg-5">
-          <label class="d-lg-none small text-muted mb-1">URL</label>
-          <div class="input-group">
-            <span class="input-group-text "><i class="fa-solid fa-globe text-muted"></i></span>
-            <input type="text" class="form-control" name="url[]" value="${url}" placeholder="https://..." required>
-          </div>
+    tr.innerHTML = `
+      <td class="ps-4">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text"><i class="fa-solid fa-link small opacity-50"></i></span>
+          <input type="text" class="form-control" name="url[]" value="${url}" placeholder="https://..." required>
         </div>
-
-        <div class="col-6 col-lg-2">
-           <label class="d-lg-none small text-muted mb-1">Modificación</label>
-           <input type="date" class="form-control" name="lastmod[]" value="${lastmod}" required>
+      </td>
+      <td>
+        <input type="date" class="form-control form-control-sm" name="lastmod[]" value="${lastmod}" required>
+      </td>
+      <td>
+        <select name="changefreq[]" class="form-select form-select-sm">
+          <option value="always" ${freq === "always" ? "selected" : ""}>Siempre</option>
+          <option value="hourly" ${freq === "hourly" ? "selected" : ""}>Cada hora</option>
+          <option value="daily" ${freq === "daily" ? "selected" : ""}>Diario</option>
+          <option value="weekly" ${freq === "weekly" ? "selected" : ""}>Semanal</option>
+          <option value="monthly" ${freq === "monthly" ? "selected" : ""}>Mensual</option>
+          <option value="yearly" ${freq === "yearly" ? "selected" : ""}>Anual</option>
+          <option value="never" ${freq === "never" ? "selected" : ""}>Nunca</option>
+        </select>
+      </td>
+      <td>
+        <div class="d-flex align-items-center gap-2">
+          <input type="range" class="form-range flex-grow-1" name="priority[]" value="${priority}" min="0.0" max="1.0" step="0.1" oninput="this.nextElementSibling.innerText = parseFloat(this.value).toFixed(1)">
+          <span class="badge priority-badge">${parseFloat(priority).toFixed(1)}</span>
         </div>
-
-        <div class="col-6 col-lg-2">
-           <label class="d-lg-none small text-muted mb-1">Frecuencia</label>
-           <select name="changefreq[]" class="form-select">
-             <option value="daily" ${freq === "daily" ? "selected" : ""}>Diario</option>
-             <option value="weekly" ${freq === "weekly" ? "selected" : ""}>Semanal</option>
-             <option value="monthly" ${freq === "monthly" ? "selected" : ""}>Mensual</option>
-             <option value="yearly" ${freq === "yearly" ? "selected" : ""}>Anual</option>
-             <option value="never" ${freq === "never" ? "selected" : ""}>Nunca</option>
-           </select>
-        </div>
-
-        <div class="col-10 col-lg-2">
-           <label class="d-lg-none small text-muted mb-1">Prioridad (0.0 - 1.0)</label>
-           <div class="input-group">
-             <span class="input-group-text "><i class="fa-solid fa-sort text-muted"></i></span>
-             <input type="number" class="form-control" name="priority[]" value="${priority}" min="0.0" max="1.0" step="0.1" required>
-           </div>
-        </div>
-
-        <div class="col-2 col-lg-1 text-end">
-           <label class="d-lg-none small text-muted mb-1">&nbsp;</label>
-           <button type="button" class="btn btn-outline-danger w-100 border-0" onclick="removePageField(this)" title="Eliminar fila">
-             <i class="fa-solid fa-trash-can"></i>
-           </button>
-        </div>
-
-      </div>
+      </td>
+      <td class="text-end pe-4">
+        <button type="button" class="btn btn-outline-danger btn-sm border-0" onclick="removePageField(this)" title="Eliminar fila">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </td>
     `;
 
-    container.appendChild(div);
+    container.appendChild(tr);
   }
 
-  // Función para eliminar (más robusta: busca el padre más cercano)
   function removePageField(button) {
-    const row = button.closest(".page-row");
+    const row = button.closest("tr");
     const container = document.getElementById("url-container");
 
-    // Evitar dejar el formulario vacío (opcional, buena práctica UX)
-    if (container.children.length > 1) {
-      if (confirm('¿Eliminar esta entrada?')) {
-        row.remove();
-      }
+    if (container.rows.length > 1) {
+      row.style.opacity = '0';
+      row.style.transform = 'translateX(20px)';
+      row.style.transition = 'all 0.3s ease';
+      setTimeout(() => row.remove(), 300);
     } else {
-      // Si es el último, solo limpiamos los valores en lugar de borrar la fila
-      alert("Debe haber al menos una página.");
+      alert("El sitemap debe contener al menos una entrada.");
     }
   }
 
-  // Wrapper para el botón de agregar
   function addNewPage() {
     const container = document.getElementById("url-container");
     addPageField(container);
+    // Scroll suave a la nueva fila
+    container.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }
 </script>
 <?php end_block() ?>

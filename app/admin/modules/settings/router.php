@@ -87,3 +87,11 @@ Router::route('settings/social')
   ->middleware('auth_admin')
   ->permission('settings.social')
   ->register();
+
+Router::route('settings/seo')
+  ->action(admin_action("settings.seo"))
+  ->view(admin_view("settings.seo"))
+  ->layout(admin_layout())
+  ->middleware('auth_admin')
+  ->permission('settings.general') // Usamos el permiso general para simplificar
+  ->register();

@@ -7,10 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $option_updates = [
     'site_name'        => clear_data($_POST['st_sitename']),
     'site_description' => clear_data($_POST['st_description']),
-    'facebook'         => clear_data($_POST['st_facebook']),
-    'twitter'          => clear_data($_POST['st_twitter']),
-    'instagram'        => clear_data($_POST['st_instagram']),
-    'youtube'          => clear_data($_POST['st_youtube']),
   ];
 
   // Procesar keywords

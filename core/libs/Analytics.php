@@ -38,10 +38,24 @@ class Analytics {
       setcookie('visitor_session_id', $cookie, time() + 3600 * 24 * 7, '/');
     }
 
-    $visitorId = $this->registerVisitor($ip, $userAgent, $referer, $isBot);
-    $pageId    = $this->registerPage($pageUri, $pageTitle, $cookie);
-    $this->registerSession($visitorId, $cookie, $pageUri);
-    $this->updateUserOnline($visitorId, $pageId, $ip, $referer);
+    // Cache de sesión para reducir consultas
+    $visitorId = $_SESSION['v_id'] ?? null;
+    $lastTrack = $_SESSION['v_last_track'] ?? 0;
+    $currentTime = time();
+
+    if (!$visitorId) {
+      $visitorId = $this->registerVisitor($ip, $userAgent, $referer, $isBot);
+      $_SESSION['v_id'] = $visitorId;
+    }
+
+    $pageId = $this->registerPage($pageUri, $pageTitle, $cookie);
+
+    // Solo actualizar sesión y online cada 60 segundos para ahorrar recursos
+    if (($currentTime - $lastTrack) > 60) {
+      $this->registerSession($visitorId, $cookie, $pageUri);
+      $this->updateUserOnline($visitorId, $pageId, $ip, $referer);
+      $_SESSION['v_last_track'] = $currentTime;
+    }
   }
 
   private function registerVisitor(string $ip, string $userAgent, string $referer, bool $isBot): ?int {

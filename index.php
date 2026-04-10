@@ -126,13 +126,6 @@ if (!empty($route['analytics'])) {
 
   $ip = get_api() ?? "0.0.0.0";
 
-  $log->info("Ip del cliente")
-    ->file("analytics")
-    ->with("Page Title", $pageTitle)
-    ->with("Page URL", $pageUri)
-    ->with("IP", $ip)
-    ->write();
-
   $analytics = (new Analytics($connect))
     ->geoApiUrl('https://ipapi.pirulug.pw/api/v1/{ip}');
 
@@ -185,4 +178,5 @@ if (!empty($route['view']) && !empty($route['layout'])) {
 
 $log->info(round((microtime(true) - APP_START) * 1000, 2) . ' ms')
   ->file("index")
+  ->with("URL", $url)
   ->write();

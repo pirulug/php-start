@@ -38,6 +38,9 @@
 </head>
 
 <body>
+  <?php if ($config->get("loader_home") === 'true'): ?>
+    <?php require_once BASE_DIR . '/app/admin/layouts/partials/loader.php'; ?>
+  <?php endif; ?>
   <div class="wrapper-sticky">
     <nav class="navbar navbar-expand-lg bg-body fixed-top">
       <div class="container">
