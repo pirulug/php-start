@@ -1,5 +1,5 @@
 <?php start_block("title"); ?>
-Dashboard
+Dashboard Principal
 <?php end_block(); ?>
 
 <?php start_block('breadcrumb'); ?>
@@ -8,204 +8,261 @@ Dashboard
 ]) ?>
 <?php end_block(); ?>
 
-<div class="row g-4 mb-4">
+<?php start_block("css") ?>
+<style>
+  .welcome-banner {
+    background: linear-gradient(135deg, #f05 0%, #ff1e7c 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-banner::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
 
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="card h-100 bg-primary bg-opacity-10">
-      <div class="card-body d-flex align-items-center">
-        <div class="p-3 rounded-circle bg-primary text-white me-3">
+  .quick-action-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+  }
+  .quick-action-card:hover {
+    transform: translateY(-5px);
+    border-color: #f05 !important;
+  }
+  .quick-action-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .system-item {
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.02);
+  }
+  [data-bs-theme="dark"] .system-item {
+    background-color: rgba(255,255,255,0.02);
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  [data-bs-theme="dark"] .user-avatar {
+    border-color: #2b3035;
+  }
+</style>
+<?php end_block() ?>
+
+<div class="welcome-banner mb-3">
+  <div class="row align-items-center">
+    <div class="col-md-8">
+      <h2 class="fw-bold mb-1">¡Bienvenido al Panel Administrativo!</h2>
+      <p class="mb-0 opacity-75">Controla tu plataforma de manera sencilla y eficiente.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+      <div class="small fw-bold text-uppercase opacity-75"><?= date('l, d F Y') ?></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <!-- KPI: Usuarios -->
+  <div class="col-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body p-3 d-flex align-items-center">
+        <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-3 me-3">
           <i class="fa-solid fa-users fa-lg"></i>
         </div>
         <div>
-          <h6 class="text-muted text-uppercase fw-bold small mb-1">Usuarios</h6>
-          <h2 class="mb-0 fw-bold text-primary"><?= number_format($count_user) ?></h2>
+          <h6 class="text-muted small fw-bold text-uppercase mb-0">Usuarios</h6>
+          <h3 class="mb-0 fw-bold"><?= number_format($count_user) ?></h3>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="card h-100 bg-success bg-opacity-10">
-      <div class="card-body d-flex align-items-center">
-        <div class="p-3 rounded-circle bg-success text-white me-3">
-          <i class="fa-solid fa-wifi fa-lg"></i>
+  <!-- KPI: Roles -->
+  <div class="col-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body p-3 d-flex align-items-center">
+        <div class="p-3 bg-success bg-opacity-10 text-success rounded-3 me-3">
+          <i class="fa-solid fa-shield-halved fa-lg"></i>
         </div>
         <div>
-          <h6 class="text-muted text-uppercase fw-bold small mb-1">En Línea</h6>
-          <h2 class="mb-0 fw-bold text-success"><?= number_format($count_online) ?></h2>
+          <h6 class="text-muted small fw-bold text-uppercase mb-0">Roles</h6>
+          <h3 class="mb-0 fw-bold"><?= number_format($count_roles) ?></h3>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="card h-100 bg-info bg-opacity-10">
-      <div class="card-body d-flex align-items-center">
-        <div class="p-3 rounded-circle bg-info text-white me-3">
-          <i class="fa-solid fa-eye fa-lg"></i>
+  <!-- KPI: Módulos -->
+  <div class="col-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body p-3 d-flex align-items-center">
+        <div class="p-3 bg-info bg-opacity-10 text-info rounded-3 me-3">
+          <i class="fa-solid fa-cubes fa-lg"></i>
         </div>
         <div>
-          <h6 class="text-muted text-uppercase fw-bold small mb-1">Páginas Vistas</h6>
-          <h2 class="mb-0 fw-bold text-info"><?= number_format($total_views) ?></h2>
+          <h6 class="text-muted small fw-bold text-uppercase mb-0">Módulos</h6>
+          <h3 class="mb-0 fw-bold"><?= number_format($modules_count) ?></h3>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="col-12 col-sm-6 col-xl-3">
-    <div class="card h-100 bg-warning bg-opacity-10">
-      <div class="card-body d-flex align-items-center">
-        <div class="p-3 rounded-circle bg-warning text-dark me-3">
-          <i class="fa-solid fa-earth-americas fa-lg"></i>
+  <!-- KPI: PHP -->
+  <div class="col-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body p-3 d-flex align-items-center">
+        <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-3 me-3">
+          <i class="fa-brands fa-php fa-lg"></i>
         </div>
         <div>
-          <h6 class="text-muted text-uppercase fw-bold small mb-1">Visitantes</h6>
-          <h2 class="mb-0 fw-bold text-warning"><?= number_format($total_visitors) ?></h2>
+          <h6 class="text-muted small fw-bold text-uppercase mb-0">Versión PHP</h6>
+          <h3 class="mb-0 fw-bold"><?= explode('-', PHP_VERSION)[0] ?></h3>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="row g-4">
-
-  <div class="col-12 col-lg-8">
-    <div class="card h-100">
-      <div class="card-header bg-transparent py-3">
-        <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-          <i class="fa-solid fa-arrow-trend-up text-primary"></i>
-          Páginas más visitadas
-        </h5>
+<div class="row g-3">
+  <!-- Columna Izquierda: Acciones y Sistema -->
+  <div class="col-lg-8">
+    
+    <div class="card mb-3">
+      <div class="card-header bg-transparent px-3 pt-3">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-bolt me-2 text-primary"></i>Accesos Directos</h6>
       </div>
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="bg-secondary bg-opacity-10">
-            <tr>
-              <th class="text-uppercase small fw-bold text-muted ps-4">Página</th>
-              <th class="text-uppercase small fw-bold text-muted">Tipo</th>
-              <th class="text-uppercase small fw-bold text-muted text-end pe-4">Visitas</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($top_pages as $page): ?>
-              <tr>
-                <td class="ps-4">
-                  <div class="d-flex flex-column">
-                    <span
-                      class="fw-bold text-body"><?= htmlspecialchars($page->visitor_page_title ?? 'Sin título') ?></span>
-                    <a href="<?= htmlspecialchars($page->visitor_page_uri) ?>" target="_blank"
-                      class="small text-muted text-decoration-none">
-                      <?= htmlspecialchars($page->visitor_page_uri) ?>
-                    </a>
-                  </div>
-                </td>
-                <td>
-                  <?php
-                  $badgeColor = match ($page->visitor_page_type) {
-                    'page' => 'bg-primary',
-                    'article' => 'bg-success',
-                    'api' => 'bg-secondary',
-                    'admin' => 'bg-danger',
-                    default => 'bg-info'
-                  };
-                  ?>
-                  <span class="badge rounded-pill bg-opacity-10 text-body <?= $badgeColor ?> text-opacity-75">
-                    <?= ucfirst($page->visitor_page_type) ?>
-                  </span>
-                </td>
-                <td class="text-end pe-4 fw-bold text-primary">
-                  <?= number_format($page->visitor_page_total_views) ?>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+      <div class="card-body px-3 pb-3">
+        <div class="row g-3">
+          <div class="col-md-3 col-6">
+            <a href="<?= admin_route('users/create') ?>" class="card quick-action-card border-light shadow-none text-center p-3">
+              <div class="quick-action-icon bg-primary bg-opacity-10 text-primary mx-auto">
+                <i class="fa-solid fa-user-plus"></i>
+              </div>
+              <span class="small fw-bold text-uppercase">Nuevo Usuario</span>
+            </a>
+          </div>
+          <div class="col-md-3 col-6">
+            <a href="<?= admin_route('settings') ?>" class="card quick-action-card border-light shadow-none text-center p-3">
+              <div class="quick-action-icon bg-success bg-opacity-10 text-success mx-auto">
+                <i class="fa-solid fa-gears"></i>
+              </div>
+              <span class="small fw-bold text-uppercase">Ajustes</span>
+            </a>
+          </div>
+          <div class="col-md-3 col-6">
+            <a href="<?= admin_route('roles') ?>" class="card quick-action-card border-light shadow-none text-center p-3">
+              <div class="quick-action-icon bg-info bg-opacity-10 text-info mx-auto">
+                <i class="fa-solid fa-user-lock"></i>
+              </div>
+              <span class="small fw-bold text-uppercase">Roles</span>
+            </a>
+          </div>
+          <div class="col-md-3 col-6">
+            <a href="<?= admin_route('settings/backups') ?>" class="card quick-action-card border-light shadow-none text-center p-3">
+              <div class="quick-action-icon bg-warning bg-opacity-10 text-warning mx-auto">
+                <i class="fa-solid fa-database"></i>
+              </div>
+              <span class="small fw-bold text-uppercase">Respaldos</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="card">
+       <div class="card-header bg-transparent px-3 pt-3">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-server me-2 text-info"></i>Estado del Sistema</h6>
+      </div>
+      <div class="card-body px-3 pb-3">
+        <div class="row g-3">
+          <div class="col-md-6">
+             <div class="system-item d-flex justify-content-between align-items-center h-100">
+                <div>
+                  <div class="small text-muted fw-bold">Memoria en Uso</div>
+                  <div class="h5 mb-0 fw-bold"><?= $system_info['memory_usage'] ?></div>
+                </div>
+                <div class="text-primary"><i class="fa-solid fa-memory fa-2x opacity-25"></i></div>
+             </div>
+          </div>
+          <div class="col-md-6">
+             <div class="system-item d-flex justify-content-between align-items-center h-100">
+                <div>
+                  <div class="small text-muted fw-bold">Entorno</div>
+                  <div class="small fw-bold"><?= $system_info['os'] ?> · <?= $system_info['server_software'] ?></div>
+                </div>
+                <div class="text-success"><i class="fa-solid fa-microchip fa-2x opacity-25"></i></div>
+             </div>
+          </div>
+          <div class="col-12">
+            <div class="system-item">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="small text-muted fw-bold">Uso de Almacenamiento</span>
+                <span class="small fw-bold"><?= $disk_percentage ?>%</span>
+              </div>
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-info" style="width: <?= $disk_percentage ?>%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="col-12 col-lg-4">
+  <!-- Columna Derecha: Usuarios Recientes -->
+  <div class="col-lg-4">
     <div class="card h-100">
-      <div class="card-header bg-transparent py-3">
-        <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-          <i class="fa-solid fa-laptop-code text-info"></i>
-          Navegadores
-        </h5>
+      <div class="card-header bg-transparent px-3 pt-3">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-user-clock me-2 text-warning"></i>Usuarios Recientes</h6>
       </div>
-      <div class="card-body">
-        <?php
-        // Calcular total para sacar porcentajes
-        $total_browser_hits = 0;
-        foreach ($browsers as $b)
-          $total_browser_hits += $b->total;
-        ?>
-
-        <div class="d-flex flex-column gap-4">
-          <?php foreach ($browsers as $browser):
-            $percent = ($total_browser_hits > 0) ? round(($browser->total / $total_browser_hits) * 100) : 0;
-            // Icono según navegador
-            $icon = match (strtolower($browser->visitor_browser)) {
-              'chrome' => 'fa-brands fa-chrome text-danger',
-              'firefox' => 'fa-brands fa-firefox-browser text-warning',
-              'safari' => 'fa-brands fa-safari text-primary',
-              'edge' => 'fa-brands fa-edge text-info',
-              default => 'fa-solid fa-globe text-secondary'
-            };
-            ?>
-            <div>
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="fw-bold text-muted small">
-                  <i class="<?= $icon ?> me-1"></i> <?= $browser->visitor_browser ?: 'Desconocido' ?>
-                </span>
-                <span class="fw-bold small"><?= $percent ?>%</span>
-              </div>
-              <div class="progress" style="height: 6px;">
-                <div class="progress-bar bg-primary" role="progressbar" style="width: <?= $percent ?>%"></div>
+      <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+          <?php foreach ($recent_users as $user): ?>
+            <div class="list-group-item px-3 py-3 bg-transparent">
+              <div class="d-flex align-items-center">
+                <img src="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>" class="user-avatar me-3" alt="<?= $user->user_login ?>">
+                <div class="flex-grow-1 overflow-hidden">
+                  <div class="fw-bold text-truncate"><?= htmlspecialchars($user->user_login) ?></div>
+                  <div class="text-muted small text-truncate"><?= htmlspecialchars($user->user_email) ?></div>
+                </div>
+                <div class="text-end ms-2">
+                  <span class="badge bg-secondary-subtle text-secondary small px-2"><?= $user->role_name ?></span>
+                  <div class="text-muted" style="font-size: 0.7rem;"><?= date('d M', strtotime($user->user_created)) ?></div>
+                </div>
               </div>
             </div>
           <?php endforeach; ?>
         </div>
-
       </div>
-    </div>
-  </div>
-
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header bg-transparent py-3">
-        <h5 class="card-title mb-0 d-flex align-items-center gap-2">
-          <i class="fa-solid fa-user-clock text-warning"></i>
-          Usuarios Registrados Recientemente
-        </h5>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <tbody>
-            <?php foreach ($recent_users as $user): ?>
-              <tr>
-                <td class="ps-4" style="width: 60px;">
-                  <img src="<?= APP_URL ?>/storage/uploads/user/<?= $user->user_image ?>" class="rounded-circle"
-                    width="40" height="40" style="object-fit:cover;">
-                </td>
-                <td>
-                  <div class="d-flex flex-column">
-                    <span class="fw-bold text-body"><?= htmlspecialchars($user->user_login) ?></span>
-                    <small class="text-muted"><?= htmlspecialchars($user->user_email) ?></small>
-                  </div>
-                </td>
-                <td>
-                  <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3">
-                    <?= htmlspecialchars($user->role_name) ?>
-                  </span>
-                </td>
-                <td class="text-end pe-4 text-muted small">
-                  <i class="fa-regular fa-calendar me-1"></i>
-                  <?= date('d/m/Y', strtotime($user->user_created)) ?>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+      <div class="card-footer bg-transparent border-0 text-center py-3">
+        <a href="<?= admin_route('users') ?>" class="text-decoration-none small fw-bold text-uppercase">Ver todos los usuarios</a>
       </div>
     </div>
   </div>
