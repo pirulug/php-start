@@ -10,78 +10,101 @@ Top Páginas
 ]) ?>
 <?php end_block(); ?>
 
-<div class="card   ">
-  <div class="card-body">
+<?php start_block("css") ?>
+<link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" rel="stylesheet">
+<style>
+  .premium-table thead th {
+    background-color: transparent;
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+    color: #6c757d;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  [data-bs-theme="dark"] .premium-table thead th {
+    border-bottom-color: rgba(255,255,255,0.05);
+  }
+</style>
+<?php end_block() ?>
+
+<?php
+// Helper functions (inline)
+$icons = [
+  'chrome'  => 'fa-brands fa-chrome text-danger',
+  'firefox' => 'fa-brands fa-firefox text-warning',
+  'safari'  => 'fa-brands fa-safari text-info',
+  'edge'    => 'fa-brands fa-edge text-primary',
+  'windows' => 'fa-brands fa-windows text-primary',
+  'apple'   => 'fa-brands fa-apple',
+  'android' => 'fa-brands fa-android text-success',
+  'linux'   => 'fa-brands fa-linux text-secondary'
+];
+
+$countryToCode = [
+  'argentina' => 'ar', 'bolivia' => 'bo', 'brasil' => 'br', 'brazil' => 'br', 'chile' => 'cl', 'colombia' => 'co', 'ecuador' => 'ec', 'peru' => 'pe', 'venezuela' => 've',
+  'canada' => 'ca', 'estados unidos' => 'us', 'usa' => 'us', 'mexico' => 'mx', 'espana' => 'es', 'spain' => 'es', 'alemania' => 'de', 'germany' => 'de', 'francia' => 'fr',
+  'reino unido' => 'gb', 'uk' => 'gb', 'italia' => 'it', 'portugal' => 'pt'
+];
+
+function getIcon($val, $icons) {
+  $val = strtolower($val ?? '');
+  foreach ($icons as $key => $class) {
+    if (strpos($val, $key) !== false) return "<i class='$class'></i>";
+  }
+  return '<i class="fa-solid fa-globe text-muted"></i>';
+}
+
+function getFlag($country, $codes) {
+  $code = $codes[strtolower($country ?? '')] ?? 'xx';
+  return "<span class='fi fi-$code rounded-circle'></span>";
+}
+?>
+
+<div class="card overflow-hidden">
+  <div class="card-header bg-transparent py-3 px-3">
+    <h6 class="fw-bold mb-0"><i class="fa-solid fa-trophy me-2 text-warning"></i>Top Páginas y Visitantes</h6>
+  </div>
+  <div class="card-body p-0">
     <div class="table-responsive">
-      <table class="table table-borderless table-hover align-middle mb-0">
+      <table class="table premium-table table-hover align-middle mb-0">
         <thead>
           <tr>
-            <th class="text-center">Vistas totales</th>
-            <th>Información para visitantes</th>
-            <th>Remitente</th>
-            <th>Página de entrada</th>
-            <th>Página de salida</th>
+            <th class="ps-3 text-center">Visitas</th>
+            <th>Visitante / Ubicación</th>
+            <th>Tecnología</th>
+            <th>Origen</th>
+            <th class="pe-3">Fluidez (Entrada → Salida)</th>
           </tr>
         </thead>
         <tbody>
           <?php foreach ($topVisitors as $row): ?>
             <tr>
-              <td class="text-center fw-semibold">
-                <?= (int) $row->visitor_total_hits ?>
+              <td class="ps-3 text-center">
+                <span class="badge bg-primary text-white border-0 rounded-pill px-3 fw-bold">
+                  <?= (int) $row->visitor_total_hits ?>
+                </span>
               </td>
-
               <td>
-                <div class="d-flex flex-wrap gap-2">
-                  <?php if ($row->visitor_country): ?>
-                    <span class="badge text-bg-secondary"><?= $row->visitor_country ?></span>
-                  <?php endif; ?>
-
-                  <?php if ($row->visitor_platform): ?>
-                    <span class="badge text-bg-info"><?= $row->visitor_platform ?></span>
-                  <?php endif; ?>
-
-                  <?php if ($row->visitor_device): ?>
-                    <span class="badge text-bg-warning"><?= $row->visitor_device ?></span>
-                  <?php endif; ?>
-
-                  <?php if ($row->visitor_browser): ?>
-                    <span class="badge text-bg-primary"><?= $row->visitor_browser ?></span>
-                  <?php endif; ?>
-
-                  <a href="visitor.php?id=<?= (int) $row->visitor_id ?>" class="badge text-bg-dark text-decoration-none">
-                    Ver
-                  </a>
+                <div class="d-flex align-items-center gap-2">
+                  <?= getFlag($row->visitor_country, $countryToCode) ?>
+                  <span class="small fw-medium"><?= $row->visitor_country ?: 'Desconocido' ?></span>
                 </div>
               </td>
-
               <td>
-                <?php if ($row->visitor_referer): ?>
-                  <a href="<?= $row->visitor_referer ?>" target="_blank" class="text-decoration-none">
-                    <?= parse_url($row->visitor_referer, PHP_URL_HOST) ?>
-                  </a>
-                <?php else: ?>
-                  <span class="text-muted">Tráfico directo</span>
-                <?php endif; ?>
+                <div class="d-flex gap-2 fs-6">
+                   <span title="<?= $row->visitor_browser ?>"><?= getIcon($row->visitor_browser, $icons) ?></span>
+                   <span title="<?= $row->visitor_platform ?>"><?= getIcon($row->visitor_platform, $icons) ?></span>
+                </div>
               </td>
-
               <td>
-                <?php if ($row->visitor_session_start_page): ?>
-                  <span class="text-truncate d-inline-block" style="max-width: 260px;">
-                    <?= $row->visitor_session_start_page ?>
-                  </span>
-                <?php else: ?>
-                  <span class="text-muted">—</span>
-                <?php endif; ?>
+                <div class="text-truncate small text-muted" style="max-width: 150px;">
+                  <?= $row->visitor_referer ?: '<span class="badge bg-secondary-subtle text-secondary small">Directo</span>' ?>
+                </div>
               </td>
-
-              <td>
-                <?php if ($row->visitor_session_end_page): ?>
-                  <span class="text-truncate d-inline-block" style="max-width: 260px;">
-                    <?= $row->visitor_session_end_page ?>
-                  </span>
-                <?php else: ?>
-                  <span class="text-muted">—</span>
-                <?php endif; ?>
+              <td class="pe-3">
+                <div class="small mb-1"><i class="fa-solid fa-right-to-bracket me-1 text-success opacity-50"></i> <span class="text-truncate d-inline-block align-bottom" style="max-width: 250px;"><?= $row->visitor_session_start_page ?: '—' ?></span></div>
+                <div class="small"><i class="fa-solid fa-right-from-bracket me-1 text-danger opacity-50"></i> <span class="text-truncate d-inline-block align-bottom" style="max-width: 250px;"><?= $row->visitor_session_end_page ?: '—' ?></span></div>
               </td>
             </tr>
           <?php endforeach; ?>

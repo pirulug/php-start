@@ -11,142 +11,179 @@ Resumen de Analítica
 
 <?php start_block("css"); ?>
 <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css" rel="stylesheet">
-
 <style>
-  .icon-box {
-    width: 48px;
-    height: 48px;
+  .kpi-card {
+    transition: transform 0.3s ease;
+  }
+  .kpi-card:hover {
+    transform: translateY(-5px);
+  }
+  .kpi-icon {
+    width: 52px;
+    height: 52px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    border-radius: 14px;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  
+  .pulse-live {
+    width: 10px;
+    height: 10px;
+    background: #2ecc71;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    box-shadow: 0 0 0 rgba(46, 204, 113, 0.4);
+    animation: pulse-green 2s infinite;
+  }
+  @keyframes pulse-green {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
   }
 
-  /* Ajuste de Gráficos */
+  .chart-card {
+    overflow: hidden;
+  }
   .chart-container {
     position: relative;
-    height: 250px;
-    /* Altura uniforme */
+    height: 300px;
     width: 100%;
+  }
+  
+  .premium-table thead th {
+    background-color: transparent;
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+    color: #6c757d;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  [data-bs-theme="dark"] .premium-table thead th {
+    border-bottom-color: rgba(255,255,255,0.05);
   }
 </style>
 <?php end_block(); ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
   <div>
+    <h4 class="fw-bold mb-0">Dashboard de Analítica</h4>
+    <p class="text-muted small mb-0">Visualiza el rendimiento de tu sitio en tiempo real.</p>
   </div>
-  <button class="btn btn-primary" onclick="loadAnalytics()">
-    <i class="fa-solid fa-rotate me-2"></i> Actualizar
-  </button>
-  <button class="btn btn-primary" onclick="resolverPaisesDesconocidos()">
-    <i class="fa fa-rotate"></i>
-    Paises
-  </button>
+  <div class="d-flex gap-2">
+    <button class="btn btn-outline-secondary px-3 fw-bold text-uppercase small" onclick="resolverPaisesDesconocidos()">
+      <i class="fa-solid fa-earth-americas me-2"></i> Paises
+    </button>
+    <button class="btn btn-primary px-3 fw-bold text-uppercase small" onclick="loadAnalytics()">
+      <i class="fa-solid fa-rotate me-2"></i> Actualizar
+    </button>
+  </div>
 </div>
 
-<div class="row g-4 mb-3" id="summary-cards">
+<div class="row g-3 mb-3" id="summary-cards">
+  <!-- Visitantes -->
   <div class="col-md-2 col-sm-6">
-    <div class="card h-100">
-      <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-primary-subtle text-primary rounded-3 me-3">
+    <div class="card kpi-card h-100">
+      <div class="card-body">
+        <div class="kpi-icon mb-3" style="background-color: rgba(255, 0, 85, 0.1); color: #f05;">
           <i class="fa-solid fa-users"></i>
         </div>
-        <div>
-          <h3 class="fw-bold mb-0" id="totalVisitors">...</h3>
-          <span class="text-body-secondary small fw-medium">Visitantes</span>
-        </div>
+        <h3 class="fw-bold mb-1" id="totalVisitors">...</h3>
+        <span class="text-muted small fw-bold text-uppercase">Visitantes</span>
       </div>
     </div>
   </div>
+  <!-- Vistas -->
   <div class="col-md-2 col-sm-6">
-    <div class="card h-100">
-      <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-success-subtle text-success rounded-3 me-3">
+    <div class="card kpi-card h-100">
+      <div class="card-body">
+        <div class="kpi-icon mb-3" style="background-color: rgba(46, 204, 113, 0.1); color: #2ecc71;">
           <i class="fa-regular fa-file-lines"></i>
         </div>
-        <div>
-          <h3 class="fw-bold mb-0" id="totalPages">...</h3>
-          <span class="text-body-secondary small fw-medium">Vistas</span>
-        </div>
+        <h3 class="fw-bold mb-1" id="totalPages">...</h3>
+        <span class="text-muted small fw-bold text-uppercase">Vistas</span>
       </div>
     </div>
   </div>
+  <!-- Duración -->
   <div class="col-md-2 col-sm-6">
-    <div class="card h-100">
-      <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-info-subtle text-info rounded-3 me-3">
+    <div class="card kpi-card h-100">
+      <div class="card-body">
+        <div class="kpi-icon mb-3" style="background-color: rgba(52, 152, 219, 0.1); color: #3498db;">
           <i class="fa-solid fa-stopwatch"></i>
         </div>
-        <div>
-          <h3 class="fw-bold mb-0" id="avgDuration">...</h3>
-          <span class="text-body-secondary small fw-medium">Duración Media</span>
-        </div>
+        <h3 class="fw-bold mb-1" id="avgDuration">...</h3>
+        <span class="text-muted small fw-bold text-uppercase">Duración</span>
       </div>
     </div>
   </div>
+  <!-- Rebote -->
   <div class="col-md-2 col-sm-6">
-    <div class="card h-100">
-      <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-danger-subtle text-danger rounded-3 me-3">
+    <div class="card kpi-card h-100">
+      <div class="card-body">
+        <div class="kpi-icon mb-3" style="background-color: rgba(231, 76, 60, 0.1); color: #e74c3c;">
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </div>
-        <div>
-          <h3 class="fw-bold mb-0" id="bounceRate">...</h3>
-          <span class="text-body-secondary small fw-medium">Rebote</span>
-        </div>
+        <h3 class="fw-bold mb-1" id="bounceRate">...</h3>
+        <span class="text-muted small fw-bold text-uppercase">Rebote</span>
       </div>
     </div>
   </div>
+  <!-- Online -->
   <div class="col-md-2 col-sm-6">
-    <div class="card h-100">
-      <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-warning-subtle text-warning rounded-3 me-3">
-          <i class="fa-solid fa-bolt"></i>
+    <div class="card kpi-card h-100" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div class="kpi-icon" style="background: rgba(255,255,255,0.2); color: #fff;">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <span class="badge bg-success-subtle text-success fw-bold small">LIVE</span>
         </div>
-        <div>
-          <h3 class="fw-bold mb-0" id="usersOnline">...</h3>
-          <span class="text-body-secondary small fw-medium text-success">● En Línea</span>
-        </div>
+        <h3 class="fw-bold mb-1 text-white" id="usersOnline">...</h3>
+        <span class="small fw-bold text-uppercase text-white opacity-75">En Línea</span>
       </div>
     </div>
   </div>
-    <div class="col-md-2 col-sm-6">
-    <div class="card h-100">
-      <div class="card-body d-flex align-items-center">
-        <div class="icon-box bg-secondary-subtle text-secondary rounded-3 me-3">
+  <!-- Sesiones -->
+  <div class="col-md-2 col-sm-6">
+    <div class="card kpi-card h-100">
+      <div class="card-body">
+        <div class="kpi-icon mb-3" style="background-color: rgba(241, 196, 15, 0.1); color: #f1c40f;">
           <i class="fa-solid fa-clock-rotate-left"></i>
         </div>
-        <div>
-          <h3 class="fw-bold mb-0" id="totalSessions">...</h3>
-          <span class="text-body-secondary small fw-medium">Sesiones</span>
-        </div>
+        <h3 class="fw-bold mb-1" id="totalSessions">...</h3>
+        <span class="text-muted small fw-bold text-uppercase">Sesiones</span>
       </div>
     </div>
   </div>
 </div>
 
-<div class="row g-4 mb-3">
+<div class="row g-3 mb-3">
   <div class="col-lg-4">
-    <div class="card h-100   ">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Resumen de Tráfico</span>
-        <i class="fa-solid fa-chart-pie text-muted"></i>
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-chart-pie me-2 text-primary"></i>Resumen de Tráfico</h6>
       </div>
-      <div class="card-body">
-        <div class="text-center mb-3 py-3  rounded-3 border border-light">
-          <span class="d-block text-muted small mb-1">Visitantes Activos</span>
-          <span class="display-4 fw-bold " id="summaryOnline">0</span>
+      <div class="card-body px-3">
+        <div class="text-center mb-3 p-3 rounded" style="background-color: rgba(240, 5, 85, 0.05); border: 1px solid rgba(240, 5, 85, 0.1);">
+          <span class="pulse-live"></span>
+          <span class="text-muted small fw-bold text-uppercase">Visitantes Activos</span>
+          <h1 class="display-4 fw-bold mb-0" style="color: #f05;" id="summaryOnline">0</h1>
         </div>
         <div class="table-responsive">
-          <table class="table table-borderless table-hover align-middle">
+          <table class="table premium-table align-middle">
             <thead>
               <tr>
                 <th>Periodo</th>
-                <th class="text-center">Visitantes</th>
+                <th class="text-center">Vence</th>
                 <th class="text-end">Visitas</th>
               </tr>
             </thead>
-            <tbody id="summaryTraffic">
+            <tbody id="summaryTraffic" class="small">
             </tbody>
           </table>
         </div>
@@ -155,22 +192,23 @@ Resumen de Analítica
   </div>
 
   <div class="col-lg-8">
-    <div class="card h-100   ">
-      <div class="card-header">
-        Evolución de Visitas
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3 d-flex justify-content-between">
+        <h6 class="fw-bold mb-1">Evolución de Visitas</h6>
+        <span class="badge bg-primary-subtle text-primary fw-bold">TIEMPO REAL</span>
       </div>
-      <div class="card-body">
-        <div class="row g-4">
+      <div class="card-body px-3">
+        <div class="row g-3">
           <div class="col-12">
-            <p class="text-body-secondary small fw-medium mb-2">Este Mes (Por Días)</p>
+            <p class="text-muted small fw-bold text-uppercase mb-2">Este Mes (Por Días)</p>
             <div class="chart-container" style="height: 200px;"><canvas id="chartMonthDays"></canvas></div>
           </div>
           <div class="col-md-6">
-            <p class="text-body-secondary small fw-medium mb-2">Este Año (Por Meses)</p>
+            <p class="text-muted small fw-bold text-uppercase mb-2">Este Año</p>
             <div class="chart-container" style="height: 180px;"><canvas id="chartYearMonths"></canvas></div>
           </div>
           <div class="col-md-6">
-            <p class="text-body-secondary small fw-medium mb-2">Histórico (Últimos 10 Años)</p>
+            <p class="text-muted small fw-bold text-uppercase mb-2">Histórico (10 Años)</p>
             <div class="chart-container" style="height: 180px;"><canvas id="chartYears"></canvas></div>
           </div>
         </div>
@@ -179,112 +217,135 @@ Resumen de Analítica
   </div>
 </div>
 
-<div class="row g-4 mb-3">
+<div class="row g-3 mb-3">
   <div class="col-lg-8">
-    <div class="card h-100   ">
-      <div class="card-header">Tendencia (Últimos 30 días)</div>
-      <div class="card-body chart-container">
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent px-3 pt-3 d-flex justify-content-between align-items-center">
+        <h6 class="fw-bold mb-0">Tendencia (30 días)</h6>
+        <div class="d-flex gap-2 small fw-bold">
+           <span class="text-primary"><i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i> VISITANTES</span>
+           <span style="color: #2ecc71;"><i class="fa-solid fa-circle me-1" style="font-size: 8px;"></i> VISITAS</span>
+        </div>
+      </div>
+      <div class="card-body px-3 pb-3 chart-container">
         <canvas id="chartTrend"></canvas>
       </div>
     </div>
   </div>
   <div class="col-lg-4">
-    <div class="card h-100   ">
-      <div class="card-header">Top 5 Páginas</div>
-      <div class="card-body chart-container">
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0">Top 5 Páginas</h6>
+      </div>
+      <div class="card-body px-3 pb-3 chart-container">
         <canvas id="chartPages"></canvas>
       </div>
     </div>
   </div>
 </div>
 
-<div class="row g-4 mb-3">
+<div class="row g-3 mb-3">
   <div class="col-lg-4">
-    <div class="card h-100   ">
-      <div class="card-header">Países</div>
-      <div class="card-body chart-container position-relative">
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0">Geolocalización</h6>
+      </div>
+      <div class="card-body px-3 pb-3 chart-container position-relative">
         <canvas id="chartCountries"></canvas>
       </div>
     </div>
   </div>
   <div class="col-lg-4">
-    <div class="card h-100   ">
-      <div class="card-header">Navegadores</div>
-      <div class="card-body chart-container position-relative">
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0">Navegadores</h6>
+      </div>
+      <div class="card-body px-3 pb-3 chart-container position-relative">
         <canvas id="chartBrowsers"></canvas>
       </div>
     </div>
   </div>
   <div class="col-lg-4">
-    <div class="card h-100   ">
-      <div class="card-header">Sistemas Operativos</div>
-      <div class="card-body chart-container position-relative">
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0">Plataformas</h6>
+      </div>
+      <div class="card-body px-3 pb-3 chart-container position-relative">
         <canvas id="chartPlatforms"></canvas>
       </div>
     </div>
   </div>
 </div>
 
-<div class="row g-4 mb-3">
+<div class="row g-3 mb-3">
   <div class="col-md-6">
-    <div class="card h-100   ">
-      <div class="card-header">Dispositivos</div>
-      <div class="card-body chart-container">
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0">Tecnología</h6>
+      </div>
+      <div class="card-body px-3 pb-3 chart-container">
         <canvas id="chartDevices"></canvas>
       </div>
     </div>
   </div>
   <div class="col-md-6">
-    <div class="card h-100   ">
-      <div class="card-header">Fuentes de Tráfico</div>
-      <div class="card-body chart-container">
+    <div class="card chart-card h-100">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0">Fuentes de Tráfico</h6>
+      </div>
+      <div class="card-body px-3 pb-3 chart-container">
         <canvas id="chartReferers"></canvas>
       </div>
     </div>
   </div>
 </div>
 
-<div class="row g-4">
-  <div class="col-12">
-    <div class="card   ">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Usuarios Online (Detalle)</span>
-        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3">Live</span>
+<div class="row g-3">
+  <div class="col-12 col-xl-7">
+    <div class="card chart-card">
+      <div class="card-header bg-transparent px-3 pt-3 d-flex justify-content-between align-items-center">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-bolt me-2 text-success"></i>Usuarios Online (Detalle)</h6>
+        <span class="badge bg-success-subtle text-success fw-bold px-3">LIVE</span>
       </div>
-      <div class="table-responsive">
-        <table class="table table-borderless table-hover mb-0" id="tableOnline">
-          <thead class="">
-            <tr>
-              <th>IP</th>
-              <th>País</th>
-              <th>Navegador</th>
-              <th>Plataforma</th>
-              <th>Página Actual</th>
-              <th>Última Actividad</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table premium-table align-middle mb-0" id="tableOnline">
+            <thead>
+              <tr>
+                <th class="ps-3">IP</th>
+                <th>País</th>
+                <th>Browser</th>
+                <th>OS</th>
+                <th>Página Actual</th>
+                <th class="text-end pe-3">Actividad</th>
+              </tr>
+            </thead>
+            <tbody class="small"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-12">
-    <div class="card   ">
-      <div class="card-header">Últimas Sesiones</div>
-      <div class="table-responsive">
-        <table class="table table-borderless table-hover mb-0" id="tableSessions">
-          <thead class="">
-            <tr>
-              <th>País</th>
-              <th>Navegador</th>
-              <th>Plataforma</th>
-              <th>Página Inicial</th>
-              <th>Hora</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+  <div class="col-12 col-xl-5">
+    <div class="card chart-card">
+      <div class="card-header bg-transparent pt-3 px-3">
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Últimas Sesiones</h6>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table premium-table align-middle mb-0" id="tableSessions">
+            <thead>
+              <tr>
+                <th class="ps-3">País</th>
+                <th>Browser</th>
+                <th>Página Inicial</th>
+                <th class="text-end pe-3">Hora</th>
+              </tr>
+            </thead>
+            <tbody class="small"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -294,285 +355,171 @@ Resumen de Analítica
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  // =============================================
-  // CONFIGURACIÓN ESTÉTICA GLOBAL (UI/UX)
-  // =============================================
-  function getCSSVar(name, fallback) {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
-  }
+  const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+  const colors = {
+    primary: '#f05',
+    success: '#2ecc71',
+    info: '#3498db',
+    warning: '#f1c40f',
+    danger: '#e74c3c',
+    text: isDark ? '#adb5bd' : '#8898aa',
+    grid: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+    tooltipBg: '#1a1a1a'
+  };
 
-  Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-  Chart.defaults.color = getCSSVar('--bs-body-color', '#8898aa');
-  Chart.defaults.scale.grid.color = getCSSVar('--bs-border-color', '#f3f3f3');
+  Chart.defaults.font.family = '"Inter", -apple-system, sans-serif';
+  Chart.defaults.color = colors.text;
+  Chart.defaults.scale.grid.color = colors.grid;
 
-  // Opciones compartidas para limpiar los gráficos (Minimalismo)
   const commonOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Se adapta al contenedor CSS
+    maintainAspectRatio: false,
     plugins: {
-      legend: { display: false }, // Ocultamos leyenda por defecto (más limpio)
+      legend: { display: false },
       tooltip: {
-        backgroundColor: getCSSVar('--bs-body-bg', '#1e293b'),
-        titleColor: getCSSVar('--bs-body-color', '#ffffff'),
-        bodyColor: getCSSVar('--bs-body-color', '#ffffff'),
-        borderColor: getCSSVar('--bs-border-color', '#475569'),
-        borderWidth: 1,
+        backgroundColor: colors.tooltipBg,
+        titleColor: '#fff',
+        bodyColor: '#fff',
         padding: 12,
-        titleFont: { size: 13 },
-        bodyFont: { size: 13 },
-        cornerRadius: 8,
+        cornerRadius: 10,
         displayColors: true
       }
     },
     scales: {
-      x: {
-        grid: { display: false, drawBorder: false }, // Sin líneas verticales
-        ticks: { font: { size: 11 }, color: getCSSVar('--bs-secondary-color', '#6c757d') }
-      },
-      y: {
-        beginAtZero: true,
-        grid: { borderDash: [3, 3], drawBorder: false, color: getCSSVar('--bs-border-color', '#e2e8f0') }, // Líneas horizontales punteadas suaves
-        ticks: { padding: 10, font: { size: 11 }, color: getCSSVar('--bs-secondary-color', '#6c757d') }
+      x: { grid: { display: false } },
+      y: { 
+        beginAtZero: true, 
+        grid: { borderDash: [3, 3] },
+        ticks: { stepSize: 5 }
       }
     },
     elements: {
-      line: { tension: 0.4, borderWidth: 3 }, // Curvas suaves (Smooth)
-      point: { radius: 0, hoverRadius: 6 }, // Ocultar puntos hasta hacer hover
-      bar: { borderRadius: 4 } // Barras redondeadas
+      line: { tension: 0.45, borderWidth: 3 },
+      point: { radius: 0, hoverRadius: 6 },
+      bar: { borderRadius: 6 }
     }
   };
 
-  // Opciones específicas para gráficos circulares (Donut/Pie)
   const pieOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '75%', // Donut más fino
+    ...commonOptions,
+    cutout: '80%',
     plugins: {
-      legend: { position: 'right', labels: { boxWidth: 10, usePointStyle: true, font: { size: 11 } } }
-    },
-    layout: { padding: 0 }
+      legend: { display: true, position: 'bottom', labels: { boxWidth: 8, usePointStyle: true, padding: 20 } }
+    }
   };
 
-  // =============================================
   // INICIALIZACIÓN DE GRÁFICOS
-  // =============================================
-
-  // 1. Tendencia (Lineal Suave)
   const ctxTrend = document.getElementById('chartTrend').getContext('2d');
-  // Crear gradiente para efecto visual "Wow"
   const gradientTrend = ctxTrend.createLinearGradient(0, 0, 0, 400);
-  gradientTrend.addColorStop(0, 'rgba(13, 110, 253, 0.2)');
-  gradientTrend.addColorStop(1, 'rgba(13, 110, 253, 0)');
+  gradientTrend.addColorStop(0, 'rgba(255, 0, 85, 0.15)');
+  gradientTrend.addColorStop(1, 'rgba(255, 0, 85, 0)');
 
   const chartTrend = new Chart(ctxTrend, {
     type: 'line',
     data: {
       labels: [],
       datasets: [
-        {
-          label: 'Visitantes',
-          data: [],
-          borderColor: '#0d6efd',
-          backgroundColor: gradientTrend,
-          fill: true, // Relleno con gradiente
-          tension: 0.4
-        },
-        {
-          label: 'Visitas',
-          data: [],
-          borderColor: '#198754',
-          borderDash: [5, 5], // Línea punteada para diferenciar
-          tension: 0.4,
-          fill: false
-        }
+        { label: 'Visitantes', data: [], borderColor: colors.primary, backgroundColor: gradientTrend, fill: true },
+        { label: 'Visitas', data: [], borderColor: colors.success, borderDash: [5, 5], fill: false }
       ]
     },
     options: {
       ...commonOptions,
-      plugins: { ...commonOptions.plugins, legend: { display: true, align: 'end', labels: { usePointStyle: true, boxWidth: 8 } } },
-      interaction: { mode: 'index', intersect: false }
+      plugins: { ...commonOptions.plugins, legend: { display: false } }
     }
   });
 
-  // 2. Páginas (Barras)
   const chartPages = new Chart(document.getElementById('chartPages'), {
     type: 'bar',
-    data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: '#0d6efd' }] },
+    data: { labels: [], datasets: [{ label: 'Vistas', data: [], backgroundColor: colors.info }] },
     options: commonOptions
   });
 
-  // 3. Países (Donut)
   const chartCountries = new Chart(document.getElementById('chartCountries'), {
     type: 'doughnut',
-    data: { labels: [], datasets: [{ data: [], backgroundColor: generateColors(10), borderWidth: 0 }] },
+    data: { labels: [], datasets: [{ data: [], backgroundColor: ['#f05', '#2ecc71', '#3498db', '#f1c40f', '#e74c3c'], borderWidth: 0 }] },
     options: pieOptions
   });
 
-  // 4. Navegadores (Pie - ajustado a Donut para consistencia visual)
   const chartBrowsers = new Chart(document.getElementById('chartBrowsers'), {
-    type: 'doughnut', // Cambiado a doughnut para que se vea más moderno
-    data: { labels: [], datasets: [{ data: [], backgroundColor: generateColors(8), borderWidth: 0 }] },
+    type: 'doughnut',
+    data: { labels: [], datasets: [{ data: [], backgroundColor: ['#3498db', '#f1c40f', '#e74c3c', '#2ecc71', '#9b59b6'], borderWidth: 0 }] },
     options: pieOptions
   });
 
-  // 5. Plataformas (Pie - ajustado a Donut)
   const chartPlatforms = new Chart(document.getElementById('chartPlatforms'), {
     type: 'doughnut',
-    data: { labels: [], datasets: [{ data: [], backgroundColor: generateColors(8), borderWidth: 0 }] },
+    data: { labels: [], datasets: [{ data: [], backgroundColor: ['#2c3e50', '#7f8c8d', '#bdc3c7', '#2980b9', '#16a085'], borderWidth: 0 }] },
     options: pieOptions
   });
 
-  // 6. Dispositivos (Barra Vertical)
   const chartDevices = new Chart(document.getElementById('chartDevices'), {
     type: 'bar',
-    data: { labels: [], datasets: [{ label: 'Dispositivos', data: [], backgroundColor: '#ffc107', borderRadius: 4 }] },
+    data: { labels: [], datasets: [{ label: 'Total', data: [], backgroundColor: colors.warning }] },
     options: commonOptions
   });
 
-  // 7. Referencias (Barra Horizontal)
   const chartReferers = new Chart(document.getElementById('chartReferers'), {
     type: 'bar',
-    data: { labels: [], datasets: [{ label: 'Referencias', data: [], backgroundColor: '#dc3545', borderRadius: 4 }] },
-    options: {
-      ...commonOptions,
-      indexAxis: 'y', // Barra horizontal
-    }
+    data: { labels: [], datasets: [{ label: 'Referencia', data: [], backgroundColor: colors.danger }] },
+    options: { ...commonOptions, indexAxis: 'y' }
   });
-
-  // --- GRÁFICOS DE TIEMPO (NUEVOS) ---
 
   const chartMonthDays = new Chart(document.getElementById('chartMonthDays'), {
     type: 'line',
-    data: { labels: [], datasets: [{ label: 'Visitas', data: [], borderColor: '#0d6efd', tension: 0.4, fill: false }] },
+    data: { labels: [], datasets: [{ label: 'Visitas', data: [], borderColor: colors.primary, fill: false }] },
     options: commonOptions
   });
 
   const chartYearMonths = new Chart(document.getElementById('chartYearMonths'), {
     type: 'bar',
-    data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: '#0d6efd', borderRadius: 4 }] },
+    data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: colors.info }] },
     options: commonOptions
   });
 
   const chartYears = new Chart(document.getElementById('chartYears'), {
     type: 'bar',
-    data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: '#ffc107', borderRadius: 4 }] },
+    data: { labels: [], datasets: [{ label: 'Visitas', data: [], backgroundColor: colors.warning }] },
     options: commonOptions
   });
 
+  // FUNCIONES DE SOPORTE E ICONOS
+  const countryToCode = {
+    'argentina': 'ar', 'bolivia': 'bo', 'brasil': 'br', 'brazil': 'br', 'chile': 'cl', 'colombia': 'co', 'ecuador': 'ec', 'peru': 'pe', 'venezuela': 've',
+    'canada': 'ca', 'estados unidos': 'us', 'usa': 'us', 'mexico': 'mx', 'espana': 'es', 'spain': 'es', 'alemania': 'de', 'germany': 'de', 'francia': 'fr',
+    'reino unido': 'gb', 'uk': 'gb', 'italia': 'it', 'portugal': 'pt'
+  };
 
-  // =============================================
-  // FUNCIONES AUXILIARES
-  // =============================================
-  function generateColors(n) {
-    // Genera colores pastel más agradables
-    return Array.from({ length: n }, (_, i) => `hsl(${i * 40}, 65%, 65%)`);
-  }
-
-  const browserIcons = {
+  const icons = {
     chrome: 'fa-brands fa-chrome text-danger',
     firefox: 'fa-brands fa-firefox text-warning',
     safari: 'fa-brands fa-safari text-info',
     edge: 'fa-brands fa-edge text-primary',
-    opera: 'fa-brands fa-opera text-danger',
-    brave: 'fa-solid fa-shield-halved text-warning',
-    'internet explorer': 'fa-brands fa-internet-explorer text-primary'
-  };
-  const osIcons = {
     windows: 'fa-brands fa-windows text-primary',
-    mac: 'fa-brands fa-apple ',
-    ios: 'fa-solid fa-mobile-screen-button ',
+    apple: 'fa-brands fa-apple',
     android: 'fa-brands fa-android text-success',
     linux: 'fa-brands fa-linux text-secondary'
   };
 
-  // --- Mapa país → código ISO2 ---
-  const countryToCode = {
-    // América del Sur
-    'argentina': 'ar', 'bolivia': 'bo', 'brasil': 'br', 'brazil': 'br', 'chile': 'cl',
-    'colombia': 'co', 'ecuador': 'ec', 'guyana': 'gy', 'paraguay': 'py',
-    'peru': 'pe', 'suriname': 'sr', 'uruguay': 'uy', 'venezuela': 've', 'french guiana': 'gf',
-    // América del Norte y Central
-    'canada': 'ca', 'estados unidos': 'us', 'united states of america':'us', 'eeuu': 'us', 'usa': 'us', 'united states': 'us', 'mexico': 'mx',
-    'belize': 'bz', 'costa rica': 'cr', 'el salvador': 'sv', 'guatemala': 'gt', 'honduras': 'hn',
-    'nicaragua': 'ni', 'panama': 'pa', 'bahamas': 'bs', 'barbados': 'bb', 'cuba': 'cu',
-    'dominican republic': 'do', 'republica dominicana': 'do', 'haiti': 'ht', 'jamaica': 'jm',
-    'puerto rico': 'pr', 'trinidad y tobago': 'tt', 'trinidad and tobago': 'tt',
-    // Europa Occidental
-    'alemania': 'de', 'germany': 'de', 'austria': 'at', 'belgica': 'be', 'belgium': 'be',
-    'dinamarca': 'dk', 'denmark': 'dk', 'espana': 'es', 'spain': 'es', 'finlandia': 'fi', 'finland': 'fi',
-    'francia': 'fr', 'france': 'fr', 'irlanda': 'ie', 'ireland': 'ie', 'italia': 'it', 'italy': 'it',
-    'luxemburgo': 'lu', 'luxembourg': 'lu', 'paises bajos': 'nl', 'netherlands': 'nl', 'noruega': 'no', 'norway': 'no',
-    'portugal': 'pt', 'suiza': 'ch', 'switzerland': 'ch', 'reino unido': 'gb', 'uk': 'gb', 'united kingdom': 'gb',
-    'inglaterra': 'gb', 'escocia': 'gb', 'gales': 'gb', 'islandia': 'is', 'iceland': 'is',
-    // Europa del Este
-    'albania': 'al', 'andorra': 'ad', 'armenia': 'am', 'azerbaiyan': 'az', 'azerbaijan': 'az',
-    'bielorrusia': 'by', 'belarus': 'by', 'bosnia y herzegovina': 'ba', 'bulgaria': 'bg',
-    'croacia': 'hr', 'croatia': 'hr', 'eslovaquia': 'sk', 'slovakia': 'sk', 'eslovenia': 'si', 'slovenia': 'si',
-    'estonia': 'ee', 'georgia': 'ge', 'grecia': 'gr', 'greece': 'gr', 'hungria': 'hu', 'hungary': 'hu',
-    'letonia': 'lv', 'latvia': 'lv', 'lituania': 'lt', 'lithuania': 'lt', 'moldavia': 'md', 'moldova': 'md',
-    'montenegro': 'me', 'macedonia': 'mk', 'polonia': 'pl', 'poland': 'pl', 'republica checa': 'cz', 'czech republic': 'cz',
-    'rumania': 'ro', 'romania': 'ro', 'rusia': 'ru', 'russia': 'ru', 'serbia': 'rs', 'ucrania': 'ua', 'ukraine': 'ua',
-    // África
-    'argelia': 'dz', 'algeria': 'dz', 'angola': 'ao', 'benin': 'bj', 'botswana': 'bw', 'burkina faso': 'bf',
-    'burundi': 'bi', 'cabo verde': 'cv', 'cape verde': 'cv', 'camerun': 'cm', 'cameroon': 'cm', 'chad': 'td',
-    'comoras': 'km', 'comoros': 'km', 'congo': 'cg', 'congo republic': 'cg', 'republica democratica del congo': 'cd',
-    'democratic republic of the congo': 'cd', 'costa de marfil': 'ci', 'ivory coast': 'ci', 'djibouti': 'dj',
-    'egipto': 'eg', 'egypt': 'eg', 'eritrea': 'er', 'etiopia': 'et', 'ethiopia': 'et', 'gabon': 'ga', 'gambia': 'gm',
-    'ghana': 'gh', 'guinea': 'gn', 'guinea ecuatorial': 'gq', 'equatorial guinea': 'gq', 'kenia': 'ke', 'kenya': 'ke',
-    'lesoto': 'ls', 'liberia': 'lr', 'libia': 'ly', 'madagascar': 'mg', 'malawi': 'mw', 'mali': 'ml', 'mauritania': 'mr',
-    'mauricio': 'mu', 'mauritius': 'mu', 'mozambique': 'mz', 'namibia': 'na', 'niger': 'ne', 'nigeria': 'ng',
-    'ruanda': 'rw', 'rwanda': 'rw', 'santo tome y principe': 'st', 'sao tome and principe': 'st', 'senegal': 'sn',
-    'seychelles': 'sc', 'sierra leona': 'sl', 'somalia': 'so', 'sudafrica': 'za', 'south africa': 'za', 'sudan': 'sd',
-    'sudan del sur': 'ss', 'south sudan': 'ss', 'tanzania': 'tz', 'togo': 'tg', 'tunisia': 'tn', 'uganda': 'ug',
-    'zambia': 'zm', 'zimbabue': 'zw', 'zimbabwe': 'zw',
-    // Asia
-    'afganistan': 'af', 'afghanistan': 'af', 'arabia saudita': 'sa', 'saudi arabia': 'sa', 'armenia': 'am',
-    'azerbaijan': 'az', 'bahrein': 'bh', 'bahrain': 'bh', 'bangladesh': 'bd', 'brunei': 'bn', 'camboya': 'kh',
-    'cambodia': 'kh', 'china': 'cn', 'chipre': 'cy', 'cyprus': 'cy', 'corea del norte': 'kp', 'north korea': 'kp',
-    'corea del sur': 'kr', 'south korea': 'kr', 'emiratos arabes unidos': 'ae', 'uae': 'ae', 'filipinas': 'ph',
-    'philippines': 'ph', 'india': 'in', 'indonesia': 'id', 'iran': 'ir', 'iraq': 'iq', 'israel': 'il', 'japan': 'jp',
-    'jordania': 'jo', 'kazajistan': 'kz', 'kazakhstan': 'kz', 'kirguistan': 'kg', 'kyrgyzstan': 'kg', 'kuwait': 'kw',
-    'laos': 'la', 'libano': 'lb', 'lebanon': 'lb', 'malasia': 'my', 'malaysia': 'my', 'maldivas': 'mv', 'maldives': 'mv',
-    'mongolia': 'mn', 'myanmar': 'mm', 'nepal': 'np', 'oman': 'om', 'pakistan': 'pk', 'qatar': 'qa', 'singapur': 'sg',
-    'singapore': 'sg', 'siria': 'sy', 'syria': 'sy', 'sri lanka': 'lk', 'tailandia': 'th', 'thailand': 'th',
-    'timor oriental': 'tl', 'east timor': 'tl', 'turquia': 'tr', 'turkey': 'tr', 'vietnam': 'vn', 'yemen': 'ye',
-    // Oceanía
-    'australia': 'au', 'fiyi': 'fj', 'fiji': 'fj', 'kiribati': 'ki', 'islas marshall': 'mh', 'micronesia': 'fm',
-    'nauru': 'nr', 'nueva zelanda': 'nz', 'new zealand': 'nz', 'palaos': 'pw', 'papua nueva guinea': 'pg',
-    'papua new guinea': 'pg', 'samoa': 'ws', 'salomon': 'sb', 'solomon islands': 'sb', 'tonga': 'to', 'tuvalu': 'tv',
-    'vanuatu': 'vu',
-    // Otros / territorios
-    'hong kong': 'hk', 'macao': 'mo', 'taiwan': 'tw', 'palestina': 'ps', 'palestine': 'ps', 'vaticano': 'va',
-    'holy see': 'va',
-    // Casos especiales
-    'localhost': 'xx', 'desconocido': 'xx', 'unknown': 'xx'
-  };
+  function getIcon(val, type = 'browser') {
+    val = val?.toLowerCase() || '';
+    const key = Object.keys(icons).find(k => val.includes(k));
+    const fallback = type === 'browser' ? 'fa-solid fa-globe' : 'fa-solid fa-desktop';
+    return `<i class="${key ? icons[key] : fallback + ' text-muted'}"></i>`;
+  }
 
-  function getBrowserIcon(b) {
-    b = b?.toLowerCase() || '';
-    const key = Object.keys(browserIcons).find(k => b.includes(k));
-    return `<i class="${key ? browserIcons[key] : 'fa-solid fa-globe text-muted'}"></i>`;
-  }
-  function getOSIcon(p) {
-    p = p?.toLowerCase() || '';
-    const key = Object.keys(osIcons).find(k => p.includes(k));
-    return `<i class="${key ? osIcons[key] : 'fa-solid fa-desktop text-muted'}"></i>`;
-  }
   function getFlag(country) {
-    if (!country) return '<span class="fi fi-xx  rounded-1"></span>';
+    if (!country) return '<span class="fi fi-xx rounded-circle"></span>';
     const code = countryToCode[country.toLowerCase()] || 'xx';
-    return `<span class="fi fi-${code}  rounded-1"></span>`;
+    return `<span class="fi fi-${code} rounded-circle"></span>`;
   }
 
-  // =============================================
   // CARGA DE DATOS
-  // =============================================
   async function loadAnalytics() {
     try {
       const res = await fetch('<?= APP_URL ?>/ajax/visitors');
       const data = await res.json();
 
-      // 1. KPIs
       document.getElementById('totalVisitors').textContent = data.totals.visitors.toLocaleString();
       document.getElementById('totalPages').textContent = data.totals.pages.toLocaleString();
       document.getElementById('totalSessions').textContent = data.totals.sessions.toLocaleString();
@@ -581,7 +528,7 @@ Resumen de Analítica
       document.getElementById('avgDuration').textContent = data.totals.avg_duration;
       document.getElementById('summaryOnline').textContent = data.totals.online ?? 0;
 
-      // 2. Gráficos
+      // Actualizar gráficos
       chartTrend.data.labels = data.trend.map(d => d.date);
       chartTrend.data.datasets[0].data = data.trend.map(d => d.visitors);
       chartTrend.data.datasets[1].data = data.trend.map(d => d.visits);
@@ -623,96 +570,50 @@ Resumen de Analítica
       chartYears.data.datasets[0].data = data.lastYears.map(d => d.visits);
       chartYears.update();
 
-      // 3. Tablas (Usando template literals limpios)
-      const sessionsBody = document.querySelector('#tableSessions tbody');
-      if (data.recentSessions.length > 0) {
-        sessionsBody.innerHTML = data.recentSessions.map(s => `
-            <tr>
-                <td><div class="d-flex align-items-center gap-2">${getFlag(s.visitor_country)} <span class="fw-medium">${s.visitor_country ?? 'Desconocido'}</span></div></td>
-                <td>${getBrowserIcon(s.visitor_browser)} <span class="text-muted ms-1">${s.visitor_browser ?? '-'}</span></td>
-                <td>${getOSIcon(s.visitor_platform)} <span class="text-muted ms-1">${s.visitor_platform ?? '-'}</span></td>
-                <td><span class="text-truncate d-inline-block" style="max-width: 150px;">${s.visitor_sessions_start_page ?? '-'}</span></td>
-                <td class="text-end text-muted small">${s.visitor_session_start_time}</td>
-            </tr>
-            `).join('');
-      } else {
-        sessionsBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">Sin datos recientes</td></tr>';
-      }
+      // Tablas
+      document.querySelector('#tableSessions tbody').innerHTML = data.recentSessions.map(s => `
+        <tr>
+          <td class="ps-3"><div class="d-flex align-items-center gap-2">${getFlag(s.visitor_country)} <span>${s.visitor_country || 'Desconocido'}</span></div></td>
+          <td>${getIcon(s.visitor_browser)} <span class="ms-1">${s.visitor_browser || '-'}</span></td>
+          <td><span class="text-truncate d-inline-block" style="max-width: 150px;">${s.visitor_sessions_start_page || '-'}</span></td>
+          <td class="text-end pe-3 text-muted">${s.visitor_session_start_time}</td>
+        </tr>`).join('') || '<tr><td colspan="4" class="text-center py-3">Sin datos</td></tr>';
 
-      const onlineBody = document.querySelector('#tableOnline tbody');
-      if (data.onlineUsers.length > 0) {
-        onlineBody.innerHTML = data.onlineUsers.map(o => `
-            <tr>
-                <td><span class="font-monospace text-primary bg-primary bg-opacity-10 px-2 py-1 rounded small">${o.visitor_useronline_ip}</span></td>
-                <td>${getFlag(o.visitor_country)}</td>
-                <td>${getBrowserIcon(o.visitor_browser)}</td>
-                <td>${getOSIcon(o.visitor_platform)}</td>
-                <td><span class="text-truncate d-inline-block" style="max-width: 200px;">${o.visitor_pages_title ?? '—'}</span></td>
-                <td class="text-end text-success small">Hace un momento</td>
-            </tr>
-            `).join('');
-      } else {
-        onlineBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">No hay usuarios online</td></tr>';
-      }
+      document.querySelector('#tableOnline tbody').innerHTML = data.onlineUsers.map(o => `
+        <tr>
+          <td class="ps-3"><span class="badge bg-primary-subtle text-primary border-0 rounded-pill px-3">${o.visitor_useronline_ip}</span></td>
+          <td>${getFlag(o.visitor_country)}</td>
+          <td>${getIcon(o.visitor_browser)}</td>
+          <td>${getIcon(o.visitor_platform, 'os')}</td>
+          <td><span class="text-truncate d-inline-block" style="max-width: 180px;">${o.visitor_pages_title || '—'}</span></td>
+          <td class="text-end pe-3"><span class="badge bg-success bg-opacity-10 text-success fw-bold">Online</span></td>
+        </tr>`).join('') || '<tr><td colspan="6" class="text-center py-3">No hay usuarios online</td></tr>';
 
-      // 4. Tabla Resumen Tráfico
       const resumen = [
-        { label: 'Hoy', v: data.summary.today },
-        { label: 'Ayer', v: data.summary.yesterday },
-        { label: 'Esta Semana', v: data.summary.thisWeek },
-        { label: 'Este Mes', v: data.summary.thisMonth },
-        { label: 'Total Histórico', v: data.summary.total },
+        { l: 'HOY', v: data.summary.today },
+        { l: 'AYER', v: data.summary.yesterday },
+        { l: 'SEMANA', v: data.summary.thisWeek },
+        { l: 'MES', v: data.summary.thisMonth },
+        { l: 'TOTAL', v: data.summary.total }
       ];
+      document.getElementById('summaryTraffic').innerHTML = resumen.map(r => `
+        <tr>
+          <td class="fw-bold text-muted">${r.l}</td>
+          <td class="text-center fw-bold">${(r.v.visitors || 0).toLocaleString()}</td>
+          <td class="text-end text-primary fw-bold">${(r.v.visits || 0).toLocaleString()}</td>
+        </tr>`).join('');
 
-      const tbody = document.getElementById('summaryTraffic');
-      tbody.innerHTML = resumen.map(r => `
-            <tr>
-                <td class="text-start fw-medium text-secondary">${r.label}</td>
-                <td class="text-center fw-bold ">${r.v.visitors ?? 0}</td>
-                <td class="text-end text-muted">${r.v.visits ?? 0}</td>
-            </tr>
-        `).join('');
-
-    } catch (error) {
-      console.error("Error cargando analíticas:", error);
+    } catch (e) {
+      console.error("Error Analítica:", e);
     }
   }
 
-  // Carga inicial y refresco automático
+  function resolverPaisesDesconocidos() {
+    fetch('/ajax/country', { method: 'POST', body: JSON.stringify({ limit: 50 }) })
+      .then(() => loadAnalytics());
+  }
+
   loadAnalytics();
   setInterval(loadAnalytics, 30000);
 </script>
-
-<script>
-  /**
-   * Resuelve países desconocidos desde el backend
-   * Endpoint: /ajax/country
-   */
-  function resolverPaisesDesconocidos(limit = 50) {
-
-    fetch('/ajax/country', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        limit: limit
-      })
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error HTTP ' + response.status);
-        }
-        return response.json();
-      })
-      .then(json => {
-        console.log('Países actualizados:', json.updated ?? 0);
-        loadAnalytics()
-      })
-      .catch(error => {
-        console.error('Error al resolver países:', error);
-      });
-  }
-</script>
-
 <?php end_block(); ?>

@@ -21,6 +21,13 @@ Para que el framework gestione correctamente el cambio de tema (Light/Dark), tie
 - **Redondeado:** ❌ `.rounded` en elementos `.card`. Las tarjetas ya tienen su radio de borde predefinido.
 - **Grupos:** ❌ `.btn-group` en columnas de acción de tablas de datos. Usa botones individuales separados para evitar colapsos visuales.
 
+- No usar `mb-4` si no `mb-3`
+- No usar `p-4` si no `p-3`
+- No usar `g-4` si no `g-3`
+- No usar `mt-4` si no `mt-3`
+- No usar `pt-4` si no `pt-3`
+- No usar `gt-4` si no `gt-3`
+
 ## 🏗️ 2. Estructura de Bloques en Vistas
 
 Cada archivo `.view.php` debe seguir esta estructura de bloques obligatoria:
