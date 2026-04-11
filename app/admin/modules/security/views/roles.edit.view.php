@@ -30,13 +30,13 @@ Editar Roles
 
 <form method="POST" autocomplete="off">
 
-  <div class="row g-4">
+  <div class="row g-3">
 
     <div class="col-12 col-md-4 col-xl-3">
       <div class="card" style="position: sticky; top: 1rem;">
 
         <div class="card-body">
-          <div class="mb-4">
+          <div class="mb-3">
             <label class="form-label text-muted small text-uppercase fw-bold">Nombre del Rol <span
                 class="text-danger">*</span></label>
             <div class="input-group">
@@ -130,11 +130,12 @@ Editar Roles
     </div>
 
     <div class="col-12">
-      <div class="bg-body rounded p-3 d-flex justify-content-end gap-2">
-        <a href="<?= admin_route("roles") ?>" class="btn btn-outline-secondary px-4">
+      <div class="bg-body p-3 border-top d-flex justify-content-end gap-2">
+        <a href="<?= admin_route("roles") ?>" class="btn btn-outline-secondary px-4 text-uppercase small fw-bold">
+          <i class="fa-solid fa-arrow-left me-2"></i>
           Cancelar
         </a>
-        <button type="submit" class="btn btn-primary px-5">
+        <button type="submit" class="btn btn-primary px-5 text-uppercase small fw-bold">
           <i class="fa-solid fa-floppy-disk me-2"></i>
           Guardar Cambios
         </button>

@@ -99,7 +99,7 @@ Editar Permiso
 
 <form method="POST" action="" autocomplete="off" class="needs-validation">
 
-  <div class="row g-4">
+  <div class="row g-3">
 
     <!-- COLUMNA IZQUIERDA: GRUPO -->
     <div class="col-12 col-md-5 col-xl-4">
@@ -116,7 +116,7 @@ Editar Permiso
         </div>
 
         <div class="card-body">
-          <div class="btn-group w-100 mb-4" role="group">
+          <div class="btn-group w-100 mb-3" role="group">
             <input type="radio" class="btn-check" name="group_mode" id="mode_existing" value="existing" checked
               onchange="toggleGroupMode()">
             <label class="btn btn-outline-secondary" for="mode_existing">Grupo Actual</label>
@@ -244,17 +244,13 @@ Editar Permiso
 
     <!-- BOTONERA -->
     <div class="col-12">
-      <div class="card bg-transparent">
-        <div class="card-body p-0">
-          <div class="d-flex justify-content-end gap-2">
-            <a href="<?= admin_route("permissions") ?>" class="btn btn-link text-decoration-none text-muted px-4">
-              <i class="fa-solid fa-arrow-left me-2"></i>Volver
-            </a>
-            <button type="submit" class="btn btn-primary px-4">
-              <i class="fa-solid fa-rotate me-2"></i>Actualizar Permiso
-            </button>
-          </div>
-        </div>
+      <div class="bg-body p-3 d-flex justify-content-end gap-2">
+        <a href="<?= admin_route("permissions") ?>" class="btn btn-outline-secondary px-4 text-uppercase small fw-bold">
+          <i class="fa-solid fa-arrow-left me-2"></i>Volver
+        </a>
+        <button type="submit" class="btn btn-primary px-4 text-uppercase small fw-bold">
+          <i class="fa-solid fa-rotate me-2"></i>Actualizar Permiso
+        </button>
       </div>
     </div>
 
