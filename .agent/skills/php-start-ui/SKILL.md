@@ -28,6 +28,8 @@ Para que el framework gestione correctamente el cambio de tema (Light/Dark), tie
 - No usar `.pt-4` si no `.pt-3`
 - No usar `.gt-4` si no `.gt-3`
 
+- No usar `.bg-body-tertiary` si no `.bg-body`
+
 - No usar `.border-0`
 - No usar `.rounded`
 
