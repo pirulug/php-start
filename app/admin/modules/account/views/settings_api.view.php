@@ -82,7 +82,7 @@ API Keys
                       <div class="input-group input-group-sm" style="max-width: 280px;">
                         <input type="text" class="form-control font-monospace x-small bg-body" value="<?= $key->api_key ?>" readonly>
                         <button class="btn btn-outline-primary" type="button" onclick="copyToClipboard('<?= $key->api_key ?>', this)" title="Copiar">
-                          <i class="fa-regular fa-copy"></i>
+                          <i class="fa fa-copy"></i>
                         </button>
                       </div>
                     </td>
@@ -130,8 +130,10 @@ API Keys
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   window.copyToClipboard = function(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-      const icon = btn.querySelector('i');
+    const icon = btn.querySelector('i');
+    
+    // Función para manejar el éxito visual
+    const showSuccess = () => {
       icon.classList.remove('fa-copy');
       icon.classList.add('fa-check');
       btn.classList.replace('btn-outline-primary', 'btn-success');
@@ -141,7 +143,29 @@ document.addEventListener('DOMContentLoaded', function() {
         icon.classList.add('fa-copy');
         btn.classList.replace('btn-success', 'btn-outline-primary');
       }, 2000);
-    });
+    };
+
+    // Intento con Clipboard API (Requiere HTTPS)
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(showSuccess);
+    } else {
+      // Fallback: Método tradicional con textarea invisible
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed"; 
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showSuccess();
+      } catch (err) {
+        console.error('No se pudo copiar el texto: ', err);
+      }
+      document.body.removeChild(textArea);
+    }
   }
 
   document.querySelectorAll('.btn-delete-key').forEach(btn => {

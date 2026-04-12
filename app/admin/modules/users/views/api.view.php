@@ -57,7 +57,7 @@
                       <div class="input-group input-group-sm" style="max-width: 300px;">
                         <input type="text" class="form-control font-monospace small" value="<?= $key->api_key ?>" readonly>
                         <button class="btn btn-outline-secondary btn-copy" type="button" data-key="<?= $key->api_key ?>">
-                          <i class="fa-regular fa-copy"></i>
+                          <i class="fa fa-copy"></i>
                         </button>
                       </div>
                     </td>
@@ -92,15 +92,36 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.btn-copy').forEach(btn => {
     btn.addEventListener('click', function() {
       const key = this.getAttribute('data-key');
-      navigator.clipboard.writeText(key).then(() => {
-        const icon = this.querySelector('i');
+      const icon = this.querySelector('i');
+
+      const showSuccess = () => {
         icon.classList.remove('fa-copy');
         icon.classList.add('fa-check', 'text-success');
         setTimeout(() => {
           icon.classList.remove('fa-check', 'text-success');
           icon.classList.add('fa-copy');
         }, 1500);
-      });
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(key).then(showSuccess);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = key;
+        textArea.style.position = "fixed"; 
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          showSuccess();
+        } catch (err) {
+          console.error('No se pudo copiar el texto: ', err);
+        }
+        document.body.removeChild(textArea);
+      }
     });
   });
 

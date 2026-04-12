@@ -75,7 +75,7 @@ Conexiones API
                       <div class="input-group input-group-sm" style="max-width: 320px;">
                         <input type="text" class="form-control font-monospace  bg-body border" value="<?= $key->api_key ?>" readonly>
                         <button class="btn btn-primary border-0" type="button" onclick="copyToClipboard('<?= $key->api_key ?>', this)" title="Copiar al portapapeles">
-                          <i class="fa-regular fa-copy"></i>
+                          <i class="fa fa-copy"></i>
                         </button>
                       </div>
                     </td>
@@ -128,16 +128,39 @@ Conexiones API
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   window.copyToClipboard = function(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-      const icon = btn.querySelector('i');
-      icon.classList.replace('fa-copy', 'fa-check');
+    const icon = btn.querySelector('i');
+    
+    const showSuccess = () => {
+      icon.classList.remove('fa-copy');
+      icon.classList.add('fa-check');
       btn.classList.replace('btn-primary', 'btn-success');
       
       setTimeout(() => {
-        icon.classList.replace('fa-check', 'fa-copy');
+        icon.classList.remove('fa-check');
+        icon.classList.add('fa-copy');
         btn.classList.replace('btn-success', 'btn-primary');
       }, 2000);
-    });
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(showSuccess);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed"; 
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showSuccess();
+      } catch (err) {
+        console.error('No se pudo copiar el texto: ', err);
+      }
+      document.body.removeChild(textArea);
+    }
   }
 
   function showConfirm(title, text, type, confirmText, callback) {

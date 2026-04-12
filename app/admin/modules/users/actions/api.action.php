@@ -28,7 +28,7 @@ $page_title = "Gestionar API Keys: " . $managed_user->user_login;
 // ACCIÓN: GENERAR O REGENERAR API KEY
 // ========================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['generate_key']) || isset($_POST['regenerate_key']))) {
-  $new_key = bin2hex(random_bytes(32)); 
+  $new_key = bin2hex(random_bytes(16)); 
 
   try {
     $connect->beginTransaction();
