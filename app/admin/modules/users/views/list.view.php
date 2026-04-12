@@ -96,6 +96,9 @@ Listar Usuarios
 
                 <td class="text-end pe-3">
 
+                  <?= ActionBtn::apiKey(admin_route("users/api", [$cipher->encrypt($user->user_id)]))
+                    ->can('users.edit') ?>
+
                   <?= ActionBtn::edit(admin_route("user/edit", [$cipher->encrypt($user->user_id)]))
                     ->can('users.edit') ?>
 

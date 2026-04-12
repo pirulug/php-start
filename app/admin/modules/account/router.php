@@ -23,3 +23,11 @@ Router::route('account/settings/password')
   ->middleware('auth_admin')
   ->permission('account.settings')
   ->register();
+
+Router::route('account/settings/api')
+  ->action(admin_action("account.settings_api"))
+  ->view(admin_view("account.settings_api"))
+  ->layout(admin_layout())
+  ->middleware('auth_admin')
+  ->permission('account.settings')
+  ->register();

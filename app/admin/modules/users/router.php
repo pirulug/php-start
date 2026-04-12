@@ -35,3 +35,11 @@ Router::route('user/delete/{id}')
   ->middleware('auth_admin')
   ->permission('users.delete')
   ->register();
+
+Router::route('users/api/{id}')
+  ->action(admin_action("users.api"))
+  ->view(admin_view("users.api"))
+  ->layout(admin_layout())
+  ->middleware('auth_admin')
+  ->permission('users.edit')
+  ->register();

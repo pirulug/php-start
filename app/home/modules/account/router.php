@@ -25,4 +25,14 @@ Router::route('account/settings/password')
   ->action(home_action("account.settings_password"))
   ->view(home_view("account.settings_password"))
   ->layout(home_layout())
-  ->register();
+  ->register();
+
+Router::route('account/settings/api')
+  ->analytic("API Keys")
+  ->middleware("auth_home")
+  ->permission("account.edit")
+  ->action(home_action("account.settings_api"))
+  ->view(home_view("account.settings_api"))
+  ->layout(home_layout())
+  ->register();
+

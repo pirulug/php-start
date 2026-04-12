@@ -110,6 +110,19 @@ class ActionBtn {
   }
 
   /**
+   * Gestionar API Keys
+   */
+  public static function apiKey(string $url): self {
+    $instance          = new self();
+    $instance->type    = 'link';
+    $instance->url     = $url;
+    $instance->classes = 'btn btn-sm btn-outline-info';
+    $instance->icon    = 'fas fa-key';
+    $instance->text    = 'API Keys';
+    return $instance;
+  }
+
+  /**
    * 6. Archivar, pausar o advertencias
    */
   public static function archive(string $url): self {

@@ -24,6 +24,11 @@ Configuración de Perfil
             <i class="fa-solid fa-shield-halved fa-fw"></i>
             <span>Seguridad</span>
           </a>
+          <a href="<?= home_route("account/settings/api") ?>" 
+             class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3 <?= strpos($_SERVER['REQUEST_URI'], 'api') !== false ? 'active' : '' ?>">
+            <i class="fa-solid fa-key fa-fw"></i>
+            <span>API Keys</span>
+          </a>
         </div>
       </div>
     </div>
