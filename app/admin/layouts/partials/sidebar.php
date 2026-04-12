@@ -6,6 +6,8 @@
       <span class="sidebar-brand-text align-middle"><?= $config->siteName() ?? APP_NAME ?></span>
     </a>
 
+    <a class="sidebar-close js-sidebar-close" href="#"><i data-feather="x"></i></a>
+
     <!-- MENÚ -->
     <ul class="sidebar-nav">
       <?php Sidebar::render(); ?>

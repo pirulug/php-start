@@ -43,7 +43,7 @@
     <?php require_once BASE_DIR . '/app/admin/layouts/partials/sidebar.menu.php'; ?>
     <?php require_once BASE_DIR . '/app/admin/layouts/partials/sidebar.php'; ?>
 
-
+    <div class="sidebar-backdrop"></div>
     <div class="main">
       <!-- NavBar-->
       <nav class="navtop">
