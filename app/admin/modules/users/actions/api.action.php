@@ -8,9 +8,9 @@ if (!$encrypted_id) {
   exit;
 }
 
-$user_id_to_manage = $cipher->decrypt($encrypted_id);
+$user_id_to_manage = $cipher->decrypt($encrypted_id); // Desciframos el ID del usuario
 
-// Obtener datos del usuario para el título y validación
+// Obtenemos los datos del usuario para el título y la validación
 $stmt_user = $connect->prepare("SELECT user_login FROM users WHERE user_id = :id");
 $stmt_user->bindParam(':id', $user_id_to_manage);
 $stmt_user->execute();
@@ -24,7 +24,9 @@ if (!$managed_user) {
 
 $page_title = "Gestionar API Keys: " . $managed_user->user_login;
 
-// ======================= ACCIÓN: GENERAR/REGENERAR LLAVE =======================
+// ========================================================
+// ACCIÓN: GENERAR O REGENERAR API KEY
+// ========================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['generate_key']) || isset($_POST['regenerate_key']))) {
   $new_key = bin2hex(random_bytes(32)); 
 
@@ -62,7 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['generate_key']) || i
   exit;
 }
 
-// ======================= ACCIÓN: ELIMINAR LLAVE =======================
+// ========================================================
+// ACCIÓN: ELIMINAR API KEY
+// ========================================================
 if (isset($_GET['delete_key'])) {
   $key_id = intval($_GET['delete_key']);
   
@@ -77,12 +81,14 @@ if (isset($_GET['delete_key'])) {
     $notifier->message("Error al eliminar API Key: " . $e->getMessage())->bootstrap()->danger()->add();
   }
 
-  $url = strtok($_SERVER['REQUEST_URI'], '?');
+  $url = strtok($_SERVER['REQUEST_URI'], '?'); // Limpiamos los parámetros de la URL
   header("Location: " . $url);
   exit;
 }
 
-// ======================= OBTENER LLAVES =======================
+// ========================================================
+// CONSULTA DE LLAVES ACTIVAS
+// ========================================================
 $stmt = $connect->prepare("SELECT * FROM user_api_keys WHERE user_id = :user_id ORDER BY api_key_created DESC");
 $stmt->bindParam(':user_id', $user_id_to_manage);
 $stmt->execute();

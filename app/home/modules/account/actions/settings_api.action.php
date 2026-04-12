@@ -3,7 +3,9 @@
 $user_id_to_manage = $_SESSION['user_id'];
 $page_title = "Mis API Keys";
 
-// ======================= ACCIÓN: GENERAR/REGENERAR NUEVA LLAVE =======================
+// ========================================================
+// ACCIÓN: GENERAR O REGENERAR API KEY
+// ========================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['generate_key']) || isset($_POST['regenerate_key']))) {
   $new_key = bin2hex(random_bytes(32)); 
 
@@ -41,7 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['generate_key']) || i
   exit;
 }
 
-// ======================= ACCIÓN: ELIMINAR LLAVE =======================
+// ========================================================
+// ACCIÓN: ELIMINAR API KEY
+// ========================================================
 if (isset($_GET['delete_key'])) {
   $key_id = intval($_GET['delete_key']);
   
@@ -56,12 +60,14 @@ if (isset($_GET['delete_key'])) {
     $notifier->message("Error al eliminar API Key: " . $e->getMessage())->bootstrap()->danger()->add();
   }
 
-  $url = strtok($_SERVER['REQUEST_URI'], '?');
+  $url = strtok($_SERVER['REQUEST_URI'], '?'); // Limpiamos la URL de parámetros GET
   header("Location: " . $url);
   exit;
 }
 
-// ======================= OBTENER LLAVES =======================
+// ========================================================
+// CONSULTA DE LLAVES ACTIVAS
+// ========================================================
 $stmt = $connect->prepare("SELECT * FROM user_api_keys WHERE user_id = :user_id ORDER BY api_key_created DESC");
 $stmt->bindParam(':user_id', $user_id_to_manage);
 $stmt->execute();
