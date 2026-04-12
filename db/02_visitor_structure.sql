@@ -24,6 +24,7 @@ CREATE TABLE visitors (
   visitor_browser VARCHAR(100) DEFAULT NULL,
   visitor_platform VARCHAR(100) DEFAULT NULL,
   visitor_device VARCHAR(50) DEFAULT NULL,
+  visitor_is_bot TINYINT(1) DEFAULT 0,
   visitor_country VARCHAR(100) DEFAULT NULL,
   visitor_region VARCHAR(100) DEFAULT NULL,
   visitor_city VARCHAR(100) DEFAULT NULL,

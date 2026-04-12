@@ -39,14 +39,10 @@ class Analytics {
     }
 
     // Cache de sesión para reducir consultas
-    $visitorId = $_SESSION['v_id'] ?? null;
     $lastTrack = $_SESSION['v_last_track'] ?? 0;
     $currentTime = time();
-
-    if (!$visitorId) {
-      $visitorId = $this->registerVisitor($ip, $userAgent, $referer, $isBot);
-      $_SESSION['v_id'] = $visitorId;
-    }
+    $visitorId = $this->registerVisitor($ip, $userAgent, $referer, $isBot);
+    $_SESSION['v_id'] = $visitorId;
 
     $pageId = $this->registerPage($pageUri, $pageTitle, $cookie);
 
@@ -63,10 +59,10 @@ class Analytics {
     $platform = $this->getPlatform($userAgent);
     $device   = $this->getDevice($userAgent);
 
-    $stmt = $this->connect->prepare("SELECT visitor_country, visitor_region, visitor_city FROM visitors WHERE visitor_ip = :ip LIMIT 1");
-    $stmt->bindParam(':ip', $ip);
-    $stmt->execute();
-    $geo = $stmt->fetch(PDO::FETCH_OBJ);
+    $stmt_geo = $this->connect->prepare("SELECT visitor_country, visitor_region, visitor_city FROM visitors WHERE visitor_ip = :ip LIMIT 1");
+    $stmt_geo->bindParam(':ip', $ip);
+    $stmt_geo->execute();
+    $geo = $stmt_geo->fetch(PDO::FETCH_OBJ);
     
     $country = ($geo && isset($geo->visitor_country)) ? $geo->visitor_country : 'Desconocido';
     $region  = ($geo && isset($geo->visitor_region))  ? $geo->visitor_region  : null;
@@ -122,8 +118,9 @@ class Analytics {
     
     $hasVisited = $stmt->fetchColumn() > 0;
     $uniqueIncrement = $hasVisited ? 0 : 1;
+    $inc_val = $uniqueIncrement;
 
-    $stmt = $this->connect->prepare("
+    $stmt_page_ins = $this->connect->prepare("
       INSERT INTO visitor_pages (
         visitor_page_uri,
         visitor_page_title,
@@ -137,25 +134,25 @@ class Analytics {
         visitor_page_title = VALUES(visitor_page_title),
         visitor_page_id = LAST_INSERT_ID(visitor_page_id)
     ");
-    $stmt->bindParam(':uri', $uri);
-    $stmt->bindParam(':title', $title);
-    $stmt->bindParam(':inc', $uniqueIncrement);
-    $stmt->bindParam(':inc2', $uniqueIncrement);
-    $stmt->execute();
+    $stmt_page_ins->bindParam(':uri', $uri);
+    $stmt_page_ins->bindParam(':title', $title);
+    $stmt_page_ins->bindParam(':inc', $inc_val);
+    $stmt_page_ins->bindParam(':inc2', $inc_val);
+    $stmt_page_ins->execute();
 
     return (int) $this->connect->lastInsertId();
   }
 
   private function registerSession(int $visitorId, string $cookie, string $pageUri): void {
-    $stmt = $this->connect->prepare("
+    $stmt_sess = $this->connect->prepare("
       SELECT *
       FROM visitor_sessions
       WHERE visitor_session_cookie = :cookie
       LIMIT 1
     ");
-    $stmt->bindParam(':cookie', $cookie);
-    $stmt->execute();
-    $session = $stmt->fetch(PDO::FETCH_OBJ);
+    $stmt_sess->bindParam(':cookie', $cookie);
+    $stmt_sess->execute();
+    $session = $stmt_sess->fetch(PDO::FETCH_OBJ);
 
     if ($session) {
       $path = $session->visitor_session_path ? json_decode($session->visitor_session_path, true) : [];
@@ -163,23 +160,23 @@ class Analytics {
       $path_json = json_encode($path);
       $session_id = $session->visitor_session_id;
 
-      $stmt = $this->connect->prepare("
+      $stmt_upd = $this->connect->prepare("
         UPDATE visitor_sessions
         SET visitor_session_path = :path,
             visitor_session_end_page = :uri,
             visitor_session_end_time = CURRENT_TIMESTAMP
         WHERE visitor_session_id = :sid
       ");
-      $stmt->bindParam(':path', $path_json);
-      $stmt->bindParam(':uri', $pageUri);
-      $stmt->bindParam(':sid', $session_id);
-      $stmt->execute();
+      $stmt_upd->bindParam(':path', $path_json);
+      $stmt_upd->bindParam(':uri', $pageUri);
+      $stmt_upd->bindParam(':sid', $session_id);
+      $stmt_upd->execute();
       return;
     }
 
     $path_init = json_encode([['uri' => $pageUri, 'time' => date('Y-m-d H:i:s')]]);
 
-    $stmt = $this->connect->prepare("
+    $stmt_ins = $this->connect->prepare("
       INSERT INTO visitor_sessions (
         visitor_session_visitor_id,
         visitor_session_cookie,
@@ -188,16 +185,16 @@ class Analytics {
         visitor_session_path
       ) VALUES (:vid, :cookie, :uri_start, :uri_end, :path)
     ");
-    $stmt->bindParam(':vid', $visitorId);
-    $stmt->bindParam(':cookie', $cookie);
-    $stmt->bindParam(':uri_start', $pageUri);
-    $stmt->bindParam(':uri_end', $pageUri);
-    $stmt->bindParam(':path', $path_init);
-    $stmt->execute();
+    $stmt_ins->bindParam(':vid', $visitorId);
+    $stmt_ins->bindParam(':cookie', $cookie);
+    $stmt_ins->bindParam(':uri_start', $pageUri);
+    $stmt_ins->bindParam(':uri_end', $pageUri);
+    $stmt_ins->bindParam(':path', $path_init);
+    $stmt_ins->execute();
   }
 
   private function updateUserOnline(int $visitorId, int $pageId, string $ip, string $referer): void {
-    $stmt = $this->connect->prepare("
+    $stmt_online = $this->connect->prepare("
       INSERT INTO visitor_useronlines (
         visitor_useronline_visitor_id,
         visitor_useronline_page_id,
@@ -212,11 +209,11 @@ class Analytics {
         visitor_useronline_last_activity = CURRENT_TIMESTAMP
     ");
 
-    $stmt->bindParam(':vid', $visitorId);
-    $stmt->bindParam(':pid', $pageId);
-    $stmt->bindParam(':ip', $ip);
-    $stmt->bindParam(':ref', $referer);
-    $stmt->execute();
+    $stmt_online->bindParam(':vid', $visitorId);
+    $stmt_online->bindParam(':pid', $pageId);
+    $stmt_online->bindParam(':ip', $ip);
+    $stmt_online->bindParam(':ref', $referer);
+    $stmt_online->execute();
 
     if (mt_rand(1, 20) === 1) {
       $this->connect->query("
