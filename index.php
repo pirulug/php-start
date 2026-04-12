@@ -137,6 +137,12 @@ if (!empty($route['analytics'])) {
 | Ejecutar middlewares
 |--------------------------------------------------------------------------
 */
+
+/*
+|--------------------------------------------------------------------------
+| Ejecutar middlewares
+|--------------------------------------------------------------------------
+*/
 foreach ($route['middlewares'] as [$middleware, $params]) {
   call_user_func(
     $middleware . '_middleware',
