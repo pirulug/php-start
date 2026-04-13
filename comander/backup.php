@@ -13,8 +13,7 @@ require_once BASE_DIR . "/config.php";
 // Cargar el núcleo del framework
 require_once BASE_DIR . "/core/bootstrap/base.php";
 
-$date = date('Y-m-d_His');
-$backup_file = BASE_DIR . "/db/backup_{$date}.sql";
+$backup_file = BASE_DIR . "/db/database.mariadb.sql";
 
 echo "\n📦 Iniciando Respaldo de Base de Datos...\n";
 echo "------------------------------------------\n";
@@ -32,37 +31,38 @@ try {
   $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
   foreach ($tables as $table) {
-    echo "💾 Procesando tabla: `$table`... ";
+    echo "💾 Procesando tabla: $table... ";
     
     // 1. Estructura della tabla
-    $stmt_create = $connect->query("SHOW CREATE TABLE `$table` ");
+    $stmt_create = $connect->query("SHOW CREATE TABLE $table ");
     $create_row = $stmt_create->fetch(PDO::FETCH_ASSOC);
     
-    fwrite($handle, "-- Estructura de la tabla `$table` --\n");
-    fwrite($handle, "DROP TABLE IF EXISTS `$table`;\n");
-    fwrite($handle, $create_row['Create Table'] . ";\n\n");
+    fwrite($handle, "-- Estructura de la tabla $table --\n");
+    fwrite($handle, "DROP TABLE IF EXISTS $table;\n");
+    fwrite($handle, str_replace('`', '', $create_row['Create Table']) . ";\n\n");
 
     // 2. Datos de la tabla
-    $stmt_data = $connect->query("SELECT * FROM `$table` ");
+    $stmt_data = $connect->query("SELECT * FROM $table ");
     $rows = $stmt_data->fetchAll(PDO::FETCH_ASSOC);
 
 
     if (count($rows) > 0) {
-      fwrite($handle, "-- Datos de la tabla `$table` --\n");
+      fwrite($handle, "-- Datos de la tabla $table --\n");
+      
+      $keys = array_keys($rows[0]);
+      $all_values = [];
       
       foreach ($rows as $row) {
-        $keys = array_keys($row);
         $values = array_values($row);
-        
         $escaped_values = array_map(function($value) use ($connect) {
           if ($value === null) return 'NULL';
           return $connect->quote($value);
         }, $values);
-
-        $sql = "INSERT INTO `$table` (`" . implode("`, `", $keys) . "`) VALUES (" . implode(", ", $escaped_values) . ");\n";
-        fwrite($handle, $sql);
+        $all_values[] = "(" . implode(", ", $escaped_values) . ")";
       }
-      fwrite($handle, "\n");
+
+      $sql = "INSERT INTO $table (" . implode(", ", $keys) . ") VALUES \n" . implode(",\n", $all_values) . ";\n\n";
+      fwrite($handle, $sql);
     }
     
     echo "✅\n";
