@@ -14,7 +14,7 @@
 
       <div class="p-4 p-md-5 rounded-4 bg-primary bg-opacity-10">
 
-        <?= $notifier->showBootstrap(); ?>
+                            <?= $notifier->showBootstrap(); ?>
 
         <form method="post" autocomplete="on">
 
@@ -67,7 +67,7 @@
       <div class="text-center mt-4">
         <!-- <p class="text-muted small">
           ¿No tienes una cuenta? <a href="#" class="text-primary fw-bold text-decoration-none">Contáctanos</a>
-        </p> -->
+    </p> -->
         <div class="mt-3">
           <a href="<?= APP_URL ?>" class="btn btn-sm btn-link text-muted text-decoration-none">
             <i class="fa-solid fa-arrow-left me-1"></i> Volver al sitio

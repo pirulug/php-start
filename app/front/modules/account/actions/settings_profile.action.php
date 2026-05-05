@@ -1,0 +1,194 @@
+<?php
+
+/**
+ * Vista de perfil del usuario.
+ */
+
+// Obtener ID
+$id_user = $_SESSION["user_id"];
+
+// Obtener user
+$query = "SELECT * FROM users WHERE user_id = :user_id";
+$stmt  = $connect->prepare($query);
+$stmt->bindParam(":user_id", $id_user);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_OBJ);
+
+// Obtener user meta
+$query = "
+  SELECT *  
+  FROM usermeta
+  WHERE usermeta.user_id = :user_id
+";
+$stmt  = $connect->prepare($query);
+$stmt->bindParam(":user_id", $user->user_id);
+$stmt->execute();
+$metadata = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+$usermeta = new stdClass();
+
+foreach ($metadata as $meta) {
+  $key   = $meta->usermeta_key;
+  $value = $meta->usermeta_value;
+
+  $usermeta->$key = $value;
+}
+
+// Formulario POST
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+  if (isset($_POST['update_profile'])) {
+
+  // Datos de usuario
+  $user_id           = clear_input($_POST['id']);
+  $user_email        = clear_input($_POST['user_email']);
+  $user_nickname     = clear_input($_POST['user_nickname']);
+  $user_display_name = clear_input($_POST['user_display_name']);
+
+  // Datos user meta
+  $usermeta_first_name       = clear_input($_POST['user_first_name']);
+  $usermeta_last_name        = clear_input($_POST['user_last_name']);
+  $usermeta_second_last_name = clear_input($_POST['user_second_last_name']);
+
+  $update = false;
+
+  // Obtener datos actuales del usuario
+  $query = "SELECT * FROM users WHERE user_id = :user_id";
+  $stmt  = $connect->prepare($query);
+  $stmt->bindParam(':user_id', $user_id);
+  $stmt->execute();
+  $current_user = $stmt->fetch(PDO::FETCH_OBJ);
+
+  // Validar email
+  if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
+      $notifier->message("El email ingresado no es válido.")
+    ->toast()
+    ->danger()
+    ->add();
+  } else {
+      // Verificar si cambió y no está duplicado
+      if ($current_user->user_email !== $user_email) {
+    $query = "SELECT COUNT(*) AS count FROM users WHERE user_email = :user_email AND user_id != :user_id";
+    $stmt  = $connect->prepare($query);
+    $stmt->bindParam(':user_email', $user_email);
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+    if ($result->count > 0) {
+          $notifier->message("El email ya está registrado.")
+      ->toast()
+      ->danger()
+      ->add();
+    } else {
+          $update = true;
+    }
+      }
+  }
+
+  // NickName
+  if (empty($user_nickname) && $user_nickname == "") {
+      $notifier->message("Por favor, introduce un alias.")
+    ->toast()
+    ->danger()
+    ->add();
+  }
+
+  // Imagen
+  if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0 && is_safe_image($_FILES['user_image'])) {
+      if (!$notifier->can()->danger()) {
+
+    $upload_path = BASE_DIR . '/uploads/user/';
+
+    $user_image = (new UploadImage())
+          ->file($_FILES['user_image'])
+          ->dir($upload_path)
+          ->convertTo("webp")
+          ->width(150)
+          ->height(150)
+          ->maxSize(5 * 1024 * 1024)
+          ->prefix('user_')
+          ->upload();
+
+    if (!$user_image['success']) {
+          $notifier
+      ->message($user_image['message'])
+      ->danger()
+      ->toast()
+      ->add();
+    } else {
+          // Eliminar imagen anterior si no es la predeterminada
+          if ($current_user->user_image && file_exists($upload_path . $current_user->user_image) && $current_user->user_image !== 'default.webp') {
+      unlink($upload_path . $current_user->user_image);
+          }
+          $user_image = $user_image['file_name'];
+          $update     = true;
+    }
+
+      } else {
+    $user_image = $current_user->user_image;
+      }
+  } else {
+      $user_image = $current_user->user_image;
+  }
+
+  // Si no hay errores, actualizar datos
+  if (!$notifier->can()->danger()) {
+
+      $query = "UPDATE users SET 
+                  user_email = :user_email,
+                  user_nickname = :user_nickname,
+                  user_display_name = :user_display_name,
+                  user_image = :user_image,
+                  user_updated = NOW()
+        WHERE user_id = :user_id";
+
+      $stmt = $connect->prepare($query);
+      $stmt->bindParam(':user_email', $user_email);
+      $stmt->bindParam(':user_nickname', $user_nickname);
+      $stmt->bindParam(':user_display_name', $user_display_name);
+      $stmt->bindParam(':user_image', $user_image);
+      $stmt->bindParam(':user_id', $user_id);
+
+      if ($stmt->execute()) {
+
+    // UPDATE USERMETA
+    $usermeta_data = [
+          'first_name'       => $usermeta_first_name,
+          'last_name'        => $usermeta_last_name,
+          'second_last_name' => $usermeta_second_last_name,
+    ];
+
+    $query_meta = "
+          INSERT INTO usermeta (user_id, usermeta_key, usermeta_value)
+          VALUES (:user_id, :key, :value)
+          ON DUPLICATE KEY UPDATE
+      usermeta_value = VALUES(usermeta_value)
+    ";
+    $stmt_meta  = $connect->prepare($query_meta);
+
+    foreach ($usermeta_data as $key => $value) {
+          $stmt_meta->bindParam(':value', $value);
+          $stmt_meta->bindParam(':user_id', $user_id);
+          $stmt_meta->bindParam(':key', $key);
+          $stmt_meta->execute();
+    }
+
+    $notifier
+          ->message("Perfil actualizado correctamente.")
+          ->success()
+          ->toast()
+          ->add();
+
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+      } else {
+    $notifier
+          ->message("Error al actualizar el perfil.")
+          ->danger()
+          ->toast()
+          ->add();
+      }
+  }
+  }
+}

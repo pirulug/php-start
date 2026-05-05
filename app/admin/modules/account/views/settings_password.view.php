@@ -1,111 +1,96 @@
-<?php start_block("title") ?>
-Seguridad - Configuración
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Seguridad y Contraseña
+<?php end_block(); ?>
 
-<div class="row g-4">
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Cuenta', 'link' => admin_route('account/profile')],
+  ['label' => 'Seguridad']
+]) ?>
+<?php end_block(); ?>
 
-  <!-- SIDEBAR -->
+<div class="row g-3">
+
+  <!-- SIDEBAR DE NAVEGACIÓN -->
   <div class="col-md-4 col-lg-3">
-    <div class="card sticky-top" style="top: 1rem; z-index: 1;">
-      <div class="card-header bg-transparent border-bottom p-3">
-        <h6 class="m-0 fw-bold text-uppercase small text-body-secondary">Ajustes</h6>
-      </div>
-      <div class="list-group list-group-flush">
-        <a href="<?= admin_route("account/settings/profile") ?>" 
-           class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3 <?= strpos($_SERVER['REQUEST_URI'], 'profile') !== false ? 'active' : '' ?>">
-          <i class="fa-solid fa-user-circle fa-fw"></i>
-          <span>Mi Perfil</span>
-        </a>
-        <a href="<?= admin_route("account/settings/password") ?>" 
-           class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3 <?= strpos($_SERVER['REQUEST_URI'], 'password') !== false ? 'active' : '' ?>">
-          <i class="fa-solid fa-shield-halved fa-fw"></i>
-          <span>Seguridad</span>
-        </a>
-      </div>
-    </div>
+    <?php require_once BASE_DIR . '/app/admin/modules/account/views/partials/sidebar.php'; ?>
   </div>
 
-  <!-- CONTENT -->
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="col-md-8 col-lg-9">
     <form action="" method="POST">
-      <div class="card border-danger-subtle mb-4 shadow-sm">
-        <div class="card-header bg-transparent border-bottom py-3">
-          <h5 class="card-title mb-0 text-danger-emphasis d-flex align-items-center">
-            <i class="fa-solid fa-shield-halved me-2"></i>Actualizar Contraseña
-          </h5>
+      <div class="card mb-3">
+        <div class="card-header d-flex align-items-center">
+          <h6 class="card-title mb-0 fw-bold text-uppercase">
+            <i class="fa-solid fa-lock me-2 text-danger"></i>Seguridad de la Cuenta
+          </h6>
         </div>
 
         <div class="card-body">
-          <div class="alert alert-light border mb-4 d-flex align-items-center" role="alert">
-            <i class="fa-solid fa-circle-info text-info me-3 fs-4"></i>
+          <div class="alert alert-info border-0 bg-info-subtle mb-3 d-flex align-items-center gap-3 p-3" role="alert">
+            <div class="bg-body p-2 rounded-3 border border-info-subtle">
+              <i class="fa-solid fa-shield-halved text-info fs-4"></i>
+            </div>
             <div>
-              <strong>Consejo de seguridad:</strong>
-              <div class="small text-muted">Asegúrate de no usar la misma contraseña en múltiples sitios.</div>
+              <strong class="d-block mb-1">Mantén tu cuenta protegida</strong>
+              <div class="small text-body-secondary">Te recomendamos usar una contraseña fuerte y única. No compartas
+                tus credenciales con nadie.</div>
             </div>
           </div>
 
-          <div class="mb-4">
-            <label class="form-label fw-semibold">Contraseña Actual</label>
+          <!-- CONTRASEÑA ACTUAL -->
+          <div class="mb-3">
+            <label for="current_password" class="form-label">Contraseña Actual</label>
             <div class="input-group">
-              <span class="input-group-text bg-body-tertiary"><i class="fa-solid fa-key text-muted"></i></span>
-              <input type="password" name="current_password" class="form-control password-field" placeholder="••••••••••••" required>
-              <button class="btn btn-outline-secondary toggle-password" type="button">
+              <input type="password" id="current_password" name="current_password" class="form-control"
+                placeholder="••••••••••••" required>
+              <button class="btn btn-outline-secondary" type="button" data-pr-toggle-password="">
                 <i class="fa-regular fa-eye"></i>
               </button>
             </div>
+            <div class="form-text small mt-2">Debes ingresar tu contraseña actual para autorizar el cambio.</div>
           </div>
 
-          <hr class="text-secondary opacity-25">
+          <hr class="my-3 opacity-10">
 
+          <!-- NUEVA CONTRASEÑA -->
           <div class="row g-3">
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Nueva Contraseña</label>
+              <label for="password" class="form-label">Nueva Contraseña</label>
               <div class="input-group">
-                <input type="password" name="password" class="form-control password-field" placeholder="Nueva contraseña" required>
-                <button class="btn btn-outline-secondary toggle-password" type="button">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Nueva contraseña"
+                  required>
+                <button class="btn btn-outline-secondary" type="button" data-pr-toggle-password="">
                   <i class="fa-regular fa-eye"></i>
                 </button>
               </div>
             </div>
             <div class="col-md-6">
-              <label class="form-label fw-semibold">Confirmar Contraseña</label>
+              <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
               <div class="input-group">
-                <input type="password" name="confirm_password" class="form-control password-field" placeholder="Repite la nueva contraseña" required>
-                <button class="btn btn-outline-secondary toggle-password" type="button">
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control"
+                  placeholder="Misma contraseña" required>
+                <button class="btn btn-outline-secondary" type="button" data-pr-toggle-password="">
                   <i class="fa-regular fa-eye"></i>
                 </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="card-footer bg-transparent border-top-0 d-flex justify-content-end py-3">
-          <button name="change_password" type="submit" class="btn btn-danger px-4">
-            <i class="fa-solid fa-check-double me-1"></i> Actualizar Contraseña
-          </button>
-        </div>
+      <!-- BOTONERA STICKY -->
+      <div class="bg-body p-3 rounded d-flex justify-content-end gap-2 sticky-bottom mt-3">
+        <a href="<?= admin_route("account/profile") ?>"
+          class="btn btn-outline-secondary px-4 text-uppercase small fw-bold">
+          <i class="fa-solid fa-arrow-left me-2"></i> Cancelar
+        </a>
+        <button name="change_password" type="submit" class="btn btn-danger px-5 text-uppercase small fw-bold">
+          <i class="fa-solid fa-floppy-disk me-2"></i> Actualizar Contraseña
+        </button>
       </div>
     </form>
   </div>
 
 </div>
-
-<script>
-  // Script para mostrar/ocultar contraseña
-  document.querySelectorAll('.toggle-password').forEach(button => {
-    button.addEventListener('click', function () {
-      const input = this.previousElementSibling;
-      const icon = this.querySelector('i');
-
-      if (input.type === "password") {
-        input.type = "text";
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      } else {
-        input.type = "password";
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-      }
-    });
-  });
-</script>

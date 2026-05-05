@@ -2,22 +2,17 @@
 <html lang="es">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <!-- Primary Meta Tags-->
-  <title><?= get_block('title', 'Admin'); ?> | PiruAdmin</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= $config->title(get_block('title')) ?></title>
 
   <!-- Favicon-->
-  <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
-
-  <!-- Css -->
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/assets/css/fontawesome.css" />
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/assets/css/piruadmin.css" />
-
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/toastifyjs/toastifyjs.css" />
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.css" />
+  <?php if ($config->favicon()): ?>
+    <link rel="shortcut icon"
+      href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon.ico'} ?>" type="image/x-icon">
+  <?php else: ?>
+    <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
+  <?php endif; ?>
 
   <script>
     (function () {
@@ -26,37 +21,23 @@
       const theme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
       document.documentElement.setAttribute('data-bs-theme', theme);
     })();
-
   </script>
 
-  <?php echo get_block('css'); ?>
+  <!-- CSS -->
+  <?= static_assets_css("piruadmin.css") ?>
+  <?= static_assets_css("fontawesome.css") ?>
+  <?= static_assets_css("bootstrapicons.css") ?>
+
+  <?= get_block('css'); ?>
 </head>
 
 <body>
-  <?php if ($config->get("loader")): ?>
-    <?php require_once BASE_DIR . '/app/admin/layouts/partials/loader.php'; ?>
-  <?php endif; ?>
+  <?= $content ?>
 
-  <div class="wrapper">
+  <!-- JS -->
+  <?= static_assets_js("piruadmin.js") ?>
 
-
-    <?php $notifier->showBootstrap() ?>
-
-    <?= $content; ?>
-
-
-  </div>
-  <!-- Dark & Ligth-->
-
-  <!-- Js -->
-  <script src="<?= APP_URL ?>/static/plugins/feathericons/feathericons.js"></script>
-  <script src="<?= APP_URL ?>/static/plugins/toastifyjs/toastifyjs.js"></script>
-  <script src="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.js"></script>
-  <script src="<?= APP_URL ?>/static/plugins/sweetalert2/sa.js"></script>
-  <script src="<?= APP_URL ?>/static/assets/js/piruadmin.js"></script>
-
-  <?php echo get_block('js'); ?>
-
+  <?= get_block('js'); ?>
 </body>
 
 </html>

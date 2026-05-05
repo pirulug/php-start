@@ -1,39 +1,32 @@
 <?php
 
-$query      = "SELECT option_key, option_value FROM options";
-$optionsRaw = $connect->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $option_updates = [
-    'site_name'        => clear_data($_POST['st_sitename']),
-    'site_description' => clear_data($_POST['st_description']),
-    'facebook'         => clear_data($_POST['st_facebook']),
-    'twitter'          => clear_data($_POST['st_twitter']),
-    'instagram'        => clear_data($_POST['st_instagram']),
-    'youtube'          => clear_data($_POST['st_youtube']),
+    'site_name'        => clear_input($_POST['st_sitename'] ?? ''),
+    'site_description' => clear_input($_POST['st_description'] ?? ''),
   ];
 
-  // Procesar keywords
-  $st_keywords = json_decode($_POST['st_keywords'], true);
-  if (is_array($st_keywords)) {
-    $keywords                        = array_map(fn($item) => $item['value'], $st_keywords);
+  // Procesar keywords (Tagify envía un JSON)
+  $st_keywords_raw  = $_POST['st_keywords'] ?? '[]';
+  $st_keywords_json = json_decode($st_keywords_raw, true);
+
+  if (is_array($st_keywords_json)) {
+    $keywords                        = array_map(fn($item) => $item['value'], $st_keywords_json);
     $option_updates['site_keywords'] = implode(',', $keywords);
+  } else {
+    // Fallback por si no es JSON (Tagify desactivado o error)
+    $option_updates['site_keywords'] = clear_input($st_keywords_raw);
   }
 
-  // Actualizar cada opción
-  foreach ($option_updates as $key => $value) {
-    $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = :key");
-    $stmt->execute([
-      ':value' => $value,
-      ':key'   => $key
-    ]);
-  }
+  // Actualizar cada opción usando patrón seguro UPSERT
+  meta_options_upsert_many($option_updates);
 
   $notifier
-    ->message('Se actualizó correctamente.')
+    ->message('Ajustes generales actualizados correctamente.')
     ->bootstrap()
     ->success()
     ->add();
-  header("Refresh:0");
+
+  header("Location: " . admin_route('settings/general'));
   exit();
 }

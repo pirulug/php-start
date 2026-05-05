@@ -2,12 +2,9 @@
 
 $id = $args['id'] ?? null;
 
+// Verificar y Descifrar ID
 if (!isset($id) || $id == "") {
-  $notifier
-    ->message("Tienes que tener un id.")
-    ->bootstrap()
-    ->danger()
-    ->add();
+  $notifier->message("Tienes que tener un id.")->danger()->bootstrap()->add();
   header("Location: " . admin_route("users"));
   exit();
 }
@@ -15,40 +12,59 @@ if (!isset($id) || $id == "") {
 $id = $cipher->decrypt($id);
 
 if (!is_numeric($id)) {
-  // $notifier->add("El id no encontrado.", "danger");
-  $notifier
-    ->message("El id no es válido.")
-    ->bootstrap()
-    ->danger()
-    ->add();
+  $notifier->message("El id no es válido.")->danger()->bootstrap()->add();
   header("Location: " . admin_route("users"));
   exit();
 }
 
-$query = "SELECT * FROM users WHERE user_id = $id";
+// Consulta Segura (Preparada)
+$query = "SELECT user_id, user_image FROM users WHERE user_id = :id";
 $stmt  = $connect->prepare($query);
+$stmt->bindParam(':id', $id, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-
 if (empty($user)) {
-  // $notifier->add("Usuario no encontrado.", "danger");
-  $notifier
-    ->message("Usuario no encontrado.")
-    ->bootstrap()
-    ->danger()
-    ->add();
+  $notifier->message("Usuario no encontrado.")->danger()->bootstrap()->add();
   header("Location: " . admin_route("users"));
   exit();
 }
 
-$statement = $connect->prepare('DELETE FROM users WHERE user_id = :id');
-$statement->execute(array('id' => $id));
+// Borrado físico de imagen 
+if ($user->user_image && $user->user_image !== 'default.webp') {
+  $upload_path = BASE_DIR . '/storage/uploads/user/';
+  $file_path   = $upload_path . $user->user_image;
 
-$notifier
-  ->message("Usuario eliminado correctamente.")
-  ->bootstrap()
-  ->success()
-  ->add();
-header('Location: ' . $_SERVER['HTTP_REFERER']);
+  if (file_exists($file_path)) {
+    unlink($file_path);
+  }
+}
+
+// Eliminación Segura (Usermeta primero, luego Usuario)
+try {
+  $connect->beginTransaction();
+
+  // 1. Borrar metadatos
+  $stmt_meta = $connect->prepare('DELETE FROM usermeta WHERE user_id = :id');
+  $stmt_meta->bindParam(':id', $id, PDO::PARAM_INT);
+  $stmt_meta->execute();
+
+  // 2. Borrar usuario
+  $statement = $connect->prepare('DELETE FROM users WHERE user_id = :id');
+  $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
+  if ($statement->execute()) {
+    $connect->commit();
+    $notifier->message("Usuario y sus datos eliminados correctamente.")->success()->bootstrap()->add();
+  } else {
+    $connect->rollBack();
+    $notifier->message("Error al eliminar el usuario.")->danger()->bootstrap()->add();
+  }
+} catch (Exception $e) {
+  if ($connect->inTransaction())
+    $connect->rollBack();
+  $notifier->message("Error en el proceso de eliminación: " . $e->getMessage())->danger()->bootstrap()->add();
+}
+
+header('Location: ' . admin_route("users"));
 exit();

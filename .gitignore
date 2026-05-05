@@ -16,3 +16,9 @@ deploy/config.py
 __pycache__
 
 tmp
+
+scratch
+
+.old
+
+*.backup.sql

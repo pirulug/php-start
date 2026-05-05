@@ -32,4 +32,4 @@ $log->info("Usuario ha cerrado sesión")
 
 // 5. Redirigir al login
 header("Location: " . admin_route("login"));
-exit;
+exit();

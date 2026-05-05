@@ -1,187 +1,153 @@
 <?php
 
-if (file_exists(__DIR__ . '/MAINTENANCE')) {
-  http_response_code(503);
-  header('Retry-After: 300'); // 5 minutos
-  exit('Página en mantenimiento. Volvemos en breve.');
+// PHP-Start
+
+// VERSION CHECK
+if (version_compare(PHP_VERSION, '8.4.0', '<')) {
+  http_response_code(500);
+  exit("Error: Su versión de PHP (" . PHP_VERSION . ") no es compatible con este sistema. Se requiere PHP 8.4 o superior.");
 }
 
-define('APP_START', microtime(true));
-define('BASE_DIR', __DIR__);
+// Initial setup
+const BASE_DIR = __DIR__;
 
+// Cargar las configuraciones
 require_once BASE_DIR . "/config.php";
-require_once BASE_DIR . "/core/config/path.config.php";
-require_once BASE_DIR . "/core/config/security.config.php";
+require_once BASE_DIR . "/core/configs/cache.config.php";
+require_once BASE_DIR . "/core/configs/path.config.php";
+require_once BASE_DIR . "/core/configs/security.config.php";
+require_once BASE_DIR . "/core/configs/app.config.php";
 
+// Session Management
 if (session_status() === PHP_SESSION_NONE) {
-  session_name(COOKIE_PREFIX . 'session');
   session_start();
 }
 
-/*
-|--------------------------------------------------------------------------
-| Obtener URL limpia
-|--------------------------------------------------------------------------
-*/
-$url          = isset($_GET['url']) ? trim($_GET['url'], '/') : '/';
-$requestedUrl = trim($_GET['url'] ?? '', '/');
+// URL CLEANING
+$requested_url = trim($_GET["url"] ?? "", "/");
+$requested_url = $requested_url ?: "/";
 
-/*
-|--------------------------------------------------------------------------
-| Detectar contexto
-|--------------------------------------------------------------------------
-*/
-$isAdmin = str_starts_with($requestedUrl, PATH_ADMIN);
-$isApi   = str_starts_with($requestedUrl, PATH_API);
-$isAjax  = str_starts_with($requestedUrl, PATH_AJAX);
+// CONTEXT DETECTION
+$url_parts    = explode('/', $requested_url);
+$first_part   = $url_parts[0] ?? '';
+$is_ctx_admin = ($first_part === PATH_ADMIN);
+$is_ctx_api   = ($first_part === PATH_API);
 
-/*
-|--------------------------------------------------------------------------
-| Cargar bootstrap según contexto
-|--------------------------------------------------------------------------
-*/
-if ($isAdmin) {
-  require_once BASE_DIR . "/core/bootstrap/admin.php";
-} elseif ($isApi) {
-  require_once BASE_DIR . "/core/bootstrap/api.php";
-} elseif ($isAjax) {
-  require_once BASE_DIR . "/core/bootstrap/ajax.php";
-} else {
-  require_once BASE_DIR . "/core/bootstrap/home.php";
+// BOOTSTRAP LOADING
+require_once BASE_DIR . "/core/bootstraps/main.bootstrap.php";
+
+// --------------------------------------------------------------------------
+// MODULAR PROTECTION (ENABLE/DISABLE MODULES)
+// --------------------------------------------------------------------------
+
+// Bloqueo de API si está desactivada
+if ($is_ctx_api && !has_api()) {
+  http_response_code(404);
+  header('Content-Type: application/json; charset=utf-8');
+  exit(json_encode([
+    'status'  => 404,
+    'success' => false,
+    'code'    => 'API_DISABLED',
+    'message' => 'La API se encuentra deshabilitada en este proyecto.'
+  ]));
 }
 
-/*
-|--------------------------------------------------------------------------
-| Resolver ruta
-|--------------------------------------------------------------------------
-*/
-$route = Router::resolve($url);
-$args  = $route['params'] ?? [];
+// Bloqueo de Frontend si está desactivado (Redirigir al Admin Login)
+if (!$is_ctx_admin && !$is_ctx_api && !has_front()) {
+  header("Location: " . admin_route("login"));
+  exit();
+}
 
-/*
-|--------------------------------------------------------------------------
-| Ruta no encontrada
-|--------------------------------------------------------------------------
-*/
+if ($is_ctx_admin) {
+  require_once BASE_DIR . "/core/bootstraps/admin.bootstrap.php";
+} elseif ($is_ctx_api) {
+  require_once BASE_DIR . "/core/bootstraps/api.bootstrap.php";
+} else {
+  require_once BASE_DIR . "/core/bootstraps/front.bootstrap.php";
+}
+
+// Cargar rutas
+if ($is_ctx_admin) {
+  load_routes_admin();
+} elseif ($is_ctx_api) {
+  load_routes_api();
+} else {
+  load_routes_front();
+}
+
+// ROUTE RESOLUTION
+$route = Router::resolve($requested_url);
+$args  = $route["params"] ?? [];
+
+// echo "<hr>";
+// echo "<pre>";
+// print_r(Router::getRoutes());
+// echo "</pre>";
+// echo "<hr>";
+// var_dump($route);
+
+// ERROR 404
 if (!$route) {
-
   http_response_code(404);
 
-  // 1. RECURSOS ESTÁTICOS (Imágenes, CSS, JS, etc.)
+  // Fallback para archivos estáticos faltantes (Evita bucles pesados)
   $staticExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'ico', 'css', 'js', 'woff', 'woff2', 'ttf', 'mp4', 'pdf'];
-  $extension        = strtolower(pathinfo($requestedUrl, PATHINFO_EXTENSION));
+  $extension        = strtolower(pathinfo($requested_url, PATHINFO_EXTENSION));
 
   if (in_array($extension, $staticExtensions)) {
-    exit;
+    exit();
   }
 
-  // 2. API / AJAX → JSON
-  if ($isApi || $isAjax) {
+  if ($is_ctx_api) {
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode([
+    exit(json_encode([
       'status'  => 404,
       'success' => false,
       'code'    => 'NOT_FOUND',
       'message' => 'Recurso no encontrado',
-      'path'    => '/' . $requestedUrl
-    ]);
-    exit;
+      'path'    => '/' . $requested_url
+    ]));
+  } elseif ($is_ctx_admin) {
+    $route = Router::route('404')
+      ->setContext(CTX_ADMIN)
+      ->action('errors@404')
+      ->view('errors@404')
+      ->layout('error')
+      ->getRoute();
+  } else {
+    $route = Router::route('404')
+      ->setContext(CTX_FRONT)
+      ->action('errors@404')
+      ->view('errors@404')
+      ->layout('error')
+      ->getRoute();
   }
-
-  // 3. ADMIN → Vista de error
-  if ($isAdmin) {
-    require_once admin_action('errors.404');
-    ob_start();
-    require_once admin_view('errors.404');
-    $content = ob_get_clean();
-    require_once admin_layout('error');
-    exit;
-  }
-
-  // 4. FRONT
-  require_once home_action('errors.404');
-  ob_start();
-  require_once home_view('errors.404');
-  $content = ob_get_clean();
-  require_once home_layout(); // Por defecto usa 'main'
-  exit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Analytics
-|--------------------------------------------------------------------------
-*/
-if (!empty($route['analytics'])) {
+// --------------------------------------------------------------------------
+// EJECUCIÓN DE LA RUTA
+// --------------------------------------------------------------------------
 
-  // Obtener IP real del cliente de forma segura (sin spoofing)
-  function get_api() {
-    return $_SERVER['REMOTE_ADDR'] ?? null;
-  }
-
-  $pageTitle = $route['analytics']['title'];
-  $pageUri   = $route['analytics']['uri']
-    ?? ($_SERVER['REQUEST_URI'] ?? '/');
-
-  $ip = get_api() ?? "0.0.0.0";
-
-  $log->info("Ip del cliente")
-    ->file("analytics")
-    ->with("Page Title", $pageTitle)
-    ->with("Page URL", $pageUri)
-    ->with("IP", $ip)
-    ->write();
-
-  $analytics = (new Analytics($connect))
-    ->geoApiUrl('https://ipapi.pirulug.pw/api/v1/{ip}');
-
-  $analytics->trackVisit($pageTitle, $pageUri, $ip);
-}
-
-/*
-|--------------------------------------------------------------------------
-| Ejecutar middlewares
-|--------------------------------------------------------------------------
-*/
+// MIDDLEWARES (Por implementar sistema de carga)
 foreach ($route['middlewares'] as [$middleware, $params]) {
-  call_user_func(
-    $middleware . '_middleware',
-    $route,
-    $params
-  );
+  call_user_func($middleware . '_middleware', $route, $params);
 }
 
-/*
-|--------------------------------------------------------------------------
-| Ejecutar action
-|--------------------------------------------------------------------------
-*/
+// ACTION EXECUTION
 if (!empty($route['action'])) {
-
-  if ($isApi || $isAjax) {
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-    header('Content-Type: application/json; charset=utf-8');
-  }
-
   require_once $route['action'];
 }
 
-/*
-|--------------------------------------------------------------------------
-| Renderizar vista + layout
-|--------------------------------------------------------------------------
-*/
-if (!empty($route['view']) && !empty($route['layout'])) {
-
+// VIEW EXECUTION
+if (!empty($route['view'])) {
   ob_start();
   require_once $route['view'];
   $content = ob_get_clean();
 
-  require_once $route['layout'];
+  // LAYOUT EXECUTION
+  if (!empty($route['layout'])) {
+    require_once $route['layout'];
+  } else {
+    echo $content;
+  }
 }
-
-$log->info(round((microtime(true) - APP_START) * 1000, 2) . ' ms')
-  ->file("index")
-  ->write();

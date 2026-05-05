@@ -2,34 +2,22 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $smtp_updates = [
-    'smtp_host'       => clear_data($_POST['st_smtphost']),
-    'smtp_email'      => clear_data($_POST['st_smtpemail']),
-    'smtp_password'   => clear_data($_POST['st_smtppassword']),
-    'smtp_port'       => clear_data($_POST['st_smtpport']),
-    'smtp_encryption' => clear_data($_POST['st_smtpencrypt']),
+    'smtp_host'       => clear_input($_POST['st_smtphost'] ?? ''),
+    'smtp_email'      => clear_input($_POST['st_smtpemail'] ?? ''),
+    'smtp_password'   => clear_input($_POST['st_smtppassword'] ?? ''),
+    'smtp_port'       => clear_input($_POST['st_smtpport'] ?? ''),
+    'smtp_encryption' => clear_input($_POST['st_smtpencrypt'] ?? ''),
   ];
 
-  foreach ($smtp_updates as $key => $value) {
-    $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = :key");
-    $stmt->execute([
-      ':value' => $value,
-      ':key'   => $key
-    ]);
-  }
+  // Guardar usando el helper del dominio (Masivo)
+  meta_options_upsert_many($smtp_updates);
 
   $notifier
-    ->message("Se actualizó de manera correcta")
+    ->message("Configuración SMTP actualizada.")
     ->bootstrap()
     ->success()
     ->add();
+
   header("Refresh:0");
   exit();
 }
-
-// Obtener SMTP config de options
-$query = "SELECT option_key, option_value FROM options 
-          WHERE option_key IN (
-            'smtp_host', 'smtp_email', 'smtp_password', 'smtp_port', 'smtp_encryption'
-          )";
-
-$optionsRaw = $connect->query($query)->fetchAll(PDO::FETCH_KEY_PAIR);

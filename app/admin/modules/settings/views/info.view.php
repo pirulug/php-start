@@ -1,11 +1,18 @@
-<?php start_block("title") ?>
-Información del sistema
-<?php end_block() ?>
+<?php start_block('title'); ?>
+Información del Sistema
+<?php end_block(); ?>
 
-<div class="row g-3 mb-4">
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
+  ['label' => 'Información']
+]) ?>
+<?php end_block(); ?>
+
+<div class="row g-3 mb-3">
   <div class="col-md-3">
-    <div
-      class="card h-100 border-0  border-start border-4 <?php echo $isPhpVersionOk ? 'border-success' : 'border-danger'; ?>">
+    <div class="card h-100 border-start border-4 <?php echo $isPhpVersionOk ? 'border-success' : 'border-danger'; ?>">
       <div class="card-body">
         <div class="text-muted text-uppercase small fw-bold mb-1">Versión PHP</div>
         <div class="h4 mb-0"><?php echo $currentPhpVersion; ?></div>
@@ -18,8 +25,7 @@ Información del sistema
   </div>
 
   <div class="col-md-3">
-    <div
-      class="card h-100 border-0  border-start border-4 <?php echo $isDbVersionOk ? 'border-primary' : 'border-warning'; ?>">
+    <div class="card h-100 border-start border-4 <?php echo $isDbVersionOk ? 'border-primary' : 'border-warning'; ?>">
       <div class="card-body">
         <div class="text-muted text-uppercase small fw-bold mb-1">Base de Datos</div>
         <div class="h4 mb-0 text-truncate" title="<?php echo $dbType; ?>"><?php echo strtok($dbType, ' '); ?></div>
@@ -29,8 +35,7 @@ Información del sistema
   </div>
 
   <div class="col-md-3">
-    <div
-      class="card h-100 border-0  border-start border-4 <?php echo $isMemoryLimitOk ? 'border-info' : 'border-danger'; ?>">
+    <div class="card h-100 border-start border-4 <?php echo $isMemoryLimitOk ? 'border-info' : 'border-danger'; ?>">
       <div class="card-body">
         <div class="text-muted text-uppercase small fw-bold mb-1">Memoria Límite</div>
         <div class="h4 mb-0"><?php echo $memoryLimit; ?> MB</div>
@@ -40,7 +45,7 @@ Información del sistema
   </div>
 
   <div class="col-md-3">
-    <div class="card h-100 border-0 ">
+    <div class="card h-100">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-end mb-1">
           <div class="text-muted text-uppercase small fw-bold">Almacenamiento</div>
@@ -70,10 +75,10 @@ Información del sistema
   </div>
 </div>
 
-<div class="row g-4">
+<div class="row g-3">
   <div class="col-lg-6">
-    <div class="card   h-100">
-      <div class="card-header   pt-4 pb-0">
+    <div class="card h-100">
+      <div class="card-header">
         <h5 class="card-title text-primary"><i class="fa-brands fa-php me-2"></i>Configuración PHP</h5>
       </div>
       <div class="card-body">
@@ -118,8 +123,8 @@ Información del sistema
   </div>
 
   <div class="col-lg-6">
-    <div class="card   mb-4">
-      <div class="card-header   pt-4 pb-0">
+    <div class="card mb-3">
+      <div class="card-header">
         <h5 class="card-title "><i class="fa-solid fa-server me-2"></i>Detalles del Servidor</h5>
       </div>
       <div class="card-body">
@@ -151,7 +156,7 @@ Información del sistema
       </div>
     </div>
 
-    <div class="card   ">
+    <div class="card">
       <div class="card-body d-flex align-items-center">
         <div class=" p-3 rounded-circle  text-primary me-3">
           <i class="fa-brands fa-linux fa-xl"></i>

@@ -1,14 +1,12 @@
 <?php
 
 return [
-  'auth'        => true,
-  'dashboard'   => true,
-  'plugins'     => true,
-  'roles'       => true,
-  'permissions' => true,
-  'users'       => true,
-  'analytics'   => true,
-  'settings'    => true,
-  'account'     => true,
-  // 'test'        => true,
+  "auth"       => true,
+  "account"    => true,
+  "dashboard"  => true,
+  "components" => true,
+  "security"   => true,
+  "users"      => true,
+  "policies"   => true,
+  "settings"   => true,
 ];

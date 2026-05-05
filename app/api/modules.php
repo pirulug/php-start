@@ -1,5 +1,5 @@
 <?php
 
 return [
-  'users' => true,
+  'users'     => true,
 ];

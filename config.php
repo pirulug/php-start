@@ -6,6 +6,6 @@ const DB_NAME = 'php-start';
 const DB_USER = 'root';
 const DB_PASS = '';
 
-// App
+// App Defaults (Fallbacks)
 const APP_NAME = 'PHP START';
 const APP_URL = 'http://php-start.test';

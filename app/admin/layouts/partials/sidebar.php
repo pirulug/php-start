@@ -1,15 +1,17 @@
 <nav class="sidebar js-sidebar" id="sidebar">
   <div class="sidebar-content js-simplebar">
 
-    <!-- BRAND (FIJO, NO DINÁMICO) -->
-    <a class="sidebar-brand" href="/<?php echo admin_route('dashboard'); ?>">
+  <!-- BRAND (FIJO, NO DINÁMICO) -->
+  <a class="sidebar-brand" href="/<?php echo admin_route('dashboard'); ?>">
       <span class="sidebar-brand-text align-middle"><?= $config->siteName() ?? APP_NAME ?></span>
-    </a>
+  </a>
 
-    <!-- MENÚ -->
-    <ul class="sidebar-nav">
+  <a class="sidebar-close js-sidebar-close" href="#"><i data-feather="x"></i></a>
+
+  <!-- MENÚ -->
+  <ul class="sidebar-nav">
       <?php Sidebar::render(); ?>
-    </ul>
+  </ul>
 
   </div>
 </nav>

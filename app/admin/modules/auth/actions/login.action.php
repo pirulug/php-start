@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_SESSION["signin"]) && $_SESSION["signin"] === true) {
+if (is_admin()) {
   header("Location: " . admin_route("dashboard"));
   exit();
 }
@@ -24,12 +24,12 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
       SELECT u.*, um.usermeta_value AS token_hash
       FROM users u
       LEFT JOIN usermeta um
-        ON um.user_id = u.user_id
-        AND um.usermeta_key = 'remember_token'
+    ON um.user_id = u.user_id
+    AND um.usermeta_key = 'remember_token'
       WHERE u.user_id = :user_id
       AND u.user_status = 1
       LIMIT 1
-    ");
+  ");
     $stmt->execute([':user_id' => $user_id]);
 
     if (!$stmt->rowCount()) {
@@ -54,8 +54,10 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
       ->success()
       ->bootstrap()
       ->add();
-    header("Location: " . admin_route("dashboard"));
-    exit();
+    if (is_admin()) {
+      header("Location: " . admin_route("dashboard"));
+      exit();
+    }
 
   } catch (Exception $e) {
     setcookie(COOKIE_PREFIX . 'auth', '', time() - 3600, '/');
@@ -65,15 +67,16 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
 // LOGIN
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  $user_login    = trim($_POST['user-name'] ?? '');
-  $user_password = trim($_POST['user-password'] ?? '');
-  $remember_me   = isset($_POST['remember-me']);
+  $user_login_raw = $_POST['user-name'] ?? '';
+  $user_login     = clear_input($user_login_raw);
+  $user_password  = $_POST['user-password'] ?? '';
+  $remember_me    = isset($_POST['remember-me']);
 
   // =========================================================
   // ACCESS CONTROL (rate limit)
   // =========================================================
   $rate = (new LoginRateLimiter($connect))
-    ->fromPost($user_login)
+    ->fromPost($user_login_raw)
     ->resolveUser()
     ->load();
 
@@ -127,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return;
       }
 
-      if (!can_user_login($connect, $user->user_id)) {
+      if (!can_user_access_admin($connect, $user->user_id)) {
         $notifier->message("No tienes permisos para acceder al sistema.")
           ->bootstrap()
           ->danger()
@@ -149,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           INSERT INTO usermeta (user_id, usermeta_key, usermeta_value)
           VALUES (:user_id, 'remember_token', :value)
           ON DUPLICATE KEY UPDATE
-            usermeta_value = VALUES(usermeta_value)
-        ");
+      usermeta_value = VALUES(usermeta_value)
+    ");
         $stmt->execute([
           ':user_id' => $user->user_id,
           ':value'   => $tokenHash
@@ -201,11 +204,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['redirect_after_login']);
 
         header("Location: " . $redirect);
-        exit;
+        exit();
       }
 
       header("Location: " . admin_route("dashboard"));
-      exit;
+      exit();
 
     } else {
       // =========================================================

@@ -19,8 +19,8 @@ $metadata = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 $usermeta = new stdClass();
 foreach ($metadata as $meta) {
-  $key   = $meta->usermeta_key;
-  $value = $meta->usermeta_value;
+  $key            = $meta->usermeta_key;
+  $value          = $meta->usermeta_value;
   $usermeta->$key = $value;
 }
 
@@ -28,14 +28,14 @@ foreach ($metadata as $meta) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 
   $user_id           = intval($_POST['id']);
-  $user_email        = trim($_POST['user_email'] ?? '');
-  $user_nickname     = trim($_POST['user_nickname'] ?? '');
-  $user_display_name = trim($_POST['user_display_name'] ?? '');
+  $user_email        = clear_input($_POST['user_email'] ?? '');
+  $user_nickname     = clear_input($_POST['user_nickname'] ?? '');
+  $user_display_name = clear_input($_POST['user_display_name'] ?? '');
 
   // Datos user meta
-  $usermeta_first_name       = trim($_POST['user_first_name'] ?? '');
-  $usermeta_last_name        = trim($_POST['user_last_name'] ?? '');
-  $usermeta_second_last_name = trim($_POST['user_second_last_name'] ?? '');
+  $usermeta_first_name       = clear_input($_POST['user_first_name'] ?? '');
+  $usermeta_last_name        = clear_input($_POST['user_last_name'] ?? '');
+  $usermeta_second_last_name = clear_input($_POST['user_second_last_name'] ?? '');
 
   // Validar email
   if (!filter_var($user_email, FILTER_VALIDATE_EMAIL)) {
@@ -61,10 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
 
   // Imagen
   $user_image = $user->user_image;
-  if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
+  if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0 && is_safe_image($_FILES['user_image'])) {
     if (!$notifier->can()->danger()) {
       $upload_path = BASE_DIR . '/storage/uploads/user/';
-      
+
       $up_res = (new UploadImage())
         ->file($_FILES['user_image'])
         ->dir($upload_path)
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_profile'])) {
                   user_display_name = :user_display_name,
                   user_image = :user_image,
                   user_updated = NOW()
-                WHERE user_id = :user_id";
+        WHERE user_id = :user_id";
 
       $stmt = $connect->prepare($query);
       $stmt->bindParam(':user_email', $user_email);

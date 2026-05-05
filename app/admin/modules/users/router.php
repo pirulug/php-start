@@ -1,37 +1,54 @@
 <?php
 
 Router::route('users')
-  ->action(admin_action("users.list"))
-  ->view(admin_view("users.list"))
-  ->layout(admin_layout())
+  ->action('users@list')
+  ->view('users@list')
+  ->layout('main')
   ->middleware('auth_admin')
   ->permission('users.list')
   ->register();
 
 Router::route('user/new')
-  ->action(admin_action("users.new"))
-  ->view(admin_view("users.new"))
-  ->layout(admin_layout())
+  ->action('users@new')
+  ->view('users@new')
+  ->layout('main')
   ->middleware('auth_admin')
   ->permission('users.new')
   ->register();
 
 Router::route('user/edit/{id}')
-  ->action(admin_action("users.edit"))
-  ->view(admin_view("users.edit"))
-  ->layout(admin_layout())
+  ->action('users@edit')
+  ->view('users@edit')
+  ->layout('main')
   ->middleware('auth_admin')
   ->permission('users.edit')
   ->register();
 
 Router::route('user/deactivate/{id}')
-  ->action(admin_action("users.deactivate"))
+  ->action('users@deactivate')
   ->middleware('auth_admin')
   ->permission('users.deactivate')
   ->register();
 
 Router::route('user/delete/{id}')
-  ->action(admin_action("users.delete"))
+  ->action('users@delete')
   ->middleware('auth_admin')
   ->permission('users.delete')
   ->register();
+
+Router::route('users/api/{id}')
+  ->action('users@api')
+  ->view('users@api')
+  ->layout('main')
+  ->middleware('auth_admin')
+  ->permission('users.edit')
+  ->register();
+
+Router::route('user/permissions/{id}')
+  ->action('users@permissions')
+  ->view('users@permissions')
+  ->layout('main')
+  ->middleware('auth_admin')
+  ->permission('users.edit')
+  ->register();
+

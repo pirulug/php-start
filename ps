@@ -1,0 +1,62 @@
+<?php
+
+// Initial setup
+const BASE_DIR = __DIR__;
+
+// Cargar configuración de base de datos y núcleo del framework
+require_once BASE_DIR . "/config.php";
+require_once BASE_DIR . "/core/configs/cache.config.php";
+require_once BASE_DIR . "/core/configs/path.config.php";
+require_once BASE_DIR . "/core/configs/security.config.php";
+require_once BASE_DIR . "/core/bootstraps/console.bootstrap.php";
+
+// =============================================================================
+// SECCIÓN: DESPACHADOR DE COMANDOS
+// =============================================================================
+
+$command = $argv[1] ?? 'help';
+
+switch ($command) {
+  case 'migrate':
+    require_once BASE_DIR . "/core/comander/migrate.php";
+    break;
+
+  case 'reset':
+    require_once BASE_DIR . "/core/comander/reset.php";
+    break;
+
+  case 'backup':
+    require_once BASE_DIR . "/core/comander/backup.php";
+    break;
+
+  case 'modules':
+    require_once BASE_DIR . "/core/comander/modules.php";
+    break;
+
+  case 'reset-logos':
+    require_once BASE_DIR . "/core/comander/reset-logos.php";
+    break;
+
+  case 'lang':
+    require_once BASE_DIR . "/core/comander/lang.php";
+    break;
+  
+  case 'sync-permissions':
+    require_once BASE_DIR . "/core/comander/sync_permissions.php";
+    break;
+
+  default:
+    echo "\nConsola PHP-Start\n";
+    echo "--------------------------------------------------------\n";
+    echo "Uso: php ps [comando] [opciones]\n\n";
+    echo "Comandos disponibles:\n";
+    echo "  migrate           Gestiona las migraciones de la base de datos.\n";
+    echo "  reset             Gestiona resetear la cache.\n";
+    echo "  reset-logos       Restaura la identidad visual (logos/favicon) por defecto.\n";
+    echo "  backup            Genera un respaldo de la base de datos.\n";
+    echo "  modules           Genera la estructura de un nuevo módulo.\n";
+    echo "  lang              Genera/Limpia los archivos de idiomas de un módulo.\n";
+    echo "  sync-permissions  Sincroniza los permisos del código con la base de datos.\n";
+    echo "--------------------------------------------------------\n\n";
+    break;
+}

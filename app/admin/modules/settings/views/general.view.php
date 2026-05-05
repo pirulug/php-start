@@ -1,107 +1,83 @@
-<?php start_block("title"); ?>
-Información General
+<?php start_block('title'); ?>
+Ajustes Generales
+<?php end_block(); ?>
+
+<?php start_block('breadcrumb'); ?>
+<?php render_breadcrumb([
+  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
+  ['label' => 'Settings'],
+  ['label' => 'General']
+]) ?>
 <?php end_block(); ?>
 
 <?php start_block("css"); ?>
-<link rel="stylesheet" href="<?= APP_URL . "/static/plugins/tagify/tagify.css" ?>">
+<?= static_libs_css("tagify", "tagify.css") ?>
+<?php end_block(); ?>
+
+<?php start_block("js"); ?>
+<?= static_libs_js("tagify", "tagify.js") ?>
+<?= url_script_admin('settings', 'general') ?>
 <?php end_block(); ?>
 
 <form action="" method="POST" enctype="multipart/form-data">
-  <div class="card">
-    <div class="card-body">
-      <div class="row g-4">
-
-        <div class="col-lg-7 border-end-lg">
-          <h6 class="text-primary fw-bold mb-3"><i class="fa-solid fa-sliders me-2"></i>Información General</h6>
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="text-primary fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-sliders"></i>
+            Información General
+          </h6>
 
           <div class="mb-3">
-            <label class="form-label fw-semibold">Nombre del Sitio</label>
-            <input class="form-control" type="text" value="<?= $optionsRaw['site_name'] ?? '' ?>" name="st_sitename"
-              placeholder="Ej: Mi Empresa S.A.">
+            <label for="st_sitename" class="form-label">Nombre del Sitio <span class="text-danger">*</span></label>
+            <input type="text" id="st_sitename" name="st_sitename" class="form-control"
+              value="<?= htmlspecialchars($config->siteName() ?? '') ?>" placeholder="Ej: Mi Empresa S.A." required>
           </div>
 
           <div class="mb-3">
-            <label class="form-label fw-semibold">Descripción</label>
-            <textarea class="form-control" name="st_description" rows="3"
-              style="field-sizing: content; min-height: 80px;"
-              placeholder="Breve descripción para SEO..."><?= $optionsRaw['site_description'] ?? '' ?></textarea>
-            <div class="form-text">Aparecerá en los resultados de búsqueda.</div>
+            <label for="st_description" class="form-label">Descripción SEO (Meta Description)</label>
+            <textarea name="st_description" id="st_description" class="form-control" rows="3"
+              placeholder="Breve descripción para buscadores..."><?= htmlspecialchars($config->siteDescription() ?? '') ?></textarea>
+            <div class="form-text small">Este texto es el que aparece en los resultados de búsqueda de Google.</div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Palabras Clave (Keywords)</label>
-            <input class="form-control" id="tag-input" type="text" value='<?= $optionsRaw['site_keywords'] ?? "" ?>'
-              name="st_keywords" placeholder="Escribe y presiona Enter">
+          <div class="mb-0">
+            <label for="tag-input" class="form-label">Palabras Clave (Keywords)</label>
+            <input type="text" id="tag-input" name="st_keywords" class="form-control"
+              value="<?= htmlspecialchars($config->siteKeywords() ?? '') ?>" placeholder="Escribe y presiona Enter">
+            <div class="form-text small">Presiona Enter para agregar cada etiqueta.</div>
           </div>
         </div>
+      </div>
 
-        <div class="col-lg-5">
-          <h6 class="text-primary fw-bold mb-3"><i class="fa-solid fa-share-nodes me-2"></i>Redes Sociales</h6>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Facebook</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-facebook text-primary"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["facebook"] ?? "" ?>" name="st_facebook"
-                placeholder="URL o Usuario">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Twitter / X</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-x-twitter"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["twitter"] ?? "" ?>" name="st_twitter"
-                placeholder="@usuario">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Instagram</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-instagram text-danger"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["instagram"] ?? "" ?>" name="st_instagram"
-                placeholder="@usuario">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label small text-muted">Youtube</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent"><i class="fa-brands fa-youtube text-danger"></i></span>
-              <input class="form-control" type="text" value="<?= $optionsRaw["youtube"] ?? "" ?>" name="st_youtube"
-                placeholder="Canal URL">
-            </div>
-          </div>
-
-        </div>
+      <!-- Botonera Pegajosa -->
+      <div class="bg-body p-3 rounded d-flex justify-content-end gap-2 sticky-bottom mt-3">
+        <button type="submit" class="btn btn-primary px-5 text-uppercase small fw-bold">
+          <i class="fa-solid fa-floppy-disk me-2"></i>
+          Guardar Cambios
+        </button>
       </div>
     </div>
 
-    <div class="card-footer bg-transparent border-top-0 d-flex justify-content-end py-3">
-      <button class="btn btn-primary px-4" type="submit">
-        <i class="fa-solid fa-save me-1"></i> Guardar Cambios
-      </button>
+    <div class="col-lg-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="text-primary fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-circle-info"></i>
+            Ayuda
+          </h6>
+          <p class="text-body small mb-0">
+            La información configurada aquí es vital para la identidad de su sitio y su posicionamiento en buscadores.
+          </p>
+          <hr class="my-3 opacity-10">
+          <ul class="small ps-3 text-secondary mb-0">
+            <li><strong>Nombre:</strong> Aparece en la pestaña del navegador.</li>
+            <li><strong>Descripción:</strong> Debe tener entre 150 y 160 caracteres.</li>
+            <li><strong>Keywords:</strong> Ayudan a categorizar su sitio.</li>
+          </ul>
+        </div>
+      </div>
     </div>
-
   </div>
 </form>
-
-<?php start_block("js"); ?>
-<script src="<?= APP_URL . "/static/plugins/tagify/tagify.js" ?>"></script>
-<script>
-  // Inicialización de Tagify con estilos ajustados a Bootstrap
-  const input = document.getElementById('tag-input');
-  if (input) {
-    new Tagify(input, {
-      maxTags: 10,
-      dropdown: {
-        maxItems: 20,
-        classname: "tags-look",
-        enabled: 0,
-        closeOnSelect: false
-      }
-    });
-  }
-</script>
-<?php end_block(); ?>

@@ -5,18 +5,19 @@ $id_user = $_SESSION["user_id"];
 
 $query = "
   SELECT 
-    users.*,
-    roles.* 
+  users.*,
+  roles.* 
   FROM 
-    users
+  users
   INNER JOIN
-    roles
-  ON
-    users.role_id = roles.role_id
+  usermeta ON users.user_id = usermeta.user_id AND usermeta.usermeta_key = 'role_id'
+  INNER JOIN
+  roles ON usermeta.usermeta_value = roles.role_id
   WHERE 
-    user_id = :user_id
+  users.user_id = :user_id
 ";
-$stmt  = $connect->prepare($query);
+
+$stmt = $connect->prepare($query);
 $stmt->bindParam(":user_id", $id_user);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_OBJ);

@@ -26,8 +26,13 @@ if (!is_numeric($id)) {
   exit();
 }
 
-// Obtener los datos del usuario de la base de datos
-$query = "SELECT * FROM users WHERE user_id = :id";
+// Obtener los datos del usuario + su rol desde meta
+$query = "
+  SELECT u.*, um.usermeta_value as role_id 
+  FROM users u 
+  LEFT JOIN usermeta um ON um.user_id = u.user_id AND um.usermeta_key = 'role_id'
+  WHERE u.user_id = :id
+";
 $stmt  = $connect->prepare($query);
 $stmt->bindParam(':id', $id);
 $stmt->execute();
@@ -51,14 +56,13 @@ $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Obtener los datos del formulario y limpiarlos
-  $user_id       = $cipher->decrypt(clear_data($_POST['user_id']));
-  $user_login    = clear_data($_POST['user_login']);
-  $user_email    = clear_data($_POST['user_email']);
-  $role_id       = clear_data($_POST['role_id']);
-  $user_status   = clear_data($_POST['user_status']);
-  $user_password = clear_data($_POST['user_password']);
-  // $user_password_save = cleardata($_POST['user_password_save']);
+  // Obtener los datos del formulario y limpiarlos (Arquitectura Action)
+  $user_id       = $cipher->decrypt(clear_input($_POST['user_id'] ?? ''));
+  $user_login    = clear_input($_POST['user_login'] ?? '');
+  $user_email    = clear_input($_POST['user_email'] ?? '');
+  $role_id       = clear_input($_POST['role_id'] ?? '');
+  $user_status   = clear_input($_POST['user_status'] ?? '');
+  $user_password = clear_input($_POST['user_password'] ?? '');
 
   // Validar el nombre de usuario (mínimo 4 caracteres)
   if (strlen($user_login) < 4) {
@@ -132,10 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       ->add();
   }
 
-  // Validar selected
-  if (!in_array($user_status, [1, 2])) {
+  // Validar estatus (0: Inactivo, 1: Activo)
+  if (!in_array($user_status, [0, 1])) {
     $notifier
-      ->message("Seleccionar estatus.")
+      ->message("Seleccionar un estatus válido.")
       ->bootstrap()
       ->danger()
       ->add();
@@ -143,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Imagen
   if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
-    if (!$notifier->can()->danger()) {
+    if (!$notifier->can()->danger() && clear_image($_FILES['user_image'])) {
 
       $upload_path = BASE_DIR . '/storage/uploads/user/';
 
@@ -183,34 +187,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (!$notifier->can()->danger()) {
     $query = "
       UPDATE 
-        users 
+    users 
       SET 
-        user_login = :user_login, 
-        user_email = :user_email, 
-        role_id = :role_id, 
-        user_status = :user_status, 
-        user_password = :user_password, 
-        user_image = :user_image, 
-        user_updated = CURRENT_TIME 
+    user_login = :user_login, 
+    user_email = :user_email, 
+    user_status = :user_status, 
+    user_password = :user_password, 
+    user_image = :user_image, 
+    user_updated = CURRENT_TIME 
       WHERE 
-        user_id = :user_id
-    ";
+    user_id = :user_id
+  ";
     $stmt  = $connect->prepare($query);
     $stmt->bindParam(':user_login', $user_login);
     $stmt->bindParam(':user_email', $user_email);
-    $stmt->bindParam(':role_id', $role_id);
     $stmt->bindParam(':user_status', $user_status);
     $stmt->bindParam(':user_password', $user_password);
     $stmt->bindParam(':user_image', $user_image);
     $stmt->bindParam(':user_id', $user_id);
-    $stmt->execute();
 
-    $notifier
-      ->message("Usuario se actualizo correctamente.")
-      ->bootstrap()
-      ->success()
-      ->add();
-    header("Location: " . $_SERVER['HTTP_REFERER']);
-    exit();
+    if ($stmt->execute()) {
+      // Actualizar ROL en usermeta
+      $stmtMeta = $connect->prepare("
+      INSERT INTO usermeta (user_id, usermeta_key, usermeta_value) 
+      VALUES (:uid, 'role_id', :rid)
+      ON DUPLICATE KEY UPDATE usermeta_value = VALUES(usermeta_value)
+    ");
+      $stmtMeta->execute([
+        ':uid' => $user_id,
+        ':rid' => $role_id
+      ]);
+
+      $notifier
+        ->message("El usuario se actualizó correctamente.")
+        ->bootstrap()
+        ->success()
+        ->add();
+      header("Location: " . admin_route("users"));
+      exit();
+    }
   }
 }

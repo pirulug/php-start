@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_password'])) {
       $stmt->execute();
 
       // Deactivate remember token
-      $sql_meta = "UPDATE usermeta SET usermeta_value = NULL WHERE user_id = :user_id AND usermeta_key = 'remember_token'";
+      $sql_meta  = "UPDATE usermeta SET usermeta_value = NULL WHERE user_id = :user_id AND usermeta_key = 'remember_token'";
       $stmt_meta = $connect->prepare($sql_meta);
       $stmt_meta->execute([':user_id' => $userId]);
 

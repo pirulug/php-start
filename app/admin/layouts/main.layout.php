@@ -2,23 +2,17 @@
 <html lang="es">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-
-  <meta name="site-url" content="<?= APP_URL ?>">
-
-  <!-- Primary Meta Tags-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $config->title(get_block('title')) ?></title>
 
   <!-- Favicon-->
-  <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
-
-  <!-- Css -->
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/assets/css/fontawesome.css" />
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/assets/css/piruadmin.css" />
-
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/toastifyjs/toastifyjs.css" />
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.css" />
+  <?php if ($config->favicon() && isset($config->favicon()->{'favicon.ico'})): ?>
+    <link rel="shortcut icon"
+      href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon.ico'} ?>" type="image/x-icon">
+  <?php else: ?>
+    <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
+  <?php endif; ?>
 
   <script>
     (function () {
@@ -27,14 +21,19 @@
       const theme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
       document.documentElement.setAttribute('data-bs-theme', theme);
     })();
-
   </script>
 
-  <?php echo get_block('css'); ?>
+  <!-- CSS -->
+  <?= static_assets_css("piruadmin.css") ?>
+  <?= static_assets_css("fontawesome.css") ?>
+
+  <?= static_libs_css("sweetalert2", "sweetalert2.css") ?>
+
+  <?= get_block('css'); ?>
 </head>
 
 <body>
-  <?php if ($config->get("loader")): ?>
+  <?php if ($config->get("loader_admin") === 'true'): ?>
     <?php require_once BASE_DIR . '/app/admin/layouts/partials/loader.php'; ?>
   <?php endif; ?>
 
@@ -43,7 +42,7 @@
     <?php require_once BASE_DIR . '/app/admin/layouts/partials/sidebar.menu.php'; ?>
     <?php require_once BASE_DIR . '/app/admin/layouts/partials/sidebar.php'; ?>
 
-
+    <div class="sidebar-backdrop"></div>
     <div class="main">
       <!-- NavBar-->
       <nav class="navtop">
@@ -57,6 +56,23 @@
                 <i class="fa fa-eye"></i>
                 Ver sitio
               </a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                <i class="fa-solid fa-globe"></i>
+                <span class="d-none d-sm-inline-block ms-1"><?= strtoupper(get_locale()) ?></span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item d-flex align-items-center gap-2" href="<?= admin_route('account/lang/es') ?>">
+                  Español
+                  <?php if (get_locale() === 'es'): ?><i class="fa-solid fa-check ms-auto text-success small"></i><?php endif; ?>
+                </a>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="<?= admin_route('account/lang/en') ?>">
+                  English
+                  <?php if (get_locale() === 'en'): ?><i class="fa-solid fa-check ms-auto text-success small"></i><?php endif; ?>
+                </a>
+              </div>
             </li>
 
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" id="bd-theme" type="button"
@@ -86,7 +102,7 @@
                 data-bs-toggle="dropdown">
                 <div class="avatar avatar-sm me-1">
                   <img class="avatar img-fluid rounded me-1"
-                    src="<?= APP_URL . "/storage/uploads/user/" . $user_session->user_image ?>"
+                    src="<?= storage_uploads($user_session->user_image, "user") ?>"
                     alt="<?= $user_session->user_name ?>" />
                 </div>
                 <span><?= $user_session->user_display_name ?></span>
@@ -116,11 +132,17 @@
       <main class="content">
         <?php if (has_block('title')): ?>
           <div class="mb-3">
-            <h1 class="h3 d-inline align-middle">
-              <?= get_block('title'); ?>
-            </h1>
+            <div class="d-flex justify-content-between align-items-center">
+              <h1 class="h3 d-inline align-middle">
+                <?= get_block('title'); ?>
+              </h1>
+              <?php if (has_block('breadcrumb')): ?>
+                <?= get_block('breadcrumb'); ?>
+              <?php endif; ?>
+            </div>
           </div>
         <?php endif; ?>
+
 
         <?php $notifier->showBootstrap() ?>
 
@@ -135,7 +157,7 @@
               <p class="mb-0">
                 <a class="text-muted" href="index.html">
                   &copy;
-                  <strong><?= $config->siteName() ?? APP_NAME ?></strong>
+                  <strong><?= $config->siteName() ?></strong>
                 </a>All Right Reserved.
               </p>
             </div>
@@ -148,37 +170,19 @@
       </footer>
     </div>
     <!-- Back to top-->
-    <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#">
+    <!-- <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#">
       <i class="fa fa-arrow-up"></i>
-    </a>
+    </a> -->
   </div>
   <!-- Dark & Ligth-->
 
-  <!-- Js -->
-  <script src="<?= APP_URL ?>/static/plugins/feathericons/feathericons.js"></script>
-  <script src="<?= APP_URL ?>/static/plugins/toastifyjs/toastifyjs.js"></script>
-  <script src="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.js"></script>
-  <script src="<?= APP_URL ?>/static/plugins/sweetalert2/sa.js"></script>
-  <script src="<?= APP_URL ?>/static/assets/js/piruadmin.js"></script>
+  <!-- JS -->
+  <?= static_assets_js("piruadmin.js") ?>
+  <?= static_libs_js("feathericons", "feathericons.js") ?>
+  <?= static_libs_js("sweetalert2", "sweetalert2.js") ?>
+  <?= static_libs_js("sweetalert2", "sa.js") ?>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const sidebar = document.getElementById('sidebar');
-      const activeItem = document.querySelector('.sidebar-item.active');
-
-      if (sidebar && activeItem) {
-        setTimeout(() => {
-          activeItem.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-          });
-        }, 100);
-      }
-    });
-  </script>
-
-  <?php echo get_block('js'); ?>
-
+  <?= get_block('js'); ?>
 </body>
 
 </html>

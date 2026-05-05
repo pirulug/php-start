@@ -7,12 +7,12 @@ $stmt->execute();
 $roles = $stmt->fetchAll(PDO::FETCH_OBJ);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Obtener los datos del formulario y limpiarlos
-  $user_login  = ($_POST['user_login']);
-  $user_email  = ($_POST['user_email']);
-  $role_id     = ($_POST['role_id']);
-  $user_status = ($_POST['user_status']);
-  $password    = ($_POST['user_password']);
+  // Obtener los datos del formulario y limpiarlos (Arquitectura Action)
+  $user_login  = clear_input($_POST['user_login'] ?? '');
+  $user_email  = clear_input($_POST['user_email'] ?? '');
+  $role_id     = clear_input($_POST['role_id'] ?? '');
+  $user_status = clear_input($_POST['user_status'] ?? '');
+  $password    = clear_input($_POST['user_password'] ?? '');
 
   // Validar el nombre de usuario
   if (strlen($user_login) < 4) {
@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $statement = $connect->prepare($query);
       $statement->bindParam(':user_login', $user_login);
       $statement->execute();
-      $result = $statement->fetch(PDO::FETCH_ASSOC);
+      $result = $statement->fetch(PDO::FETCH_OBJ);
 
-      if ($result['count'] > 0) {
+      if ($result && $result->count > 0) {
         $notifier
           ->message("El nombre de usuario ya está en uso.")
           ->danger()
@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $statement = $connect->prepare($query);
       $statement->bindParam(':user_email', $user_email);
       $statement->execute();
-      $result = $statement->fetch(PDO::FETCH_ASSOC);
+      $result = $statement->fetch(PDO::FETCH_OBJ);
 
-      if ($result['count'] > 0) {
+      if ($result && $result->count > 0) {
         $notifier
           ->message("El email ya está registrado.")
           ->danger()
@@ -95,13 +95,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   // Imagen
   if (!empty($_FILES['user_image']) && $_FILES['user_image']['size'] > 0) {
-    if (!$notifier->can()->danger()) {
+    if (!$notifier->can()->danger() && clear_image($_FILES['user_image'])) {
 
-      $upload_path = BASE_DIR . '/uploads/user/';
+      $upload_path = BASE_DIR . '/storage/uploads/user/';
 
       $user_image = (new UploadImage())
         ->file($_FILES['user_image'])
         ->dir($upload_path)
+        ->prefix('u_')
         ->convertTo("webp")
         ->width(100)
         ->height(100)
@@ -129,21 +130,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
       $query     = "INSERT INTO users 
-        (user_login, user_email, user_nickname, user_display_name, role_id, user_status, user_password, user_image, user_updated) 
-        VALUES 
-        (:user_login, :user_email, :user_nickname, :user_display_name, :role_id, :user_status, :user_password, :user_image, CURRENT_TIME)";
+    (user_login, user_email, user_nickname, user_display_name, user_status, user_password, user_image, user_updated) 
+    VALUES 
+    (:user_login, :user_email, :user_nickname, :user_display_name, :user_status, :user_password, :user_image, CURRENT_TIME)";
       $statement = $connect->prepare($query);
 
       $statement->bindParam(':user_login', $user_login);
       $statement->bindParam(':user_email', $user_email);
       $statement->bindParam(':user_nickname', $user_login);
       $statement->bindParam(':user_display_name', $user_login);
-      $statement->bindParam(':role_id', $role_id);
       $statement->bindParam(':user_status', $user_status);
       $statement->bindParam(':user_password', $hashed_password);
       $statement->bindParam(':user_image', $user_image);
 
       if ($statement->execute()) {
+        $user_id = $connect->lastInsertId();
+
+        // Guardar Rol en usermeta
+        $stmtMeta = $connect->prepare("INSERT INTO usermeta (user_id, usermeta_key, usermeta_value) VALUES (:uid, 'role_id', :rid)");
+        $stmtMeta->execute([
+          ':uid' => $user_id,
+          ':rid' => $role_id
+        ]);
 
         $notifier
           ->message("El nuevo usuario se insertó correctamente.")
@@ -169,4 +177,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   }
 }
-

@@ -10,7 +10,7 @@ if (file_exists($file_path)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $content = $_POST["content"];
+  $content = clear_textarea($_POST["content"]);
   file_put_contents($file_path, $content);
 
   $notifier
@@ -21,4 +21,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   header("Location:" . $_SERVER['REQUEST_URI']);
   exit();
 }
-
