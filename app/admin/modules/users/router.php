@@ -41,7 +41,7 @@ Router::route('users/api/{id}')
   ->view('users@api')
   ->layout('main')
   ->middleware('auth_admin')
-  ->permission('users.edit')
+  ->permission('users.api')
   ->register();
 
 Router::route('user/permissions/{id}')
@@ -49,6 +49,6 @@ Router::route('user/permissions/{id}')
   ->view('users@permissions')
   ->layout('main')
   ->middleware('auth_admin')
-  ->permission('users.edit')
+  ->permission('users.permissions')
   ->register();
 

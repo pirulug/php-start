@@ -148,10 +148,10 @@ Listar Usuarios
               <td class="text-end pe-3">
                 <div class="d-flex justify-content-end gap-1">
                   <?= ActionBtn::apiKey(admin_route("users/api", [$cipher->encrypt($user->user_id)]))
-                    ->can('users.edit') ?>
+                    ->can('users.api') ?>
 
                   <?= ActionBtn::permissions(admin_route("user/permissions", [$cipher->encrypt($user->user_id)]))
-                    ->can('users.edit') ?>
+                    ->can('users.permissions') ?>
 
                   <?= ActionBtn::edit(admin_route("user/edit", [$cipher->encrypt($user->user_id)]))
                     ->can('users.edit') ?>

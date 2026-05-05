@@ -1,5 +1,5 @@
 -- PHP-Start Database Backup
--- Fecha: 2026-05-05 10:12:10
+-- Fecha: 2026-05-05 11:07:02
 -- Base de datos: `php-start`
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -65,7 +65,7 @@ INSERT INTO `options` (`option_id`, `option_key`, `option_value`) VALUES
 ('31', 'site_social', '[{\"name\":\"Facebook\",\"url\":\"https://facebook.com\"}]'),
 ('32', 'tracking_type', 'internal'),
 ('33', 'version', '1.0'),
-('34', 'site_permissions', '{\"admin\":{\"dashboard.dashboard\":{\"name\":\"Dashboard Panel\",\"group\":\"dashboard\",\"desc\":\"Acceso al dashboard administrativo\"},\"account.settings\":{\"name\":\"Configuraci\\u00f3n Admin\",\"group\":\"account\",\"desc\":\"Configuraci\\u00f3n de cuenta en administraci\\u00f3n\"},\"roles.new\":{\"name\":\"Roles new\",\"group\":\"roles\"},\"roles.list\":{\"name\":\"Roles list\",\"group\":\"roles\"},\"roles.edit\":{\"name\":\"Roles edit\",\"group\":\"roles\"},\"roles.delete\":{\"name\":\"Roles delete\",\"group\":\"roles\"},\"permissions.list\":{\"name\":\"Permissions list\",\"group\":\"permissions\"},\"permissions.new\":{\"name\":\"Permissions new\",\"group\":\"permissions\"},\"permissions.edit\":{\"name\":\"Permissions edit\",\"group\":\"permissions\"},\"permissions.delete\":{\"name\":\"Permissions delete\",\"group\":\"permissions\"},\"settings.general\":{\"name\":\"Settings general\",\"group\":\"settings\"},\"settings.brand\":{\"name\":\"Settings brand\",\"group\":\"settings\"},\"settings.captcha\":{\"name\":\"Settings captcha\",\"group\":\"settings\"},\"settings.info\":{\"name\":\"Settings info\",\"group\":\"settings\"},\"settings.robots\":{\"name\":\"Settings robots\",\"group\":\"settings\"},\"settings.sitemap\":{\"name\":\"Settings sitemap\",\"group\":\"settings\"},\"settings.smtp\":{\"name\":\"Settings smtp\",\"group\":\"settings\"},\"settings.social\":{\"name\":\"Settings social\",\"group\":\"settings\"},\"users.list\":{\"name\":\"Users list\",\"group\":\"users\"},\"users.new\":{\"name\":\"Users new\",\"group\":\"users\"},\"users.edit\":{\"name\":\"Users edit\",\"group\":\"users\"},\"users.deactivate\":{\"name\":\"Users deactivate\",\"group\":\"users\"},\"users.delete\":{\"name\":\"Users delete\",\"group\":\"users\"},\"account.profile\":{\"name\":\"Account Profile\",\"group\":\"account\",\"desc\":\"\"},\"policies.list\":{\"name\":\"Policies list\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.new\":{\"name\":\"Policies new\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.edit\":{\"name\":\"Policies edit\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.delete\":{\"name\":\"Policies delete\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"access.admin\":{\"name\":\"Acceso al Panel Administrativo\",\"group\":\"Sistema\",\"desc\":\"Permiso ra\\u00edz (gatekeeper) para habilitar el acceso al panel administrativo.\"},\"components.captcha\":{\"name\":\"Captcha\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.sweetalert\":{\"name\":\"Sweetalert\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.gravatar\":{\"name\":\"Gravatar\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.barcode\":{\"name\":\"Barcode\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.qrcode\":{\"name\":\"Qrcode\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.fpdf\":{\"name\":\"Fpdf\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.status\":{\"name\":\"Status\",\"group\":\"Policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.formats\":{\"name\":\"Formats\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.backup\":{\"name\":\"Backup\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"}},\"front\":{\"account.profile\":{\"name\":\"Ver Perfil\",\"group\":\"account\",\"desc\":\"\"},\"account.edit\":{\"name\":\"Editar Perfil\",\"group\":\"account\",\"desc\":\"\"}}}');
+('34', 'site_permissions', '{\"admin\":{\"access.admin\":{\"name\":\"Acceso al Panel Administrativo\",\"group\":\"Sistema\",\"desc\":\"Permiso ra\\u00edz (gatekeeper) para habilitar el acceso al panel administrativo.\"},\"account.profile\":{\"name\":\"Profile\",\"group\":\"Account\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"account.settings\":{\"name\":\"Settings\",\"group\":\"Account\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.captcha\":{\"name\":\"Captcha\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.sweetalert\":{\"name\":\"Sweetalert\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.gravatar\":{\"name\":\"Gravatar\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.barcode\":{\"name\":\"Barcode\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.qrcode\":{\"name\":\"Qrcode\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.fpdf\":{\"name\":\"Fpdf\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"dashboard.dashboard\":{\"name\":\"Dashboard\",\"group\":\"Dashboard\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.list\":{\"name\":\"List\",\"group\":\"Policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.new\":{\"name\":\"New\",\"group\":\"Policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.edit\":{\"name\":\"Edit\",\"group\":\"Policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.delete\":{\"name\":\"Delete\",\"group\":\"Policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.status\":{\"name\":\"Status\",\"group\":\"Policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"permissions.list\":{\"name\":\"List\",\"group\":\"Permissions\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"permissions.new\":{\"name\":\"New\",\"group\":\"Permissions\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"permissions.edit\":{\"name\":\"Edit\",\"group\":\"Permissions\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"permissions.delete\":{\"name\":\"Delete\",\"group\":\"Permissions\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"roles.list\":{\"name\":\"List\",\"group\":\"Roles\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"roles.new\":{\"name\":\"New\",\"group\":\"Roles\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"roles.edit\":{\"name\":\"Edit\",\"group\":\"Roles\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"roles.delete\":{\"name\":\"Delete\",\"group\":\"Roles\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.formats\":{\"name\":\"Formats\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.general\":{\"name\":\"General\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.social\":{\"name\":\"Social\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.robots\":{\"name\":\"Robots\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.sitemap\":{\"name\":\"Sitemap\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.brand\":{\"name\":\"Brand\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.info\":{\"name\":\"Info\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.backup\":{\"name\":\"Backup\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.captcha\":{\"name\":\"Captcha\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.smtp\":{\"name\":\"Smtp\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"users.list\":{\"name\":\"List\",\"group\":\"Users\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"users.new\":{\"name\":\"New\",\"group\":\"Users\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"users.edit\":{\"name\":\"Edit\",\"group\":\"Users\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"users.deactivate\":{\"name\":\"Deactivate\",\"group\":\"Users\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"users.delete\":{\"name\":\"Delete\",\"group\":\"Users\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"users.api\":{\"name\":\"Api\",\"group\":\"Users\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"users.permissions\":{\"name\":\"Permissions\",\"group\":\"Users\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"}},\"front\":{\"account.profile\":{\"name\":\"Profile\",\"group\":\"Account\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"account.edit\":{\"name\":\"Edit\",\"group\":\"Account\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"}}}');
 
 -- --------------------------------------------------------
 
@@ -141,7 +141,7 @@ CREATE TABLE `rolemeta` (
 
 INSERT INTO `rolemeta` (`rolemeta_id`, `role_id`, `rolemeta_key`, `rolemeta_value`) VALUES 
 ('1', '1', 'permissions', '[\"access.admin\", \"dashboard.dashboard\", \"account.profile\", \"account.settings\", \"analytics.summary\", \"analytics.visitors\", \"analytics.views\", \"analytics.online\", \"analytics.top\", \"analytics.mapa\", \"roles.new\", \"roles.list\", \"roles.edit\", \"roles.delete\", \"permissions.list\", \"permissions.new\", \"permissions.edit\", \"permissions.delete\", \"settings.general\", \"settings.options\", \"settings.backups\", \"settings.brand\", \"settings.captcha\", \"settings.date_time\", \"settings.info\", \"settings.robots\", \"settings.sitemap\", \"settings.smtp\", \"settings.social\", \"users.list\", \"users.new\", \"users.edit\", \"users.deactivate\", \"users.delete\", \"account.profile_front\", \"account.edit_front\"]'),
-('2', '2', 'permissions', '[\"account.profile_front\", \"account.edit_front\"]');
+('2', '2', 'permissions', '[\"front:account.profile\",\"front:account.edit\"]');
 
 -- --------------------------------------------------------
 
@@ -187,18 +187,17 @@ INSERT INTO `usermeta` (`usermeta_id`, `user_id`, `usermeta_key`, `usermeta_valu
 ('2', '1', 'first_name', 'Administrador'),
 ('3', '1', 'last_name', ''),
 ('4', '1', 'second_last_name', ''),
-('5', '1', 'remember_token', ''),
+('5', '1', 'remember_token', 'da433e767178637c7723ac3eed153c6ff23607e84c8bf4f56b1e373d225c7316'),
 ('6', '1', 'api_key', '{\"key\":\"b2748dac5d04d00437ef19f5b6c7f055\",\"created_at\":\"2026-04-22 00:28:06\",\"updated_at\":\"2026-04-22 00:28:06\"}'),
 ('7', '1', 'permissions', '[]'),
-('8', '1', 'login_access', ''),
 ('9', '2', 'role_id', '2'),
 ('10', '2', 'first_name', 'Jhon'),
 ('11', '2', 'last_name', 'Doe'),
 ('12', '2', 'second_last_name', 'Plus'),
-('13', '2', 'remember_token', 'f1bd10c2c9a1f2c22b8f862892233dd775284955cb2802a6bdec0012f142835c'),
+('13', '2', 'remember_token', 'b3a04ae003280d7eac6d6a7dcbb531f2137301dcf9e3c9e234fa93754f837105'),
 ('14', '2', 'api_key', '{\"key\":\"e38fd424356ac799959ac835b25888e0\",\"created_at\":\"2026-04-22 00:28:06\",\"updated_at\":\"2026-04-22 00:28:06\"}'),
-('15', '2', 'permissions', '[]'),
-('16', '2', 'login_access', '');
+('15', '2', 'permissions', '[\"admin:access.admin\",\"admin:dashboard.dashboard\",\"admin:users.list\",\"admin:users.new\",\"admin:users.edit\"]'),
+('36', '3', 'role_id', '1');
 
 -- --------------------------------------------------------
 
@@ -227,8 +226,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_login`, `user_password`, `user_nickname`, `user_display_name`, `user_email`, `user_status`, `user_image`, `user_created`, `user_updated`, `user_deleted`, `user_last_login`) VALUES 
-('1', 'admin', '$2y$12$jaw4Tfj9sl89d3CxeyKsmOobTZooker2W/0BX.6yD2A57klOpVlwe', 'Admin', 'Admin', 'admin@gmail.com', '1', 'default.webp', '2026-04-11 22:34:01', '2026-04-20 15:26:34', NULL, '2026-04-20 15:26:34'),
-('2', 'user', '$2y$12$h9WAlbYEIDg2mqqRgwyFnub3OoI1eSvCcp.7mN8BkKWp8BIoWdAki', 'User', 'User', 'pirulug@gmail.com', '1', 'default.webp', '2026-04-11 22:34:01', '2026-04-20 22:48:30', NULL, '2026-04-20 22:48:30');
+('1', 'admin', '$2y$12$jaw4Tfj9sl89d3CxeyKsmOobTZooker2W/0BX.6yD2A57klOpVlwe', 'Admin', 'Admin', 'admin@gmail.com', '1', 'default.webp', '2026-04-11 22:34:01', '2026-05-05 10:55:07', NULL, '2026-05-05 10:55:07'),
+('2', 'user', '$2y$12$Fa0jnV.IvF5xKval728EIeD8FPG5CNR/4KoRUeHQ41QWGyvYYOWAm', 'User', 'User', 'pirulug@gmail.com', '1', 'default.webp', '2026-04-11 22:34:01', '2026-05-05 10:57:52', NULL, '2026-05-05 10:57:52'),
+('3', 'Porro aliquip eiusmo', '$2y$12$0ec.UVrE8f7fw/9tR3XwoOYBq/aHMRfbmKSUv6R7glDLcuU/cueIa', 'Porro aliquip eiusmo', 'Porro aliquip eiusmo', 'lupow@mailinator.com', '0', 'default.webp', '2026-05-05 10:59:01', '2026-05-05 10:59:01', NULL, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -311,7 +311,7 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT de la tabla `rolemeta`
 --
 ALTER TABLE `rolemeta` 
-  MODIFY `rolemeta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `rolemeta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -323,13 +323,13 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `usermeta`
 --
 ALTER TABLE `usermeta` 
-  MODIFY `usermeta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `usermeta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users` 
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 COMMIT;
 

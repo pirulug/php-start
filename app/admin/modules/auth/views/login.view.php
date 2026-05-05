@@ -14,41 +14,26 @@
 
       <div class="p-4 p-md-5 rounded-4 bg-primary bg-opacity-10">
 
-                            <?= $notifier->showBootstrap(); ?>
+        <?= $notifier->showBootstrap(); ?>
 
         <form method="post" autocomplete="on">
 
           <div class="mb-3">
-            <label class="form-label text-muted small text-uppercase fw-bold ps-1">Usuario</label>
-            <div class="input-group">
-              <span class="input-group-text border-0 bg-body ps-3 text-secondary">
-                <i class="fa-solid fa-user"></i>
-              </span>
-              <input class="form-control border-0 bg-body py-2" type="text" name="user-name" placeholder="Ej: admin"
-                required autofocus autocomplete="username">
-            </div>
+            <label class="form-label" for="user-name">Usuario</label>
+            <input class="form-control bg-body" type="text" name="user-name" id="user-name" placeholder="Ej: admin" required autofocus autocomplete="username">
           </div>
 
-          <div class="mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <label class="form-label text-muted small text-uppercase fw-bold ps-1 mb-0">Contraseña</label>
-              <!-- <a href="#" class="text-decoration-none small text-primary fw-bold" tabindex="-1">¿Olvidaste la clave?</a> -->
-            </div>
-
+          <div class="mb-3">
+            <label class="form-label" for="user-password">Contraseña</label>
             <div class="input-group">
-              <span class="input-group-text border-0 bg-body ps-3 text-secondary">
-                <i class="fa-solid fa-lock"></i>
-              </span>
-              <input class="form-control border-0 bg-body py-2" id="inputChoosePassword" type="password"
-                name="user-password" placeholder="••••••••" required autocomplete="current-password">
-
-              <button class="btn border-0 bg-body text-secondary pe-3" id="togglePassword" type="button">
-                <i class="fa-solid fa-eye-slash"></i>
+              <input class="form-control bg-body" id="user-password" type="password" name="user-password" placeholder="••••••••" required autocomplete="current-password">
+              <button class="btn btn-outline-secondary" type="button" data-pr-toggle-password="">
+                <i class="fa-regular fa-eye"></i>
               </button>
             </div>
           </div>
 
-          <div class="mb-4 form-check ms-1">
+          <div class="mb-3 form-check">
             <input class="form-check-input" type="checkbox" id="rememberMe" name="remember-me" value="true" checked>
             <label class="form-check-label text-muted small user-select-none" for="rememberMe">
               Mantener sesión iniciada
@@ -56,7 +41,7 @@
           </div>
 
           <div class="d-grid gap-2">
-            <button class="btn btn-primary py-2 fw-bold rounded-3" type="submit">
+            <button class="btn btn-primary py-2 fw-bold rounded-3 text-uppercase" type="submit">
               <i class="fa-solid fa-right-to-bracket me-2"></i> Iniciar Sesión
             </button>
           </div>
@@ -78,22 +63,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  const toggleBtn = document.getElementById("togglePassword");
-  const passwordInput = document.getElementById("inputChoosePassword");
-  const icon = toggleBtn.querySelector("i");
-
-  toggleBtn.addEventListener("click", () => {
-    // Alternar tipo
-    const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
-
-    // Alternar icono
-    icon.classList.toggle("fa-eye");
-    icon.classList.toggle("fa-eye-slash");
-
-    // Asegurar foco para seguir escribiendo
-    passwordInput.focus();
-  });
-</script>

@@ -49,13 +49,16 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
     $_SESSION['user_id'] = $user->user_id;
     $_SESSION['signin']  = true;
 
-    $notifier
-      ->message("Bienbenido {$user->user_nickname}")
-      ->success()
-      ->bootstrap()
-      ->add();
     if (is_admin()) {
+      $notifier
+        ->success("¡Bienvenido de nuevo, {$user->user_nickname}!")
+        ->toast()
+        ->add();
       header("Location: " . admin_route("dashboard"));
+      exit();
+    } else {
+      // Si el usuario no es admin, no tiene sentido dejarlo en el login de admin
+      header("Location: " . front_route("account/profile"));
       exit();
     }
 
