@@ -7,22 +7,22 @@
 try {
   // 1. Si ya hay sesión activa, no hacemos nada
   if (is_logged_in()) {
-  echo json_encode([
+    echo json_encode([
       'success' => true,
       'message' => 'Sesión ya activa',
       'data'    => ['logged' => true]
-  ]);
-  exit;
+    ]);
+    exit;
   }
 
   // 2. Si no hay cookie, fuera
   if (!isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
-  echo json_encode([
+    echo json_encode([
       'success' => false,
       'message' => 'Sin cookie de persistencia',
       'data'    => ['logged' => false]
-  ]);
-  exit;
+    ]);
+    exit;
   }
 
   // 3. Procesar cookie
@@ -30,15 +30,15 @@ try {
   $dataDecrypted = $cipher->decrypt($dataEncrypted);
 
   if (!$dataDecrypted || !str_contains($dataDecrypted, ':')) {
-  throw new Exception('Token corrupto');
+    throw new Exception('Token corrupto');
   }
 
   [$user_id, $token] = explode(':', $dataDecrypted, 2);
-  $token = trim($token);
-  $user_id = trim($user_id);
+  $token             = trim($token);
+  $user_id           = trim($user_id);
 
   if (!is_numeric($user_id) || empty($token)) {
-  throw new Exception('Estructura inválida');
+    throw new Exception('Estructura inválida');
   }
 
   // 4. Validar en BD
@@ -56,16 +56,16 @@ try {
   $stmt->execute([':user_id' => $user_id]);
 
   if ($stmt->rowCount() === 0) {
-  throw new Exception('Usuario no válido');
+    throw new Exception('Usuario no válido');
   }
 
   $user = $stmt->fetch(PDO::FETCH_OBJ);
 
   if (
-  empty($user->token_hash) ||
-  !hash_equals($user->token_hash, hash('sha256', $token))
+    empty($user->token_hash) ||
+    !hash_equals($user->token_hash, hash('sha256', $token))
   ) {
-  throw new Exception('Token inválido');
+    throw new Exception('Token inválido');
   }
 
   // 5. LOGIN EXITOSO
@@ -76,25 +76,31 @@ try {
   $stmtUpdate = $connect->prepare("UPDATE users SET user_last_login = NOW() WHERE user_id = :uid");
   $stmtUpdate->execute([':uid' => $user->user_id]);
 
+  // Notificar al humano (se mostrará tras la recarga)
+  global $notifier;
+  $notifier->success("Bienvenido de nuevo, " . $user->user_nickname)
+    ->toast()
+    ->add();
+
   echo json_encode([
-  'success' => true,
-  'message' => 'Login automático exitoso',
-  'data'    => [
+    'success' => true,
+    'message' => 'Login automático exitoso',
+    'data'    => [
       'logged'   => true,
       'user'     => $user->user_nickname,
       'redirect' => front_route("account/profile")
-  ]
+    ]
   ]);
 
 } catch (Exception $e) {
   // Limpiar cookie si es un error de formato o token inválido
   if (!str_contains($e->getMessage(), 'database') && !str_contains($e->getMessage(), 'Conexión')) {
-  setcookie(COOKIE_PREFIX . 'auth', '', time() - 3600, '/');
+    setcookie(COOKIE_PREFIX . 'auth', '', time() - 3600, '/');
   }
 
   echo json_encode([
-  'success' => false,
-  'message' => 'Error en autologin',
-  'debug'   => $e->getMessage()
+    'success' => false,
+    'message' => 'Error en autologin',
+    'debug'   => $e->getMessage()
   ]);
 }

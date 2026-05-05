@@ -8,8 +8,8 @@
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(405);
   echo json_encode([
-  'success' => false,
-  'message' => 'Método no permitido.'
+    'success' => false,
+    'message' => 'Método no permitido.'
   ], JSON_UNESCAPED_UNICODE);
   exit;
 }
@@ -30,16 +30,16 @@ $email = trim($_POST['email'] ?? '');
 // Validaciones básicas
 if ($email === '') {
   echo json_encode([
-  'success' => false,
-  'message' => 'El correo electrónico es obligatorio.'
+    'success' => false,
+    'message' => 'El correo electrónico es obligatorio.'
   ], JSON_UNESCAPED_UNICODE);
   exit;
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   echo json_encode([
-  'success' => false,
-  'message' => 'El formato del correo no es válido.'
+    'success' => false,
+    'message' => 'El formato del correo no es válido.'
   ], JSON_UNESCAPED_UNICODE);
   exit;
 }
@@ -52,35 +52,35 @@ try {
   $user = $stmt->fetch(PDO::FETCH_OBJ);
 
   if ($user) {
-  // Generar token único
-  $token  = bin2hex(random_bytes(32));
-  $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+    // Generar token único
+    $token  = bin2hex(random_bytes(32));
+    $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
-  // Guardar token en usermeta (UPSERT)
-  $meta_data = [
+    // Guardar token en usermeta (UPSERT)
+    $meta_data = [
       'reset_token'        => $token,
       'reset_token_expiry' => $expiry
-  ];
+    ];
 
-  foreach ($meta_data as $key => $value) {
+    foreach ($meta_data as $key => $value) {
       $stmt_meta = $connect->prepare("
     INSERT INTO usermeta (user_id, usermeta_key, usermeta_value)
     VALUES (:user_id, :key, :value)
     ON DUPLICATE KEY UPDATE usermeta_value = VALUES(usermeta_value)
       ");
       $stmt_meta->execute([
-    ':user_id' => $user->user_id,
-    ':key'     => $key,
-    ':value'   => $value
+        ':user_id' => $user->user_id,
+        ':key'     => $key,
+        ':value'   => $value
       ]);
-  }
+    }
 
-  // Preparar Correo
-  $reset_link = APP_URL . "/reset-password/confirm/" . $token;
-  $site_name  = $config->get("site_name");
-  
-  $subject = "Restablecer tu contraseña - {$site_name}";
-  $body = "
+    // Preparar Correo
+    $reset_link = APP_URL . "/reset-password/confirm/" . $token;
+    $site_name  = $config->get("site_name");
+
+    $subject = "Restablecer tu contraseña - {$site_name}";
+    $body    = "
       <div style='font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;'>
     <h2 style='color: #0d6efd;'>Hola, {$user->user_login}</h2>
     <p>Has solicitado restablecer tu contraseña en <strong>{$site_name}</strong>.</p>
@@ -96,23 +96,23 @@ try {
       </div>
   ";
 
-  // Enviar con componente de sistema (Utilidad Global)
-  $send = Mail::init()->send($email, $subject, $body);
+    // Enviar con componente de sistema (Utilidad Global)
+    $send = Mail::init()->send($email, $subject, $body);
 
-  if (!$send['success']) {
+    if (!$send['success']) {
       $log->error("Error enviando correo de reset: " . $send['message'])->file("auth")->write();
-      
+
       echo json_encode([
-    'success' => false,
-    'message' => 'Hubo un problema al enviar el correo. Por favor intenta más tarde.'
+        'success' => false,
+        'message' => 'Hubo un problema al enviar el correo. Por favor intenta más tarde.'
       ], JSON_UNESCAPED_UNICODE);
       exit;
-  }
+    }
   }
 
   echo json_encode([
-  'success' => true,
-  'message' => 'Si el correo está registrado, recibirás un enlace de recuperación en breve.'
+    'success' => true,
+    'message' => 'Si el correo está registrado, recibirás un enlace de recuperación en breve.'
   ], JSON_UNESCAPED_UNICODE);
 
   // Registrar el intento para el rate limit (siempre cuenta para prevenir spam)
@@ -121,7 +121,7 @@ try {
 } catch (Throwable $e) {
   http_response_code(500);
   echo json_encode([
-  'success' => false,
-  'message' => 'Error interno del servidor.'
+    'success' => false,
+    'message' => 'Error interno del servidor.'
   ], JSON_UNESCAPED_UNICODE);
 }

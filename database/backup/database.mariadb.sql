@@ -1,5 +1,5 @@
 -- PHP-Start Database Backup
--- Fecha: 2026-05-03 11:10:31
+-- Fecha: 2026-05-05 10:12:10
 -- Base de datos: `php-start`
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -65,7 +65,170 @@ INSERT INTO `options` (`option_id`, `option_key`, `option_value`) VALUES
 ('31', 'site_social', '[{\"name\":\"Facebook\",\"url\":\"https://facebook.com\"}]'),
 ('32', 'tracking_type', 'internal'),
 ('33', 'version', '1.0'),
-('34', 'site_permissions', '{\"admin\":{\"dashboard.dashboard\":{\"name\":\"Dashboard Panel\",\"group\":\"dashboard\",\"desc\":\"Acceso al dashboard administrativo\"},\"account.settings\":{\"name\":\"Configuraci\\u00f3n Admin\",\"group\":\"account\",\"desc\":\"Configuraci\\u00f3n de cuenta en administraci\\u00f3n\"},\"analytics.summary\":{\"name\":\"Analytics summary\",\"group\":\"analytics\"},\"analytics.visitors\":{\"name\":\"Analytics visitors\",\"group\":\"analytics\"},\"analytics.views\":{\"name\":\"Analytics views\",\"group\":\"analytics\"},\"analytics.online\":{\"name\":\"Analytics online\",\"group\":\"analytics\"},\"analytics.top\":{\"name\":\"Analytics top\",\"group\":\"analytics\"},\"analytics.mapa\":{\"name\":\"Analytics mapa\",\"group\":\"analytics\"},\"roles.new\":{\"name\":\"Roles new\",\"group\":\"roles\"},\"roles.list\":{\"name\":\"Roles list\",\"group\":\"roles\"},\"roles.edit\":{\"name\":\"Roles edit\",\"group\":\"roles\"},\"roles.delete\":{\"name\":\"Roles delete\",\"group\":\"roles\"},\"permissions.list\":{\"name\":\"Permissions list\",\"group\":\"permissions\"},\"permissions.new\":{\"name\":\"Permissions new\",\"group\":\"permissions\"},\"permissions.edit\":{\"name\":\"Permissions edit\",\"group\":\"permissions\"},\"permissions.delete\":{\"name\":\"Permissions delete\",\"group\":\"permissions\"},\"settings.general\":{\"name\":\"Settings general\",\"group\":\"settings\"},\"settings.options\":{\"name\":\"Settings options\",\"group\":\"settings\"},\"settings.backups\":{\"name\":\"Settings backups\",\"group\":\"settings\"},\"settings.brand\":{\"name\":\"Settings brand\",\"group\":\"settings\"},\"settings.captcha\":{\"name\":\"Settings captcha\",\"group\":\"settings\"},\"settings.date_time\":{\"name\":\"Settings date_time\",\"group\":\"settings\"},\"settings.info\":{\"name\":\"Settings info\",\"group\":\"settings\"},\"settings.robots\":{\"name\":\"Settings robots\",\"group\":\"settings\"},\"settings.sitemap\":{\"name\":\"Settings sitemap\",\"group\":\"settings\"},\"settings.smtp\":{\"name\":\"Settings smtp\",\"group\":\"settings\"},\"settings.social\":{\"name\":\"Settings social\",\"group\":\"settings\"},\"users.list\":{\"name\":\"Users list\",\"group\":\"users\"},\"users.new\":{\"name\":\"Users new\",\"group\":\"users\"},\"users.edit\":{\"name\":\"Users edit\",\"group\":\"users\"},\"users.deactivate\":{\"name\":\"Users deactivate\",\"group\":\"users\"},\"users.delete\":{\"name\":\"Users delete\",\"group\":\"users\"},\"account.profile\":{\"name\":\"Account Profile\",\"group\":\"account\",\"desc\":\"\"},\"policies.list\":{\"name\":\"Policies list\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.new\":{\"name\":\"Policies new\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.edit\":{\"name\":\"Policies edit\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.delete\":{\"name\":\"Policies delete\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"}},\"front\":{\"account.profile\":{\"name\":\"Ver Perfil\",\"group\":\"account\",\"desc\":\"\"},\"account.edit\":{\"name\":\"Editar Perfil\",\"group\":\"account\",\"desc\":\"\"}}}');
+('34', 'site_permissions', '{\"admin\":{\"dashboard.dashboard\":{\"name\":\"Dashboard Panel\",\"group\":\"dashboard\",\"desc\":\"Acceso al dashboard administrativo\"},\"account.settings\":{\"name\":\"Configuraci\\u00f3n Admin\",\"group\":\"account\",\"desc\":\"Configuraci\\u00f3n de cuenta en administraci\\u00f3n\"},\"roles.new\":{\"name\":\"Roles new\",\"group\":\"roles\"},\"roles.list\":{\"name\":\"Roles list\",\"group\":\"roles\"},\"roles.edit\":{\"name\":\"Roles edit\",\"group\":\"roles\"},\"roles.delete\":{\"name\":\"Roles delete\",\"group\":\"roles\"},\"permissions.list\":{\"name\":\"Permissions list\",\"group\":\"permissions\"},\"permissions.new\":{\"name\":\"Permissions new\",\"group\":\"permissions\"},\"permissions.edit\":{\"name\":\"Permissions edit\",\"group\":\"permissions\"},\"permissions.delete\":{\"name\":\"Permissions delete\",\"group\":\"permissions\"},\"settings.general\":{\"name\":\"Settings general\",\"group\":\"settings\"},\"settings.brand\":{\"name\":\"Settings brand\",\"group\":\"settings\"},\"settings.captcha\":{\"name\":\"Settings captcha\",\"group\":\"settings\"},\"settings.info\":{\"name\":\"Settings info\",\"group\":\"settings\"},\"settings.robots\":{\"name\":\"Settings robots\",\"group\":\"settings\"},\"settings.sitemap\":{\"name\":\"Settings sitemap\",\"group\":\"settings\"},\"settings.smtp\":{\"name\":\"Settings smtp\",\"group\":\"settings\"},\"settings.social\":{\"name\":\"Settings social\",\"group\":\"settings\"},\"users.list\":{\"name\":\"Users list\",\"group\":\"users\"},\"users.new\":{\"name\":\"Users new\",\"group\":\"users\"},\"users.edit\":{\"name\":\"Users edit\",\"group\":\"users\"},\"users.deactivate\":{\"name\":\"Users deactivate\",\"group\":\"users\"},\"users.delete\":{\"name\":\"Users delete\",\"group\":\"users\"},\"account.profile\":{\"name\":\"Account Profile\",\"group\":\"account\",\"desc\":\"\"},\"policies.list\":{\"name\":\"Policies list\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.new\":{\"name\":\"Policies new\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.edit\":{\"name\":\"Policies edit\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.delete\":{\"name\":\"Policies delete\",\"group\":\"policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"access.admin\":{\"name\":\"Acceso al Panel Administrativo\",\"group\":\"Sistema\",\"desc\":\"Permiso ra\\u00edz (gatekeeper) para habilitar el acceso al panel administrativo.\"},\"components.captcha\":{\"name\":\"Captcha\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.sweetalert\":{\"name\":\"Sweetalert\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.gravatar\":{\"name\":\"Gravatar\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.barcode\":{\"name\":\"Barcode\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.qrcode\":{\"name\":\"Qrcode\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"components.fpdf\":{\"name\":\"Fpdf\",\"group\":\"Components\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"policies.status\":{\"name\":\"Status\",\"group\":\"Policies\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.formats\":{\"name\":\"Formats\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"},\"settings.backup\":{\"name\":\"Backup\",\"group\":\"Settings\",\"desc\":\"Sincronizado autom\\u00e1ticamente desde el c\\u00f3digo\"}},\"front\":{\"account.profile\":{\"name\":\"Ver Perfil\",\"group\":\"account\",\"desc\":\"\"},\"account.edit\":{\"name\":\"Editar Perfil\",\"group\":\"account\",\"desc\":\"\"}}}');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `postmeta`
+--
+
+DROP TABLE IF EXISTS `postmeta`;
+CREATE TABLE `postmeta` (
+  `postmeta_id` bigint(20) unsigned NOT NULL ,
+  `post_id` bigint(20) unsigned NOT NULL ,
+  `postmeta_key` varchar(150) NOT NULL ,
+  `postmeta_value` longtext DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Volcado de datos para la tabla `postmeta`
+--
+
+INSERT INTO `postmeta` (`postmeta_id`, `post_id`, `postmeta_key`, `postmeta_value`) VALUES 
+('1', '1', 'type', 'faq'),
+('2', '2', 'type', 'markdown'),
+('3', '3', 'type', 'markdown');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `posts`
+--
+
+DROP TABLE IF EXISTS `posts`;
+CREATE TABLE `posts` (
+  `post_id` bigint(20) unsigned NOT NULL ,
+  `post_author` int(11) DEFAULT NULL ,
+  `post_title` varchar(255) NOT NULL ,
+  `post_slug` varchar(255) NOT NULL ,
+  `post_content` longtext DEFAULT NULL ,
+  `post_excerpt` text DEFAULT NULL ,
+  `post_type` varchar(50) NOT NULL DEFAULT 'post',
+  `post_status` tinyint(4) NOT NULL DEFAULT '1',
+  `post_created_at` datetime NOT NULL DEFAULT 'current_timestamp()',
+  `post_updated_at` datetime NOT NULL DEFAULT 'current_timestamp()'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Volcado de datos para la tabla `posts`
+--
+
+INSERT INTO `posts` (`post_id`, `post_author`, `post_title`, `post_slug`, `post_content`, `post_excerpt`, `post_type`, `post_status`, `post_created_at`, `post_updated_at`) VALUES 
+('1', '1', 'FAQs', 'faqs', '[{\"q\":\"¿Cómo funciona?\",\"a\":\"Funciona mediante el framework PHP-Start.\"},{\"q\":\"¿Es seguro?\",\"a\":\"Sí, utiliza PDO y estándares de seguridad.\"}]', NULL, 'policy', '1', '2026-04-13 10:51:11', '2026-04-13 11:13:32'),
+('2', '1', 'Política de Privacidad', 'privacy-policy', 'Contenido inicial de privacidad.', NULL, 'policy', '1', '2026-04-13 10:51:11', '2026-04-13 11:05:16'),
+('3', '1', 'Términos y Condiciones', 'terms-and-conditions', 'Contenido inicial de términos.', NULL, 'policy', '1', '2026-04-13 10:51:11', '2026-04-13 11:05:03'),
+('4', '1', 'Sobre Nosotros', 'about-us', 'Bienvenido a nuestra empresa...', NULL, 'page', '1', '2026-05-05 10:11:02', '2026-05-05 10:11:02'),
+('5', '1', 'Primer Blog Post', 'mi-primer-post', 'Este es el contenido completo del post...', 'Este es un resumen corto.', 'post', '1', '2026-05-05 10:11:02', '2026-05-05 10:11:02');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rolemeta`
+--
+
+DROP TABLE IF EXISTS `rolemeta`;
+CREATE TABLE `rolemeta` (
+  `rolemeta_id` int(11) NOT NULL ,
+  `role_id` int(11) DEFAULT NULL ,
+  `rolemeta_key` varchar(150) NOT NULL ,
+  `rolemeta_value` text DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Volcado de datos para la tabla `rolemeta`
+--
+
+INSERT INTO `rolemeta` (`rolemeta_id`, `role_id`, `rolemeta_key`, `rolemeta_value`) VALUES 
+('1', '1', 'permissions', '[\"access.admin\", \"dashboard.dashboard\", \"account.profile\", \"account.settings\", \"analytics.summary\", \"analytics.visitors\", \"analytics.views\", \"analytics.online\", \"analytics.top\", \"analytics.mapa\", \"roles.new\", \"roles.list\", \"roles.edit\", \"roles.delete\", \"permissions.list\", \"permissions.new\", \"permissions.edit\", \"permissions.delete\", \"settings.general\", \"settings.options\", \"settings.backups\", \"settings.brand\", \"settings.captcha\", \"settings.date_time\", \"settings.info\", \"settings.robots\", \"settings.sitemap\", \"settings.smtp\", \"settings.social\", \"users.list\", \"users.new\", \"users.edit\", \"users.deactivate\", \"users.delete\", \"account.profile_front\", \"account.edit_front\"]'),
+('2', '2', 'permissions', '[\"account.profile_front\", \"account.edit_front\"]');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+  `role_id` int(11) NOT NULL ,
+  `role_name` varchar(50) NOT NULL ,
+  `role_description` varchar(150) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`role_id`, `role_name`, `role_description`) VALUES 
+('1', 'Administrador', 'Usuario con acceso administrativo'),
+('2', 'Usuario', 'Usuario con acceso básico');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usermeta`
+--
+
+DROP TABLE IF EXISTS `usermeta`;
+CREATE TABLE `usermeta` (
+  `usermeta_id` int(11) NOT NULL ,
+  `user_id` int(11) DEFAULT NULL ,
+  `usermeta_key` varchar(150) NOT NULL ,
+  `usermeta_value` text DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Volcado de datos para la tabla `usermeta`
+--
+
+INSERT INTO `usermeta` (`usermeta_id`, `user_id`, `usermeta_key`, `usermeta_value`) VALUES 
+('1', '1', 'role_id', '1'),
+('2', '1', 'first_name', 'Administrador'),
+('3', '1', 'last_name', ''),
+('4', '1', 'second_last_name', ''),
+('5', '1', 'remember_token', ''),
+('6', '1', 'api_key', '{\"key\":\"b2748dac5d04d00437ef19f5b6c7f055\",\"created_at\":\"2026-04-22 00:28:06\",\"updated_at\":\"2026-04-22 00:28:06\"}'),
+('7', '1', 'permissions', '[]'),
+('8', '1', 'login_access', ''),
+('9', '2', 'role_id', '2'),
+('10', '2', 'first_name', 'Jhon'),
+('11', '2', 'last_name', 'Doe'),
+('12', '2', 'second_last_name', 'Plus'),
+('13', '2', 'remember_token', 'f1bd10c2c9a1f2c22b8f862892233dd775284955cb2802a6bdec0012f142835c'),
+('14', '2', 'api_key', '{\"key\":\"e38fd424356ac799959ac835b25888e0\",\"created_at\":\"2026-04-22 00:28:06\",\"updated_at\":\"2026-04-22 00:28:06\"}'),
+('15', '2', 'permissions', '[]'),
+('16', '2', 'login_access', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL ,
+  `user_login` varchar(255) DEFAULT NULL ,
+  `user_password` varchar(255) DEFAULT NULL ,
+  `user_nickname` varchar(100) DEFAULT NULL ,
+  `user_display_name` varchar(150) DEFAULT NULL ,
+  `user_email` varchar(255) DEFAULT NULL ,
+  `user_status` tinyint(4) NOT NULL DEFAULT '1',
+  `user_image` varchar(255) NOT NULL DEFAULT 'default.webp',
+  `user_created` datetime NOT NULL DEFAULT 'current_timestamp()',
+  `user_updated` datetime NOT NULL DEFAULT 'current_timestamp()',
+  `user_deleted` datetime DEFAULT NULL ,
+  `user_last_login` datetime DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`user_id`, `user_login`, `user_password`, `user_nickname`, `user_display_name`, `user_email`, `user_status`, `user_image`, `user_created`, `user_updated`, `user_deleted`, `user_last_login`) VALUES 
+('1', 'admin', '$2y$12$jaw4Tfj9sl89d3CxeyKsmOobTZooker2W/0BX.6yD2A57klOpVlwe', 'Admin', 'Admin', 'admin@gmail.com', '1', 'default.webp', '2026-04-11 22:34:01', '2026-04-20 15:26:34', NULL, '2026-04-20 15:26:34'),
+('2', 'user', '$2y$12$h9WAlbYEIDg2mqqRgwyFnub3OoI1eSvCcp.7mN8BkKWp8BIoWdAki', 'User', 'User', 'pirulug@gmail.com', '1', 'default.webp', '2026-04-11 22:34:01', '2026-04-20 22:48:30', NULL, '2026-04-20 22:48:30');
 
 --
 -- Índices para tablas volcadas
@@ -79,6 +242,50 @@ ALTER TABLE `options`
   ADD UNIQUE KEY `option_key` (`option_key`);
 
 --
+-- Indices de la tabla `postmeta`
+--
+ALTER TABLE `postmeta` 
+  ADD PRIMARY KEY (`postmeta_id`),
+  ADD UNIQUE KEY `uniq_post_meta` (`post_id`, `postmeta_key`);
+
+--
+-- Indices de la tabla `posts`
+--
+ALTER TABLE `posts` 
+  ADD PRIMARY KEY (`post_id`),
+  ADD UNIQUE KEY `post_slug` (`post_slug`),
+  ADD KEY `post_author` (`post_author`);
+
+--
+-- Indices de la tabla `rolemeta`
+--
+ALTER TABLE `rolemeta` 
+  ADD PRIMARY KEY (`rolemeta_id`),
+  ADD UNIQUE KEY `uniq_role_meta` (`role_id`, `rolemeta_key`);
+
+--
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles` 
+  ADD PRIMARY KEY (`role_id`),
+  ADD UNIQUE KEY `role_name` (`role_name`);
+
+--
+-- Indices de la tabla `usermeta`
+--
+ALTER TABLE `usermeta` 
+  ADD PRIMARY KEY (`usermeta_id`),
+  ADD UNIQUE KEY `uniq_user_meta` (`user_id`, `usermeta_key`);
+
+--
+-- Indices de la tabla `users`
+--
+ALTER TABLE `users` 
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `user_login` (`user_login`),
+  ADD UNIQUE KEY `user_email` (`user_email`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -87,6 +294,42 @@ ALTER TABLE `options`
 --
 ALTER TABLE `options` 
   MODIFY `option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+
+--
+-- AUTO_INCREMENT de la tabla `postmeta`
+--
+ALTER TABLE `postmeta` 
+  MODIFY `postmeta_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `posts`
+--
+ALTER TABLE `posts` 
+  MODIFY `post_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `rolemeta`
+--
+ALTER TABLE `rolemeta` 
+  MODIFY `rolemeta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `roles`
+--
+ALTER TABLE `roles` 
+  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `usermeta`
+--
+ALTER TABLE `usermeta` 
+  MODIFY `usermeta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
+--
+ALTER TABLE `users` 
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 COMMIT;
 

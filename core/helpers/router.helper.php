@@ -107,3 +107,43 @@ function api_route($path = '', $params = [], $get = []) {
 
   return $url;
 }
+
+// --------------------------------------------------------------------------
+// SECCIÓN: CONSTRUCTORES DE ENDPOINTS (API INTERNA)
+// --------------------------------------------------------------------------
+
+/**
+ * Genera la URL para un endpoint del panel de administración.
+ *
+ * @param string $path   Ruta del endpoint (ej. "users/delete").
+ * @param array  $params Parámetros de ruta.
+ * @param array  $get    Parámetros GET.
+ * @return string URL del endpoint.
+ */
+function admin_endpoint($path, $params = [], $get = []) {
+  $parts = explode('/', trim($path, '/'));
+  if (count($parts) < 2) return '';
+
+  $module = array_shift($parts);
+  $file   = implode('/', $parts);
+
+  return admin_route("{$module}/endpoint/{$file}", $params, $get);
+}
+
+/**
+ * Genera la URL para un endpoint del frontend.
+ *
+ * @param string $path   Ruta del endpoint (ej. "auth/check-autologin").
+ * @param array  $params Parámetros de ruta.
+ * @param array  $get    Parámetros GET.
+ * @return string URL del endpoint.
+ */
+function front_endpoint($path, $params = [], $get = []) {
+  $parts = explode('/', trim($path, '/'));
+  if (count($parts) < 2) return '';
+
+  $module = array_shift($parts);
+  $file   = implode('/', $parts);
+
+  return front_route("{$module}/endpoint/{$file}", $params, $get);
+}

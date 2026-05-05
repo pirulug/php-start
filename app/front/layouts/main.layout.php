@@ -27,12 +27,33 @@
     })();
   </script>
 
+  <?php if (!is_logged_in() && isset($_COOKIE[COOKIE_PREFIX . 'auth'])): ?>
+    <script>
+      /**
+       * Autologin inmediato (Head Check)
+       * Inicia la comprobación antes de renderizar el cuerpo para evitar parpadeos.
+       */
+      (function() {
+        fetch('<?= front_endpoint("auth/check-autologin") ?>', {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(res => {
+          if (res.success && res.data.logged) {
+            window.location.reload();
+          }
+        });
+      })();
+    </script>
+  <?php endif; ?>
+
   <!-- CSS -->
   <?= static_assets_css("piruui.css") ?>
   <?= static_assets_css("bootstrapicons.css") ?>
   <?= static_assets_css("fontawesome.css") ?>
 
-  <?= static_libs_css("toastifyjs","toastifyjs.css") ?>
+  <?= static_libs_css("toastifyjs", "toastifyjs.css") ?>
 
   <?= get_block('css'); ?>
 </head>
@@ -370,8 +391,9 @@
   </div>
 
   <!-- JS -->
-  <?= static_libs_js("toastifyjs","toastifyjs.js") ?>
+  <?= static_libs_js("toastifyjs", "toastifyjs.js") ?>
   <?= static_assets_js("piruui.js") ?>
+
 
   <?= get_block('js'); ?>
 
