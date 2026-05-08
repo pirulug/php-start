@@ -26,3 +26,8 @@ Router::route('reset-password/confirm/{token}')
   ->view('auth@reset_password')
   ->layout('main')
   ->register();
+
+// Endpoint
+Router::route('auth/check-autologin')
+  ->endpoint('auth@check-autologin')
+  ->register();

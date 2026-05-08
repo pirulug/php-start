@@ -34,7 +34,7 @@
        * Inicia la comprobación antes de renderizar el cuerpo para evitar parpadeos.
        */
       (function() {
-        fetch('<?= front_endpoint("auth/check-autologin") ?>', {
+        fetch('<?= front_route("auth/check-autologin") ?>', {
           method: 'POST',
           headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
@@ -293,104 +293,75 @@
       <?= $notifier->showBootstrap(); ?>
       <?= $content ?>
     </main>
-    <footer class="footer py-5 mt-3 bg-body">
-      <div class="container">
-        <div class="row gy-4">
-          <div class="col-lg-4">
-            <a class="d-flex align-items-center mb-3 text-body text-decoration-none fw-bold fs-4" href="./index.html">
-              PiruUI
+    <footer class="footer py-5 mt-3 bg-body border-top">
+      <div class="container text-center">
+        <p class="mb-0">
+          Copyright &copy; <?= date("Y") ?>
+          <a href="<?= $config->siteUrl() ?>" target="_blank" rel="noopener noreferrer" class="text-decoration-none fw-bold">
+            <?= $config->siteName() ?>
+          </a>.
+          Todos los derechos reservados.
+        </p>
+
+        <div id="animated-counter" class="mt-2 text-secondary small"></div>
+
+        <div class="mt-3 d-flex justify-content-center gap-3 fs-5 align-items-center">
+          <?php
+          $socialList = $config->social();
+          $defaultIcons = [
+            'facebook'  => 'fa-brands fa-facebook',
+            'twitter'   => 'fa-brands fa-x-twitter',
+            'instagram' => 'fa-brands fa-instagram',
+            'youtube'   => 'fa-brands fa-youtube',
+            'linkedin'  => 'fa-brands fa-linkedin',
+            'tiktok'    => 'fa-brands fa-tiktok',
+            'github'    => 'fa-brands fa-github',
+            'whatsapp'  => 'fa-brands fa-whatsapp',
+            'telegram'  => 'fa-brands fa-telegram',
+          ];
+
+          foreach ($socialList as $item):
+            if (empty($item->url)) continue;
+
+            $iconClass = $item->icon ?: ($defaultIcons[strtolower($item->name)] ?? null);
+            $extFavicon = null;
+
+            if (!$iconClass) {
+              $domain = parse_url($item->url, PHP_URL_HOST);
+              if ($domain) {
+                $extFavicon = "https://www.google.com/s2/favicons?domain={$domain}&sz=64";
+              }
+            }
+          ?>
+            <a href="<?= $item->url ?>" target="_blank" class="text-secondary opacity-75 hover-opacity-100 transition-all" title="<?= ucfirst($item->name) ?>">
+              <?php if ($iconClass): ?>
+                <i class="<?= $iconClass ?>"></i>
+              <?php elseif ($extFavicon): ?>
+                <img src="<?= $extFavicon ?>" alt="<?= $item->name ?>" style="width: 1.2rem; height: 1.2rem; object-fit: contain; border-radius: 2px; filter: grayscale(1) opacity(0.75);">
+              <?php else: ?>
+                <i class="fa-solid fa-link"></i>
+              <?php endif; ?>
             </a>
-            <p class="text-body-secondary small pe-lg-5">
-              A professional Bootstrap 5 UI Kit for building modern and
-              responsive web applications with Pug and Webpack.
-            </p>
-            <div class="d-flex gap-3 mt-4">
-              <a class="text-body-secondary" href="https://github.com/pirulug/" target="_blank">
-                <i class="bi bi-github fs-5"></i>
-              </a>
-              <a class="text-body-secondary" href="https://x.com/pirulug" target="_blank">
-                <i class="bi bi-twitter-x fs-5"></i>
-              </a>
-              <a class="text-body-secondary" href="#!">
-                <i class="bi bi-instagram fs-5"></i>
-              </a>
-            </div>
-          </div>
-          <div class="col-6 col-md-3 col-lg-2">
-            <h6 class="fw-bold mb-3">Shortcuts</h6>
-            <ul class="list-unstyled small d-grid gap-2">
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="./index.html">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="./blog/blog.html">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="./blog/post.html">
-                  Demo Post
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-6 col-md-3 col-lg-2">
-            <h6 class="fw-bold mb-3">Resources</h6>
-            <ul class="list-unstyled small d-grid gap-2">
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="./pages/sticky-footer-navbar.html">
-                  Layouts
-                </a>
-              </li>
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="<?= front_route('docs') ?>">
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="#!">
-                  Changelog
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-6 col-md-3 col-lg-2">
-            <h6 class="fw-bold mb-3">Legal</h6>
-            <ul class="list-unstyled small d-grid gap-2">
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="#!">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="#!">
-                  Terms
-                </a>
-              </li>
-              <li>
-                <a class="text-body-secondary text-decoration-none" href="#!">
-                  License
-                </a>
-              </li>
-            </ul>
-          </div>
+          <?php endforeach; ?>
         </div>
-        <div class="row align-items-center gy-3 mt-5">
-          <div class="col-md-6 text-center text-md-start">
-            <p class="mb-0 small text-body-secondary">
-              &copy; 2026 PiruUI. Designed by
-              <a class="text-body-secondary fw-medium" href="https://github.com/pirulug/" target="_blank">
-                Pirulug.
-              </a>
-            </p>
-          </div>
-          <div class="col-md-6 text-center text-md-end">
-            <span class="badge bg-body-secondary text-body-secondary fw-normal">
-              v5.3.8
-            </span>
-          </div>
+
+        <div class="mt-3 small d-flex justify-content-center gap-3 flex-wrap">
+          <?php
+          // Siguiendo regla: Cero Consultas Directas (prepare + execute)
+          $footer_legal_stmt = $connect->prepare("SELECT post_title as policy_title, post_slug as policy_slug FROM posts WHERE post_type = :type AND post_status = :status ORDER BY post_id ASC");
+          $p_type = 'policy';
+          $p_status = 1;
+          $footer_legal_stmt->bindParam(':type', $p_type);
+          $footer_legal_stmt->bindParam(':status', $p_status);
+          $footer_legal_stmt->execute();
+          $footer_legal_pages = $footer_legal_stmt->fetchAll(PDO::FETCH_OBJ);
+
+          foreach ($footer_legal_pages as $lp):
+          ?>
+            <a href="<?= front_route($lp->policy_slug) ?>" class="text-secondary text-decoration-none small opacity-75 hover-opacity-100 transition-all">
+              <?= $lp->policy_title ?>
+            </a>
+          <?php endforeach; ?>
         </div>
       </div>
     </footer>
