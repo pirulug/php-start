@@ -79,11 +79,6 @@ if ($is_ctx_admin) {
 $route = Router::resolve($requested_url);
 $args  = $route["params"] ?? [];
 
-// echo "<hr>";
-// echo "<pre>";
-// print_r(Router::getRoutes());
-// echo "</pre>";
-// echo "<hr>";
 // var_dump($route);
 
 // ERROR 404

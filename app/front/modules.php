@@ -4,7 +4,8 @@ return [
   'index'    => true,
   'account'  => true,
   'auth'     => true,
-  'erros'    => true,
-  'policies' => true,
+  'errors'    => true,
   'test' => true,
+  'docs' => true,
+  'policies' => true,
 ];

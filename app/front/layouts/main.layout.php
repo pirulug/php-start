@@ -154,7 +154,7 @@
                 </div>
                 <div class="piru-megamenu-column">
                   <h6>Resources & Shop</h6>
-                  <a class="piru-dropdown-item" href="#">
+                  <a class="piru-dropdown-item" href="<?= front_route('docs') ?>">
                     <i class="bi bi-book"></i>
                     <span>Documentation</span>
                   </a>
@@ -195,6 +195,12 @@
                 <span>Checkout</span>
               </a>
             </div>
+          </li>
+          <li>
+            <a class="piru-nav-link" href="<?= front_route('docs') ?>">
+              <i class="bi bi-journal-text"></i>
+              <span>Docs</span>
+            </a>
           </li>
           <li>
             <a class="piru-nav-link" href="./colors.html">
@@ -339,7 +345,7 @@
                 </a>
               </li>
               <li>
-                <a class="text-body-secondary text-decoration-none" href="#!">
+                <a class="text-body-secondary text-decoration-none" href="<?= front_route('docs') ?>">
                   Documentation
                 </a>
               </li>

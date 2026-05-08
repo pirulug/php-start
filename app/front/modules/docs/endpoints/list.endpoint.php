@@ -1,0 +1,3 @@
+<?php
+
+// Endpoint para docs

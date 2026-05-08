@@ -147,3 +147,63 @@ function front_endpoint($path, $params = [], $get = []) {
 
   return front_route("{$module}/endpoint/{$file}", $params, $get);
 }
+// --------------------------------------------------------------------------
+// SECCIÓN: RESOLUCIÓN DE RUTAS FÍSICAS (HELPERS)
+// --------------------------------------------------------------------------
+
+/**
+ * Resuelve la ruta física de una acción en el contexto front.
+ * 
+ * @param string $path Sintaxis modulo/accion o modulo@accion.
+ * @return string Ruta absoluta.
+ */
+function front_action($path) {
+  $path = str_replace('@', '/', $path);
+  $parts = explode('/', trim($path, '/'));
+  if (count($parts) < 2) return '';
+  return BASE_DIR . "/app/front/modules/{$parts[0]}/actions/{$parts[1]}.action.php";
+}
+
+/**
+ * Resuelve la ruta física de una vista en el contexto front.
+ */
+function front_view($path) {
+  $path = str_replace('@', '/', $path);
+  $parts = explode('/', trim($path, '/'));
+  if (count($parts) < 2) return '';
+  return BASE_DIR . "/app/front/modules/{$parts[0]}/views/{$parts[1]}.view.php";
+}
+
+/**
+ * Resuelve la ruta física de un layout en el contexto front.
+ */
+function front_layout($name = 'main') {
+  return BASE_DIR . "/app/front/layouts/{$name}.layout.php";
+}
+
+/**
+ * Resuelve la ruta física de una acción en el contexto admin.
+ */
+function admin_action($path) {
+  $path = str_replace('@', '/', $path);
+  $parts = explode('/', trim($path, '/'));
+  if (count($parts) < 2) return '';
+  return BASE_DIR . "/app/admin/modules/{$parts[0]}/actions/{$parts[1]}.action.php";
+}
+
+/**
+ * Resuelve la ruta física de una vista en el contexto admin.
+ */
+function admin_view($path) {
+  $path = str_replace('@', '/', $path);
+  $parts = explode('/', trim($path, '/'));
+  if (count($parts) < 2) return '';
+  return BASE_DIR . "/app/admin/modules/{$parts[0]}/views/{$parts[1]}.view.php";
+}
+
+/**
+ * Resuelve la ruta física de un layout en el contexto admin.
+ */
+function admin_layout($name = 'main') {
+  return BASE_DIR . "/app/admin/layouts/{$name}.layout.php";
+}
