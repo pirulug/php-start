@@ -6,4 +6,5 @@ return [
   'auth'     => true,
   'erros'    => true,
   'policies' => true,
+  'test' => true,
 ];

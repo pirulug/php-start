@@ -2,4 +2,5 @@
 
 return [
   'users'     => true,
+  'test' => true,
 ];

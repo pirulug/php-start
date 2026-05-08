@@ -45,6 +45,9 @@ $cipher = (new Cipher())
 // Configuración del sitio
 $config = new SiteConfig($connect);
 
+// Fecha y Hora
+$site_date = new SiteDate($config);
+
 // Sona Horaria
 date_default_timezone_set(
   $config->get("site_timezone", "America/Lima")
