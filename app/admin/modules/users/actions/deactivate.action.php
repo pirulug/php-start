@@ -87,5 +87,5 @@ try {
 }
 
 // Redirigir al listado de usuarios
-header("Location: " . admin_route("users"));
+header("Location: " . admin_route("users",[],["p" => ($_GET["p"] ?? 1)]));
 exit();

@@ -22,9 +22,9 @@
     <div class="card mb-3">
       <div class="card-header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-3">
-          <a href="<?= admin_route('users') ?>" class="btn btn-outline-secondary btn-sm" title="Volver">
-            <i class="fa-solid fa-arrow-left"></i>
-          </a>
+
+          <?= Button::cancel(admin_route("users", [], ["p" => ($_GET["p"] ?? 1)]))->text("Volver")->classes("btn btn-outline-secondary")->icon("fa fa-arrow-left")->render() ?>
+
           <h5 class="card-title mb-0"><?= __("Gestionar API Keys de") ?>
             <strong><?= clear_html($managed_user->user_login) ?></strong>
           </h5>
@@ -60,8 +60,8 @@
                 <?php foreach ($api_keys as $key): ?>
                   <tr>
                     <td>
-                      <div class="input-group input-group-sm" style="max-width: 300px;">
-                        <input type="text" id="api_key_<?= $key->api_key_id ?>" class="form-control font-monospace small"
+                      <div class="input-group">
+                        <input type="text" id="api_key_<?= $key->api_key_id ?>" class="form-control font-monospace"
                           value="<?= $key->api_key ?>" readonly>
                         <button class="btn btn-outline-secondary btn-copy" type="button" data-key="<?= $key->api_key ?>"
                           title="Copiar">
@@ -70,7 +70,7 @@
                       </div>
                     </td>
                     <td>
-                      <span class="text-muted small"><?= format_datetime($key->api_key_created) ?></span>
+                      <span class="text-muted"><?= format_datetime($key->api_key_created) ?></span>
                     </td>
                     <td class="text-end">
                       <button type="button" class="btn btn-sm btn-outline-primary btn-regenerate-key"

@@ -4,22 +4,22 @@ console.log("Hola mundo desde list.script.js")
 console.log(APP_ADMIN_URL + "/users")
 
 // GET
-// fetch(APP_ADMIN_URL + "/users/endpoint/list", {
-//   method: "GET",
-//   headers: {
-//     "Content-Type": "application/json",
-//     "Accept": "application/json"
-//   }
-// })
-//   .then(response => response.json())
-//   .then(data => {
-//     if (data.success) {
-//       console.log(data.message);
-//     } else {
-//       console.error(data.message);
-//     }
-//   })
-//   .catch(error => console.error("Error:", error));
+fetch(APP_ADMIN_URL + "/users/endpoint/list", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  }
+})
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log(data);
+    } else {
+      console.error(data);
+    }
+  })
+  .catch(error => console.error("Error:", error));
 
 // // POST
 // fetch(APP_ADMIN_URL + "/users/endpoint/save", {

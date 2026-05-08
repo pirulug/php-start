@@ -98,14 +98,8 @@ Nuevo Usuario
 
       <!-- BOTONERA DENTRO DEL COL-8 -->
       <div class="bg-body p-3 rounded d-flex justify-content-end gap-2 sticky-bottom">
-        <a href="<?= admin_route("users") ?>" class="btn btn-outline-secondary px-4 text-uppercase small fw-bold">
-          <i class="fa-solid fa-arrow-left me-2"></i>
-          Cancelar
-        </a>
-        <button type="submit" class="btn btn-primary px-5 text-uppercase small fw-bold">
-          <i class="fa-solid fa-floppy-disk me-2"></i>
-          Guardar Usuario
-        </button>
+        <?= Button::cancel(admin_route("users"))->render() ?>
+        <?= Button::save()->render() ?> 
       </div>
     </div>
 

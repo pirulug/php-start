@@ -37,74 +37,73 @@ Generar un paginador Bootstrap 5 con truncado (elipsis) dinámico.
 Para mantener la coherencia visual, los listados deben seguir esta estructura dividida en tres bloques independientes (`.bg-body .p-3 .rounded .mb-3`).
 
 ### A. Cabecera (Acciones y Filtros)
-```html
+Se utiliza el componente `Button` para acciones principales y `Filter` para el buscador y selectores.
+```php
 <div class="bg-body p-3 rounded mb-3 text-end">
   <!-- Botón de Acción Principal -->
-  <a href="..." class="btn btn-primary px-4 d-inline-block mb-3 text-uppercase small fw-bold text-nowrap">
-    <i class="fa-solid fa-plus me-2"></i> Nuevo Elemento
-  </a>
+  <?= Button::new(admin_route('modulo/new'))->text('Nuevo Elemento') ?>
+
+  <hr class="my-2">
 
   <!-- Formulario de Filtros -->
-  <form method="get" autocomplete="off">
-    <div class="d-flex flex-wrap justify-content-end align-items-center gap-2">
-      <select name="filtro" class="form-select w-auto">
-        <option value="">Todos</option>
-      </select>
-
-      <div class="input-group w-auto flex-grow-1" style="max-width: 450px;">
-        <input type="text" name="search" class="form-control" placeholder="Buscar...">
-        <button type="submit" class="btn btn-primary px-3 text-uppercase small fw-bold text-nowrap">
-          <i class="fa-solid fa-magnifying-glass me-2"></i> Filtrar
-        </button>
-      </div>
-    </div>
-  </form>
+  <?= Filter::make(admin_route('modulo'))
+    ->select('categoria', 'Todas las categorías', $categorias, 'cat_id', 'cat_name')
+    ->search('Buscar...')
+    ->render() ?>
 </div>
 ```
 
 ### B. Cuerpo (Tabla de Datos)
-```html
+Se utiliza el componente `Table` para renderizar elementos atómicos dentro de las celdas.
+```php
 <div class="bg-body p-3 rounded mb-3">
   <div class="table-responsive">
     <table class="table table-hover align-middle table-sm m-0">
       <thead>
         <tr>
-          <th class="ps-3">Elemento</th>
+          <th class="ps-3">Usuario</th>
           <th>Estado</th>
           <th class="text-end pe-3">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="ps-3 py-3">...</td>
-          <td>...</td>
-          <td class="text-end pe-3">...</td>
-        </tr>
+        <?php foreach ($items as $item): ?>
+          <tr>
+            <td class="ps-3 py-3">
+              <div class="d-flex align-items-center gap-3">
+                <?= Table::avatar(storage_uploads($item->img, 'modulo'), $item->name)->circle() ?>
+                <div class="d-flex flex-column">
+                  <?= Table::text($item->name)->bold() ?>
+                  <?= Table::text($item->email)->muted()->small() ?>
+                </div>
+              </div>
+            </td>
+            <td><?= Table::status($item->status) ?></td>
+            <td class="text-end pe-3">
+              <div class="d-flex justify-content-end gap-1">
+                <?= Button::edit(admin_route('modulo/edit', [$cipher->encrypt($item->id)])) ?>
+                <?= Button::delete(admin_route('modulo/delete', [$cipher->encrypt($item->id)])) ?>
+              </div>
+            </td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
   </div>
 </div>
 ```
 
-### C. Pie (Paginación Sticky)
-```html
-<div class="bg-body p-3 rounded d-flex align-items-center justify-content-between sticky-bottom">
-  <div class="legend">
-    <span class="fw-bold">Mostrando 10 de 100 registros</span>
+### C. Pie (Paginación y Leyenda)
+Se utiliza el componente `Pager` para gestionar la navegación y la información de registros.
+```php
+<?php $pager = Pager::make($total_rows, $limit)->items('elementos'); ?>
+
+<?php if ($total_rows > $limit): ?>
+  <div class="bg-body p-3 rounded d-flex align-items-center justify-content-between sticky-bottom">
+    <?= $pager->legend() ?>
+    <?= $pager->render() ?>
   </div>
-  <div class="paginator">
-    <nav>
-      <ul class="pagination justify-content-end mb-0">
-        <!-- Ejemplo de navegación -->
-        <li class="page-item active"><a class="page-link" href="?p=1">1</a></li>
-        <li class="page-item"><a class="page-link" href="?p=2">2</a></li>
-        <li class="page-item">
-          <a class="page-link" href="?p=2" aria-label="Siguiente"><i class="fa-solid fa-chevron-right small"></i></a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-</div>
+<?php endif; ?>
 ```
 
 ## 4. Formularios (`new.view.php` & `edit.view.php`)
@@ -159,7 +158,7 @@ Para mantener la coherencia visual, los listados deben seguir esta estructura di
   ```
 
 ## 6. Acciones Especiales (`delete.action.php` / `deactivate.action.php`)
-- **Confirmación**: Las eliminaciones deben usar `SweetAlert2` mediante el helper `ActionBtn::delete()`.
+- **Confirmación**: Las eliminaciones deben usar `SweetAlert2` mediante el helper `Button::delete()`.
 - **Ofuscación**: Siempre ofuscar los IDs en la URL usando `$cipher->encrypt($id)`.
 - **Respuesta**: Al ser acciones de proceso, deben terminar siempre con una redirección y `exit()`.
 

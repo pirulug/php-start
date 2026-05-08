@@ -97,14 +97,10 @@ Editar Usuario
 
       <!-- BOTONERA DENTRO DEL COL-8 -->
       <div class="bg-body p-3 rounded d-flex justify-content-end gap-2 sticky-bottom">
-        <a href="<?= admin_route('users') ?>" class="btn btn-outline-secondary px-4 text-uppercase small fw-bold">
-          <i class="fa-solid fa-arrow-left me-2"></i>
-          Cancelar
-        </a>
-        <button type="submit" class="btn btn-primary px-5 text-uppercase small fw-bold">
-          <i class="fa-solid fa-rotate me-2"></i>
-          Actualizar Usuario
-        </button>
+        <?= Button::cancel(admin_route("users", [], ["p" => ($_GET["p"] ?? 1)]))
+          ->icon("fa-solid fa-arrow-left me-2")
+          ->render() ?>
+        <?= Button::save()->text("Actualizar Usuario")->icon("fa-solid fa-rotate me-2")->render() ?> 
       </div>
     </div>
 

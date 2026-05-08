@@ -36,7 +36,7 @@ Router::route("user/delete/{id}")
   ->permission("users.delete")
   ->register();
 
-Router::route("users/api/{id}")
+Router::route("user/api/{id}")
   ->action("users@api")
   ->view("users@api")
   ->layout("main")

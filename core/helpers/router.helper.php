@@ -120,15 +120,15 @@ function api_route($path = '', $params = [], $get = []) {
  * @param array  $get    Parámetros GET.
  * @return string URL del endpoint.
  */
-function admin_endpoint($path, $params = [], $get = []) {
-  $parts = explode('/', trim($path, '/'));
-  if (count($parts) < 2) return '';
+// function admin_endpoint($path, $params = [], $get = []) {
+//   $parts = explode('/', trim($path, '/'));
+//   if (count($parts) < 2) return '';
 
-  $module = array_shift($parts);
-  $file   = implode('/', $parts);
+//   $module = array_shift($parts);
+//   $file   = implode('/', $parts);
 
-  return admin_route("{$module}/endpoint/{$file}", $params, $get);
-}
+//   return admin_route("{$module}/endpoint/{$file}", $params, $get);
+// }
 
 /**
  * Genera la URL para un endpoint del frontend.
@@ -138,15 +138,15 @@ function admin_endpoint($path, $params = [], $get = []) {
  * @param array  $get    Parámetros GET.
  * @return string URL del endpoint.
  */
-function front_endpoint($path, $params = [], $get = []) {
-  $parts = explode('/', trim($path, '/'));
-  if (count($parts) < 2) return '';
+// function front_endpoint($path, $params = [], $get = []) {
+//   $parts = explode('/', trim($path, '/'));
+//   if (count($parts) < 2) return '';
 
-  $module = array_shift($parts);
-  $file   = implode('/', $parts);
+//   $module = array_shift($parts);
+//   $file   = implode('/', $parts);
 
-  return front_route("{$module}/endpoint/{$file}", $params, $get);
-}
+//   return front_route("{$module}/endpoint/{$file}", $params, $get);
+// }
 // --------------------------------------------------------------------------
 // SECCIÓN: RESOLUCIÓN DE RUTAS FÍSICAS (HELPERS)
 // --------------------------------------------------------------------------

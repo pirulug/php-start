@@ -15,6 +15,9 @@ require_once BASE_DIR . "/core/boot/lang.php";
 // Libs
 load_core_files("libraries");
 
+// Components (UI)
+load_core_files("components");
+
 // Helpers
 load_core_files("helpers");
 

@@ -47,8 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
           text: 'La llave de este usuario dejará de funcionar inmediatamente.',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#d33',
-          cancelButtonColor: '#fe7444',
           confirmButtonText: 'Sí, eliminar',
           cancelButtonText: 'Cancelar'
         }).then((result) => {
@@ -73,8 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
           text: 'Se creará una nueva llave de acceso para este usuario.',
           icon: 'question',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#fe7444',
           confirmButtonText: 'Sí, generar',
           cancelButtonText: 'Cancelar'
         }).then((result) => {
@@ -115,8 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
           text: 'La llave actual del usuario será invalidada y se generará una nueva.',
           icon: 'info',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#fe7444',
           confirmButtonText: 'Sí, regenerar',
           cancelButtonText: 'Cancelar'
         }).then((result) => {

@@ -10,16 +10,13 @@
 // -----------------------------------------------------------------------------
 
 /**
- * Obtiene la instancia única de SiteDate para el formateo de fechas.
+ * Obtiene la instancia global de SiteDate para el formateo de fechas.
  * 
  * @return SiteDate
  */
 function _get_site_date_instance() {
-  static $instance = null;
-  if ($instance === null) {
-    $instance = new SiteDate();
-  }
-  return $instance;
+  global $site_date;
+  return $site_date;
 }
 
 // -----------------------------------------------------------------------------

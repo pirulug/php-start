@@ -205,3 +205,39 @@ Para garantizar la integridad de los datos y prevenir ataques XSS, el framework 
   - `->toast()` -> Notificación pequeña flotante (Toastify).
   - `->sweetalert()` -> Ventana emergente premium (SweetAlert2).
 - **Cerrar trato:** **OBLIGATORIO** terminar con `->add()`.
+
+## 14. Endpoints y Scripts (AJAX/Fetch)
+El framework facilita la comunicación asíncrona mediante una estructura dedicada para lógica de cliente y respuestas raw (JSON, XML, etc.).
+
+### Scripts del Módulo (`scripts/`)
+Los archivos JavaScript específicos de un módulo se ubican en `app/{context}/modules/{module}/scripts/{file}.script.js`.
+- **Carga en View**: Utiliza el helper `url_script_admin` o `url_script_front` dentro del bloque `js`.
+- **Contexto de URL**: Para que el JS conozca las rutas del sistema, inyecta variables globales antes de cargar el archivo.
+  ```php
+  <?php start_block('js') ?>
+  <script>
+    const APP_ADMIN_URL = "<?= admin_route() ?>";
+  </script>
+  <?= url_script_admin('users', 'list') ?>
+  <?php end_block() ?>
+  ```
+
+### Endpoints (`endpoints/`)
+Son archivos PHP que procesan peticiones AJAX y devuelven datos sin layout. Se ubican en `app/{context}/modules/{module}/endpoints/{file}.endpoint.php`.
+- **Registro en Router**: Se deben registrar en el `router.php` del módulo usando el método `endpoint()`.
+  ```php
+  Router::route("users/endpoint/list")
+    ->endpoint("users@list")
+    ->middleware("auth_admin")
+    ->permission("users.list")
+    ->register();
+  ```
+- **Consumo en JS**:
+  ```javascript
+  fetch(APP_ADMIN_URL + "/users/endpoint/list", {
+    method: "GET",
+    headers: { "Accept": "application/json" }
+  })
+  .then(response => response.json())
+  .then(data => console.log(data));
+  ```

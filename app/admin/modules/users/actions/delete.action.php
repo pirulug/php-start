@@ -66,5 +66,5 @@ try {
   $notifier->message("Error en el proceso de eliminación: " . $e->getMessage())->danger()->bootstrap()->add();
 }
 
-header('Location: ' . admin_route("users"));
+header("Location: " . admin_route("users",[],["p" => ($_GET["p"] ?? 1)]));
 exit();

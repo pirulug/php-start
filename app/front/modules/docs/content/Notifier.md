@@ -4,10 +4,20 @@ La clase `Notifier` es un sistema centralizado para la gestión de notificacione
 
 ## Características Principales
 
+- **Doble Acceso**: Compatible con llamadas de instancia (`$notifier`) y estáticas (`Notifier::`).
 - **Persistencia en Sesión**: Los mensajes se guardan en `$_SESSION` y se eliminan automáticamente tras ser mostrados (patrón Flash Messages).
 - **Múltiples Formatos**: Soporte nativo para tres métodos de visualización distintos.
 - **Interfaz Fluida**: Configuración encadenable de mensajes, tipos y métodos.
 - **Modo de Consulta**: Capacidad para verificar si existen mensajes de cierto tipo antes de renderizar contenedores en la interfaz.
+
+## Modos de Acceso
+
+El sistema soporta dos formas de interacción que comparten el mismo estado:
+
+- **Objeto Global**: `$notifier` (disponible en todo el proyecto).
+- **Acceso Estático**: `Notifier::método()` (ideal para servicios o lógica desacoplada).
+
+Ambos métodos son encadenables y afectan a la misma cola de mensajes.
 
 ## Métodos de Configuración
 
@@ -54,10 +64,8 @@ Estos métodos deben ser llamados en la vista o layout principal para mostrar la
 Se inicializa automáticamente en `core/bootstrap/base.php` como `$notifier`.
 
 ```php
-// Ejemplo en un controlador tras guardar datos
-$notifier->success('Los cambios han sido guardados correctamente.')
-         ->bootstrap()
-         ->add();
+// Uso estático (Equivalente)
+Notifier::success('Los cambios han sido guardados correctamente.')->add();
 
 // Ejemplo en el Layout principal para mostrar alertas
 $notifier->showBootstrap();

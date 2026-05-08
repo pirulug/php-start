@@ -1,109 +1,127 @@
 # Router
 
-Clase central para la definición y resolución de rutas del sistema. Soporta agrupamiento por prefijos, contextos diferenciados (Front-end/Admin), middlewares, parámetros dinámicos y seguimiento analítico integrado.
+Motor de enrutamiento central para la definición y resolución de rutas del sistema. Soporta parámetros dinámicos, grupos con prefijos, contextos diferenciados, gestión de middlewares y resolución automática de archivos de lógica y vista.
 
 ## Características
 
-- **Definición Fluida**: Construcción de rutas mediante encadenamiento de métodos.
-- **Grupos y Prefijos**: Organiza rutas bajo un mismo prefijo y contexto con un solo bloque.
-- **Parámetros Dinámicos**: Permite capturar variables desde la URL usando la sintaxis `{nombre_parametro}`.
-- **Soporte de Middlewares**: Capacidad para inyectar lógica de control (como validación de permisos) antes de procesar la ruta.
-- **Contextos**: Diferenciación nativa entre el área pública (`CTX_FRONT`) y la administrativa (`CTX_ADMIN`).
+- **Definición Fluida**: Construcción de rutas mediante encadenamiento de métodos (Fluent API).
+- **Grupos y Prefijos**: Organiza bloques de rutas bajo un mismo prefijo y contexto compartido.
+- **Parámetros Dinámicos con Regex**: Captura variables desde la URL (`{id}`) con soporte opcional para validación mediante expresiones regulares (`{id:[0-9]+}`).
+- **Soporte de Middlewares**: Inyección de capas de control antes de procesar la ruta (ej: validación de permisos).
+- **Resolución Inteligente**: Mapeo directo a archivos de módulos mediante la sintaxis `modulo@archivo`.
+
+---
+
+## Contextos de Ejecución
+
+El framework utiliza tres contextos principales definidos mediante constantes globales en `path.config.php`. Estos contextos determinan la ruta de búsqueda de los archivos y la lógica de permisos:
+
+- **`CTX_FRONT`** ('front'): Orientado a la cara pública del sitio. Busca archivos en `app/front/`.
+- **`CTX_ADMIN`** ('admin'): Orientado al panel administrativo. Busca archivos en `app/admin/`.
+- **`CTX_API`** ('api'): Orientado a servicios de datos y endpoints. Busca archivos en `app/api/`.
+
+---
 
 ## Métodos Estáticos
 
 ### `prefix(string $prefix, string $context, callable $callback): void`
-Define un bloque de rutas que comparten prefijo y contexto.
-- **$prefix**: Cadena que se antepondrá a todas las rutas del bloque.
-- **$context**: Constante de contexto (`CTX_FRONT` o `CTX_ADMIN`).
-- **$callback**: Función anónima donde se definen las rutas.
-
----
+Define un bloque de rutas que comparten un prefijo de URL y un contexto de ejecución.
+- **$prefix**: Cadena base (ej: `"admin"`).
+- **$context**: Contexto de ejecución (`CTX_FRONT`, `CTX_ADMIN`, `CTX_API`).
+- **$callback**: Función donde se definen las rutas hijas.
 
 ### `route(string $uri): self`
-Inicia la definición de una nueva ruta.
-- **$uri**: Ruta relativa (ej: `"perfil/{id}"`).
-
----
+Inicia la definición de una nueva ruta. La URI se concatena automáticamente con el prefijo del grupo actual.
+- **$uri**: Ruta relativa. Soporta parámetros dinámicos: `{param}` o `{param:regex}`.
 
 ### `resolve(string $uri): ?array`
-Busca una coincidencia para la URI recibida entre todas las rutas registradas.
-- **Retorno**: Array con la configuración de la ruta y sus parámetros extraídos, o `null` si no hay coincidencias.
+Analiza la URI solicitada y busca una coincidencia en el registro global de rutas.
+- **Retorno**: Un array con todos los datos de la ruta y los parámetros extraídos, o `null` si no hay coincidencia.
 
 ## Métodos de Instancia (Builder)
 
 ### `action(string $path): self`
-Define el archivo de lógica (`controller`) que procesará la petición.
-
----
+Asigna el archivo de lógica que procesará la petición. 
+- **Sintaxis**: Soporta `modulo@archivo` para resolución automática dentro de `app/{context}/modules/{modulo}/actions/{archivo}.action.php`.
 
 ### `view(string $path): self`
-Define el archivo de vista (`.php` o `.pug`) que se renderizará.
+Asigna el archivo de plantilla que se renderizará.
+- **Sintaxis**: Soporta `modulo@archivo` para resolución automática dentro de `app/{context}/modules/{modulo}/views/{archivo}.view.php`.
 
----
+### `endpoint(string $path): self`
+Similar a `action()`, pero diseñado para salidas directas (JSON, archivos, etc.) que no requieren ser envueltas en un layout.
+- **Sintaxis**: Resuelve en `app/{context}/modules/{modulo}/endpoints/{archivo}.endpoint.php`.
 
-### `layout(string $path): self`
-Define el layout (plantilla base) que envolverá a la vista.
-
----
+### `layout(string $path = 'main'): self`
+Define el layout maestro que envolverá la vista. Busca automáticamente en `app/{context}/layouts/`.
 
 ### `permission(string $permission): self`
-Añade automáticamente un middleware de verificación de permisos.
-
----
+Atajo para añadir un middleware de verificación de permisos.
 
 ### `middleware(string $name, $params = null): self`
-Añade un middleware personalizado a la ruta.
+Añade un middleware a la cola de ejecución de la ruta.
 
----
-
-### `analytic(string $title, ?string $uri = null): self`
-Configura los metadatos de analítica (título de página y URI opcional) para esta ruta.
-
----
+### `setContext(string $context): self`
+Cambia manualmente el contexto de la ruta (útil fuera de bloques `prefix`).
 
 ### `register(): void`
-**Importante**: Este método confirma el registro de la ruta en la lista global. Debe llamarse al final de cada definición.
+**OBLIGATORIO**: Confirma y guarda la configuración de la ruta. Debe ser el último método de la cadena.
 
 ## Ejemplo de Uso
 
-### Definición de Rutas en `routes/`
-
+### Definición Modular
 ```php
-// Rutas de administración
-Router::prefix('panel', CTX_ADMIN, function() {
+// Rutas Administrativas
+Router::prefix('admin', CTX_ADMIN, function() {
   
-  // Vista simple
   Router::route('dashboard')
-    ->view('admin/dashboard')
-    ->analytic('Panel de Control')
+    ->view('dashboard@index')
     ->register();
 
-  // Ruta con parámetros y permisos
-  Router::route('users/edit/{id}')
-    ->action('admin/users/update')
-    ->view('admin/users/form')
-    ->permission('users_manage')
+  // Parámetro con validación numérica (regex)
+  Router::route('usuarios/editar/{id:[0-9]+}')
+    ->action('users@edit')
+    ->view('users@form')
+    ->permission('users.edit')
     ->register();
 });
 
-// Rutas públicas
-Router::route('articulo/{slug}')
-  ->view('front/article')
-  ->layout('main')
-  ->register();
+// Rutas de Front-end (Área Pública)
+Router::prefix('', CTX_FRONT, function() {
+
+  Router::route('/')
+    ->view('home@index')
+    ->register();
+
+  Router::route('blog/{slug}')
+    ->view('blog@post')
+    ->register();
+});
+
+// Definición de Bloque API
+Router::prefix('api', CTX_API, function() {
+  
+  Router::route('v1/auth/login')
+    ->endpoint('auth@login')
+    ->register();
+
+  Router::route('v1/users/profile')
+    ->endpoint('users@profile')
+    ->permission('api.users')
+    ->register();
+});
 ```
 
-## Resolución de Parámetros
+## Resolución de Parámetros Dinámicos
 
-Cuando una ruta contiene parámetros (`{slug}`, `{id}`), el método `resolve()` los extrae automáticamente. Si la URL visitada es `/articulo/mi-primer-post`, el resultado incluirá:
+El Router permite extraer valores variables de la URL de forma sencilla:
 
+- `{slug}`: Coincide con cualquier caracter excepto `/`.
+- `{id:[0-9]+}`: Solo coincide si el valor es numérico.
+
+Si la ruta es `blog/post/{slug}` y la URL visitada es `blog/post/mi-articulo`, el Router devolverá los parámetros extraídos en el array de resolución:
 ```php
-[
-  'uri' => 'articulo/mi-primer-post',
-  'params' => [
-    'slug' => 'mi-primer-post'
-  ],
-  // ... resto de la configuración
+'params' => [
+  'slug' => 'mi-articulo'
 ]
 ```

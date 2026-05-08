@@ -15,6 +15,8 @@ class Notifier {
   // PROPIEDADES DE ESTADO
   // --------------------------------------------------------------------------
 
+  private static ?Notifier $instance = null;
+
   private string $message = '';
   private string $type = 'success';
   private string $method = 'bootstrap';
@@ -29,6 +31,26 @@ class Notifier {
     if (session_status() === PHP_SESSION_NONE) {
       session_start();
     }
+    self::$instance = $this;
+  }
+
+  /**
+   * Obtiene la instancia compartida del Notifier.
+   *
+   * @return self
+   */
+  public static function getInstance(): self {
+    if (self::$instance === null) {
+      self::$instance = new self();
+    }
+    return self::$instance;
+  }
+
+  /**
+   * Captura llamadas estáticas y las redirige a la instancia compartida.
+   */
+  public static function __callStatic($name, $arguments) {
+    return self::getInstance()->$name(...$arguments);
   }
 
   // --------------------------------------------------------------------------

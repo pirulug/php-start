@@ -9,7 +9,7 @@ if (!isset($id) || $id == "") {
     ->bootstrap()
     ->danger()
     ->add();
-  header("Location: " . admin_route("users"));
+  header("Location: " . admin_route("users",[],["p" => ($_GET["p"] ?? 1)]));
   exit();
 }
 
@@ -22,7 +22,7 @@ if (!is_numeric($id)) {
     ->bootstrap()
     ->danger()
     ->add();
-  header("Location: " . admin_route("users"));
+  header("Location: " . admin_route("users",[],["p" => ($_GET["p"] ?? 1)]));
   exit();
 }
 
@@ -45,7 +45,7 @@ if (empty($user)) {
     ->bootstrap()
     ->danger()
     ->add();
-  header("Location: " . admin_route("users"));
+  header("Location: " . admin_route("users",[],["p" => ($_GET["p"] ?? 1)]));
   exit();
 }
 
@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ->bootstrap()
         ->success()
         ->add();
-      header("Location: " . admin_route("users"));
+      header("Location: " . admin_route("users",[],["p" => ($_GET["p"] ?? 1)]));
       exit();
     }
   }

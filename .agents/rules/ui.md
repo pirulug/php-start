@@ -253,65 +253,65 @@ Para inputs relacionados usar:
 ### Principio General
 
 > Un formulario mal estructurado genera errores silenciosos.  
-> Un formulario consistente reduce validación, bugs y soporte.
+> Un formulario consistente## Cabeceras de Listados (Buscador y Filtros)
 
-## Cabeceras de Listados (Buscador y Filtros)
-
-Para mantener una interfaz administrativa coherente, las cabeceras de las tablas (donde reside el buscador, filtros y botón de creación) deben seguir esta estructura:
+Para mantener una interfaz administrativa coherente, las cabeceras de las tablas deben utilizar los componentes `Button` y `Filter`.
 
 - **Contenedor**: Usar `.bg-body .p-3 .rounded .mb-3`.
-- **Alineación**: Preferir `.d-flex .flex-wrap .justify-content-end .align-items-center .gap-2`.
-- **Buscador**: Utilizar un `input-group` con un ancho máximo (ej. `max-width: 450px`) y `flex-grow-1` para que destaque. El botón de búsqueda debe usar `text-nowrap`.
-- **Filtros**: Los elementos `select` deben usar la clase `.w-auto` para no ocupar espacio innecesario.
-- **Persistencia (Obligatorio)**: Los filtros deben mantener su estado mediante `$_GET`. Para valores numéricos o booleanos, usar comparación estricta de strings `(string)$_GET['key'] === 'valor'`.
-- **Acción Principal**: El botón de "Nuevo/Crear" debe ir arriba del formulario de filtros o integrado en la misma línea según la complejidad, usando siempre la estética Premium (`px-4 text-uppercase small fw-bold`).
+- **Acción Principal**: Utilizar `Button::new()` para el botón de creación.
+- **Filtros y Búsqueda**: Utilizar el componente `Filter` para gestionar selectores y buscador.
 
-```html
+```php
 <div class="bg-body p-3 rounded mb-3 text-end">
-  <a href="..." class="btn btn-primary px-4 d-inline-block mb-3 text-uppercase small fw-bold text-nowrap">
-    <i class="fa-solid fa-plus me-2"></i> Nuevo Elemento
-  </a>
-  <form method="get">
-    <div class="d-flex flex-wrap justify-content-end align-items-center gap-2">
-      <select name="status" class="form-select w-auto">
-        <option value="">Todos</option>
-        <option value="1" <?= (isset($_GET['status']) && $_GET['status'] === '1') ? 'selected' : '' ?>>Activo</option>
-      </select>
-      <div class="input-group w-auto flex-grow-1" style="max-width: 450px;">
-        <input type="text" name="search" class="form-control" placeholder="Buscar..." value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-        <button type="submit" class="btn btn-primary px-3 text-uppercase small fw-bold text-nowrap">
-          <i class="fa-solid fa-magnifying-glass me-2"></i> Buscar
-        </button>
-      </div>
-    </div>
-  </form>
+  <?= Button::new(admin_route('modulo/new'))->text('Nuevo Elemento') ?>
+
+  <hr class="my-2">
+
+  <?= Filter::make(admin_route('modulo'))
+    ->select('status', 'Todos los estados', [1 => 'Activo', 0 => 'Inactivo'])
+    ->search('Buscar...')
+    ->render() ?>
 </div>
 ```
 
 ## Tablas de Datos (Contenido)
 
-Las tablas deben ser limpias, responsivas y con espaciado consistente.
+Las tablas deben ser limpias, responsivas y utilizar el componente `Table` para elementos atómicos.
 
 - **Contenedor**: Envolver siempre en `.bg-body .p-3 .rounded .mb-3`.
-- **Estructura**: Usar la clase `.table-responsive` rodeando la etiqueta `<table>`.
-- **Estilo de Tabla**: Usar `.table .table-hover .align-middle`. Para optimizar espacio en listados densos, usar `.table-sm`.
-- **Celdas**: 
-  - La primera columna (`Usuario`, `Nombre`, etc.) suele llevar `.ps-3`.
-  - Las acciones deben ir en la última columna con `.text-end .pe-3`.
-  - Los estados (Activo/Inactivo) deben usar un punto de color y texto en mayúsculas pequeñas.
+- **Estructura**: Usar la clase `.table-responsive` y `.table .table-hover .align-middle`.
+- **Celdas**: Utilizar los métodos estáticos de `Table` para asegurar consistencia visual.
 
-```html
+```php
 <div class="bg-body p-3 rounded mb-3">
   <div class="table-responsive">
-    <table class="table table-hover align-middle m-0">
+    <table class="table table-hover align-middle table-sm m-0">
       <thead>
         <tr>
           <th class="ps-3">Elemento</th>
+          <th>Estado</th>
           <th class="text-end pe-3">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        ...
+        <tr>
+          <td class="ps-3 py-3">
+            <div class="d-flex align-items-center gap-3">
+              <?= Table::avatar($img, $name)->circle() ?>
+              <div class="d-flex flex-column">
+                <?= Table::text($name)->bold() ?>
+                <?= Table::text($email)->muted()->small() ?>
+              </div>
+            </div>
+          </td>
+          <td><?= Table::status($status) ?></td>
+          <td class="text-end pe-3">
+            <div class="d-flex justify-content-end gap-1">
+              <?= Button::edit($url_edit) ?>
+              <?= Button::delete($url_delete) ?>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -320,24 +320,18 @@ Las tablas deben ser limpias, responsivas y con espaciado consistente.
 
 ## Paginación y Leyenda
 
-La barra de paginación debe proporcionar contexto y navegación rápida, manteniéndose siempre a la vista.
+La barra de paginación debe utilizar el componente `Pager` para proporcionar contexto y navegación rápida.
 
 - **Contenedor**: Usar `.bg-body .p-3 .rounded .d-flex .align-items-center .justify-content-between .sticky-bottom`.
-- **Leyenda**: A la izquierda, mostrando el conteo actual (ej: "Mostrando 10 de 100"). Usar `.fw-bold`.
-- **Paginador**: A la derecha, con botones claros para "Primero", "Anterior", "Siguiente" y "Último".
-- **Comportamiento**: La clase `.sticky-bottom` asegura que el usuario siempre pueda navegar sin importar el largo de la tabla.
+- **Uso**: El objeto `Pager` gestiona tanto la leyenda como el renderizado de la navegación.
 
-```html
-<?php if ($total_pages > 1): ?>
+```php
+<?php $pager = Pager::make($total, $limit)->items('registros'); ?>
+
+<?php if ($total > $limit): ?>
   <div class="bg-body p-3 rounded d-flex align-items-center justify-content-between sticky-bottom">
-    <div class="legend">
-      <span class="fw-bold">Mostrando <?= count($items) ?> de <?= $total ?> registros</span>
-    </div>
-    <nav class="paginator">
-      <ul class="pagination justify-content-end mb-0">
-        ...
-      </ul>
-    </nav>
+    <?= $pager->legend() ?>
+    <?= $pager->render() ?>
   </div>
 <?php endif; ?>
 ```
