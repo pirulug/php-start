@@ -178,6 +178,31 @@ class Router {
   }
 
   /**
+   * Asigna un archivo de endpoint a la ruta. Soporta sintaxis módulo@endpoint.
+   *
+   * @param string $path Ruta física o sintaxis de módulo.
+   * @return self Instancia.
+   */
+  public function endpoint(string $path): self {
+    if (strpos($path, '@') !== false) {
+      $parts   = explode('@', $path);
+      $module  = $parts[0];
+      $this->route['module'] = $module;
+
+      $path    = str_replace('@', '/', $path);
+      $context = $this->route['context'];
+
+      $path = match ($context) {
+        'admin' => $this->resolvePath(BASE_DIR . '/app/admin/modules', 'endpoints', $path, '.endpoint.php', 'admin endpoint'),
+        'api'   => $this->resolvePath(BASE_DIR . '/app/api', 'endpoints', $path, '.php', 'api endpoint'),
+        default => $this->resolvePath(BASE_DIR . '/app/front/modules', 'endpoints', $path, '.endpoint.php', 'front endpoint')
+      };
+    }
+    $this->route['action'] = $path;
+    return $this;
+  }
+
+  /**
    * Asigna el layout decorador para la vista.
    *
    * @param string $path Nombre del layout o ruta completa.
