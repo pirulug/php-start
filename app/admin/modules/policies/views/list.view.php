@@ -101,19 +101,19 @@ Gestión de Políticas
             <td class="text-end pe-3">
               <div class="d-flex justify-content-end gap-2">
                 <?php if ($p->post_status == 1): ?>
-                  <?= ActionBtn::deactivate(admin_route("policy/status", [$cipher->encrypt($p->post_id)]))
-                    ->can('policies.status') ?>
+                  <?= Button::deactivate(admin_route("policy/status", [$cipher->encrypt($p->post_id)]))
+                    ->can("policies.status") ?>
                 <?php else: ?>
-                  <?= ActionBtn::active(admin_route("policy/status", [$cipher->encrypt($p->post_id)]))
-                    ->can('policies.status') ?>
+                  <?= Button::active(admin_route("policy/status", [$cipher->encrypt($p->post_id)]))
+                    ->can("policies.status") ?>
                 <?php endif; ?>
 
-                <?= ActionBtn::edit(admin_route('policy/edit', [$cipher->encrypt($p->post_id)]))
-                  ->can('policies.edit') ?>
+                <?= Button::edit(admin_route("policy/edit", [$cipher->encrypt($p->post_id)]))
+                  ->can("policies.edit") ?>
 
                 <?php if (!in_array($p->post_slug, $protected_slugs)): ?>
-                  <?= ActionBtn::delete(admin_route('policy/delete', [$cipher->encrypt($p->post_id)]))
-                    ->can('policies.delete') ?>
+                  <?= Button::delete(admin_route("policy/delete", [$cipher->encrypt($p->post_id)]))
+                    ->can("policies.delete") ?>
                 <?php endif; ?>
               </div>
             </td>

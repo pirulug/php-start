@@ -102,7 +102,7 @@ if (!$captcha->validate($_POST)) {
           </div>
 
           <div class="d-grid">
-            <?= ActionBtn::save()->text('Validar Captcha')->render(); ?>
+            <?= Button::save()->text("Validar Captcha")->render(); ?>
           </div>
         </form>
       </div>

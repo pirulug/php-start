@@ -70,13 +70,13 @@ Listar Roles
             </td>
             <td class="text-end pe-3">
               <div class="d-flex justify-content-end gap-2">
-                <?= ActionBtn::edit(admin_route("rol/edit", [$cipher->encrypt($data->role_id)]))
-                  ->can('roles.edit') ?>
+                <?= Button::edit(admin_route("rol/edit", [$cipher->encrypt($data->role_id)]))
+                  ->can("roles.edit") ?>
 
-                <?= ActionBtn::delete(admin_route("rol/delete", [$cipher->encrypt($data->role_id)]))
-                  ->can('roles.delete')
-                  ->saTitle('¿Eliminar a ' . $data->role_name . '?')
-                  ->saText('No podrás recuperar sus datos.') ?>
+                <?= Button::delete(admin_route("rol/delete", [$cipher->encrypt($data->role_id)]))
+                  ->can("roles.delete")
+                  ->saTitle("¿Eliminar a " . $data->role_name . "?")
+                  ->saText("No podrás recuperar sus datos.") ?>
               </div>
             </td>
           </tr>

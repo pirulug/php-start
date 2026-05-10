@@ -88,24 +88,24 @@ Respaldos de Seguridad
                   <div class="d-flex justify-content-end gap-2">
 
                     <!-- Botón Descargar -->
-                    <?= ActionBtn::link(admin_route('settings/backup', [], ['action' => 'download', 'file' => $encName]))
-                      ->icon('fa-solid fa-download')
-                      ->text('')
-                      ->classes('btn btn-sm btn-outline-success')
-                      ->attrs('title="Descargar respaldo"') ?>
+                    <?= Button::link(admin_route('settings/backup', [], ['action' => 'download', 'file' => $encName]))
+                      ->icon("fa-solid fa-download")
+                      ->text("")
+                      ->classes("btn btn-sm btn-outline-success")
+                      ->attrs("title=\"Descargar respaldo\"") ?>
 
                     <!-- Botón Restaurar -->
-                    <?= ActionBtn::link(admin_route('settings/backup', [], ['action' => 'restore', 'file' => $encName]))
-                      ->icon('fa-solid fa-rotate-left')
-                      ->text('')
-                      ->classes('btn btn-sm btn-outline-warning')
-                      ->attrs('title="Restaurar base de datos" onclick="return confirm(\'ADVERTENCIA: Se eliminaran todas las tablas actuales. ¿Continuar?\')"') ?>
+                    <?= Button::link(admin_route('settings/backup', [], ['action' => 'restore', 'file' => $encName]))
+                      ->icon("fa-solid fa-rotate-left")
+                      ->text("")
+                      ->classes("btn btn-sm btn-outline-warning")
+                      ->attrs("title=\"Restaurar base de datos\" onclick=\"return confirm('ADVERTENCIA: Se eliminaran todas las tablas actuales. ¿Continuar?')\"") ?>
 
                     <!-- Botón Eliminar -->
-                    <?= ActionBtn::delete(admin_route('settings/backup', [], ['action' => 'delete', 'file' => $encName]))
-                      ->saTitle('¿Eliminar respaldo?')
-                      ->saText('Este archivo se borrara permanentemente del servidor.')
-                      ->text('') ?>
+                    <?= Button::delete(admin_route('settings/backup', [], ['action' => 'delete', 'file' => $encName]))
+                      ->saTitle("¿Eliminar respaldo?")
+                      ->saText("Este archivo se borrara permanentemente del servidor.")
+                      ->text("") ?>
 
                   </div>
                 </td>

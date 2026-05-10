@@ -17,13 +17,13 @@ SweetAlert2
         <h5 class="card-title">Confirmación de Acción (Link)</h5>
       </div>
       <div class="card-body">
-        <p class="text-muted small">Utiliza <code>ActionBtn::delete()</code> para acciones críticas que requieren
+        <p class="text-muted small">Utiliza <code>Button::delete()</code> para acciones críticas que requieren
           confirmación antes de navegar.</p>
         <?php
-        echo ActionBtn::delete(admin_route('componentes/sweetalert'))
-          ->saTitle('¿Deseas reiniciar la demo?')
-          ->saText('Esta acción simulará una redirección de eliminación.')
-          ->text('Prueba de Link/Eliminación')
+        echo Button::delete(admin_route("componentes/sweetalert"))
+          ->saTitle("¿Deseas reiniciar la demo?")
+          ->saText("Esta acción simulará una redirección de eliminación.")
+          ->text("Prueba de Link/Eliminación")
           ->render();
         ?>
       </div>
