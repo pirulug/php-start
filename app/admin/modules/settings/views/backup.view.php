@@ -98,8 +98,8 @@ Respaldos de Seguridad
                     <?= Button::link(admin_route('settings/backup', [], ['action' => 'restore', 'file' => $encName]))
                       ->icon("fa-solid fa-rotate-left")
                       ->text("")
-                      ->classes("btn btn-sm btn-outline-warning")
-                      ->attrs("title=\"Restaurar base de datos\" onclick=\"return confirm('ADVERTENCIA: Se eliminaran todas las tablas actuales. ¿Continuar?')\"") ?>
+                      ->classes("btn btn-sm btn-outline-warning restore-btn")
+                      ->attrs("title=\"Restaurar base de datos\"") ?>
 
                     <!-- Botón Eliminar -->
                     <?= Button::delete(admin_route('settings/backup', [], ['action' => 'delete', 'file' => $encName]))
@@ -128,8 +128,12 @@ Respaldos de Seguridad
 </div>
 
 <div class="bg-body p-3 mt-3 rounded d-flex justify-content-end gap-2 sticky-bottom">
-  <a href="<?= admin_route('settings/backup', [], ['action' => 'backup']) ?>"
-    class="btn btn-primary px-5 fw-bold text-uppercase small">
-    <i class="fa-solid fa-plus-circle me-1"></i> Generar Respaldo
-  </a>
+  <?= Button::new(admin_route('settings/backup', [], ['action' => 'backup']))
+    ->text('Generar Respaldo')
+    ->icon('fa-solid fa-plus-circle')
+    ->classes('btn btn-primary px-5 fw-bold text-uppercase small') ?>
 </div>
+
+<?php start_block('js') ?>
+<?= url_script_admin('settings', 'backup') ?>
+<?php end_block() ?>

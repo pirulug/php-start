@@ -43,14 +43,15 @@ if ($action === 'backup') {
       // Insertar datos
       $stmtData = $connect->prepare("SELECT * FROM `$table`");
       $stmtData->execute();
-      $rows = $stmtData->fetchAll(PDO::FETCH_ASSOC); // Aquí FETCH_ASSOC es útil para recorrer columnas dinámicamente
+      $rows = $stmtData->fetchAll(PDO::FETCH_OBJ); 
 
       foreach ($rows as $row) {
+        $rowArray = (array) $row;
         $values = array_map(function ($v) use ($connect) {
           if ($v === null)
             return "NULL";
           return $connect->quote($v);
-        }, array_values($row));
+        }, array_values($rowArray));
 
         $sqlScript .= "INSERT INTO `$table` VALUES (" . implode(", ", $values) . ");\n";
       }
@@ -110,7 +111,6 @@ if (!empty($_GET['file']) && in_array($action, ['download', 'restore', 'delete']
       $stmtTables->execute();
       $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
       foreach ($tables as $table) {
-        $connect->exec("DROP TABLE IF EXISTS `$table` shadow"); // "shadow" no existe, es DROP TABLE
         $connect->exec("DROP TABLE IF EXISTS `$table` ");
       }
 

@@ -18,6 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ->success()
     ->add();
 
-  header("Refresh:0");
+  header("Location: " . admin_route("settings/smtp"));
   exit();
 }

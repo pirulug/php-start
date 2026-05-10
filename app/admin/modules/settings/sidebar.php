@@ -1,6 +1,6 @@
 <?php
 
-$settings = Sidebar::group("Settings", "folder");
+$settings = Sidebar::group("Settings", "settings");
 
 $settings->item("General", admin_route("settings/general"))
   ->can("settings.general");
