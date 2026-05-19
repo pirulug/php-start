@@ -14,35 +14,39 @@ require_once BASE_DIR . "/core/bootstraps/console.bootstrap.php";
 // SECCIÓN: DESPACHADOR DE COMANDOS
 // =============================================================================
 
-$command = $argv[1] ?? 'help';
+$command = $argv[1] ?? "help";
 
 switch ($command) {
-  case 'migrate':
+  case "migrate":
     require_once BASE_DIR . "/core/comander/migrate.php";
     break;
 
-  case 'reset':
+  case "reset":
     require_once BASE_DIR . "/core/comander/reset.php";
     break;
 
-  case 'backup':
+  case "backup":
     require_once BASE_DIR . "/core/comander/backup.php";
     break;
 
-  case 'modules':
+  case "modules":
     require_once BASE_DIR . "/core/comander/modules.php";
     break;
 
-  case 'reset-logos':
+  case "reset-logos":
     require_once BASE_DIR . "/core/comander/reset-logos.php";
     break;
 
-  case 'lang':
+  case "lang":
     require_once BASE_DIR . "/core/comander/lang.php";
     break;
   
-  case 'sync-permissions':
+  case "sync-permissions":
     require_once BASE_DIR . "/core/comander/sync_permissions.php";
+    break;
+
+  case "process-mails":
+    require_once BASE_DIR . "/core/comander/process_mails.php";
     break;
 
   default:
@@ -57,6 +61,7 @@ switch ($command) {
     echo "  modules           Genera la estructura de un nuevo módulo.\n";
     echo "  lang              Genera/Limpia los archivos de idiomas de un módulo.\n";
     echo "  sync-permissions  Sincroniza los permisos del código con la base de datos.\n";
+    echo "  process-mails     Procesa la cola de correos electrónicos en storage/mails.\n";
     echo "--------------------------------------------------------\n\n";
     break;
 }

@@ -35,7 +35,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const response = await Mail.send({
           to: email.trim(),
           subject: "Correo de prueba",
-          body: "Este es un correo de prueba enviado desde la API para verificar la configuración del servidor."
+          body: `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body style="font-family: sans-serif; background-color: #f8f9fa; padding: 20px;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; border: 1px solid #dee2e6;">
+    <h2 style="color: #0d6efd; margin-top: 0;">Correo de Prueba SMTP</h2>
+    <p style="font-size: 16px; color: #212529;">Este es un correo de prueba enviado desde la API para verificar la configuración del servidor.</p>
+    <hr style="border: 0; border-top: 1px solid #dee2e6; margin: 20px 0;">
+    <p style="font-size: 12px; color: #6c757d; margin-bottom: 0;">Este mensaje ha sido generado automáticamente por el sistema PHP Start.</p>
+  </div>
+</body>
+</html>`,
+          bypass: true,
+          lang: "es"
         });
 
         if (response.success) {

@@ -1,22 +1,22 @@
-<?php start_block('title'); ?>
+<?php block_start("title"); ?>
 Ajustes SMTP
-<?php end_block(); ?>
+<?php block_end(); ?>
 
-<?php start_block('breadcrumb'); ?>
+<?php block_start("breadcrumb"); ?>
 <?php render_breadcrumb([
-  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
-  ['label' => 'Ajustes', 'link' => admin_route('settings/general')],
-  ['label' => 'Correo (SMTP)']
+  ["label" => "Dashboard", "link" => admin_route("dashboard")],
+  ["label" => "Ajustes", "link" => admin_route("settings/general")],
+  ["label" => "Correo (SMTP)"]
 ]) ?>
-<?php end_block(); ?>
+<?php block_end(); ?>
 
 <?php
 $smtp = $config->smtp();
 ?>
-<?php start_block("js") ?>
+<?php block_start("js"); ?>
 <?= static_assets_js("mail.js") ?>
-<?= url_script_admin('settings', 'smtp') ?>
-<?php end_block() ?>
+<?= url_script_admin("settings", "smtp") ?>
+<?php block_end(); ?>
 
 <form action="" method="POST">
   <div class="row g-3">
@@ -75,14 +75,32 @@ $smtp = $config->smtp();
               <div class="mb-0">
                 <label for="st_smtpencrypt" class="form-label">Cifrado</label>
                 <select id="st_smtpencrypt" name="st_smtpencrypt" class="form-select">
-                  <option value="none" <?= $smtp->encryption === 'none' ? 'selected' : '' ?>>Ninguno (None)</option>
-                  <option value="ssl" <?= $smtp->encryption === 'ssl' ? 'selected' : '' ?>>SSL</option>
-                  <option value="tls" <?= $smtp->encryption === 'tls' ? 'selected' : '' ?>>TLS</option>
+                  <option value="none" <?= $smtp->encryption === "none" ? "selected" : "" ?>>Ninguno (None)</option>
+                  <option value="ssl" <?= $smtp->encryption === "ssl" ? "selected" : "" ?>>SSL</option>
+                  <option value="tls" <?= $smtp->encryption === "tls" ? "selected" : "" ?>>TLS</option>
                 </select>
               </div>
             </div>
           </div>
 
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="text-primary fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-clock"></i>
+            Cola de Correos (Mail Queue)
+          </h6>
+
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="st_mail_queue_enabled" name="st_mail_queue_enabled" value="true"
+              <?= $config->get("mail_queue_enabled") === "true" ? "checked" : "" ?>>
+            <label class="form-check-label" for="st_mail_queue_enabled">Activar cola de correos por archivos (Evita lentitud de carga)</label>
+          </div>
+          <div class="form-text small mt-2">
+            Los correos se guardarán en <code>storage/mails/</code> y se procesarán automáticamente de forma asíncrona en segundo plano mediante peticiones en el sitio, o periódicamente mediante una tarea programada (cron) / comando: <code>php ps process-mails</code>.
+          </div>
         </div>
       </div>
 

@@ -28,13 +28,19 @@ class MailService {
   private ?string $subject = null;
   private ?string $body = null;
   private array $attachments = [];
+  private ?string $lang = null;
 
   private bool $initialized = false;
 
   public function __construct() {
     $this->mail = new PHPMailer(true);
     $this->mail->isHTML(true);
-    $this->mail->CharSet = 'UTF-8';
+    $this->mail->CharSet = "UTF-8";
+  }
+
+  public function lang($lang) {
+    $this->lang = trim($lang);
+    return $this;
   }
 
   public function host(string $host): self {
@@ -109,36 +115,71 @@ class MailService {
   }
 
   public function send(
-    ?string $to = null,
-    ?string $subject = null,
-    ?string $body = null,
-    array $attachments = []
-  ): array {
-
-    if (!$this->initialized || !$this->configIsValid()) {
-      return [
-        'success' => false,
-        'message' => 'Configuración SMTP incompleta.'
-      ];
-    }
-
+    $to = null,
+    $subject = null,
+    $body = null,
+    $attachments = [],
+    $bypassQueue = false
+  ) {
     $to      = $to ?? $this->to;
     $subject = $subject ?? $this->subject;
     $body    = $body ?? $this->body;
-
     $attachments = array_merge($this->attachments, $attachments);
+    $lang = $this->lang ?? get_locale();
 
     if (!$to || !$subject || !$body) {
       return [
-        'success' => false,
-        'message' => 'Destinatario, asunto o cuerpo no definidos.'
+        "success" => false,
+        "message" => "Destinatario, asunto o cuerpo no definidos."
+      ];
+    }
+
+    // Guardar en cola si está habilitada y no se solicita bypass
+    if (!$bypassQueue && site_config()->get("mail_queue_enabled") === "true") {
+      $mails_dir = BASE_DIR . "/storage/mails";
+      if (!is_dir($mails_dir)) {
+        mkdir($mails_dir, 0755, true);
+      }
+
+      $mail_data = [
+        "to"          => $to,
+        "subject"     => $subject,
+        "body"        => $body,
+        "attachments" => $attachments,
+        "lang"        => $lang,
+        "created_at"  => date("Y-m-d H:i:s")
+      ];
+
+      $filename = "mail_" . date("d-m-Y-H-i-s") . "_" . bin2hex(random_bytes(4)) . ".json";
+      $file_path = $mails_dir . "/" . $filename;
+
+      if (file_put_contents($file_path, json_encode($mail_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT))) {
+        $this->resetMessage();
+        return [
+          "success" => true,
+          "message" => "Correo encolado correctamente."
+        ];
+      } else {
+        return [
+          "success" => false,
+          "message" => "No se pudo encolar el correo en el archivo."
+        ];
+      }
+    }
+
+    if (!$this->initialized || !$this->configIsValid()) {
+      return [
+        "success" => false,
+        "message" => "Configuración SMTP incompleta."
       ];
     }
 
     try {
       $this->mail->clearAddresses();
       $this->mail->clearAttachments();
+      $this->mail->clearCustomHeaders();
 
+      $this->mail->addCustomHeader("Content-Language", $lang);
       $this->mail->addAddress($to);
       $this->mail->Subject = $subject;
       $this->mail->Body    = $body;
@@ -151,14 +192,14 @@ class MailService {
       $this->resetMessage();
 
       return [
-        'success' => true,
-        'message' => "Correo enviado correctamente a {$to}"
+        "success" => true,
+        "message" => "Correo enviado correctamente a {$to}"
       ];
 
     } catch (Exception $e) {
       return [
-        'success' => false,
-        'message' => $this->mail->ErrorInfo
+        "success" => false,
+        "message" => $this->mail->ErrorInfo
       ];
     }
   }

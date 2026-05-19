@@ -25,6 +25,8 @@
       const theme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
       document.documentElement.setAttribute('data-bs-theme', theme);
     })();
+
+    const APP_URL = "<?= APP_URL ?>";
   </script>
 
   <?php if (!is_logged_in() && isset($_COOKIE[COOKIE_PREFIX . 'auth'])): ?>
@@ -237,6 +239,30 @@
           </li>
         </ul>
         <div class="piru-nav-actions">
+          <div class="dropdown">
+            <button class="piru-action-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Language">
+              <i class="bi bi-globe"></i>
+              <span class="d-none d-sm-inline-block ms-1"><?= strtoupper(get_locale()) ?></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="<?= front_route("lang/es") ?>">
+                  Español
+                  <?php if (get_locale() === "es"): ?>
+                    <i class="fa-solid fa-check ms-auto text-success small"></i>
+                  <?php endif; ?>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2" href="<?= front_route("lang/en") ?>">
+                  English
+                  <?php if (get_locale() === "en"): ?>
+                    <i class="fa-solid fa-check ms-auto text-success small"></i>
+                  <?php endif; ?>
+                </a>
+              </li>
+            </ul>
+          </div>
           <button class="piru-action-btn" id="openSearch" type="button" title="Search">
             <i class="bi bi-search"></i>
           </button>
@@ -378,6 +404,15 @@
   <?= get_block('js'); ?>
 
   <?= $notifier->showToasts(); ?>
+
+  <script>
+    // Procesar cola de correos de forma asíncrona al cargar la página
+    window.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        fetch("/mail/process").catch((err) => console.error("Error al procesar la cola de correos:", err));
+      }, 1000);
+    });
+  </script>
 </body>
 
 </html>

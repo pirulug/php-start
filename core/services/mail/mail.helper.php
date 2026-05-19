@@ -13,19 +13,18 @@ class Mail {
    * @return MailService
    */
   public static function init(?array $configOverride = null): MailService {
-    global $config;
-
-    require_once __DIR__ . '/mail.service.php';
+    require_once __DIR__ . "/mail.service.php";
 
     $mail = new MailService();
+    $cfg = site_config();
 
     $settings = [
-      'name'       => $config->get("site_name"),
-      'host'       => $config->get("smtp_host"),
-      'email'      => $config->get("smtp_email"),
-      'password'   => $config->get("smtp_password"),
-      'port'       => (int) $config->get("smtp_port"),
-      'encryption' => $config->get("smtp_encryption"),
+      "name"       => $cfg->get("site_name"),
+      "host"       => $cfg->get("smtp_host"),
+      "email"      => $cfg->get("smtp_email"),
+      "password"   => $cfg->get("smtp_password"),
+      "port"       => (int) $cfg->get("smtp_port"),
+      "encryption" => $cfg->get("smtp_encryption"),
     ];
 
     if ($configOverride) {
@@ -33,12 +32,12 @@ class Mail {
     }
 
     return $mail
-      ->name($settings['name'])
-      ->host($settings['host'])
-      ->email($settings['email'])
-      ->password($settings['password'])
-      ->port($settings['port'])
-      ->encryption($settings['encryption'])
+      ->name($settings["name"])
+      ->host($settings["host"])
+      ->email($settings["email"])
+      ->password($settings["password"])
+      ->port($settings["port"])
+      ->encryption($settings["encryption"])
       ->init();
   }
 }

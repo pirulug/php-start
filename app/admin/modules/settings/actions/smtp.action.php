@@ -1,12 +1,13 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $smtp_updates = [
-    'smtp_host'       => clear_input($_POST['st_smtphost'] ?? ''),
-    'smtp_email'      => clear_input($_POST['st_smtpemail'] ?? ''),
-    'smtp_password'   => clear_input($_POST['st_smtppassword'] ?? ''),
-    'smtp_port'       => clear_input($_POST['st_smtpport'] ?? ''),
-    'smtp_encryption' => clear_input($_POST['st_smtpencrypt'] ?? ''),
+    "smtp_host"          => clear_input($_POST["st_smtphost"] ?? ""),
+    "smtp_email"         => clear_input($_POST["st_smtpemail"] ?? ""),
+    "smtp_password"      => clear_input($_POST["st_smtppassword"] ?? ""),
+    "smtp_port"          => clear_input($_POST["st_smtpport"] ?? ""),
+    "smtp_encryption"    => clear_input($_POST["st_smtpencrypt"] ?? ""),
+    "mail_queue_enabled" => (isset($_POST["st_mail_queue_enabled"]) && $_POST["st_mail_queue_enabled"] === "true") ? "true" : "false",
   ];
 
   // Guardar usando el helper del dominio (Masivo)

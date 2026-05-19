@@ -12,8 +12,8 @@ const Mail = {
    * @param {string} options.body - Email HTML/Text body
    * @returns {Promise<Object>} Response from the server
    */
-  send: async function ({ to, subject, body }) {
-    const SITE_URL = document.querySelector('meta[name="site-url"]')?.content || '';
+  send: async function ({ to, subject, body, bypass = false, lang = "" }) {
+    const SITE_URL = document.querySelector('meta[name="site-url"]')?.content || "";
 
     if (!to || !subject || !body) {
       return {
@@ -26,6 +26,12 @@ const Mail = {
     formData.append("to", to.trim());
     formData.append("subject", subject.trim());
     formData.append("body", body.trim());
+    if (bypass) {
+      formData.append("bypass", "true");
+    }
+    if (lang) {
+      formData.append("lang", lang);
+    }
 
     try {
       const response = await fetch(`${SITE_URL}/mail`, {

@@ -190,6 +190,15 @@
   <?= static_libs_js("sweetalert2", "sa.js") ?>
 
   <?= get_block('js'); ?>
+
+  <script>
+    // Procesar cola de correos de forma asíncrona al cargar la página
+    window.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        fetch("/mail/process").catch((err) => console.error("Error al procesar la cola de correos:", err));
+      }, 1000);
+    });
+  </script>
 </body>
 
 </html>

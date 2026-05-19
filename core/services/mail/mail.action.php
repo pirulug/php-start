@@ -54,9 +54,11 @@ if (!empty($errors)) {
 
 // Envío del correo usando el componente de sistema
 try {
-  require_once __DIR__ . '/mail.helper.php';
+  require_once __DIR__ . "/mail.helper.php";
+  $bypass   = isset($_POST["bypass"]) && $_POST["bypass"] === "true";
+  $lang     = isset($_POST["lang"]) ? trim($_POST["lang"]) : get_locale();
   $mail     = Mail::init();
-  $response = $mail->send($to, $subject, $body);
+  $response = $mail->lang($lang)->send($to, $subject, $body, [], $bypass);
 
   http_response_code($response['success'] ? 200 : 500);
 
