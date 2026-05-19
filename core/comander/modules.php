@@ -242,29 +242,29 @@ foreach ($views as $view) {
   $cName = ucfirst($plural_name);
   $cView = ucfirst($view);
   
-  $view_content = "<?php start_block('title') ?>\n";
+  $view_content = "<?php block_start(\"title\") ?>\n";
   $view_content .= "  {$cView} {$cName}\n";
-  $view_content .= "<?php end_block() ?>\n\n";
+  $view_content .= "<?php block_end() ?>\n\n";
 
   if ($is_admin) {
-    $view_content .= "<?php start_block('breadcrumb'); ?>\n";
+    $view_content .= "<?php block_start(\"breadcrumb\"); ?>\n";
     $view_content .= "<?php render_breadcrumb([\n";
-    $view_content .= "  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],\n";
-    $view_content .= "  ['label' => '{$cName}', 'link' => admin_route('{$plural_name}')],\n";
-    $view_content .= "  ['label' => '{$cView}']\n";
+    $view_content .= "  [\"label\" => \"Dashboard\", \"link\" => admin_route(\"dashboard\")],\n";
+    $view_content .= "  [\"label\" => \"{$cName}\", \"link\" => admin_route(\"{$plural_name}\")],\n";
+    $view_content .= "  [\"label\" => \"{$cView}\"]\n";
     $view_content .= "]) ?>\n";
-    $view_content .= "<?php end_block(); ?>\n\n";
+    $view_content .= "<?php block_end(); ?>\n\n";
   }
 
-  $view_content .= "<?php start_block('css') ?>\n";
+  $view_content .= "<?php block_start(\"css\") ?>\n";
   $view_content .= "<link rel=\"stylesheet\" href=\"\">\n";
   $view_content .= "<style>/* STYLE */</style>\n";
-  $view_content .= "<?php end_block() ?>\n\n";
+  $view_content .= "<?php block_end() ?>\n\n";
 
-  $view_content .= "<?php start_block('js') ?>\n";
+  $view_content .= "<?php block_start(\"js\") ?>\n";
   $view_content .= "<script src=\"\"></script>\n";
   $view_content .= "<script>/* SCRIPT */</script>\n";
-  $view_content .= "<?php end_block() ?>\n\n";
+  $view_content .= "<?php block_end() ?>\n\n";
 
   if ($is_front) {
     $view_content .= "<div class=\"container py-3\">\n";
@@ -358,8 +358,8 @@ function create_module_file($base_path, $sub_folder, $filename, $custom_content 
     if (str_contains($filename, '.action')) {
       $content .= "// Lógica para la acción: {$clean_name}\n";
     } elseif (str_contains($filename, '.view')) {
-      $content .= "<?php start_block('title') ?>\n  " . ucfirst($clean_name) . "\n<?php end_block() ?>\n\n";
-      $content .= "<?php start_block('breadcrumb'); ?>\n<?php render_breadcrumb([\n  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],\n  ['label' => '" . ucfirst($clean_name) . "']\n]) ?>\n<?php end_block(); ?>\n\n";
+      $content .= "<?php block_start(\"title\") ?>\n  " . ucfirst($clean_name) . "\n<?php block_end() ?>\n\n";
+      $content .= "<?php block_start(\"breadcrumb\"); ?>\n<?php render_breadcrumb([\n  [\"label\" => \"Dashboard\", \"link\" => admin_route(\"dashboard\")],\n  [\"label\" => \"" . ucfirst($clean_name) . "\"]\n]) ?>\n<?php block_end(); ?>\n\n";
       $content .= "<div class=\"card bg-body\">\n  <div class=\"card-body\">\n    <h1>" . ucfirst($clean_name) . "</h1>\n    <p>Contenido de la vista.</p>\n  </div>\n</div>\n";
     } elseif ($filename === 'router.php') {
       $content .= "// Definición de rutas\n// Router::route('path')->action('module@action')->view('module@view')->register();\n";
