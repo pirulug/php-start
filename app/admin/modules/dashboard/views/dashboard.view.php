@@ -90,7 +90,7 @@
 <div class="welcome-banner rounded mb-3">
   <div class="row align-items-center">
     <div class="col-md-8">
-      <h2 class="fw-bold mb-1 text-white"><?= __('Bienvenido') ?>, <?= htmlspecialchars($user_session->user_login) ?>!</h2>
+      <h2 class="fw-bold mb-1 text-white"><?= __('Bienvenido') ?>, <?= clear_html($user_session->user_login) ?>!</h2>
       <p class="mb-0 opacity-75"><?= __('Bienvenido al panel administrativo') ?></p>
     </div>
     <div class="col-md-4 text-md-end mt-3 mt-md-0">
@@ -111,7 +111,8 @@
           <i class="fa-solid fa-users fa-xl"></i>
         </div>
         <div>
-          <span class="text-body-secondary small fw-bold text-uppercase d-block mb-1"><?= __('Usuarios Totales') ?></span>
+          <span
+            class="text-body-secondary small fw-bold text-uppercase d-block mb-1"><?= __('Usuarios Totales') ?></span>
           <h3 class="mb-0 fw-bold"><?= format_number($count_user) ?></h3>
         </div>
       </div>
@@ -216,7 +217,8 @@
           <div class="col-md-6">
             <div class="system-item d-flex justify-content-between align-items-center h-100">
               <div>
-                <span class="small text-body-secondary fw-bold text-uppercase d-block mb-1"><?= __('Memoria en Uso') ?></span>
+                <span
+                  class="small text-body-secondary fw-bold text-uppercase d-block mb-1"><?= __('Memoria en Uso') ?></span>
                 <div class="h4 mb-0 fw-bold"><?= $system_info['memory_usage'] ?></div>
               </div>
               <div class="text-primary opacity-50"><i class="fa-solid fa-memory fa-2x"></i></div>
@@ -227,8 +229,8 @@
               <div>
                 <span class="small text-body-secondary fw-bold text-uppercase d-block mb-1"><?= __('Entorno') ?></span>
                 <div class="small fw-bold text-truncate" style="max-width: 180px;">
-                    <?= $system_info['os'] ?> <br>
-                    <span class="opacity-75"><?= $system_info['server_software'] ?></span>
+                  <?= $system_info['os'] ?> <br>
+                  <span class="opacity-75"><?= $system_info['server_software'] ?></span>
                 </div>
               </div>
               <div class="text-success opacity-50"><i class="fa-solid fa-microchip fa-2x"></i></div>
@@ -255,7 +257,8 @@
   <div class="col-lg-4">
     <div class="card h-100">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="fw-bold mb-0"><i class="fa-solid fa-user-clock me-2 text-warning"></i><?= __('Actividad Reciente') ?></h6>
+        <h6 class="fw-bold mb-0"><i class="fa-solid fa-user-clock me-2 text-warning"></i><?= __('Actividad Reciente') ?>
+        </h6>
       </div>
       <div class="card-body p-0">
         <div class="list-group list-group-flush">
@@ -276,7 +279,8 @@
                   <div class="text-body-secondary" style="font-size: 0.75rem;">
                     <?= format_date($user->user_created) ?>
                   </div>
-                  <span class="badge bg-body-secondary text-body-secondary small border" style="font-size: 0.65rem;"><?= $user->role_name ?></span>
+                  <span class="badge bg-body-secondary text-body-secondary small border"
+                    style="font-size: 0.65rem;"><?= $user->role_name ?></span>
                 </div>
               </div>
             </div>
@@ -284,7 +288,8 @@
         </div>
       </div>
       <div class="card-footer text-center py-3">
-        <a href="<?= admin_route('users') ?>" class="btn btn-link btn-sm text-decoration-none p-0 fw-bold text-uppercase small">
+        <a href="<?= admin_route('users') ?>"
+          class="btn btn-link btn-sm text-decoration-none p-0 fw-bold text-uppercase small">
           <?= __('Gestionar Usuarios') ?> <i class="fa-solid fa-arrow-right ms-1"></i>
         </a>
       </div>
