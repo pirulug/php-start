@@ -2,7 +2,7 @@
 
 // Boot Loadning
 require_once BASE_DIR . "/core/boot/core.php";
-require_once BASE_DIR . "/core/boot/view_blocks.php";
+require_once BASE_DIR . "/core/boot/blocks.php";
 require_once BASE_DIR . "/core/boot/load.php";
 require_once BASE_DIR . "/core/boot/url.php";
 require_once BASE_DIR . "/core/boot/get.php";
