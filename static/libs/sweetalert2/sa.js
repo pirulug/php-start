@@ -40,16 +40,16 @@ const PiruSA = {
       showCancelButton: el.getAttribute('sa-show-cancel-btn') !== 'false',
       confirmButtonText: el.getAttribute('sa-confirm-btn-text') || 'Aceptar',
       cancelButtonText: el.getAttribute('sa-cancel-btn-text') || 'Cancelar',
-      confirmButtonColor: 'var(--pr-primary)',
-      cancelButtonColor: 'var(--pr-secondary)',
+      // confirmButtonColor: 'var(--pr-primary)',
+      // cancelButtonColor: 'var(--pr-secondary)',
       timer: parseInt(el.getAttribute('sa-timer'), 10) || null,
       showConfirmButton: el.getAttribute('sa-show-confirm-btn') !== 'false',
       allowOutsideClick: el.getAttribute('sa-allow-outside') !== 'false',
-      customClass: {
-        confirmButton: 'btn btn-primary px-4',
-        cancelButton: 'btn btn-outline-secondary px-4'
-      },
-      buttonsStyling: false
+      // customClass: {
+      //   confirmButton: 'btn btn-primary px-4',
+      //   cancelButton: 'btn btn-outline-secondary px-4'
+      // },
+      // buttonsStyling: false
     };
 
     const redirectUrl = el.getAttribute('sa-redirect-url');

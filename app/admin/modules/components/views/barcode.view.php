@@ -11,7 +11,7 @@ Demostración de Códigos de Barras y QR
 <?php end_block(); ?>
 
 <?php start_block("css") ?>
-<link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/prismjs/prismjs.css">
+<?= static_libs_css("prismjs", "prismjs.css") ?>
 <style>
   .barcode-example {
     transition: transform 0.2s;
@@ -173,7 +173,7 @@ $generator->output_image('png', 'code128', '12345678', $options);</code></pre>
 </div>
 
 <?php start_block("js") ?>
-<script src="<?= APP_URL ?>/static/plugins/prismjs/prismjs.js"></script>
+<?= static_libs_js("prismjs", "prismjs.js") ?>
 <script>
   document.getElementById('barcodeForm').addEventListener('submit', function(e) {
     e.preventDefault();

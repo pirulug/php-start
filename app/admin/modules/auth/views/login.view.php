@@ -25,12 +25,7 @@
 
           <div class="mb-3">
             <label class="form-label" for="user-password">Contraseña</label>
-            <div class="input-group">
-              <input class="form-control bg-body" id="user-password" type="password" name="user-password" placeholder="••••••••" required autocomplete="current-password">
-              <button class="btn btn-outline-secondary" type="button" data-pr-toggle-password="">
-                <i class="fa-regular fa-eye"></i>
-              </button>
-            </div>
+            <input class="form-control" id="user-password" type="password" name="user-password" placeholder="••••••••" required autocomplete="current-password" data-pr-toggle-password>
           </div>
 
           <div class="mb-3 form-check">

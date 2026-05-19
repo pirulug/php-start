@@ -10,6 +10,33 @@ Gestión de Captcha
 ]) ?>
 <?php end_block(); ?>
 
+
+<?php start_block("css") ?>
+<?= static_libs_css("prismjs", "prismjs.css") ?>
+<?php end_block() ?>
+
+<?php start_block("js") ?>
+<?= static_libs_js("prismjs", "prismjs.js") ?>
+<script>
+  /**
+   * Simulación de mensaje flash detectado por sa.js
+   */
+  function simulateFlash() {
+    const div = document.createElement('div');
+    div.setAttribute('data-sa-flash', '');
+    div.setAttribute('data-sa-type', 'info');
+    div.setAttribute('data-sa-title', 'Previsualización');
+    div.setAttribute('data-sa-text', 'El componente de alerta global (PiruSA) funciona en conjunto con Captchas.');
+    document.body.appendChild(div);
+
+    if (typeof PiruSA !== 'undefined') {
+      PiruSA.checkFlashMessages(); // Re-chequear para la demo
+    }
+    div.remove();
+  }
+</script>
+<?php end_block() ?>
+
 <div class="row g-4">
   <!-- Información de Tipos -->
   <div class="col-xl-8">
@@ -65,15 +92,14 @@ Gestión de Captcha
         <p class="small text-body-secondary">La clase <code>CaptchaManager</code> abstrae la lógica de cualquier
           proveedor activo:</p>
 
-        <div class="bg-body-tertiary p-3 rounded-3 border">
-          <pre class="mb-0 small"><code class="text-info" style="font-family: 'Fira Code', monospace;">$captcha = new CaptchaManager();
+
+        <pre class="language-php"><code class="language-php">$captcha = new CaptchaManager();
 echo $captcha->render(); // Se usa en la vista
 
 // En la acción se valida contra el $_POST
 if (!$captcha->validate($_POST)) {
   return "Error de validación";
 }</code></pre>
-        </div>
       </div>
     </div>
   </div>
@@ -133,24 +159,3 @@ if (!$captcha->validate($_POST)) {
     </div>
   </div>
 </div>
-
-<?php start_block("js"); ?>
-<script>
-  /**
-   * Simulación de mensaje flash detectado por sa.js
-   */
-  function simulateFlash() {
-    const div = document.createElement('div');
-    div.setAttribute('data-sa-flash', '');
-    div.setAttribute('data-sa-type', 'info');
-    div.setAttribute('data-sa-title', 'Previsualización');
-    div.setAttribute('data-sa-text', 'El componente de alerta global (PiruSA) funciona en conjunto con Captchas.');
-    document.body.appendChild(div);
-
-    if (typeof PiruSA !== 'undefined') {
-      PiruSA.checkFlashMessages(); // Re-chequear para la demo
-    }
-    div.remove();
-  }
-</script>
-<?php end_block(); ?>

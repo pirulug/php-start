@@ -11,7 +11,11 @@ Demostración de FPDF
 <?php end_block(); ?>
 
 <?php start_block("css") ?>
-<link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/prismjs/prismjs.css">
+<?= static_libs_css("prismjs", "prismjs.css") ?>
+<?php end_block() ?>
+
+<?php start_block("js") ?>
+<?= static_libs_js("prismjs", "prismjs.js") ?>
 <?php end_block() ?>
 
 <div class="row">
@@ -85,7 +89,3 @@ $pdf->Output('I', 'ejemplo.pdf');</code></pre>
     </div>
   </div>
 </div>
-
-<?php start_block("js") ?>
-<script src="<?= APP_URL ?>/static/plugins/prismjs/prismjs.js"></script>
-<?php end_block() ?>

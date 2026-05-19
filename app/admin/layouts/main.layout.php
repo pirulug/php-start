@@ -26,6 +26,7 @@
   <!-- CSS -->
   <?= static_assets_css("piruadmin.css") ?>
   <?= static_assets_css("fontawesome.css") ?>
+  <?= static_assets_css("bootstrapicons.css") ?>
 
   <?= static_libs_css("sweetalert2", "sweetalert2.css") ?>
 
@@ -66,11 +67,13 @@
               <div class="dropdown-menu dropdown-menu-end">
                 <a class="dropdown-item d-flex align-items-center gap-2" href="<?= admin_route('account/lang/es') ?>">
                   Español
-                  <?php if (get_locale() === 'es'): ?><i class="fa-solid fa-check ms-auto text-success small"></i><?php endif; ?>
+                  <?php if (get_locale() === 'es'): ?><i
+                      class="fa-solid fa-check ms-auto text-success small"></i><?php endif; ?>
                 </a>
                 <a class="dropdown-item d-flex align-items-center gap-2" href="<?= admin_route('account/lang/en') ?>">
                   English
-                  <?php if (get_locale() === 'en'): ?><i class="fa-solid fa-check ms-auto text-success small"></i><?php endif; ?>
+                  <?php if (get_locale() === 'en'): ?><i
+                      class="fa-solid fa-check ms-auto text-success small"></i><?php endif; ?>
                 </a>
               </div>
             </li>
@@ -170,9 +173,13 @@
       </footer>
     </div>
     <!-- Back to top-->
-    <!-- <a class="btn btn-lg btn-primary btn-lg-square back-to-top" href="#">
-      <i class="fa fa-arrow-up"></i>
-    </a> -->
+    <a class="back-to-top" href="#">
+      <svg class="back-to-top-progress" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="back-to-top-circle" cx="25" cy="25" r="22"></circle>
+        <circle class="back-to-top-progress-bar" cx="25" cy="25" r="22"></circle>
+      </svg>
+      <i class="bi bi-arrow-up-short"></i>
+    </a>
   </div>
   <!-- Dark & Ligth-->
 

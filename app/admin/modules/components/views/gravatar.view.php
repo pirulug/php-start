@@ -11,17 +11,11 @@
 <?php end_block(); ?>
 
 <?php start_block("css") ?>
-  <link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/prismjs/prismjs.css">
-  <style>
-    pre[class*="language-"] {
-      border-radius: 8px;
-      margin: 0;
-    }
-  </style>
+<?= static_libs_css("prismjs", "prismjs.css") ?>
 <?php end_block() ?>
 
 <?php start_block("js") ?>
-  <script src="<?= APP_URL ?>/static/plugins/prismjs/prismjs.js"></script>
+<?= static_libs_js("prismjs", "prismjs.js") ?>
 <?php end_block() ?>
 
 <div class="row">
@@ -115,9 +109,9 @@
 
     <div class="card mt-3">
       <div class="card-header">
-        <h5 class="card-title mb-0">Uso en Código</h5>
+        <h5 class="card-title">Uso en Código</h5>
       </div>
-      <div class="card-body p-0">
+      <div class="card-body">
         <pre class="language-php"><code>// 1. Uso estático fluido (Recomendado)
 echo Gravatar::email('usuario@correo.com')
              ->size(200)

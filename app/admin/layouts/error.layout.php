@@ -26,6 +26,7 @@
   <!-- CSS -->
   <?= static_assets_css("piruadmin.css") ?>
   <?= static_assets_css("fontawesome.css") ?>
+  <?= static_assets_css("bootstrapicons.css") ?>
 
   <?= get_block('css'); ?>
 </head>
