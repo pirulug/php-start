@@ -8,7 +8,7 @@ Recuperar Contraseña
 
 <?php start_block('js'); ?>
 <?= static_libs_js("sweetalert2", "sweetalert2.js") ?>
-<script src="<?= url_script_front("auth", "reset") ?>"></script>
+<?= url_script_front("auth", "reset") ?>
 <?php end_block(); ?>
 
 <div class="container my-5">
@@ -24,29 +24,29 @@ Recuperar Contraseña
               style="width: 70px; height: 70px;">
               <i class="fa-solid fa-key fs-2"></i>
             </div>
-            <h4 class="fw-bold text-uppercase"><?php __("¿Olvidaste tu clave?") ?></h4>
+            <h4 class="fw-bold text-uppercase"><?= __("¿Olvidaste tu clave?") ?></h4>
             <p class="text-body-secondary small mb-0">
-              <?php __("Introduce tu correo y te enviaremos un enlace de recuperación.") ?>
+              <?= __("Introduce tu correo y te enviaremos un enlace de recuperación.") ?>
             </p>
           </div>
 
           <form id="reset_password_form" action="" method="POST" class="mt-4">
             <div class="mb-4">
-              <label for="email" class="form-label"><?php __("Correo Electrónico") ?></label>
+              <label for="email" class="form-label"><?= __("Correo Electrónico") ?></label>
               <input type="email" name="email" id="email" class="form-control" placeholder="nombre@ejemplo.com"
                 required>
-              <div class="form-text small mt-2"><?php __("Te enviaremos las instrucciones de recuperación.") ?></div>
+              <div class="form-text small mt-2"><?= __("Te enviaremos las instrucciones de recuperación.") ?></div>
             </div>
 
             <div class="d-grid mb-3">
               <button type="submit" id="btn_submit" class="btn btn-primary btn-lg py-3 text-uppercase small fw-bold">
                 <span class="btn-text">
                   <i class="fa-solid fa-paper-plane me-2"></i>
-                  <?php __("Enviar Enlace") ?>
+                  <?= __("Enviar Enlace") ?>
                 </span>
                 <span class="btn-loading d-none">
                   <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  <?php __("Enviando...") ?>
+                  <?= __("Enviando...") ?>
                 </span>
               </button>
             </div>
@@ -54,7 +54,7 @@ Recuperar Contraseña
             <div class="text-center mt-4">
               <a href="<?= front_route("signin") ?>" class="text-decoration-none small fw-bold">
                 <i class="fa-solid fa-arrow-left me-1"></i>
-                <?php __("Volver al Inicio de Sesión") ?>
+                <?= __("Volver al Inicio de Sesión") ?>
               </a>
             </div>
           </form>

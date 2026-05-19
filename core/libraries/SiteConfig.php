@@ -145,8 +145,8 @@ class SiteConfig {
   /**
    * Obtiene el código de lenguaje (ISO 639-1).
    */
-  public function language(): string {
-    return $this->get('site_language', 'es');
+  public function language() {
+    return $this->get("site_language", DEFAULT_LANG);
   }
 
   /**

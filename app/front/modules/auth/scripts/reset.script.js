@@ -31,10 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
       if (data.success) {
         Swal.fire({
-          icon: 'success',
-          title: '¡Enviado!',
+          icon: "success",
+          title: "¡Enviado!",
           text: data.message,
-          confirmButtonColor: '#0d6efd'
         }).then(() => {
           if (redirect) window.location.href = redirect;
         });
@@ -43,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
           icon: 'error',
           title: 'Error',
           text: data.message,
-          confirmButtonColor: '#0d6efd'
         });
         // Restaurar botón si hay error
         btn.disabled = false;
@@ -56,8 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Hubo un error al procesar tu solicitud. Inténtalo de nuevo.',
-        confirmButtonColor: '#0d6efd'
+        text: 'Hubo un error al procesar tu solicitud. Inténtalo de nuevo.'
       });
       // Restaurar botón
       btn.disabled = false;

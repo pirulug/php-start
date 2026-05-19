@@ -4,6 +4,8 @@
  * Endpoint: Solicitud de restablecimiento de contraseña.
  */
 
+require_once BASE_DIR . "/core/services/mail/mail.helper.php";
+
 // Validación del método HTTP
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   http_response_code(405);
@@ -79,22 +81,31 @@ try {
     $reset_link = APP_URL . "/reset-password/confirm/" . $token;
     $site_name  = $config->get("site_name");
 
+    $locale  = get_locale();
     $subject = "Restablecer tu contraseña - {$site_name}";
     $body    = "
-      <div style='font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;'>
-    <h2 style='color: #0d6efd;'>Hola, {$user->user_login}</h2>
-    <p>Has solicitado restablecer tu contraseña en <strong>{$site_name}</strong>.</p>
-    <p>Haz clic en el siguiente botón para continuar. Este enlace expirará en 1 hora.</p>
-    <div style='text-align: center; margin: 30px 0;'>
-          <a href='{$reset_link}' style='background-color: #0d6efd; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;'>
-      Restablecer Contraseña
-          </a>
-    </div>
-    <p style='color: #666; font-size: 13px;'>Si no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
-    <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
-    <p style='font-size: 11px; color: #999;'>Este es un correo automático, por favor no respondas.</p>
-      </div>
-  ";
+      <!DOCTYPE html>
+      <html lang=\"{$locale}\">
+      <head>
+        <meta charset=\"UTF-8\">
+      </head>
+      <body>
+        <div style='font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;'>
+          <h2 style='color: #0d6efd;'>Hola, {$user->user_login}</h2>
+          <p>Has solicitado restablecer tu contraseña en <strong>{$site_name}</strong>.</p>
+          <p>Haz clic en el siguiente botón para continuar. Este enlace expirará en 1 hora.</p>
+          <div style='text-align: center; margin: 30px 0;'>
+            <a href='{$reset_link}' style='background-color: #0d6efd; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;'>
+              Restablecer Contraseña
+            </a>
+          </div>
+          <p style='color: #666; font-size: 13px;'>Si no solicitaste este cambio, puedes ignorar este correo de forma segura.</p>
+          <hr style='border: 0; border-top: 1px solid #eee; margin: 20px 0;'>
+          <p style='font-size: 11px; color: #999;'>Este es un correo automático, por favor no respondas.</p>
+        </div>
+      </body>
+      </html>
+    ";
 
     // Enviar con componente de sistema (Utilidad Global)
     $send = Mail::init()->send($email, $subject, $body);
@@ -121,7 +132,7 @@ try {
 } catch (Throwable $e) {
   http_response_code(500);
   echo json_encode([
-    'success' => false,
-    'message' => 'Error interno del servidor.'
+    "success" => false,
+    "message" => "Error interno del servidor."
   ], JSON_UNESCAPED_UNICODE);
 }

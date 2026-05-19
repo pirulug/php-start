@@ -3,7 +3,11 @@ Nueva Contraseña
 <?php end_block(); ?>
 
 <?php start_block('css'); ?>
-<link rel="stylesheet" href="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.css">
+<?= static_libs_css("sweetalert2", "sweetalert2.css") ?>
+<?php end_block(); ?>
+
+<?php start_block('js'); ?>
+<?= static_libs_js("sweetalert2", "sweetalert2.js") ?>
 <?php end_block(); ?>
 
 <div class="container my-5">
@@ -56,7 +60,3 @@ Nueva Contraseña
     </div>
   </div>
 </div>
-
-<?php start_block('js'); ?>
-<script src="<?= APP_URL ?>/static/plugins/sweetalert2/sweetalert2.js"></script>
-<?php end_block(); ?>

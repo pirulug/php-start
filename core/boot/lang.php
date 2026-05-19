@@ -90,10 +90,10 @@ function _e($text, $domain = null) {
  * @return string
  */
 function get_locale() {
-  if (isset($_SESSION['site_lang'])) {
-    return $_SESSION['site_lang'];
+  if (isset($_SESSION["site_lang"])) {
+    return $_SESSION["site_lang"];
   }
 
   global $config;
-  return $config->get('site_lang', 'es');
+  return $config->get("site_lang", DEFAULT_LANG);
 }
