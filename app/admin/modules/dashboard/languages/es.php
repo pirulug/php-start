@@ -25,7 +25,4 @@ return [
   'Uso de Almacenamiento' => 'Uso de Almacenamiento',
   'Actividad Reciente' => 'Actividad Reciente',
   'Gestionar Usuarios' => 'Gestionar Usuarios',
-  'Hola' => 'Hola',
-  'Hola mundo' => 'Hola mundo',
-  'Hola mundo todos' => 'Hola mundo todos',
 ];

@@ -287,10 +287,6 @@
         <a href="<?= admin_route('users') ?>" class="btn btn-link btn-sm text-decoration-none p-0 fw-bold text-uppercase small">
           <?= __('Gestionar Usuarios') ?> <i class="fa-solid fa-arrow-right ms-1"></i>
         </a>
-        <br>
-        <?= __('Hola') ?><br>
-        <?= __('Hola mundo') ?><br>
-        <?= __('Hola mundo todos') ?><br>
       </div>
     </div>
   </div>
