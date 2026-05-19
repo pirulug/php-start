@@ -59,6 +59,9 @@
 </head>
 
 <body>
+  <?php if ($config->get("loader_front") === "true"): ?>
+    <?php require_once BASE_DIR . "/app/front/layouts/partials/loader.php"; ?>
+  <?php endif; ?>
 
   <div class="piru-wrapper">
     <div class="piru-nav-topbar">

@@ -1,9 +1,11 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $option_updates = [
-    'site_name'        => clear_input($_POST['st_sitename'] ?? ''),
-    'site_description' => clear_input($_POST['st_description'] ?? ''),
+    "site_name"        => clear_input($_POST["st_sitename"] ?? ""),
+    "site_description" => clear_input($_POST["st_description"] ?? ""),
+    "loader_front"     => (isset($_POST["st_loader_front"]) && $_POST["st_loader_front"] === "true") ? "true" : "false",
+    "loader_admin"     => (isset($_POST["st_loader_admin"]) && $_POST["st_loader_admin"] === "true") ? "true" : "false",
   ];
 
   // Procesar keywords (Tagify envía un JSON)

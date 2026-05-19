@@ -34,8 +34,8 @@
 </head>
 
 <body>
-  <?php if ($config->get("loader_admin") === 'true'): ?>
-    <?php require_once BASE_DIR . '/app/admin/layouts/partials/loader.php'; ?>
+  <?php if ($config->get("loader_admin") === "true"): ?>
+    <?php require_once BASE_DIR . "/app/admin/layouts/partials/loader.php"; ?>
   <?php endif; ?>
 
   <div class="wrapper">

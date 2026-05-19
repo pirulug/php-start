@@ -1,23 +1,23 @@
-<?php start_block('title'); ?>
+<?php block_start("title"); ?>
 Ajustes Generales
-<?php end_block(); ?>
+<?php block_end(); ?>
 
-<?php start_block('breadcrumb'); ?>
+<?php block_start("breadcrumb"); ?>
 <?php render_breadcrumb([
-  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
-  ['label' => 'Settings'],
-  ['label' => 'General']
+  ["label" => "Dashboard", "link" => admin_route("dashboard")],
+  ["label" => "Settings"],
+  ["label" => "General"]
 ]) ?>
-<?php end_block(); ?>
+<?php block_end(); ?>
 
-<?php start_block("css"); ?>
+<?php block_start("css"); ?>
 <?= static_libs_css("tagify", "tagify.css") ?>
-<?php end_block(); ?>
+<?php block_end(); ?>
 
-<?php start_block("js"); ?>
+<?php block_start("js"); ?>
 <?= static_libs_js("tagify", "tagify.js") ?>
-<?= url_script_admin('settings', 'general') ?>
-<?php end_block(); ?>
+<?= url_script_admin("settings", "general") ?>
+<?php block_end(); ?>
 
 <form action="" method="POST" enctype="multipart/form-data">
   <div class="row g-3">
@@ -47,6 +47,27 @@ Ajustes Generales
             <input type="text" id="tag-input" name="st_keywords" class="form-control"
               value="<?= htmlspecialchars($config->siteKeywords() ?? '') ?>" placeholder="Escribe y presiona Enter">
             <div class="form-text small">Presiona Enter para agregar cada etiqueta.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="text-primary fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-spinner"></i>
+            Pantalla de Carga (Preloader)
+          </h6>
+
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="st_loader_front" name="st_loader_front" value="true"
+              <?= $config->get("loader_front") === "true" ? "checked" : "" ?>>
+            <label class="form-check-label" for="st_loader_front">Activar pantalla de carga en el Sitio Público (Front)</label>
+          </div>
+
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" id="st_loader_admin" name="st_loader_admin" value="true"
+              <?= $config->get("loader_admin") === "true" ? "checked" : "" ?>>
+            <label class="form-check-label" for="st_loader_admin">Activar pantalla de carga en el Panel de Administración (Admin)</label>
           </div>
         </div>
       </div>
