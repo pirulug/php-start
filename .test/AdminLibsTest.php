@@ -9,13 +9,13 @@ echo "\nEJECUTANDO: AdminLibsTest\n";
 // Cargar clases que no están en la raíz de libraries
 require_once BASE_DIR . "/core/libraries/admin/Sidebar.php";
 
-// 1. Prueba: ActionBtn
+// 1. Prueba: Button
 $url = "admin/users/edit/1";
-$btn = ActionBtn::edit($url)->text("Editar Usuario");
+$btn = Button::edit($url)->text("Editar Usuario");
 $html = $btn->render();
-Tester::assertTrue(strpos($html, "href=\"$url\"") !== false, "ActionBtn debe contener la URL correcta");
-Tester::assertTrue(strpos($html, "fa-pen-to-square") !== false, "ActionBtn debe contener el icono de edición");
-Tester::assertTrue(strpos($html, "Editar Usuario") !== false, "ActionBtn debe contener el texto configurado");
+Tester::assertTrue(strpos($html, "href=\"$url\"") !== false, "Button debe contener la URL correcta");
+Tester::assertTrue(strpos($html, "fa-pen-to-square") !== false, "Button debe contener el icono de edición");
+Tester::assertTrue(strpos($html, "Editar Usuario") !== false, "Button debe contener el texto configurado");
 
 // 2. Prueba: Sidebar
 Sidebar::resetGroup();
