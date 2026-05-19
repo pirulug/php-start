@@ -11,6 +11,13 @@ if (version_compare(PHP_VERSION, '8.4.0', '<')) {
 // Initial setup
 const BASE_DIR = __DIR__;
 
+// MAINTENANCE MODE
+if (file_exists(BASE_DIR . '/MAINTENANCE')) {
+  http_response_code(503);
+  header('Retry-After: 300');
+  exit('Página en mantenimiento. Volvemos en breve.');
+}
+
 // Cargar las configuraciones
 require_once BASE_DIR . "/config.php";
 require_once BASE_DIR . "/core/configs/cache.config.php";
