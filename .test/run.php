@@ -18,7 +18,8 @@ $tests = [
   "AdminLibsTest.php",
   "SecurityTest.php",
   "ConfigDbTest.php",
-  "FileLibsTest.php"
+  "FileLibsTest.php",
+  "LoginTest.php"
 ];
 
 foreach ($tests as $test) {
