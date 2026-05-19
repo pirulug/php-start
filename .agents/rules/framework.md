@@ -64,28 +64,40 @@ app/front/modules/{module}/
 └── router.php   # Definición de rutas
 ```
 
-## 6. Estructura de .view.php
-Las vistas deben utilizar el sistema de bloques para inyectar contenido en el layout:
+## 6. Estructura de .view.php y Gestión de Bloques (Themplate)
+Las vistas deben utilizar el sistema de bloques para inyectar contenido en el layout. La lógica interna de bloques está contenida en la clase de librería `Themplate` y expuesta mediante funciones globales con el prefijo `block_`.
 
+### Funciones Disponibles:
+- `block_start($name, $mode = "replace")`: Inicia la captura de un bloque de contenido (soporta anidación mediante una pila interna).
+- `block_append($name)`: Captura contenido y lo anexa al final del bloque.
+- `block_prepend($name)`: Captura contenido y lo pre-anexa al inicio del bloque.
+- `block_end()`: Finaliza la captura del bloque actual.
+- `block_define($name, $content, $mode = "replace")`: Define contenido directamente sin abrir buffers de salida.
+- `block_clear($name)`: Limpia el contenido de un bloque.
+- `block_get($name, $default = "")`: Obtiene el contenido de un bloque.
+- `block_render($name, $default = "")`: Imprime directamente el bloque en pantalla.
+- `block_has($name)`: Retorna true si el bloque tiene contenido no vacío.
+
+### Ejemplo de Estructura de Vista:
 ```php
-<?php start_block('title') ?>
+<?php block_start("title") ?>
   Título de la Página
-<?php end_block() ?>
+<?php block_end() ?>
 
-<?php start_block('breadcrumb'); ?>
+<?php block_start("breadcrumb"); ?>
 <?php render_breadcrumb([
-  ['label' => 'Dashboard', 'link' => admin_route('dashboard')],
-  ['label' => 'Módulo']
+  ["label" => "Dashboard", "link" => admin_route("dashboard")],
+  ["label" => "Módulo"]
 ]) ?>
-<?php end_block(); ?>
+<?php block_end(); ?>
 
-<?php start_block('css') ?>
+<?php block_start("css") ?>
 <style>/* Custom CSS */</style>
-<?php end_block() ?>
+<?php block_end() ?>
 
-<?php start_block('js') ?>
+<?php block_start("js") ?>
 <script>/* Custom JS */</script>
-<?php end_block() ?>
+<?php block_end() ?>
 
 <div class="card bg-body">
   <div class="card-body">
@@ -214,12 +226,12 @@ Los archivos JavaScript específicos de un módulo se ubican en `app/{context}/m
 - **Carga en View**: Utiliza el helper `url_script_admin` o `url_script_front` dentro del bloque `js`.
 - **Contexto de URL**: Para que el JS conozca las rutas del sistema, inyecta variables globales antes de cargar el archivo.
   ```php
-  <?php start_block('js') ?>
+  <?php block_start("js") ?>
   <script>
     const APP_ADMIN_URL = "<?= admin_route() ?>";
   </script>
-  <?= url_script_admin('users', 'list') ?>
-  <?php end_block() ?>
+  <?= url_script_admin("users", "list") ?>
+  <?php block_end() ?>
   ```
 
 ### Endpoints (`endpoints/`)
