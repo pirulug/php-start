@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= get_block('title') ?></title>
+  <meta name="theme-color" content="#ff0055">
+  <?php render_seo_meta("index, follow"); ?>
 
   <?php if ($config->favicon()): ?>
     <link rel="apple-touch-icon" sizes="180x180"
@@ -36,9 +37,9 @@
        * Inicia la comprobación antes de renderizar el cuerpo para evitar parpadeos.
        */
       (function() {
-        fetch('<?= front_route("auth/check-autologin") ?>', {
-          method: 'POST',
-          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        fetch(APP_URL + "/auth/check-autologin", {
+          method: "POST",
+          headers: { "X-Requested-With": "XMLHttpRequest" }
         })
         .then(r => r.json())
         .then(res => {
@@ -409,7 +410,7 @@
     // Procesar cola de correos de forma asíncrona al cargar la página
     window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
-        fetch("/mail/process").catch((err) => console.error("Error al procesar la cola de correos:", err));
+        fetch(APP_URL + "/mail/process").catch((err) => console.error("Error al procesar la cola de correos:", err));
       }, 1000);
     });
   </script>

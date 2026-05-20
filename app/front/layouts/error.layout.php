@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= get_block('title') ?></title>
+  <meta name="theme-color" content="#ff0055">
+  <?php render_seo_meta("noindex, nofollow"); ?>
 
   <!-- Favicon-->
   <?php if ($config->favicon()): ?>
@@ -16,11 +17,13 @@
 
   <script>
     (function () {
-      const storedTheme = localStorage.getItem('theme');
-      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const theme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-bs-theme', theme);
+      const storedTheme = localStorage.getItem("theme");
+      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const theme = storedTheme || (prefersDarkScheme ? "dark" : "light");
+      document.documentElement.setAttribute("data-bs-theme", theme);
     })();
+
+    const APP_URL = "<?= APP_URL ?>";
   </script>
 
   <!-- CSS -->

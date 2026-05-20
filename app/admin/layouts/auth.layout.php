@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ff0055">
   <title><?= $config->title(get_block('title')) ?></title>
 
   <!-- Favicon-->
@@ -16,17 +17,20 @@
 
   <script>
     (function () {
-      const storedTheme = localStorage.getItem('theme');
-      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const theme = storedTheme || (prefersDarkScheme ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-bs-theme', theme);
+      const storedTheme = localStorage.getItem("theme");
+      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const theme = storedTheme || (prefersDarkScheme ? "dark" : "light");
+      document.documentElement.setAttribute("data-bs-theme", theme);
     })();
+
+    const APP_URL = "<?= APP_URL ?>";
   </script>
 
   <!-- CSS -->
-  <?= static_assets_css("piruadmin.css") ?>
   <?= static_assets_css("fontawesome.css") ?>
   <?= static_assets_css("bootstrapicons.css") ?>
+  <?= static_assets_css("piruadmin-fonts.css") ?>
+  <?= static_assets_css("piruadmin.css") ?>
 
   <?= get_block('css'); ?>
 </head>
@@ -43,7 +47,7 @@
     // Procesar cola de correos de forma asíncrona al cargar la página
     window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
-        fetch("/mail/process").catch((err) => console.error("Error al procesar la cola de correos:", err));
+        fetch(APP_URL + "/mail/process").catch((err) => console.error("Error al procesar la cola de correos:", err));
       }, 1000);
     });
   </script>
