@@ -5,6 +5,23 @@
 // --------------------------------------------------------------------------
 
 /**
+ * Obtiene el prefijo de la subcarpeta a partir de APP_URL.
+ *
+ * @return string Prefijo de la subcarpeta (ej. "/subcarpeta" o "").
+ */
+function get_base_path() {
+  $base_path = parse_url(APP_URL, PHP_URL_PATH);
+  if (empty($base_path)) {
+    return "";
+  }
+  $base_path = rtrim($base_path, "/");
+  if ($base_path !== "" && $base_path[0] !== "/") {
+    $base_path = "/" . $base_path;
+  }
+  return $base_path;
+}
+
+/**
  * Genera URLs absolutas para el panel de administración.
  *
  * @param string $path Ruta base (ej. "users/edit").
@@ -12,16 +29,16 @@
  * @param array $get Parámetros de consulta (?key=val).
  * @return string URL construida.
  */
-function admin_route($path = '', $params = [], $get = []) {
-  $path = trim($path, '/');
+function admin_route($path = "", $params = [], $get = []) {
+  $path = trim($path, "/");
 
   // 1. Construir la base con el PATH_ADMIN
-  if ($path === '') {
-    $url = '/' . PATH_ADMIN;
+  if ($path === "") {
+    $url = "/" . PATH_ADMIN;
   } elseif (strpos($path, PATH_ADMIN) === 0) {
-    $url = '/' . $path;
+    $url = "/" . $path;
   } else {
-    $url = '/' . PATH_ADMIN . '/' . $path;
+    $url = "/" . PATH_ADMIN . "/" . $path;
   }
 
   // 2. Parámetros de ruta (URL Amigable: /valor1/valor2)
@@ -31,16 +48,16 @@ function admin_route($path = '', $params = [], $get = []) {
     }
 
     foreach ($params as $value) {
-      $url .= '/' . urlencode(trim((string) $value, '/'));
+      $url .= "/" . urlencode(trim((string) $value, "/"));
     }
   }
 
   // 3. Parámetros GET (Query String: ?key=value)
   if (!empty($get)) {
-    $url .= '?' . http_build_query($get);
+    $url .= "?" . http_build_query($get);
   }
 
-  return $url;
+  return get_base_path() . $url;
 }
 
 /**
@@ -51,9 +68,9 @@ function admin_route($path = '', $params = [], $get = []) {
  * @param array $get Parámetros de consulta.
  * @return string URL construida.
  */
-function front_route($path = '', $params = [], $get = []) {
-  $path = trim($path, '/');
-  $url  = '/' . $path;
+function front_route($path = "", $params = [], $get = []) {
+  $path = trim($path, "/");
+  $url  = "/" . $path;
 
   // 1. Parámetros de ruta
   if (!empty($params)) {
@@ -61,16 +78,16 @@ function front_route($path = '', $params = [], $get = []) {
       $params = [$params];
     }
     foreach ($params as $value) {
-      $url .= '/' . urlencode(trim((string) $value, '/'));
+      $url .= "/" . urlencode(trim((string) $value, "/"));
     }
   }
 
   // 2. Parámetros GET
   if (!empty($get)) {
-    $url .= (strpos($url, '?') === false ? '?' : '&') . http_build_query($get);
+    $url .= (strpos($url, "?") === false ? "?" : "&") . http_build_query($get);
   }
 
-  return $url;
+  return get_base_path() . $url;
 }
 
 /**
@@ -81,15 +98,15 @@ function front_route($path = '', $params = [], $get = []) {
  * @param array $get Parámetros de consulta.
  * @return string URL construida.
  */
-function api_route($path = '', $params = [], $get = []) {
-  $path = trim($path, '/');
+function api_route($path = "", $params = [], $get = []) {
+  $path = trim($path, "/");
 
-  if ($path === '') {
-    $url = '/' . PATH_API;
+  if ($path === "") {
+    $url = "/" . PATH_API;
   } elseif (strpos($path, PATH_API) === 0) {
-    $url = '/' . $path;
+    $url = "/" . $path;
   } else {
-    $url = '/' . PATH_API . '/' . $path;
+    $url = "/" . PATH_API . "/" . $path;
   }
 
   if (!empty($params)) {
@@ -97,15 +114,15 @@ function api_route($path = '', $params = [], $get = []) {
       $params = [$params];
     }
     foreach ($params as $value) {
-      $url .= '/' . urlencode(trim((string) $value, '/'));
+      $url .= "/" . urlencode(trim((string) $value, "/"));
     }
   }
 
   if (!empty($get)) {
-    $url .= (strpos($url, '?') === false ? '?' : '&') . http_build_query($get);
+    $url .= (strpos($url, "?") === false ? "?" : "&") . http_build_query($get);
   }
 
-  return $url;
+  return get_base_path() . $url;
 }
 
 // --------------------------------------------------------------------------
