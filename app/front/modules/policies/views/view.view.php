@@ -1,5 +1,27 @@
-<?php start_block('title'); ?>
+<?php start_block("title"); ?>
 <?= $policy->post_title ?>
+<?php end_block(); ?>
+
+<?php start_block("meta_title"); ?>
+<?= $policy->post_title ?>
+<?php end_block(); ?>
+
+<?php
+$seo_desc = "";
+if ($is_faq) {
+  $seo_desc = "Preguntas frecuentes y respuestas sobre " . $policy->post_title . ".";
+} else {
+  $plain_text = strip_tags($policy->post_content);
+  $plain_text = preg_replace("/\s+/", " ", $plain_text);
+  $seo_desc = mb_strimwidth($plain_text, 0, 155, "...");
+}
+?>
+<?php start_block("meta_description"); ?>
+<?= clear_html($seo_desc) ?>
+<?php end_block(); ?>
+
+<?php start_block("meta_keywords"); ?>
+<?= clear_html(strtolower($policy->post_title)) ?>, legal, terminos, condiciones, php start
 <?php end_block(); ?>
 
 <div class="container py-3">

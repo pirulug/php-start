@@ -1,6 +1,23 @@
-<?php start_block('title'); ?>
-Index
+<?php start_block("title"); ?>
+Inicio
 <?php end_block(); ?>
+
+<?php start_block("meta_title"); ?>
+PHP Start - Framework PHP Minimalista y Rápido
+<?php end_block(); ?>
+
+<?php start_block("meta_description"); ?>
+Un framework PHP minimalista con arquitectura limpia, alto rendimiento y seguridad robusta para potenciar tus proyectos.
+<?php end_block(); ?>
+
+<?php start_block("meta_keywords"); ?>
+php, framework, php-start, backend, mvc
+<?php end_block(); ?>
+
+<?php // Opcional: Define un bloque og_image si deseas una imagen diferente a la de settings ?>
+<?php // start_block("og_image"); ?>
+<?php // echo APP_URL . "/static/assets/img/og-custom.jpg"; ?>
+<?php // end_block(); ?>
 
 <?php start_block('css'); ?>
 <style>
