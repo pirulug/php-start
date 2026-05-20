@@ -1,0 +1,175 @@
+@font-face {
+  font-display: swap;
+  font-family: Fira Code;
+  font-style: normal;
+  font-weight: 300;
+  src: url(../../assets/fonts/firacode/FiraCode-Light.woff2) format("woff2"), url(../../assets/fonts/firacode/FiraCode-Light.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Fira Code;
+  font-style: normal;
+  font-weight: 400;
+  src: url(../../assets/fonts/firacode/FiraCode-Regular.woff2) format("woff2"), url(../../assets/fonts/firacode/FiraCode-Regular.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Fira Code;
+  font-style: normal;
+  font-weight: 500;
+  src: url(../../assets/fonts/firacode/FiraCode-Medium.woff2) format("woff2"), url(../../assets/fonts/firacode/FiraCode-Medium.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Fira Code;
+  font-style: normal;
+  font-weight: 600;
+  src: url(../../assets/fonts/firacode/FiraCode-SemiBold.woff2) format("woff2"), url(../../assets/fonts/firacode/FiraCode-SemiBold.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Fira Code;
+  font-style: normal;
+  font-weight: 700;
+  src: url(../../assets/fonts/firacode/FiraCode-Bold.woff2) format("woff2"), url(../../assets/fonts/firacode/FiraCode-Bold.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Fira Code VF;
+  font-style: normal;
+  font-weight: 300 700;
+  src: url(../../assets/fonts/firacode/FiraCode-VF.woff2) format("woff2-variations"), url(../../assets/fonts/firacode/FiraCode-VF.woff) format("woff-variations")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 900;
+  src: url(../../assets/fonts/nunito/Nunito-Black.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-Black.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 700;
+  src: url(../../assets/fonts/nunito/Nunito-Bold.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-Bold.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 900;
+  src: url(../../assets/fonts/nunito/Nunito-BlackItalic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-BlackItalic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 700;
+  src: url(../../assets/fonts/nunito/Nunito-BoldItalic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-BoldItalic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 700;
+  src: url(../../assets/fonts/nunito/Nunito-ExtraBold.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-ExtraBold.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 200;
+  src: url(../../assets/fonts/nunito/Nunito-ExtraLightItalic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-ExtraLightItalic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 200;
+  src: url(../../assets/fonts/nunito/Nunito-ExtraLight.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-ExtraLight.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 400;
+  src: url(../../assets/fonts/nunito/Nunito-Italic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-Italic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 300;
+  src: url(../../assets/fonts/nunito/Nunito-LightItalic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-LightItalic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 500;
+  src: url(../../assets/fonts/nunito/Nunito-Medium.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-Medium.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 700;
+  src: url(../../assets/fonts/nunito/Nunito-ExtraBoldItalic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-ExtraBoldItalic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 300;
+  src: url(../../assets/fonts/nunito/Nunito-Light.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-Light.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 500;
+  src: url(../../assets/fonts/nunito/Nunito-MediumItalic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-MediumItalic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: italic;
+  font-weight: 600;
+  src: url(../../assets/fonts/nunito/Nunito-SemiBoldItalic.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-SemiBoldItalic.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 400;
+  src: url(../../assets/fonts/nunito/Nunito-Regular.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-Regular.woff) format("woff")
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 600;
+  src: url(../../assets/fonts/nunito/Nunito-SemiBold.woff2) format("woff2"), url(../../assets/fonts/nunito/Nunito-SemiBold.woff) format("woff")
+}
