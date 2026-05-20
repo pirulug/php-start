@@ -10,6 +10,7 @@ require_once BASE_DIR . "/core/boot/is.php";
 require_once BASE_DIR . "/core/boot/has.php";
 require_once BASE_DIR . "/core/boot/format.php";
 require_once BASE_DIR . "/core/boot/meta.php";
+require_once BASE_DIR . "/core/boot/seo.php";
 require_once BASE_DIR . "/core/boot/lang.php";
 
 // Libs
