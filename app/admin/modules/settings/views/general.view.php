@@ -72,6 +72,42 @@ Ajustes Generales
         </div>
       </div>
 
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="text-primary fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-bullhorn"></i>
+            Barra de Anuncios (Announcement Bar)
+          </h6>
+
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="st_announcement_active" name="st_announcement_active" value="true"
+              <?= $config->get("announcement_active") === "true" ? "checked" : "" ?>>
+            <label class="form-check-label" for="st_announcement_active">Activar Barra de Anuncios en el Sitio Público (Front)</label>
+          </div>
+
+          <div class="mb-3">
+            <label for="st_announcement_type" class="form-label">Estilo / Tipo de Anuncio</label>
+            <select class="form-select" id="st_announcement_type" name="st_announcement_type">
+              <option value="primary" <?= $config->get("announcement_type", "primary") === "primary" ? "selected" : "" ?>>Primario</option>
+              <option value="secondary" <?= $config->get("announcement_type") === "secondary" ? "selected" : "" ?>>Secundario</option>
+              <option value="success" <?= $config->get("announcement_type") === "success" ? "selected" : "" ?>>Éxito (Verde)</option>
+              <option value="danger" <?= $config->get("announcement_type") === "danger" ? "selected" : "" ?>>Peligro (Rojo)</option>
+              <option value="warning" <?= $config->get("announcement_type") === "warning" ? "selected" : "" ?>>Advertencia (Amarillo)</option>
+              <option value="info" <?= $config->get("announcement_type") === "info" ? "selected" : "" ?>>Información (Azul)</option>
+              <option value="dark" <?= $config->get("announcement_type") === "dark" ? "selected" : "" ?>>Oscuro (Negro)</option>
+              <option value="light" <?= $config->get("announcement_type") === "light" ? "selected" : "" ?>>Claro (Gris claro)</option>
+            </select>
+          </div>
+
+          <div class="mb-0">
+            <label for="st_announcement_text" class="form-label">Contenido del Anuncio</label>
+            <textarea name="st_announcement_text" id="st_announcement_text" class="form-control" rows="3"
+              placeholder="Ej: ¡Llegó un nuevo curso! Conoce todas las novedades aquí <a href='#'>ver más</a>..."><?= htmlspecialchars($config->get("announcement_text") ?? '') ?></textarea>
+            <div class="form-text small">Puedes utilizar HTML ligero para enlaces (a) o negrita (strong).</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Botonera Pegajosa -->
       <div class="bg-body p-3 rounded d-flex justify-content-end gap-2 sticky-bottom mt-3">
         <button type="submit" class="btn btn-primary px-5 text-uppercase small fw-bold">

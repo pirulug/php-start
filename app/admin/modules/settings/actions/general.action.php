@@ -2,10 +2,13 @@
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $option_updates = [
-    "site_name"        => clear_input($_POST["st_sitename"] ?? ""),
-    "site_description" => clear_input($_POST["st_description"] ?? ""),
-    "loader_front"     => (isset($_POST["st_loader_front"]) && $_POST["st_loader_front"] === "true") ? "true" : "false",
-    "loader_admin"     => (isset($_POST["st_loader_admin"]) && $_POST["st_loader_admin"] === "true") ? "true" : "false",
+    "site_name"           => clear_input($_POST["st_sitename"] ?? ""),
+    "site_description"    => clear_input($_POST["st_description"] ?? ""),
+    "loader_front"        => (isset($_POST["st_loader_front"]) && $_POST["st_loader_front"] === "true") ? "true" : "false",
+    "loader_admin"        => (isset($_POST["st_loader_admin"]) && $_POST["st_loader_admin"] === "true") ? "true" : "false",
+    "announcement_active" => (isset($_POST["st_announcement_active"]) && $_POST["st_announcement_active"] === "true") ? "true" : "false",
+    "announcement_text"   => clear_textarea($_POST["st_announcement_text"] ?? ""),
+    "announcement_type"   => clear_input($_POST["st_announcement_type"] ?? "primary"),
   ];
 
   // Procesar keywords (Tagify envía un JSON)

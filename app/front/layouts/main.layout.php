@@ -56,6 +56,61 @@
   <?= static_libs_css("toastifyjs", "toastifyjs.css") ?>
 
   <?= get_block('css'); ?>
+
+  <?php
+  $announcement_active = $config->get("announcement_active") === "true";
+  $announcement_text   = $config->get("announcement_text", "");
+  $announcement_type   = $config->get("announcement_type", "primary");
+  $announcement_hash   = !empty($announcement_text) ? substr(md5($announcement_text), 0, 8) : "";
+  $announcement_cookie = "announcement_closed_" . $announcement_hash;
+
+  $show_announcement = $announcement_active && !empty($announcement_text) && !isset($_COOKIE[$announcement_cookie]);
+  ?>
+  <?php if ($show_announcement): ?>
+      <style>
+        .piru-announcement-bar {
+          position: relative;
+          width: 100%;
+          z-index: 1050;
+          transition: all 0.3s ease;
+          font-family: inherit;
+        }
+        .piru-announcement-bar a {
+          font-weight: 700;
+          text-decoration: underline;
+          color: inherit;
+        }
+        .piru-announcement-bar a:hover {
+          opacity: 0.9;
+        }
+        .announcement-close {
+          position: absolute;
+          right: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: transparent;
+          border: none;
+          color: inherit;
+          font-size: 1.25rem;
+          cursor: pointer;
+          opacity: 0.7;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 5px;
+        }
+        .announcement-close:hover {
+          opacity: 1;
+          transform: translateY(-50%) scale(1.1);
+        }
+        @media (max-width: 576px) {
+          .piru-announcement-bar .container {
+            padding-right: 45px;
+          }
+        }
+      </style>
+  <?php endif; ?>
 </head>
 
 <body>
@@ -65,54 +120,42 @@
 
   <div class="piru-wrapper">
     <header class="piru-nav-wrapper">
-      <!-- <div
-        class="piru-announcement-bar bg-primary text-dark"
-        id="announcementBar">
-        <div class="container position-relative">
-          <div
-            class="d-flex align-items-center justify-content-center gap-3 flex-wrap text-center py-2">
-            <div class="fw-bold small">
-              Llegó un nuevo curso 👉
-              <a
-                class="text-reset text-decoration-underline"
-                href="#"
-                target="_blank">
-                Skills y rules de IA para programadores
-              </a>
-              ¡Cómpralo con descuento! Solo quedan:
-            </div>
-            <div class="d-flex align-items-center gap-1">
-              <span
-                class="badge bg-dark bg-opacity-10 text-dark fw-bold px-2 py-1">
-                <span class="font-monospace">05</span>
-                <span class="small ms-1">D</span>
-              </span>
-              <span
-                class="badge bg-dark bg-opacity-10 text-dark fw-bold px-2 py-1">
-                <span class="font-monospace">18</span>
-                <span class="small ms-1">H</span>
-              </span>
-              <span
-                class="badge bg-dark bg-opacity-10 text-dark fw-bold px-2 py-1">
-                <span class="font-monospace">05</span>
-                <span class="small ms-1">M</span>
-              </span>
-              <span
-                class="badge bg-dark bg-opacity-10 text-dark fw-bold px-2 py-1">
-                <span class="font-monospace">06</span>
-                <span class="small ms-1">S</span>
-              </span>
+      <?php if ($show_announcement): ?>
+          <div class="piru-announcement-bar text-bg-<?= clear_html($announcement_type) ?>" id="announcementBar" data-announcement-hash="<?= clear_html($announcement_hash) ?>">
+            <div class="container position-relative py-2">
+              <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap text-center">
+                <div class="fw-bold small">
+                  <?= $announcement_text ?>
+                </div>
+              </div>
+              <button class="announcement-close" id="closeAnnouncement" type="button" aria-label="Cerrar aviso">
+                <i class="bi bi-x-lg"></i>
+              </button>
             </div>
           </div>
-          <button
-            class="announcement-close"
-            id="closeAnnouncement"
-            type="button"
-            aria-label="Cerrar aviso">
-            <i class="bi bi-x-lg"></i>
-          </button>
-        </div>
-      </div> -->
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              const bar = document.getElementById("announcementBar");
+              const closeBtn = document.getElementById("closeAnnouncement");
+              if (bar && closeBtn) {
+                closeBtn.addEventListener("click", () => {
+                  const hash = bar.getAttribute("data-announcement-hash");
+                  const d = new Date();
+                  d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 días
+                  document.cookie = "announcement_closed_" + hash + "=1; expires=" + d.toUTCString() + "; path=/; SameSite=Lax";
+                  
+                  // Ocultar la barra con animación suave
+                  bar.style.transition = "opacity 0.3s ease, transform 0.3s ease, margin-top 0.3s ease";
+                  bar.style.opacity = "0";
+                  bar.style.transform = "translateY(-100%)";
+                  setTimeout(() => {
+                    bar.style.display = "none";
+                  }, 300);
+                });
+              }
+            });
+          </script>
+      <?php endif; ?>
       <nav class="piru-nav-main">
         <div class="piru-nav-container">
           <a class="piru-nav-brand" href="<?= front_route() ?>">
