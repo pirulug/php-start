@@ -116,12 +116,34 @@
       <nav class="piru-nav-main">
         <div class="piru-nav-container">
           <a class="piru-nav-brand" href="<?= front_route() ?>">
-            <div class="piru-nav-logo-images">
-              <img class="piru-logo logo-light" src="<?= storage_uploads($config->logo()->dark, "site") ?>"
-                alt="<?= $config->siteName() ?>">
-              <img class="piru-logo logo-dark" src="<?= storage_uploads($config->logo()->light, "site") ?>"
-                alt="<?= $config->siteName() ?>">
-            </div>
+            <?php $logoType = $config->get('logo_type', 'images'); ?>
+            <?php if ($logoType == 'images'): ?>
+              <div class="piru-nav-logo-images">
+                <img class="piru-logo logo-light" src="<?= storage_uploads($config->logo()->dark, "site") ?>"
+                  alt="<?= $config->siteName() ?>">
+                <img class="piru-logo logo-dark" src="<?= storage_uploads($config->logo()->light, "site") ?>"
+                  alt="<?= $config->siteName() ?>">
+              </div>
+            <?php elseif ($logoType == 'text'): ?>
+              <div class="piru-nav-logo-text">
+                <?php
+                $iconSource = $config->get('logo_icon_source', 'class');
+                $iconColor = $config->get('logo_icon_color', '');
+                $colorStyle = $iconColor ? ' style="color: ' . clear_html($iconColor) . ' !important;"' : '';
+                
+                if ($iconSource === 'none'):
+                  // Sin icono, no se renderiza nada
+                elseif ($iconSource === 'svg_raw' && $config->get('logo_icon_svg')):
+                  echo $config->get('logo_icon_svg');
+                elseif ($iconSource === 'image' && $config->get('logo_icon_file')):
+                  ?>
+                  <img src="<?= storage_uploads($config->get('logo_icon_file'), "site") ?>" alt="Icon" style="height: 24px; width: auto; object-fit: contain;">
+                <?php else: ?>
+                  <i class="<?= clear_html($config->get('logo_icon_class', 'bi bi-lightning-charge-fill')) ?>"<?= $colorStyle ?>></i>
+                <?php endif; ?>
+                <span><?= $config->siteName() ?></span>
+              </div>
+            <?php endif; ?>
           </a>
           <ul class="piru-nav-menu">
             <li class="piru-nav-dropdown has-megamenu">

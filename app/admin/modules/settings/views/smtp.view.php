@@ -61,11 +61,7 @@ $smtp = $config->smtp();
                 <label for="st_smtppassword" class="form-label">Contraseña <span class="text-danger">*</span></label>
                 <div class="input-group">
                   <input type="password" id="st_smtppassword" name="st_smtppassword" class="form-control"
-                    value="<?= htmlspecialchars($smtp->password) ?>" placeholder="••••••••" required>
-                  <button class="btn btn-outline-secondary" type="button" data-pr-toggle-password=""
-                    title="Mostrar/Ocultar">
-                    <i class="fa-regular fa-eye"></i>
-                  </button>
+                    value="<?= htmlspecialchars($smtp->password) ?>" placeholder="••••••••" data-pr-toggle-password required>
                 </div>
                 <div class="invalid-feedback">Ingrese la contraseña.</div>
               </div>

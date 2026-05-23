@@ -84,12 +84,184 @@ Identidad Visual
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Preview Theme Styles */
+  #logoPreviewContainer[data-preview-theme="light"] {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+  }
+  #logoPreviewContainer[data-preview-theme="dark"] {
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+  }
+  #logoPreviewContainer[data-preview-theme="light"] .logo-dark {
+    display: none !important;
+  }
+  #logoPreviewContainer[data-preview-theme="light"] .logo-light {
+    display: block !important;
+  }
+  #logoPreviewContainer[data-preview-theme="dark"] .logo-light {
+    display: none !important;
+  }
+  #logoPreviewContainer[data-preview-theme="dark"] .logo-dark {
+    display: block !important;
+  }
+  #logoPreviewContainer[data-preview-theme="light"] .text-body {
+    color: #212529 !important;
+  }
+  #logoPreviewContainer[data-preview-theme="dark"] .text-body {
+    color: #f8f9fa !important;
+  }
 </style>
 <?php end_block() ?>
 
 <?php start_block("js") ?>
 <?= static_libs_js("dropzone", "dropimg.js") ?>
 <?= url_script_admin('settings', 'brand') ?>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const select = document.getElementById('logoTypeSelect');
+    const previewContainer = document.getElementById('logoPreviewContainer');
+    const btnTogglePreviewTheme = document.getElementById('btnTogglePreviewTheme');
+    
+    // Controles de Icono
+    const iconSettingsSection = document.getElementById('iconSettingsSection');
+    const iconSource = document.getElementById('logoIconSource');
+    const iconClassGroup = document.getElementById('iconClassGroup');
+    const iconSvgGroup = document.getElementById('iconSvgGroup');
+    const iconImageGroup = document.getElementById('iconImageGroup');
+    
+    const iconClassInput = document.getElementById('logoIconClass');
+    const iconSvgInput = document.getElementById('logoIconSvg');
+    const iconFileInput = document.getElementById('logoIconFile');
+    
+    const iconColorInput = document.getElementById('logoIconColor');
+    const iconColorText = document.getElementById('logoIconColorText');
+    
+    if (select && previewContainer) {
+      const siteName = <?= json_encode($config->siteName()) ?>;
+      const logoDarkUrl = <?= json_encode(storage_uploads($config->logo()->dark, "site")) ?>;
+      const logoLightUrl = <?= json_encode(storage_uploads($config->logo()->light, "site")) ?>;
+      let uploadedIconUrl = <?= json_encode($config->get('logo_icon_file') ? storage_uploads($config->get('logo_icon_file'), "site") : '') ?>;
+      
+      const iconColorGroup = document.getElementById('iconColorGroup');
+      
+      const updateIconVisibility = () => {
+        if (select.value === 'text') {
+          iconSettingsSection.style.display = 'block';
+          
+          const source = iconSource.value;
+          iconClassGroup.style.display = source === 'class' ? 'block' : 'none';
+          iconColorGroup.style.display = source === 'class' ? 'block' : 'none';
+          iconSvgGroup.style.display = source === 'svg_raw' ? 'block' : 'none';
+          iconImageGroup.style.display = source === 'image' ? 'block' : 'none';
+        } else {
+          iconSettingsSection.style.display = 'none';
+        }
+      };
+
+      if (iconFileInput) {
+        iconFileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              uploadedIconUrl = event.target.result;
+              renderPreview();
+            };
+            reader.readAsDataURL(file);
+          } else {
+            uploadedIconUrl = '';
+            renderPreview();
+          }
+        });
+      }
+
+      if (iconColorInput && iconColorText) {
+        iconColorInput.addEventListener('input', (e) => {
+          iconColorText.value = e.target.value;
+          renderPreview();
+        });
+        iconColorText.addEventListener('input', (e) => {
+          if (/^#[0-9A-F]{6}$/i.test(e.target.value)) {
+            iconColorInput.value = e.target.value;
+            renderPreview();
+          }
+        });
+      }
+
+      const getIconHTML = () => {
+        const source = iconSource.value;
+        const color = iconColorInput ? iconColorInput.value : '';
+        const colorStyle = color ? `style="color: ${color} !important;"` : '';
+        
+        if (source === 'none') {
+          return '';
+        } else if (source === 'svg_raw') {
+          return iconSvgInput.value || `<i class="fa-solid fa-bolt"></i>`;
+        } else if (source === 'image') {
+          if (uploadedIconUrl) {
+            return `<img src="${uploadedIconUrl}" alt="Icon" style="height: 24px; width: auto; object-fit: contain;">`;
+          }
+          return `<i class="fa-solid fa-image"></i>`;
+        } else {
+          const cls = iconClassInput.value || 'bi bi-lightning-charge-fill';
+          return `<i class="${cls}" ${colorStyle}></i>`;
+        }
+      };
+      
+      const renderPreview = () => {
+        const type = select.value;
+        if (type === 'images') {
+          previewContainer.innerHTML = `
+            <div class="piru-nav-logo-images">
+              <img class="piru-logo logo-light" src="${logoDarkUrl}" alt="${siteName}" style="height: 32px; width: auto; object-fit: contain;">
+              <img class="piru-logo logo-dark" src="${logoLightUrl}" alt="${siteName}" style="height: 32px; width: auto; object-fit: contain;">
+            </div>
+          `;
+        } else if (type === 'text') {
+          previewContainer.innerHTML = `
+            <div class="d-flex align-items-center gap-2">
+              ${getIconHTML()}
+              <span class="fw-bold fs-5 text-body" style="letter-spacing: -0.5px;">${siteName}</span>
+            </div>
+          `;
+        }
+      };
+
+      // Control de Modo Claro/Oscuro de la vista previa
+      if (btnTogglePreviewTheme) {
+        btnTogglePreviewTheme.addEventListener('click', () => {
+          const currentTheme = previewContainer.getAttribute('data-preview-theme') || 'light';
+          const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+          previewContainer.setAttribute('data-preview-theme', newTheme);
+          
+          if (newTheme === 'dark') {
+            btnTogglePreviewTheme.innerHTML = `<i class="fa-solid fa-sun me-1"></i> Modo Claro`;
+          } else {
+            btnTogglePreviewTheme.innerHTML = `<i class="fa-solid fa-moon me-1"></i> Modo Oscuro`;
+          }
+        });
+      }
+      
+      select.addEventListener('change', () => {
+        updateIconVisibility();
+        renderPreview();
+      });
+      
+      iconSource.addEventListener('change', () => {
+        updateIconVisibility();
+        renderPreview();
+      });
+      
+      iconClassInput.addEventListener('input', renderPreview);
+      iconSvgInput.addEventListener('input', renderPreview);
+      
+      updateIconVisibility();
+      renderPreview();
+    }
+  });
+</script>
 <?php end_block() ?>
 
 <div class="row g-3">
@@ -107,6 +279,88 @@ Identidad Visual
               visual (Soportan Light/Dark Mode).</p>
           </div>
         </div>
+
+        <form method="post" class="mb-3" enctype="multipart/form-data">
+          <div class="row align-items-end">
+            <div class="col-md-8">
+              <label class="form-label">Estilo de Logo en Navegación</label>
+              <select name="st_logo_type" id="logoTypeSelect" class="form-select">
+                <option value="images" <?= $config->get('logo_type', 'images') == 'images' ? 'selected' : '' ?>>Solo Imágenes (Light / Dark)</option>
+                <option value="text" <?= $config->get('logo_type', 'images') == 'text' ? 'selected' : '' ?>>Solo Texto (Con Icono Personalizable)</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-primary fw-bold text-uppercase small w-100">
+                <i class="fa-solid fa-check me-1"></i>
+                Guardar Estilo
+              </button>
+            </div>
+          </div>
+
+          <!-- Configuración del Icono (Solo visible si Tipo de Logo es "text") -->
+          <div id="iconSettingsSection" class="mt-3 p-3 border rounded-3" style="display: none;">
+            <div class="d-flex align-items-center mb-3">
+              <i class="fa-solid fa-icons me-2 text-primary"></i>
+              <span class="fw-bold small text-uppercase text-muted">Configuración de Icono (Estilo Solo Texto)</span>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Origen del Icono</label>
+              <select name="st_logo_icon_source" id="logoIconSource" class="form-select">
+                <option value="none" <?= $config->get('logo_icon_source', 'class') == 'none' ? 'selected' : '' ?>>Sin Icono (Solo Texto)</option>
+                <option value="class" <?= $config->get('logo_icon_source', 'class') == 'class' ? 'selected' : '' ?>>Clase de Icono (FontAwesome / Bootstrap Icons)</option>
+                <option value="svg_raw" <?= $config->get('logo_icon_source', 'class') == 'svg_raw' ? 'selected' : '' ?>>Código SVG Personalizado</option>
+                <option value="image" <?= $config->get('logo_icon_source', 'class') == 'image' ? 'selected' : '' ?>>Subir Imagen / SVG</option>
+              </select>
+            </div>
+
+            <!-- Configuración del Color del Icono -->
+            <div id="iconColorGroup" class="mb-3">
+              <label class="form-label">Color del Icono</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="st_logo_icon_color" id="logoIconColor" class="form-control form-control-color" value="<?= clear_html($config->get('logo_icon_color', '#ff0055')) ?>" title="Elige un color para el icono">
+                <input type="text" id="logoIconColorText" class="form-control" value="<?= clear_html($config->get('logo_icon_color', '#ff0055')) ?>" placeholder="#ff0055" style="max-width: 120px;">
+              </div>
+              <div class="form-text">Si usas una clase de icono o SVG, este color se aplicará directamente.</div>
+            </div>
+
+            <!-- Opción: Clase de Icono -->
+            <div id="iconClassGroup" class="mb-3">
+              <label class="form-label">Clase del Icono <span class="text-danger">*</span></label>
+              <input type="text" name="st_logo_icon_class" id="logoIconClass" class="form-control" value="<?= clear_html($config->get('logo_icon_class', 'bi bi-lightning-charge-fill')) ?>" placeholder="Ej. bi bi-lightning-charge-fill o fa-solid fa-bolt">
+              <div class="form-text">Asegúrate de que la librería del icono esté disponible en el sitio.</div>
+            </div>
+
+            <!-- Opción: SVG Raw -->
+            <div id="iconSvgGroup" class="mb-3" style="display: none;">
+              <label class="form-label">Código SVG Raw <span class="text-danger">*</span></label>
+              <textarea name="st_logo_icon_svg" id="logoIconSvg" class="form-control font-monospace" rows="4" placeholder="Ej: <svg ...>...</svg>"><?= clear_html($config->get('logo_icon_svg', '')) ?></textarea>
+              <div class="form-text">Pega el código HTML &lt;svg&gt; directamente. El SVG heredará el tamaño e interacciones del tema.</div>
+            </div>
+
+            <!-- Opción: Subir Imagen/SVG -->
+            <div id="iconImageGroup" class="mb-3" style="display: none;">
+              <label class="form-label">Subir Icono (SVG, PNG, JPG, WebP) <span class="text-danger">*</span></label>
+              <div style="max-width: 100px;">
+                <input type="file" name="st_logo_icon_file" id="logoIconFile" data-dropimg data-width="100" data-height="100"
+                  data-default="<?= $config->get('logo_icon_file') ? APP_URL . '/storage/uploads/site/' . $config->get('logo_icon_file') : '' ?>"
+                  accept=".svg,.png,.jpg,.jpeg,.webp">
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 p-3 border rounded-3">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <div class="small fw-bold text-uppercase text-muted">Vista Previa (Navegación Front-End)</div>
+              <button type="button" class="btn btn-sm btn-outline-secondary text-uppercase fw-bold" id="btnTogglePreviewTheme">
+                <i class="fa-solid fa-moon me-1"></i> Modo Oscuro
+              </button>
+            </div>
+            <div class="p-3 rounded border d-inline-block" id="logoPreviewContainer" data-preview-theme="light">
+              <!-- JS Inyectará la vista previa aquí -->
+            </div>
+          </div>
+        </form>
 
         <div class="row g-3">
           <!-- Logo Oscuro -->

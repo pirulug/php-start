@@ -115,6 +115,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
 
+    // 5. LOGO TYPE & ICON SETTINGS
+    if (isset($_POST['st_logo_type'])) {
+      $logoType = clear_input($_POST['st_logo_type']);
+      $updateOption('logo_type', $logoType);
+
+      if (isset($_POST['st_logo_icon_source'])) {
+        $updateOption('logo_icon_source', clear_input($_POST['st_logo_icon_source']));
+      }
+
+      if (isset($_POST['st_logo_icon_color'])) {
+        $updateOption('logo_icon_color', clear_input($_POST['st_logo_icon_color']));
+      }
+
+      if (isset($_POST['st_logo_icon_class'])) {
+        $updateOption('logo_icon_class', clear_input($_POST['st_logo_icon_class']));
+      }
+
+      if (isset($_POST['st_logo_icon_svg'])) {
+        $svg_content = $_POST['st_logo_icon_svg'];
+        if (stripos($svg_content, '<script') !== false || stripos($svg_content, 'javascript:') !== false) {
+          throw new Exception("El código SVG contiene elementos no permitidos por seguridad.");
+        }
+        $updateOption('logo_icon_svg', $svg_content);
+      }
+
+      if (!empty($_FILES['st_logo_icon_file']) && $_FILES['st_logo_icon_file']['size'] > 0) {
+        if (clear_image($_FILES['st_logo_icon_file'])) {
+          $file = $_FILES['st_logo_icon_file'];
+          $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+          $filename = 'logo_icon_' . time() . '.' . $ext;
+          if (move_uploaded_file($file['tmp_name'], $uploadPathLogo . $filename)) {
+            $updateOption('logo_icon_file', $filename);
+          } else {
+            throw new Exception("Error al mover el archivo del icono.");
+          }
+        } else {
+          throw new Exception("El archivo del icono no es una imagen o SVG válido.");
+        }
+      }
+
+      $notifier->message("Estilo e icono de logo actualizados.")->success()->bootstrap()->add();
+    }
+
     // El refresco ya lo hace el helper meta_options_upsert
 
     header("Location: " . $_SERVER['REQUEST_URI']);

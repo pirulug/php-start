@@ -116,6 +116,7 @@
           e.stopPropagation();
           input.value = "";
           updatePreviewUI(null);
+          input.dispatchEvent(new Event('change', { bubbles: true }));
         });
 
         zone.addEventListener("click", () => input.click());
@@ -138,6 +139,7 @@
           if (e.dataTransfer.files.length) {
             input.files = e.dataTransfer.files;
             validateFile(e.dataTransfer.files[0]);
+            input.dispatchEvent(new Event('change', { bubbles: true }));
           }
         });
 
