@@ -32,10 +32,7 @@
 
   <?php if (!is_logged_in() && isset($_COOKIE[COOKIE_PREFIX . 'auth'])): ?>
       <script>
-        /**
-         * Autologin inmediato (Head Check)
-         * Inicia la comprobación antes de renderizar el cuerpo para evitar parpadeos.
-         */
+        // AutoLogin
         (function() {
           fetch(APP_URL + "/auth/check-autologin", {
             method: "POST",
