@@ -8,15 +8,15 @@
   <?php render_seo_meta("index, follow"); ?>
 
   <?php if ($config->favicon()): ?>
-      <link rel="apple-touch-icon" sizes="180x180"
-        href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'apple-touch-icon'} ?>">
-      <link rel="icon" type="image/png" sizes="32x32"
-        href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon-32x32'} ?>">
-      <link rel="icon" type="image/png" sizes="16x16"
-        href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon-16x16'} ?>">
-      <link rel="manifest" href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'webmanifest'} ?>">
+    <link rel="apple-touch-icon" sizes="180x180"
+      href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'apple-touch-icon'} ?>">
+    <link rel="icon" type="image/png" sizes="32x32"
+      href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon-32x32'} ?>">
+    <link rel="icon" type="image/png" sizes="16x16"
+      href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon-16x16'} ?>">
+    <link rel="manifest" href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'webmanifest'} ?>">
   <?php else: ?>
-      <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
   <?php endif; ?>
 
   <script>
@@ -31,21 +31,21 @@
   </script>
 
   <?php if (!is_logged_in() && isset($_COOKIE[COOKIE_PREFIX . 'auth'])): ?>
-      <script>
-        // AutoLogin
-        (function() {
-          fetch(APP_URL + "/auth/check-autologin", {
-            method: "POST",
-            headers: { "X-Requested-With": "XMLHttpRequest" }
-          })
+    <script>
+      // AutoLogin
+      (function () {
+        fetch(APP_URL + "/auth/check-autologin", {
+          method: "POST",
+          headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
           .then(r => r.json())
           .then(res => {
             if (res.success && res.data.logged) {
               window.location.reload();
             }
           });
-        })();
-      </script>
+      })();
+    </script>
   <?php endif; ?>
 
   <!-- CSS -->
@@ -67,94 +67,100 @@
   $show_announcement = $announcement_active && !empty($announcement_text) && !isset($_COOKIE[$announcement_cookie]);
   ?>
   <?php if ($show_announcement): ?>
-      <style>
-        .piru-announcement-bar {
-          position: relative;
-          width: 100%;
-          z-index: 1050;
-          transition: all 0.3s ease;
-          font-family: inherit;
+    <style>
+      .piru-announcement-bar {
+        position: relative;
+        width: 100%;
+        z-index: 1050;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+
+      .piru-announcement-bar a {
+        font-weight: 700;
+        text-decoration: underline;
+        color: inherit;
+      }
+
+      .piru-announcement-bar a:hover {
+        opacity: 0.9;
+      }
+
+      .announcement-close {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: inherit;
+        font-size: 1.25rem;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+      }
+
+      .announcement-close:hover {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      @media (max-width: 576px) {
+        .piru-announcement-bar .container {
+          padding-right: 45px;
         }
-        .piru-announcement-bar a {
-          font-weight: 700;
-          text-decoration: underline;
-          color: inherit;
-        }
-        .piru-announcement-bar a:hover {
-          opacity: 0.9;
-        }
-        .announcement-close {
-          position: absolute;
-          right: 15px;
-          top: 50%;
-          transform: translateY(-50%);
-          background: transparent;
-          border: none;
-          color: inherit;
-          font-size: 1.25rem;
-          cursor: pointer;
-          opacity: 0.7;
-          transition: opacity 0.2s ease, transform 0.2s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 5px;
-        }
-        .announcement-close:hover {
-          opacity: 1;
-          transform: translateY(-50%) scale(1.1);
-        }
-        @media (max-width: 576px) {
-          .piru-announcement-bar .container {
-            padding-right: 45px;
-          }
-        }
-      </style>
+      }
+    </style>
   <?php endif; ?>
 </head>
 
 <body>
   <?php if ($config->get("loader_front") === "true"): ?>
-      <?php require_once BASE_DIR . "/app/front/layouts/partials/loader.php"; ?>
+    <?php require_once BASE_DIR . "/app/front/layouts/partials/loader.php"; ?>
   <?php endif; ?>
 
   <div class="piru-wrapper">
     <header class="piru-nav-wrapper">
       <?php if ($show_announcement): ?>
-          <div class="piru-announcement-bar text-bg-<?= clear_html($announcement_type) ?>" id="announcementBar" data-announcement-hash="<?= clear_html($announcement_hash) ?>">
-            <div class="container position-relative py-2">
-              <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap text-center">
-                <div class="fw-bold small">
-                  <?= $announcement_text ?>
-                </div>
+        <div class="piru-announcement-bar text-bg-<?= clear_html($announcement_type) ?>" id="announcementBar"
+          data-announcement-hash="<?= clear_html($announcement_hash) ?>">
+          <div class="container position-relative py-2">
+            <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap text-center">
+              <div class="fw-bold small">
+                <?= $announcement_text ?>
               </div>
-              <button class="announcement-close" id="closeAnnouncement" type="button" aria-label="Cerrar aviso">
-                <i class="bi bi-x-lg"></i>
-              </button>
             </div>
+            <button class="announcement-close" id="closeAnnouncement" type="button" aria-label="Cerrar aviso">
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
-          <script>
-            document.addEventListener("DOMContentLoaded", () => {
-              const bar = document.getElementById("announcementBar");
-              const closeBtn = document.getElementById("closeAnnouncement");
-              if (bar && closeBtn) {
-                closeBtn.addEventListener("click", () => {
-                  const hash = bar.getAttribute("data-announcement-hash");
-                  const d = new Date();
-                  d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 días
-                  document.cookie = "announcement_closed_" + hash + "=1; expires=" + d.toUTCString() + "; path=/; SameSite=Lax";
-                  
-                  // Ocultar la barra con animación suave
-                  bar.style.transition = "opacity 0.3s ease, transform 0.3s ease, margin-top 0.3s ease";
-                  bar.style.opacity = "0";
-                  bar.style.transform = "translateY(-100%)";
-                  setTimeout(() => {
-                    bar.style.display = "none";
-                  }, 300);
-                });
-              }
-            });
-          </script>
+        </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const bar = document.getElementById("announcementBar");
+            const closeBtn = document.getElementById("closeAnnouncement");
+            if (bar && closeBtn) {
+              closeBtn.addEventListener("click", () => {
+                const hash = bar.getAttribute("data-announcement-hash");
+                const d = new Date();
+                d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000)); // 7 días
+                document.cookie = "announcement_closed_" + hash + "=1; expires=" + d.toUTCString() + "; path=/; SameSite=Lax";
+
+                // Ocultar la barra con animación suave
+                bar.style.transition = "opacity 0.3s ease, transform 0.3s ease, margin-top 0.3s ease";
+                bar.style.opacity = "0";
+                bar.style.transform = "translateY(-100%)";
+                setTimeout(() => {
+                  bar.style.display = "none";
+                }, 300);
+              });
+            }
+          });
+        </script>
       <?php endif; ?>
       <nav class="piru-nav-main">
         <div class="piru-nav-container">
@@ -171,18 +177,20 @@
               <div class="piru-nav-logo-text">
                 <?php
                 $iconSource = $config->get('logo_icon_source', 'class');
-                $iconColor = $config->get('logo_icon_color', '');
+                $iconColor  = $config->get('logo_icon_color', '');
                 $colorStyle = $iconColor ? ' style="color: ' . clear_html($iconColor) . ' !important;"' : '';
-                
+
                 if ($iconSource === 'none'):
                   // Sin icono, no se renderiza nada
                 elseif ($iconSource === 'svg_raw' && $config->get('logo_icon_svg')):
                   echo $config->get('logo_icon_svg');
                 elseif ($iconSource === 'image' && $config->get('logo_icon_file')):
                   ?>
-                  <img src="<?= storage_uploads($config->get('logo_icon_file'), "site") ?>" alt="Icon" style="height: 24px; width: auto; object-fit: contain;">
+                  <img src="<?= storage_uploads($config->get('logo_icon_file'), "site") ?>" alt="Icon"
+                    style="height: 24px; width: auto; object-fit: contain;">
                 <?php else: ?>
-                  <i class="<?= clear_html($config->get('logo_icon_class', 'bi bi-lightning-charge-fill')) ?>"<?= $colorStyle ?>></i>
+                  <i class="<?= clear_html($config->get('logo_icon_class', 'bi bi-lightning-charge-fill')) ?>"
+                    <?= $colorStyle ?>></i>
                 <?php endif; ?>
                 <span><?= $config->siteName() ?></span>
               </div>
@@ -201,9 +209,7 @@
                     <a class="piru-dropdown-item" href="./movies/movies.html">
                       <span>Movies</span>
                     </a>
-                    <a
-                      class="piru-dropdown-item"
-                      href="./movies/series-details.html">
+                    <a class="piru-dropdown-item" href="./movies/series-details.html">
                       <span>Series</span>
                     </a>
                     <a class="piru-dropdown-item" href="./blog/blog.html">
@@ -237,9 +243,7 @@
                       <span>License</span>
                     </a>
                     <hr class="my-3 opacity-10" />
-                    <a
-                      class="piru-dropdown-item featured-item"
-                      href="./shop/index.html">
+                    <a class="piru-dropdown-item featured-item" href="./shop/index.html">
                       <div class="d-flex flex-column">
                         <div class="fw-bold mb-1">Visit Our Shop</div>
                         <div class="small opacity-75">
@@ -274,40 +278,39 @@
               </a>
             </li>
             <li>
-              <a
-                class="piru-nav-link"
-                href="./pages/sticky-footer-navbar.html">
+              <a class="piru-nav-link" href="./pages/sticky-footer-navbar.html">
                 <span>Sticky Footer Navbar</span>
               </a>
             </li>
             <li class="piru-mobile-auth">
               <div class="d-grid gap-2">
                 <?php if (!is_logged_in()): ?>
-                    <a class="btn btn-primary py-3 fw-bold" href="<?= front_route("signup") ?>">
-                      Registrarse
-                    </a>
-                    <a class="btn btn-link text-body fw-bold" href="<?= front_route("signin") ?>">
-                      Iniciar Sesión
-                    </a>
+                  <a class="btn btn-primary py-3 fw-bold" href="<?= front_route("signup") ?>">
+                    Registrarse
+                  </a>
+                  <a class="btn btn-link text-body fw-bold" href="<?= front_route("signin") ?>">
+                    Iniciar Sesión
+                  </a>
                 <?php else: ?>
-                    <?php if (is_admin()): ?>
-                        <a class="btn btn-outline-primary py-3 fw-bold" href="<?= admin_route("dashboard") ?>">
-                          Dashboard
-                        </a>
-                    <?php endif; ?>
-                    <a class="btn btn-primary py-3 fw-bold" href="<?= front_route("account/profile") ?>">
-                      Mi Perfil
+                  <?php if (is_admin()): ?>
+                    <a class="btn btn-outline-primary py-3 fw-bold" href="<?= admin_route("dashboard") ?>">
+                      Dashboard
                     </a>
-                    <a class="btn btn-link text-danger fw-bold" href="<?= front_route("signout") ?>">
-                      Cerrar Sesión
-                    </a>
+                  <?php endif; ?>
+                  <a class="btn btn-primary py-3 fw-bold" href="<?= front_route("account/profile") ?>">
+                    Mi Perfil
+                  </a>
+                  <a class="btn btn-link text-danger fw-bold" href="<?= front_route("signout") ?>">
+                    Cerrar Sesión
+                  </a>
                 <?php endif; ?>
               </div>
             </li>
           </ul>
           <div class="piru-nav-actions">
             <div class="dropdown">
-              <button class="piru-action-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Language">
+              <button class="piru-action-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false" title="Language">
                 <i class="bi bi-globe"></i>
                 <span class="d-none d-sm-inline-block ms-1"><?= strtoupper(get_locale()) ?></span>
               </button>
@@ -316,7 +319,7 @@
                   <a class="dropdown-item d-flex align-items-center gap-2" href="<?= front_route("lang/es") ?>">
                     Español
                     <?php if (get_locale() === "es"): ?>
-                        <i class="fa-solid fa-check ms-auto text-success small"></i>
+                      <i class="fa-solid fa-check ms-auto text-success small"></i>
                     <?php endif; ?>
                   </a>
                 </li>
@@ -324,56 +327,45 @@
                   <a class="dropdown-item d-flex align-items-center gap-2" href="<?= front_route("lang/en") ?>">
                     English
                     <?php if (get_locale() === "en"): ?>
-                        <i class="fa-solid fa-check ms-auto text-success small"></i>
+                      <i class="fa-solid fa-check ms-auto text-success small"></i>
                     <?php endif; ?>
                   </a>
                 </li>
               </ul>
             </div>
-            <button
-              class="piru-action-btn"
-              id="openSearch"
-              type="button"
-              title="Search">
+            <button class="piru-action-btn" id="openSearch" type="button" title="Search">
               <i class="bi bi-search"></i>
             </button>
-            <button
-              class="piru-action-btn desktop-only"
-              id="bd-theme-toggle"
-              type="button"
-              title="Theme">
+            <button class="piru-action-btn desktop-only" id="bd-theme-toggle" type="button" title="Theme">
               <span class="theme-icon-active"><i class="bi bi-sun"></i></span>
             </button>
             <div class="desktop-auth">
               <?php if (!is_logged_in()): ?>
-                  <a class="btn btn-sm btn-link text-body text-decoration-none fw-bold" href="<?= front_route("signin") ?>">
-                    Entrar
-                  </a>
-                  <a class="btn btn-sm btn-primary px-3 fw-bold" href="<?= front_route("signup") ?>">
-                    Registrarse
-                  </a>
+                <a class="btn btn-sm btn-link text-body text-decoration-none fw-bold" href="<?= front_route("signin") ?>">
+                  Entrar
+                </a>
+                <a class="btn btn-sm btn-primary px-3 fw-bold" href="<?= front_route("signup") ?>">
+                  Registrarse
+                </a>
               <?php else: ?>
-                  <div class="d-flex align-items-center gap-3">
-                    <?php if (is_admin()): ?>
-                        <a class="btn btn-sm btn-outline-primary px-3 fw-bold" href="<?= admin_route("dashboard") ?>"
-                          title="Administración">
-                          <i class="bi bi-speedometer2"></i>
-                        </a>
-                    <?php endif; ?>
-                    <a class="btn btn-sm btn-primary px-3 fw-bold" href="<?= front_route("account/profile") ?>"
-                      title="Mi Perfil">
-                      <i class="bi bi-user me-1"></i> Perfil
+                <div class="d-flex align-items-center gap-3">
+                  <?php if (is_admin()): ?>
+                    <a class="btn btn-sm btn-outline-primary px-3 fw-bold" href="<?= admin_route("dashboard") ?>"
+                      title="Administración">
+                      <i class="bi bi-speedometer2"></i>
                     </a>
-                    <a class="btn btn-sm btn-link text-danger p-0" href="<?= front_route("signout") ?>" title="Salir">
-                      <i class="bi bi-box-arrow-right fs-5"></i>
-                    </a>
-                  </div>
+                  <?php endif; ?>
+                  <a class="btn btn-sm btn-primary px-3 fw-bold" href="<?= front_route("account/profile") ?>"
+                    title="Mi Perfil">
+                    <i class="bi bi-user me-1"></i> Perfil
+                  </a>
+                  <a class="btn btn-sm btn-link text-danger p-0" href="<?= front_route("signout") ?>" title="Salir">
+                    <i class="bi bi-box-arrow-right fs-5"></i>
+                  </a>
+                </div>
               <?php endif; ?>
             </div>
-            <button
-              class="piru-action-btn mobile-only"
-              id="bd-theme-toggle-mobile"
-              type="button">
+            <button class="piru-action-btn mobile-only" id="bd-theme-toggle-mobile" type="button">
               <span class="theme-icon-active"><i class="bi bi-sun"></i></span>
             </button>
             <button class="piru-nav-toggle" aria-label="Menu">
@@ -388,11 +380,8 @@
         <div class="piru-nav-container">
           <div class="d-flex align-items-center gap-3 w-100">
             <i class="bi bi-search text-primary h4 mb-0"></i>
-            <input
-              class="form-control form-control-lg bg-transparent border-0 ps-0 shadow-none"
-              id="piruSearchInput"
-              type="text"
-              placeholder="Search..." />
+            <input class="form-control form-control-lg bg-transparent border-0 ps-0 shadow-none" id="piruSearchInput"
+              type="text" placeholder="Search..." />
             <button class="btn btn-link text-body p-0" id="closeSearch">
               <i class="bi bi-x-lg h4"></i>
             </button>
@@ -409,7 +398,8 @@
       <div class="container text-center">
         <p class="mb-0">
           Copyright &copy; <?= date("Y") ?>
-          <a href="<?= $config->siteUrl() ?>" target="_blank" rel="noopener noreferrer" class="text-decoration-none fw-bold">
+          <a href="<?= $config->siteUrl() ?>" target="_blank" rel="noopener noreferrer"
+            class="text-decoration-none fw-bold">
             <?= $config->siteName() ?>
           </a>.
           Todos los derechos reservados.
@@ -446,15 +436,17 @@
               }
             }
             ?>
-              <a href="<?= $item->url ?>" target="_blank" class="text-secondary opacity-75 hover-opacity-100 transition-all" title="<?= ucfirst($item->name) ?>">
-                <?php if ($iconClass): ?>
-                    <i class="<?= $iconClass ?>"></i>
-                <?php elseif ($extFavicon): ?>
-                    <img src="<?= $extFavicon ?>" alt="<?= $item->name ?>" style="width: 1.2rem; height: 1.2rem; object-fit: contain; border-radius: 2px; filter: grayscale(1) opacity(0.75);">
-                <?php else: ?>
-                    <i class="fa-solid fa-link"></i>
-                <?php endif; ?>
-              </a>
+            <a href="<?= $item->url ?>" target="_blank" class="text-secondary opacity-75 hover-opacity-100 transition-all"
+              title="<?= ucfirst($item->name) ?>">
+              <?php if ($iconClass): ?>
+                <i class="<?= $iconClass ?>"></i>
+              <?php elseif ($extFavicon): ?>
+                <img src="<?= $extFavicon ?>" alt="<?= $item->name ?>"
+                  style="width: 1.2rem; height: 1.2rem; object-fit: contain; border-radius: 2px; filter: grayscale(1) opacity(0.75);">
+              <?php else: ?>
+                <i class="fa-solid fa-link"></i>
+              <?php endif; ?>
+            </a>
           <?php endforeach; ?>
         </div>
 
@@ -471,9 +463,10 @@
 
           foreach ($footer_legal_pages as $lp):
             ?>
-              <a href="<?= front_route($lp->policy_slug) ?>" class="text-secondary text-decoration-none small opacity-75 hover-opacity-100 transition-all">
-                <?= $lp->policy_title ?>
-              </a>
+            <a href="<?= front_route($lp->policy_slug) ?>"
+              class="text-secondary text-decoration-none small opacity-75 hover-opacity-100 transition-all">
+              <?= $lp->policy_title ?>
+            </a>
           <?php endforeach; ?>
         </div>
       </div>
