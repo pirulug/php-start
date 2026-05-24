@@ -33,6 +33,13 @@ $log->info("Usuario ha cerrado sesión")
   ->file("dashboard")
   ->write();
 
-// 5. Redirigir a la vista de inicio de sesión
+// 5. Iniciar una nueva sesión limpia para el mensaje de notificación
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+$notifier->info("Has cerrado sesión correctamente.")
+  ->bootstrap()
+  ->add();
+
 header("Location: " . admin_route("sign-in"));
 exit();

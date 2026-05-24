@@ -32,6 +32,14 @@ Router::route('account/settings/api')
   ->permission('account.settings')
   ->register();
 
+Router::route('account/settings/2fa')
+  ->action('account@settings_2fa')
+  ->view('account@settings_2fa')
+  ->layout('main')
+  ->middleware('auth_admin')
+  ->permission('account.settings')
+  ->register();
+
 Router::route('account/lang/{lang}')
   ->action('account@set_lang')
   ->register();

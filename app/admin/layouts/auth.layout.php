@@ -42,6 +42,7 @@
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-12 col-sm-9 col-md-7 col-lg-5 col-xl-4">
+            <?php $notifier->showBootstrap() ?>
             <?= $content ?>
           </div>
         </div>

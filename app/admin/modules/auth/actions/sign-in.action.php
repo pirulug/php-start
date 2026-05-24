@@ -140,7 +140,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return;
       }
 
-      // LOGIN OK
+      // Consultar si tiene 2fa_secret en usermeta
+      $stmtSecret = $connect->prepare("
+        SELECT usermeta_value 
+        FROM usermeta 
+        WHERE user_id = :user_id 
+          AND usermeta_key = '2fa_secret' 
+        LIMIT 1
+      ");
+      $user_id_val = $user->user_id;
+      $stmtSecret->bindParam(':user_id', $user_id_val, PDO::PARAM_INT);
+      $stmtSecret->execute();
+
+      if ($stmtSecret->rowCount() === 1) {
+        // Redirigir al flujo de 2FA
+        $_SESSION['2fa_user_id'] = $user->user_id;
+        $_SESSION['2fa_remember'] = $remember_me;
+
+        if ($rate) {
+          $rate->success();
+        }
+
+        header("Location: " . admin_route("2fa-code"));
+        exit();
+      }
+
+      // LOGIN CONVENCIONAL DIRECTO (2FA desactivado por defecto)
       $_SESSION['user_id'] = $user->user_id;
       $_SESSION['signin']  = true;
 
