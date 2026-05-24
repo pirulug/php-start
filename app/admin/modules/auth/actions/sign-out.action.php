@@ -1,5 +1,8 @@
 <?php
-// session_start();
+
+// -----------------------------------------------------------------------------
+// SECCIÓN: CIERRE DE SESIÓN (SIGN OUT)
+// -----------------------------------------------------------------------------
 
 // 1. Eliminar todas las variables de sesión
 $_SESSION = [];
@@ -30,6 +33,6 @@ $log->info("Usuario ha cerrado sesión")
   ->file("dashboard")
   ->write();
 
-// 5. Redirigir al login
-header("Location: " . admin_route("login"));
+// 5. Redirigir a la vista de inicio de sesión
+header("Location: " . admin_route("sign-in"));
 exit();

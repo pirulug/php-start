@@ -125,7 +125,7 @@
                   Settings
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="<?= admin_route("logout") ?>">
+                <a class="dropdown-item" href="<?= admin_route("sign-out") ?>">
                   <i class="align-middle me-1" data-feather="log-out"></i>
                   Cerrar Session
                 </a>

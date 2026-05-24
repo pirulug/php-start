@@ -61,7 +61,7 @@ if ($is_ctx_api && !has_api()) {
 
 // Bloqueo de Frontend si está desactivado (Redirigir al Admin Login)
 if (!$is_ctx_admin && !$is_ctx_api && !has_front()) {
-  header("Location: " . admin_route("login"));
+  header("Location: " . admin_route("sign-in"));
   exit();
 }
 

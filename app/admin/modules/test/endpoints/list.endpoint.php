@@ -1,3 +1,0 @@
-<?php
-
-// Endpoint para test

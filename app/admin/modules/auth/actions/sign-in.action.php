@@ -5,7 +5,9 @@ if (is_admin()) {
   exit();
 }
 
-// AUTO LOGIN CON COOKIE 
+// -----------------------------------------------------------------------------
+// SECCIÓN: AUTO LOGIN CON COOKIE
+// -----------------------------------------------------------------------------
 if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
   try {
     $data = $cipher->decrypt($_COOKIE[COOKIE_PREFIX . 'auth']);
@@ -24,13 +26,14 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
       SELECT u.*, um.usermeta_value AS token_hash
       FROM users u
       LEFT JOIN usermeta um
-    ON um.user_id = u.user_id
-    AND um.usermeta_key = 'remember_token'
+        ON um.user_id = u.user_id
+        AND um.usermeta_key = 'remember_token'
       WHERE u.user_id = :user_id
-      AND u.user_status = 1
+        AND u.user_status = 1
       LIMIT 1
-  ");
-    $stmt->execute([':user_id' => $user_id]);
+    ");
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
 
     if (!$stmt->rowCount()) {
       throw new Exception('Usuario no válido');
@@ -57,7 +60,6 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
       header("Location: " . admin_route("dashboard"));
       exit();
     } else {
-      // Si el usuario no es admin, no tiene sentido dejarlo en el login de admin
       header("Location: " . front_route("account/profile"));
       exit();
     }
@@ -67,51 +69,48 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'auth'])) {
   }
 }
 
-// LOGIN
+// -----------------------------------------------------------------------------
+// SECCIÓN: PROCESAMIENTO DE LOGIN (POST)
+// -----------------------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  $user_login_raw = $_POST['user-name'] ?? '';
+  $user_login_raw = $_POST['user_login'] ?? '';
   $user_login     = clear_input($user_login_raw);
-  $user_password  = $_POST['user-password'] ?? '';
-  $remember_me    = isset($_POST['remember-me']);
+  $user_password  = $_POST['user_password'] ?? '';
+  $remember_me    = isset($_POST['remember_me']);
 
-  // =========================================================
-  // ACCESS CONTROL (rate limit)
-  // =========================================================
+  // Control de intentos (rate limit)
   $rate = (new LoginRateLimiter($connect))
-    ->fromPost($user_login_raw)
-    ->resolveUser()
-    ->load();
+    ?->fromPost($user_login_raw)
+    ?->resolveUser()
+    ?->load();
 
-  if ($rate->isBlocked()) {
-    $notifier->message($rate->getBlockedMessage())
+  if ($rate && $rate->isBlocked()) {
+    $notifier->danger($rate->getBlockedMessage())
       ->bootstrap()
-      ->danger()
       ->add();
     return;
   }
 
-  // VALIDACIONES
+  // Validaciones de campos
   if ($user_login === '') {
-    $notifier->message("El campo usuario es obligatorio")
+    $notifier->danger("El campo usuario es obligatorio")
       ->bootstrap()
-      ->danger()
       ->add();
   }
 
   if ($user_password === '') {
-    $notifier->message("El campo contraseña es obligatorio")
+    $notifier->danger("El campo contraseña es obligatorio")
       ->bootstrap()
-      ->danger()
       ->add();
   }
 
-  // PROCESO LOGIN
+  // Proceso de autenticación
   if (!$notifier->can()->danger()) {
 
     $query = "SELECT * FROM users 
               WHERE user_login = :user_login 
-              AND user_status = 1
+                AND user_status = 1
               LIMIT 1";
     $stmt  = $connect->prepare($query);
     $stmt->bindParam(':user_login', $user_login, PDO::PARAM_STR);
@@ -121,22 +120,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       $user = $stmt->fetch(PDO::FETCH_OBJ);
 
-      // Verificar contraseña (CLAVE)
+      // Verificar contraseña
       if (!$cipher->verifyPassword($user_password, $user->user_password)) {
 
-        $rate->failed();
+        if ($rate) {
+          $rate->failed();
+        }
 
-        $notifier->message("Usuario o contraseña incorrectos")
+        $notifier->danger("Usuario o contraseña incorrectos")
           ->bootstrap()
-          ->danger()
           ->add();
         return;
       }
 
       if (!can_user_access_admin($connect, $user->user_id)) {
-        $notifier->message("No tienes permisos para acceder al sistema.")
+        $notifier->danger("No tienes permisos para acceder al sistema.")
           ->bootstrap()
-          ->danger()
           ->add();
         return;
       }
@@ -155,12 +154,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           INSERT INTO usermeta (user_id, usermeta_key, usermeta_value)
           VALUES (:user_id, 'remember_token', :value)
           ON DUPLICATE KEY UPDATE
-      usermeta_value = VALUES(usermeta_value)
-    ");
-        $stmt->execute([
-          ':user_id' => $user->user_id,
-          ':value'   => $tokenHash
-        ]);
+            usermeta_value = VALUES(usermeta_value)
+        ");
+        $user_id_val = $user->user_id;
+        $stmt->bindParam(':user_id', $user_id_val, PDO::PARAM_INT);
+        $stmt->bindParam(':value', $tokenHash, PDO::PARAM_STR);
+        $stmt->execute();
 
         // Cookie cifrada
         setcookie(
@@ -179,21 +178,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $stmt = $connect->prepare(
         "UPDATE users SET user_last_login = NOW() WHERE user_id = :user_id"
       );
-      $stmt->bindParam(':user_id', $user->user_id);
+      $user_id_val = $user->user_id;
+      $stmt->bindParam(':user_id', $user_id_val, PDO::PARAM_INT);
       $stmt->execute();
 
-      // =========================================================
-      // ACCESS CONTROL → login exitoso
-      // =========================================================
-      $rate->success();
+      if ($rate) {
+        $rate->success();
+      }
 
       // Notificación de bienvenida
-      $notifier->message("¡Bienvenido de nuevo, {$user->user_login}!")
+      $notifier->success("¡Bienvenido de nuevo, {$user->user_login}!")
         ->bootstrap()
-        ->success()
         ->add();
 
-      // log
+      // Registro de log
       $log->info("Usuario {$user->user_login} ha iniciado sesión")
         ->file("dashboard")
         ->with("user_id", $user->user_id)
@@ -202,7 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       // Redirigir a la URL original si existe
       if (!empty($_SESSION['redirect_after_login'])) {
-
         $redirect = $_SESSION['redirect_after_login'];
         unset($_SESSION['redirect_after_login']);
 
@@ -214,18 +211,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       exit();
 
     } else {
-      // =========================================================
-      // ACCESS CONTROL → fallo (IP + login)
-      // =========================================================
-      $rate->failed();
-
-      if ($rate->isBruteForce()) {
-        $rate->blockIpPermanently();
+      if ($rate) {
+        $rate->failed();
+        if ($rate->isBruteForce()) {
+          $rate->blockIpPermanently();
+        }
       }
 
-      $notifier->message("Usuario o contraseña incorrectos")
+      $notifier->danger("Usuario o contraseña incorrectos")
         ->bootstrap()
-        ->danger()
         ->add();
     }
   }
