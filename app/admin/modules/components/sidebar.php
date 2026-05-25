@@ -20,4 +20,7 @@ Sidebar::group('Componentes', 'package', function ($group) {
   $group->item('FPDF (PDF)', admin_route('components/fpdf'))
     ->can('components.fpdf');
 
+  $group->item('Kiki (Automatización)', admin_route('components/kiki'))
+    ->can('components.fpdf'); // Compartimos el permiso de fpdf por simplicidad
+
 });

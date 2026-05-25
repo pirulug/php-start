@@ -181,7 +181,7 @@
   font-family: Google Sans Code;
   font-style: normal;
   font-weight: 100 900;
-  src: url(../../assets/fonts/GoogleSansCode[MONO,wght].ttf) format("truetype-variations")
+  src: url(../../assets/fonts/google-sans-code/GoogleSansCode[MONO,wght].ttf) format("truetype-variations")
 }
 
 @font-face {
@@ -189,5 +189,5 @@
   font-family: Google Sans Code;
   font-style: italic;
   font-weight: 100 900;
-  src: url(../../assets/fonts/GoogleSansCode-Italic[MONO,wght].ttf) format("truetype-variations")
+  src: url(../../assets/fonts/google-sans-code/GoogleSansCode-Italic[MONO,wght].ttf) format("truetype-variations")
 }
