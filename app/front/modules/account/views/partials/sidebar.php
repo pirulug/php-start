@@ -15,8 +15,13 @@
     </a>
     <a href="<?= front_route("account/settings/password") ?>"
       class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3 <?= is_active('account/settings/password') ?>">
-      <i class="fa-solid fa-shield-halved fa-fw"></i>
+      <i class="fa-solid fa-key fa-fw"></i>
       <span class="small fw-bold text-uppercase">Seguridad</span>
+    </a>
+    <a href="<?= front_route("account/settings/2fa") ?>"
+      class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3 <?= is_active('account/settings/2fa') ?>">
+      <i class="fa-solid fa-shield-halved fa-fw"></i>
+      <span class="small fw-bold text-uppercase">Seguridad 2FA</span>
     </a>
     <a href="<?= front_route("account/settings/api") ?>"
       class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3 <?= is_active('account/settings/api') ?>">

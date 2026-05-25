@@ -16,6 +16,12 @@ Router::route('signout')
   ->action('auth@signout')
   ->register();
 
+Router::route('2fa-code')
+  ->action('auth@2fa-code')
+  ->view('auth@2fa-code')
+  ->layout('main')
+  ->register();
+
 Router::route('reset-password')
   ->view('auth@reset')
   ->layout('main')

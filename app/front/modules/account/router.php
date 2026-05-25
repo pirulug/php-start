@@ -24,6 +24,14 @@ Router::route('account/settings/password')
   ->layout('main')
   ->register();
 
+Router::route('account/settings/2fa')
+  ->middleware("auth_home")
+  ->permission("account.edit")
+  ->action('account@settings_2fa')
+  ->view('account@settings_2fa')
+  ->layout('main')
+  ->register();
+
 Router::route('account/settings/api')
   ->middleware("auth_home")
   ->permission("account.edit")

@@ -148,7 +148,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       //   return;
       // }
 
-      // LOGIN OK
+      // Verificar si el usuario tiene el 2FA habilitado
+      $stmt2FA = $connect->prepare("
+        SELECT usermeta_value 
+        FROM usermeta 
+        WHERE user_id = :user_id 
+          AND usermeta_key = '2fa_secret' 
+          AND usermeta_value IS NOT NULL 
+          AND usermeta_value != '' 
+        LIMIT 1
+      ");
+      $stmt2FA->bindParam(':user_id', $user->user_id, PDO::PARAM_INT);
+      $stmt2FA->execute();
+
+      if ($stmt2FA->rowCount() === 1) {
+        // Redirigir al flujo de ingreso de codigo 2FA guardando sesion temporal
+        $_SESSION['2fa_user_id'] = $user->user_id;
+        if ($remember_me) {
+          $_SESSION['2fa_remember'] = true;
+        }
+        
+        $rate->success();
+        
+        $notifier->message("Por favor ingresa tu código de verificación 2FA.")
+          ->toast()
+          ->info()
+          ->add();
+          
+        header("Location: " . front_route("2fa-code"));
+        exit();
+      }
+
+      // LOGIN OK (Sin 2FA)
       $_SESSION['user_id'] = $user->user_id;
       $_SESSION['signin']  = true;
 
