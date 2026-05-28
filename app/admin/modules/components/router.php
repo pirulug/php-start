@@ -75,3 +75,17 @@ Router::route('components/kiki')
 Router::route('components/kiki/upload')
   ->endpoint('components@kiki_upload')
   ->register();
+
+Router::route('components/osamu')
+  ->action('components@osamu')
+  ->view('components@osamu')
+  ->layout('main')
+  ->middleware('auth_admin')
+  ->permission('components.sweetalert')
+  ->register();
+
+Router::route('components/osamu/upload')
+  ->endpoint('components@upload_image')
+  ->middleware('auth_admin')
+  ->register();
+

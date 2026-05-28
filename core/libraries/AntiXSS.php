@@ -18,7 +18,7 @@ class AntiXSS {
 
   private const PATTERNS = [
     '/<script\b[^>]*>.*?<\/script>/is',
-    '/<iframe\b[^>]*>.*?<\/iframe>/is',
+    '/<iframe\b(?![^>]*src=["\']https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/embed\/)[^>]*>.*?<\/iframe>/is',
     '/<object\b[^>]*>.*?<\/object>/is',
     '/<embed\b[^>]*>.*?<\/embed>/is',
     '/<applet\b[^>]*>.*?<\/applet>/is',
@@ -26,7 +26,7 @@ class AntiXSS {
     '/<base\b[^>]*>/is',
     '/<link\b[^>]*>/is',
     '/<style\b[^>]*>.*?<\/style>/is',
-    '/(javascript|vbscript|data|mocha|livescript)\s*:/i',
+    '/(javascript|vbscript|mocha|livescript)\s*:|data\s*:(?!image\/(jpeg|png|gif|webp|svg\+xml);base64)/i',
     '/\bon[a-z]+\s*=\s*(["\']?)[^>]*?\1/i',
     '/<form\b[^>]*>.*?<\/form>/is',
     '/<\?php.*?\?>/is',
@@ -86,7 +86,7 @@ class AntiXSS {
    * @param string $allowedTags Etiquetas permitidas (estilo strip_tags).
    * @return string HTML sanitizado.
    */
-  public function cleanHtml(string $input, string $allowedTags = '<b><i><u><strong><em><ul><ol><li><p><br><h1><h2><h3><h4><h5><h6><a><img><div><span>'): string {
+  public function cleanHtml(string $input, string $allowedTags = '<b><i><u><strong><em><ul><ol><li><p><br><h1><h2><h3><h4><h5><h6><a><img><div><span><iframe><lite-youtube><pre><code>'): string {
     $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $input);
 
     $original = '';

@@ -23,4 +23,6 @@ Sidebar::group('Componentes', 'package', function ($group) {
   $group->item('Kiki (Automatización)', admin_route('components/kiki'))
     ->can('components.fpdf'); // Compartimos el permiso de fpdf por simplicidad
 
+  $group->item('Osamu (Editor)', admin_route('components/osamu'))
+    ->can('components.sweetalert');
 });
