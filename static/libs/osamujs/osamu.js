@@ -250,70 +250,8 @@ class Osamu {
       codeBlock: {
         icon: "fa-terminal", title: "Insertar Código", action: () => {
           this._exitCurrentBlock();
-          const codeHtml = `<pre class="language-javascript" style="position:relative; padding-top:28px;"><div class="osamu-code-lang-selector" contenteditable="false" style="position:absolute; top:4px; right:10px; font-size:0.7rem; color:#6c757d; font-family:sans-serif; user-select:none; z-index:5; background:var(--osamu-toolbar-bg); border:1px solid var(--osamu-border); border-radius:4px; padding:2px 6px; display:inline-flex; align-items:center; gap:4px;"><span>Lang:</span><input class="osamu-code-lang-input-inline" type="text" value="javascript" style="background:transparent; border:none; color:inherit; font-size:inherit; font-family:inherit; outline:none; width:70px; font-weight:600;"></div><code class="language-javascript"><br></code></pre><p><br></p>`;
+          const codeHtml = "<pre class='language-javascript'><code class='language-javascript'><br></code></pre><p><br></p>";
           this._exec("insertHTML", codeHtml);
-
-          setTimeout(() => {
-            this.editorBody.querySelectorAll(".osamu-code-lang-input-inline").forEach(inpEl => {
-              if (!inpEl.dataset.listenerAttached) {
-                inpEl.dataset.listenerAttached = "true";
-
-                let debounceTimer = null;
-                const updateLanguage = (e, immediate = false) => {
-                  clearTimeout(debounceTimer);
-                  const runUpdate = () => {
-                    const preEl = e.target.closest("pre");
-                    if (preEl) {
-                      const codeEl = preEl.querySelector("code");
-                      const lang = e.target.value.trim().toLowerCase() || "javascript";
-
-                      // Limpiar clases viejas de lenguaje
-                      const oldPreClasses = Array.from(preEl.classList).filter(c => c.startsWith("language-"));
-                      oldPreClasses.forEach(c => preEl.classList.remove(c));
-                      preEl.classList.add(`language-${lang}`);
-
-                      if (codeEl) {
-                        const oldCodeClasses = Array.from(codeEl.classList).filter(c => c.startsWith("language-"));
-                        oldCodeClasses.forEach(c => codeEl.classList.remove(c));
-                        codeEl.classList.add(`language-${lang}`);
-
-                        // Limpiar el formateo y tokens HTML anteriores de Prism
-                        codeEl.textContent = codeEl.textContent;
-
-                        if (window.Prism) {
-                          window.Prism.highlightElement(codeEl);
-                        }
-                      }
-                      this._syncTextarea();
-                    }
-                  };
-
-                  if (immediate) {
-                    runUpdate();
-                  } else {
-                    debounceTimer = setTimeout(runUpdate, 500);
-                  }
-                };
-
-                inpEl.addEventListener("input", (e) => updateLanguage(e, false));
-                inpEl.addEventListener("blur", (e) => updateLanguage(e, true));
-                inpEl.addEventListener("keydown", (e) => {
-                  e.stopPropagation();
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    inpEl.blur();
-                  }
-                });
-                inpEl.addEventListener("mousedown", (e) => {
-                  e.stopPropagation();
-                });
-              }
-            });
-
-            if (window.Prism) {
-              window.Prism.highlightAllUnder(this.editorBody);
-            }
-          }, 20);
         }
       },
       foreColor: { icon: "fa-font", title: "Color de Texto" },
@@ -866,11 +804,12 @@ class Osamu {
     const handles = this.resizer.querySelectorAll(".osamu-resizer-handle");
 
     if (el.tagName === "PRE") {
-      // Bloque de código: sin tiradores, solo antes/después
+      // Bloque de código: sin tiradores, solo antes/después y controles de lenguaje
       handles.forEach(h => { h.style.display = "none"; });
       this.mediaControls.style.display = "none";
-      this.codeControls.style.display = "none";
-      this.navDivider.style.display = "none";
+      this.codeControls.style.display = "flex";
+      this.navDivider.style.display = "block";
+      this.langInput.value = this._getElementLanguage(el);
     } else if (el.tagName === "BLOCKQUOTE") {
       // Cita: sin tiradores ni controles de tipo, solo antes/después
       handles.forEach(h => { h.style.display = "none"; });
@@ -1041,8 +980,7 @@ class Osamu {
   }
 
   /**
-   * Aplica el lenguaje escrito en el input al bloque de código seleccionado
-   * y re-renderiza el resaltado sintáctico de Prism.js.
+   * Aplica el lenguaje escrito en el input al bloque de código seleccionado.
    */
   _applyCodeLanguage() {
     if (!this.selectedImage || this.selectedImage.tagName !== "PRE") return;
@@ -1060,12 +998,6 @@ class Osamu {
       const oldCodeClasses = Array.from(codeEl.classList).filter(c => c.startsWith("language-"));
       oldCodeClasses.forEach(c => codeEl.classList.remove(c));
       codeEl.classList.add(`language-${lang}`);
-
-      // Resetear el HTML de Prism y re-renderizar
-      codeEl.textContent = codeEl.textContent;
-      if (window.Prism) {
-        window.Prism.highlightElement(codeEl);
-      }
     }
 
     this._syncTextarea();
@@ -1085,79 +1017,6 @@ class Osamu {
       this._ensureValidContent();
       this._syncTextareaDebounced();
       this._updatePlaceholder();
-
-      // Coloreado en tiempo real para bloques de código pre
-      if (window.Prism) {
-        const pre = e.target.closest("pre");
-        if (pre) {
-          const codeEl = pre.querySelector("code");
-          if (codeEl) {
-            // Guardar posición del caret antes de re-colorear
-            const sel = window.getSelection();
-            let savedOffset = 0;
-            if (sel && sel.rangeCount > 0) {
-              const range = sel.getRangeAt(0);
-              const preRange = document.createRange();
-              preRange.selectNodeContents(codeEl);
-              try {
-                preRange.setEnd(range.startContainer, range.startOffset);
-                savedOffset = preRange.toString().length;
-              } catch (err) {
-                savedOffset = codeEl.textContent.length;
-              }
-            }
-
-            // Aplicar highlight
-            window.Prism.highlightElement(codeEl);
-
-            // Restaurar posición del caret de forma precisa
-            if (sel && savedOffset >= 0) {
-              const newRange = document.createRange();
-              let charCount = 0;
-              let nodeStack = [codeEl];
-              let found = false;
-
-              while (nodeStack.length > 0 && !found) {
-                const node = nodeStack.pop();
-                if (node.nodeType === Node.TEXT_NODE) {
-                  const nextCharCount = charCount + node.length;
-                  if (savedOffset <= nextCharCount) {
-                    newRange.setStart(node, savedOffset - charCount);
-                    newRange.collapse(true);
-                    found = true;
-                  }
-                  charCount = nextCharCount;
-                } else if (node.nodeName === "BR") {
-                  if (savedOffset === charCount) {
-                    newRange.setStartBefore(node);
-                    newRange.collapse(true);
-                    found = true;
-                  }
-                  charCount += 1; // Un BR cuenta como un caracter de salto de línea
-                } else {
-                  let i = node.childNodes.length;
-                  while (i--) {
-                    nodeStack.push(node.childNodes[i]);
-                  }
-                }
-              }
-
-              if (found) {
-                sel.removeAllRanges();
-                sel.addRange(newRange);
-              } else {
-                // Fallback al final si no se encontró coincidencia exacta
-                try {
-                  newRange.selectNodeContents(codeEl);
-                  newRange.collapse(false);
-                  sel.removeAllRanges();
-                  sel.addRange(newRange);
-                } catch (err) { }
-              }
-            }
-          }
-        }
-      }
     });
 
     // Actualizar estados de toolbar en keyup sin re-serializar el DOM
@@ -1808,6 +1667,41 @@ class Osamu {
       temp.innerHTML = content;
       let changed = false;
 
+      // Normalizar pre sin code al sincronizar
+      temp.querySelectorAll("pre").forEach(pre => {
+        let code = pre.querySelector("code");
+        const langClass = Array.from(pre.classList).find(c => c.startsWith("language-"));
+        
+        if (!code) {
+          code = document.createElement("code");
+          if (langClass) {
+            code.className = langClass;
+          }
+          while (pre.firstChild) {
+            code.appendChild(pre.firstChild);
+          }
+          pre.appendChild(code);
+          changed = true;
+        } else {
+          if (langClass && !code.classList.contains(langClass)) {
+            const oldCodeClasses = Array.from(code.classList).filter(c => c.startsWith("language-"));
+            oldCodeClasses.forEach(c => code.classList.remove(c));
+            code.className = langClass;
+            changed = true;
+          }
+        }
+
+        // Convertir <br> internos a saltos de línea reales (\n)
+        const brs = pre.querySelectorAll("br");
+        if (brs.length > 0) {
+          brs.forEach(br => {
+            const textNode = document.createTextNode("\n");
+            br.parentNode.replaceChild(textNode, br);
+          });
+          changed = true;
+        }
+      });
+
       temp.querySelectorAll(".osamu-video-wrapper").forEach(wrapper => {
         const iframe = wrapper.querySelector("iframe");
         if (!iframe) return;
@@ -1865,6 +1759,31 @@ class Osamu {
     const temp = document.createElement("div");
     temp.innerHTML = html;
     let changed = false;
+
+    // Normalizar pre sin code al convertir
+    temp.querySelectorAll("pre").forEach(pre => {
+      let code = pre.querySelector("code");
+      const langClass = Array.from(pre.classList).find(c => c.startsWith("language-"));
+      
+      if (!code) {
+        code = document.createElement("code");
+        if (langClass) {
+          code.className = langClass;
+        }
+        while (pre.firstChild) {
+          code.appendChild(pre.firstChild);
+        }
+        pre.appendChild(code);
+        changed = true;
+      } else {
+        if (langClass && !code.classList.contains(langClass)) {
+          const oldCodeClasses = Array.from(code.classList).filter(c => c.startsWith("language-"));
+          oldCodeClasses.forEach(c => code.classList.remove(c));
+          code.className = langClass;
+          changed = true;
+        }
+      }
+    });
 
     // Convertir lite-youtube
     temp.querySelectorAll("lite-youtube").forEach(lite => {
@@ -2057,12 +1976,6 @@ class Osamu {
     this.editorBody.innerHTML = this._convertVideosToWrappers(html || "") || "<p><br></p>";
     this.textarea.value = html || "";
     this._updatePlaceholder();
-
-    if (window.Prism) {
-      setTimeout(() => {
-        window.Prism.highlightAllUnder(this.editorBody);
-      }, 10);
-    }
   }
 
   /**

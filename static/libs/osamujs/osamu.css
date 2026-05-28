@@ -214,12 +214,16 @@
   margin: 12px 0;
   overflow-x: auto;
   cursor: default;
+  color: #ff0066;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .osamu-body code {
-  font-family: var(--bs-font-monospace, "Fira Code", "Roboto Mono", monospace);
+  font-family: "Courier New", Consolas, "Courier", monospace;
   font-size: 0.875rem;
-  color: inherit;
+  color: #ff0066;
+  white-space: pre-wrap;
 }
 
 .osamu-body iframe {
