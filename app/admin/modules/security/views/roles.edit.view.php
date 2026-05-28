@@ -11,7 +11,7 @@ Editar Rol
 <?php end_block(); ?>
 
 <?php start_block('js'); ?>
-<?= url_script_admin('security', 'roles.edit') ?>
+<?= admin_modules_script('security', 'roles.edit') ?>
 <?php end_block(); ?>
 
 <form method="POST" autocomplete="off">

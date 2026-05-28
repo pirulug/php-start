@@ -16,7 +16,7 @@ Ajustes Generales
 
 <?php block_start("js"); ?>
 <?= static_libs_js("tagify", "tagify.js") ?>
-<?= url_script_admin("settings", "general") ?>
+<?= admin_modules_script("settings", "general") ?>
 <?php block_end(); ?>
 
 <form action="" method="POST" enctype="multipart/form-data">

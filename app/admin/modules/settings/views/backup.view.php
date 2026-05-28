@@ -135,5 +135,5 @@ Respaldos de Seguridad
 </div>
 
 <?php start_block('js') ?>
-<?= url_script_admin('settings', 'backup') ?>
+<?= admin_modules_script('settings', 'backup') ?>
 <?php end_block() ?>

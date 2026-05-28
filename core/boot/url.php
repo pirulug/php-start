@@ -11,9 +11,9 @@
  * @param string $file   Nombre del archivo (sin extensión .script.js).
  * @return string Etiqueta <script src="..."> completa.
  */
-function url_script_admin($module, $file) {
-  $url = APP_URL . "/app/admin/modules/{$module}/scripts/{$file}.script.js";
-  return '<script src="' . $url . '"></script>';
+function admin_modules_script($module, $file, $ext = "script.js") {
+  $url = APP_URL . "/app/admin/modules/{$module}/scripts/{$file}.{$ext}";
+  return "<script src='" . $url . "'></script>";
 }
 
 /**
@@ -23,7 +23,7 @@ function url_script_admin($module, $file) {
  * @param string $file   Nombre del archivo (sin extensión .script.js).
  * @return string Etiqueta <script src="..."> completa.
  */
-function url_script_front($module, $file) {
-  $url = APP_URL . "/app/front/modules/{$module}/scripts/{$file}.script.js";
-  return '<script src="' . $url . '"></script>';
+function front_modules_script($module, $file, $ext = "script.js") {
+  $url = APP_URL . "/app/front/modules/{$module}/scripts/{$file}.{$ext}";
+  return "<script src='" . $url . "'></script>";
 }

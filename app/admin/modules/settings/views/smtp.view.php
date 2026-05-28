@@ -14,8 +14,8 @@ Ajustes SMTP
 $smtp = $config->smtp();
 ?>
 <?php block_start("js"); ?>
-<?= static_assets_js("mail.js") ?>
-<?= url_script_admin("settings", "smtp") ?>
+<?= static_libs_js("mail", "mail.js") ?>
+<?= admin_modules_script("settings", "smtp") ?>
 <?php block_end(); ?>
 
 <form action="" method="POST">

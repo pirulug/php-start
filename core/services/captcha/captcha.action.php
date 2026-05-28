@@ -6,7 +6,7 @@ $captcha = (new Captcha())
   ->codeLength(5)
   ->sessionKey('fluid_captcha')
   ->background('lines')
-  ->font("static/assets/fonts/captcha.ttf")
+  ->font("static/libs/captcha/captcha.ttf")
   ->number();
 
 header('Content-Type: image/webp');

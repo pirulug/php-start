@@ -11,7 +11,7 @@ Editar Permiso
 <?php end_block(); ?>
 
 <?php start_block('js'); ?>
-<?= url_script_admin('security', 'permissions.edit') ?>
+<?= admin_modules_script('security', 'permissions.edit') ?>
 <script>
   function toggleGroupMode() {
     const isNew = document.getElementById('mode_new').checked;

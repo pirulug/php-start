@@ -34,7 +34,7 @@ Listar Permisos
 <?php end_block(); ?>
 
 <?php start_block('js'); ?>
-<?= url_script_admin('security', 'permissions.list') ?>
+<?= admin_modules_script('security', 'permissions.list') ?>
 <?php end_block(); ?>
 
 <div class="bg-body p-3 rounded mb-3 text-end">

@@ -8,7 +8,7 @@
       <?php if ($config->favicon()): ?>
         <img src="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'apple-touch-icon'} ?>" alt="Logo" width="40" height="40">
       <?php else: ?>
-        <img src="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" alt="Logo" width="40" height="40">
+        <img src="<?= APP_URL ?>/static/assets/front/img/favicon/favicon.ico" alt="Logo" width="40" height="40">
       <?php endif; ?>
     </div>
   </div>

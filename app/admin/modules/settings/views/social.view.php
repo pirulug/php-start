@@ -38,7 +38,7 @@ function get_external_favicon($url) {
 ?>
 <?php start_block('js') ?>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<?= url_script_admin('settings', 'social') ?>
+<?= admin_modules_script('settings', 'social') ?>
 <?php end_block(); ?>
 
 <form action="" method="POST">

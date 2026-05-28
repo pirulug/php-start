@@ -14,7 +14,7 @@ Formats
 <?php end_block() ?>
 
 <?php start_block('js') ?>
-<?= url_script_admin('settings', 'formats') ?>
+<?= admin_modules_script('settings', 'formats') ?>
 <?php end_block() ?>
 
 <form action="" method="POST" id="settingsForm">

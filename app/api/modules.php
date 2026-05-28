@@ -1,6 +1,6 @@
 <?php
 
 return [
-  'users'     => true,
-  'test' => true,
+  'users' => true,
+  'test'  => true,
 ];

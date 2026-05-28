@@ -11,7 +11,7 @@ Nuevo Permiso
 <?php end_block(); ?>
 
 <?php start_block('js'); ?>
-<?= url_script_admin('security', 'permissions.new') ?>
+<?= admin_modules_script('security', 'permissions.new') ?>
 <script>
   function toggleGroupMode() {
     const isNew = document.getElementById('mode_new').checked;

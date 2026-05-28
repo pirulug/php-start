@@ -11,7 +11,7 @@ Gestion de Sitemap
 <?php end_block(); ?>
 
 <?php start_block("js") ?>
-<?= url_script_admin('settings', 'sitemap') ?>
+<?= admin_modules_script('settings', 'sitemap') ?>
 <?php end_block() ?>
 
 <?php start_block("css") ?>

@@ -16,7 +16,7 @@ Listar Usuarios
 <script>
   const APP_ADMIN_URL = "<?= admin_route() ?>";
 </script>
-<?= url_script_admin('users', 'list') ?>
+<?= admin_modules_script('users', 'list') ?>
 <?php end_block(); ?>
 
 <!-- Buscador y filtros -->

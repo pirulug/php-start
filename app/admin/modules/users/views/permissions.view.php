@@ -11,7 +11,7 @@ Permisos: <?= clear_html($user->user_login) ?>
 <?php end_block(); ?>
 
 <?php start_block('js'); ?>
-<?= url_script_admin('users', 'permissions.view') ?>
+<?= admin_modules_script('users', 'permissions.view') ?>
 <?php end_block(); ?>
 
 <div class="row g-3">

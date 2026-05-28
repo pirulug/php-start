@@ -147,9 +147,9 @@ El framework proporciona funciones globales para verificar el estado de la sesi�
   - `admin_route($path, $params = [], $get = [])`: Genera una URL absoluta para el panel de administración.
   - `front_route($path, $params = [], $get = [])`: Genera una URL para el sitio público.
   - `api_route($path, $params = [], $get = [])`: Genera una URL para la API global.
-  - `url_script_admin($module, $file)`: Devuelve la etiqueta `<script>` completa para un script de módulo (`app/admin/modules/{module}/scripts/{file}.script.js`).
+  - `admin_modules_script($module, $file)`: Devuelve la etiqueta `<script>` completa para un script de módulo (`app/admin/modules/{module}/scripts/{file}.script.js`).
     ```php
-    <?= url_script_admin('account', 'profile') ?>
+    <?= admin_modules_script('account', 'profile') ?>
     ```
 
 ## 10. Helpers de Formateo
@@ -223,14 +223,14 @@ El framework facilita la comunicación asíncrona mediante una estructura dedica
 
 ### Scripts del Módulo (`scripts/`)
 Los archivos JavaScript específicos de un módulo se ubican en `app/{context}/modules/{module}/scripts/{file}.script.js`.
-- **Carga en View**: Utiliza el helper `url_script_admin` o `url_script_front` dentro del bloque `js`.
+- **Carga en View**: Utiliza el helper `admin_modules_script` o `front_modules_script` dentro del bloque `js`.
 - **Contexto de URL**: Para que el JS conozca las rutas del sistema, inyecta variables globales antes de cargar el archivo.
   ```php
   <?php block_start("js") ?>
   <script>
     const APP_ADMIN_URL = "<?= admin_route() ?>";
   </script>
-  <?= url_script_admin("users", "list") ?>
+  <?= admin_modules_script("users", "list") ?>
   <?php block_end() ?>
   ```
 

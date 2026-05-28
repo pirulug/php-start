@@ -117,7 +117,7 @@ Identidad Visual
 
 <?php start_block("js") ?>
 <?= static_libs_js("dropzone", "dropimg.js") ?>
-<?= url_script_admin('settings', 'brand') ?>
+<?= admin_modules_script('settings', 'brand') ?>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const select = document.getElementById('logoTypeSelect');

@@ -11,7 +11,7 @@
 <?php end_block(); ?>
 
 <?php start_block('js'); ?>
-<?= url_script_admin("users", "api") ?>
+<?= admin_modules_script("users", "api") ?>
 <?php end_block(); ?>
 
 <div class="row g-3">

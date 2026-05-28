@@ -8,7 +8,7 @@ Recuperar Contraseña
 
 <?php start_block('js'); ?>
 <?= static_libs_js("sweetalert2", "sweetalert2.js") ?>
-<?= url_script_front("auth", "reset") ?>
+<?= front_modules_script("auth", "reset") ?>
 <?php end_block(); ?>
 
 <div class="container my-5">

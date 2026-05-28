@@ -11,7 +11,7 @@ Nuevo Rol
 <?php end_block(); ?>
 
 <?php start_block('js'); ?>
-<?= url_script_admin('security', 'roles.new') ?>
+<?= admin_modules_script('security', 'roles.new') ?>
 <?php end_block(); ?>
 
 <form method="POST" autocomplete="off">

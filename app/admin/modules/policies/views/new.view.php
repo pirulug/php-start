@@ -16,7 +16,7 @@ Nueva Política
 
 <?php start_block('js'); ?>
 <?= static_libs_js("simplemde", "simplemde.js") ?>
-<?= url_script_admin('policies', 'new') ?>
+<?= admin_modules_script('policies', 'new') ?>
 <?php end_block(); ?>
 
 <div class="row justify-content-center">

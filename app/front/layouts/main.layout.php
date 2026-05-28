@@ -16,7 +16,7 @@
       href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon-16x16'} ?>">
     <link rel="manifest" href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'webmanifest'} ?>">
   <?php else: ?>
-    <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/front/img/favicon/favicon.ico" type="image/x-icon">
   <?php endif; ?>
 
   <script>
@@ -49,9 +49,9 @@
   <?php endif; ?>
 
   <!-- CSS -->
-  <?= static_assets_css("piruui.css") ?>
-  <?= static_assets_css("bootstrapicons.css") ?>
-  <?= static_assets_css("fontawesome.css") ?>
+  <?= static_libs_css("fontawesome", "fontawesome.css") ?>
+  <?= static_libs_css("bootstrapicons", "bootstrapicons.css") ?>
+  <?= static_assets_front_css("piruui.css") ?>
 
   <?= static_libs_css("toastifyjs", "toastifyjs.css") ?>
 
@@ -475,7 +475,7 @@
 
   <!-- JS -->
   <?= static_libs_js("toastifyjs", "toastifyjs.js") ?>
-  <?= static_assets_js("piruui.js") ?>
+  <?= static_assets_front_js("piruui.js") ?>
 
 
   <?= get_block('js'); ?>

@@ -15,7 +15,7 @@ $captcha = $config->captcha();
 ?>
 
 <?php start_block("js"); ?>
-<?= url_script_admin('settings', 'captcha') ?>
+<?= admin_modules_script('settings', 'captcha') ?>
 <?php end_block(); ?>
 
 <form action="" method="post" autocomplete="off">

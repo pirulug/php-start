@@ -6,7 +6,7 @@
         <img src="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon-32x32'} ?>" alt="Logo"
           width="40" height="40">
       <?php else: ?>
-        <img src="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" alt="Logo" width="40" height="40">
+        <img src="<?= APP_URL ?>/static/assets/admin/img/favicon/favicon.ico" alt="Logo" width="40" height="40">
       <?php endif; ?>
     </div>
   </div>

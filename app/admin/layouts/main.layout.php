@@ -12,7 +12,7 @@
     <link rel="shortcut icon"
       href="<?= APP_URL ?>/storage/uploads/site/favicons/<?= $config->favicon()->{'favicon.ico'} ?>" type="image/x-icon">
   <?php else: ?>
-    <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/img/favicon/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= APP_URL ?>/static/assets/admin/img/favicon/favicon.ico" type="image/x-icon">
   <?php endif; ?>
 
   <script>
@@ -27,10 +27,10 @@
   </script>
 
   <!-- CSS -->
-  <?= static_assets_css("fontawesome.css") ?>
-  <?= static_assets_css("bootstrapicons.css") ?>
-  <?= static_assets_css("piruadmin-fonts.css") ?>
-  <?= static_assets_css("piruadmin.css") ?>
+  <?= static_libs_css("fontawesome", "fontawesome.css") ?>
+  <?= static_libs_css("bootstrapicons", "bootstrapicons.css") ?>
+  <?= static_assets_admin_css("piruadmin-fonts.css") ?>
+  <?= static_assets_admin_css("piruadmin.css") ?>
 
   <?= static_libs_css("sweetalert2", "sweetalert2.css") ?>
 
@@ -188,7 +188,7 @@
   <!-- Dark & Ligth-->
 
   <!-- JS -->
-  <?= static_assets_js("piruadmin.js") ?>
+  <?= static_assets_admin_js("piruadmin.js") ?>
   <?= static_libs_js("feathericons", "feathericons.js") ?>
   <?= static_libs_js("sweetalert2", "sweetalert2.js") ?>
   <?= static_libs_js("sweetalert2", "sa.js") ?>
