@@ -290,13 +290,20 @@ class Osamu {
 
   /**
    * Asocia un input[type=color] a un botón de la barra de herramientas.
-   * Guarda la selección antes de abrir el picker para no perderla.
+   * Lee el color del texto seleccionado y preserva la selección al cambiar color.
    *
    * @param {HTMLButtonElement} btn Botón contenedor.
    * @param {string} name "foreColor" o "backColor".
    */
   _attachColorPicker(btn, name) {
     btn.style.position = "relative";
+
+    // Franja de color visible debajo del icóno del botón
+    const colorBar = document.createElement("span");
+    colorBar.className = "osamu-color-bar";
+    colorBar.style.cssText = "display:block; position:absolute; bottom:2px; left:4px; right:4px; height:3px; border-radius:1px; pointer-events:none;";
+    colorBar.style.backgroundColor = name === "foreColor" ? "#1e293b" : "#fef08a";
+    btn.appendChild(colorBar);
 
     const picker = document.createElement("input");
     picker.type = "color";
@@ -315,16 +322,30 @@ class Osamu {
     });
     picker.value = name === "foreColor" ? "#1e293b" : "#fef08a";
 
-    // Guardar selección justo antes de que el picker tome el foco
+    // Guardar selección y leer el color actual del texto antes de abrir el picker
     picker.addEventListener("mousedown", () => {
       this._saveSelection();
+
+      if (name === "foreColor") {
+        const currentColor = this._getSelectionColor();
+        if (currentColor) {
+          picker.value = currentColor;
+          colorBar.style.backgroundColor = currentColor;
+        }
+      }
     });
 
     picker.addEventListener("input", (e) => {
+      // Restaurar selección antes de aplicar el comando de color
       this._restoreSelection();
       const cmd = name === "foreColor" ? "foreColor" : "backColor";
       this._exec(cmd, e.target.value);
+      colorBar.style.backgroundColor = e.target.value;
     });
+
+    // Guardar referencia a la barra para actualizarla desde _updateToolbarStates
+    btn._osamuColorBar = colorBar;
+    btn._osamuColorName = name;
 
     btn.appendChild(picker);
   }
@@ -1541,6 +1562,17 @@ class Osamu {
         // Ignorar comandos no soportados
       }
     }
+
+    // Sincronizar las barras de color con el color del texto seleccionado
+    this.toolbar.querySelectorAll(".osamu-btn[class*='foreColor'], .osamu-btn[class*='backColor']").forEach(btn => {
+      if (!btn._osamuColorBar) return;
+      if (btn._osamuColorName === "foreColor") {
+        const color = this._getSelectionColor();
+        if (color) {
+          btn._osamuColorBar.style.backgroundColor = color;
+        }
+      }
+    });
 
     try {
       const blockVal = document.queryCommandValue("formatBlock");

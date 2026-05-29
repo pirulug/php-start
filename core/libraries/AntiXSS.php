@@ -86,7 +86,7 @@ class AntiXSS {
    * @param string $allowedTags Etiquetas permitidas (estilo strip_tags).
    * @return string HTML sanitizado.
    */
-  public function cleanHtml(string $input, string $allowedTags = '<b><i><u><strong><em><ul><ol><li><p><br><h1><h2><h3><h4><h5><h6><a><img><div><span><iframe><lite-youtube><pre><code>'): string {
+  public function cleanHtml(string $input, string $allowedTags = '<b><i><u><strong><em><ul><ol><li><p><br><h1><h2><h3><h4><h5><h6><a><img><div><span><iframe><lite-youtube><pre><code><font><blockquote>'): string {
     $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/u', '', $input);
 
     $original = '';
