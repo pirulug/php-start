@@ -115,9 +115,46 @@ class Logger {
     $route    = $this->currentRoute();
     $ip       = $_SERVER['REMOTE_ADDR'] ?? 'CLI';
 
-    $dir = $this->scope
-      ? $this->basePath . '/' . $this->scope
-      : $this->basePath;
+    // Determinar la subcarpeta segun la sesion o IP de forma automatica
+    $finalScope = '';
+    
+    // Si la sesion tiene un id de usuario y existe una conexion PDO disponible
+    if (PHP_SAPI !== 'cli' && isset($_SESSION['user_id'])) {
+      $userId = $_SESSION['user_id'];
+      
+      // Intentar obtener la instancia global de PDO para buscar el user_login
+      global $connect;
+      $userLogin = "user_{$userId}";
+      if (isset($connect) && $connect instanceof PDO) {
+        try {
+          $stmt = $connect->prepare("SELECT user_login FROM users WHERE user_id = :user_id LIMIT 1");
+          $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+          $stmt->execute();
+          $u = $stmt->fetch(PDO::FETCH_OBJ);
+          if ($u) {
+            $userLogin = $u->user_login;
+          }
+        } catch (Exception $e) {
+          // Fallback silencioso si no se puede consultar la BD
+        }
+      }
+      
+      $finalScope = 'usuarios/' . $userLogin;
+    } elseif (PHP_SAPI !== 'cli') {
+      $ipFolder = str_replace([':', '*'], '_', $ip);
+      $finalScope = 'ips/' . $ipFolder;
+    }
+
+    // Si se definio un scope explicito (ej. file("dashboard")), lo metemos dentro del directorio del usuario/ip correspondientes
+    if ($this->scope) {
+      $dir = $finalScope 
+        ? $this->basePath . '/' . $finalScope . '/' . $this->scope
+        : $this->basePath . '/' . $this->scope;
+    } else {
+      $dir = $finalScope
+        ? $this->basePath . '/' . $finalScope
+        : $this->basePath;
+    }
 
     if (!is_dir($dir)) {
       mkdir($dir, 0755, true);

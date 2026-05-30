@@ -57,6 +57,31 @@ date_default_timezone_set(
   $config->get("site_timezone", "America/Lima")
 );
 
+// -----------------------------------------------------------------------------
+// SECCIÓN: TRAZABILIDAD Y REGISTRO DE ACCESOS (LOGGING DE RUTA)
+// -----------------------------------------------------------------------------
+// Ignorar peticiones de assets estáticos y endpoints AJAX recurrentes para no saturar los logs
+$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+$is_asset = preg_match('/\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf)$/i', $request_uri);
+if (!$is_asset && PHP_SAPI !== 'cli') {
+  $user_id = $_SESSION['user_id'] ?? null;
+  $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'Desconocida';
+  
+  if ($user_id) {
+    // Usuario autenticado: trazar por su ID
+    $log->info("Acceso de usuario logueado")
+      ->with("user_id", $user_id)
+      ->with("ip", $ip_address)
+      ->write();
+  } else {
+    // Usuario no autenticado: trazar por IP
+    $log->info("Acceso anonimo")
+      ->with("ip", $ip_address)
+      ->write();
+  }
+}
+
+
 // Cargar idioma global
 load_textdomain('default', BASE_DIR . "/core/languages/" . get_locale() . ".php");
 

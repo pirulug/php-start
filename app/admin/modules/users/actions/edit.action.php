@@ -223,6 +223,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ->bootstrap()
         ->success()
         ->add();
+
+      // Registrar accion en el log
+      $log->info("Usuario Actualizado: {$user_login} con ID {$user_id}")
+        ->with("updated_user_id", $user_id)
+        ->with("updated_user_login", $user_login)
+        ->write();
+
       header("Location: " . admin_route("users",[],["p" => ($_GET["p"] ?? 1)]));
       exit();
     }

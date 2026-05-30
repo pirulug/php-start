@@ -159,6 +159,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           ->bootstrap()
           ->add();
 
+        // Registrar accion en el log
+        $log->info("Usuario Creado: {$user_login} con ID {$user_id}")
+          ->with("created_user_id", $user_id)
+          ->with("created_user_login", $user_login)
+          ->write();
+
         header("Location: " . admin_route("users"));
         exit();
       } else {

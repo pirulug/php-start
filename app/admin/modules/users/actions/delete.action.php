@@ -56,6 +56,11 @@ try {
   if ($statement->execute()) {
     $connect->commit();
     $notifier->message("Usuario y sus datos eliminados correctamente.")->success()->bootstrap()->add();
+
+    // Registrar accion en el log
+    $log->info("Usuario Eliminado con ID: {$id}")
+      ->with("deleted_user_id", $id)
+      ->write();
   } else {
     $connect->rollBack();
     $notifier->message("Error al eliminar el usuario.")->danger()->bootstrap()->add();

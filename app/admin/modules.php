@@ -9,4 +9,5 @@ return [
   "users"      => true,
   "policies"   => true,
   "settings"   => true,
+  "logs"       => true,
 ];
