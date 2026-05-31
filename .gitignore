@@ -24,3 +24,6 @@ scratch
 *.backup.sql
 
 _kiki
+
+.claude
+CLAUDE.md

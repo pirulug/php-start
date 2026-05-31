@@ -253,3 +253,27 @@ Son archivos PHP que procesan peticiones AJAX y devuelven datos sin layout. Se u
   .then(response => response.json())
   .then(data => console.log(data));
   ```
+
+## 15. Registro y Carga de Módulos (Unified Modules)
+Para optimizar el rendimiento y el control administrativo del sistema, los módulos se registran y cargan de forma unificada desde la base de datos:
+
+- **Clave Unificada**: Tabla `options` -> clave `modules`.
+- **Estructura del Valor (JSON)**:
+  ```json
+  {
+    "admin": {
+      "modulo_nombre": { "active": true, "order": 1, "sidebar": true }
+    },
+    "front": {
+      "modulo_nombre": { "active": true, "order": 1 }
+    },
+    "api": {
+      "modulo_nombre": { "active": true, "order": 1 }
+    }
+  }
+  ```
+- **Lógica de Carga**: 
+  - Las rutas (`load_routes_front()`, `load_routes_admin()`, `load_routes_api()`) y el sidebar (`load_admin_sidebar()`) leen directamente de esta opción.
+  - La propiedad `active` determina si el módulo está disponible.
+  - La propiedad `sidebar` (booleana, exclusiva de `admin`) determina si el archivo `sidebar.php` del módulo correspondiente se debe cargar en el panel de administración.
+

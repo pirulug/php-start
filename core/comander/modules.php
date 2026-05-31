@@ -323,6 +323,62 @@ if (is_file($registry_file)) {
   }
 }
 
+// Registrar en la opción unificada 'modules' de la base de datos
+$modules_config = $config->get("modules");
+if ($modules_config) {
+  if (!isset($modules_config->{$app_context})) {
+    $modules_config->{$app_context} = new stdClass();
+  }
+
+  $ctx_modules = $modules_config->{$app_context};
+  
+  if (!isset($ctx_modules->{$plural_name})) {
+    if ($app_context === "admin") {
+      $max_order = 0;
+      foreach ($ctx_modules as $mod => $settings) {
+        if (isset($settings->order) && (int)$settings->order > $max_order) {
+          $max_order = (int)$settings->order;
+        }
+      }
+      $new_order = $max_order + 1;
+      
+      $ctx_modules->{$plural_name} = (object)[
+        "active"  => true,
+        "sidebar" => true,
+        "order"   => $new_order
+      ];
+    } else {
+      $ctx_modules->{$plural_name} = (object)[
+        "active" => true,
+        "order"  => 999
+      ];
+    }
+    
+    // Guardar cambios en base de datos
+    $json_value = json_encode($modules_config);
+    $stmt = $connect->prepare("UPDATE options SET option_value = :value WHERE option_key = 'modules'");
+    $stmt->bindParam(":value", $json_value);
+    $stmt->execute();
+    
+    // Purgar cachés
+    $config->refresh();
+    $cache_files = [
+      BASE_DIR . "/storage/caches/site_options.cache.php",
+      BASE_DIR . "/storage/caches/routes.home.php",
+      BASE_DIR . "/storage/caches/routes.admin.php",
+      BASE_DIR . "/storage/caches/routes.api.php",
+      BASE_DIR . "/storage/caches/sidebar.admin.php"
+    ];
+    foreach ($cache_files as $file) {
+      if (file_exists($file)) {
+        unlink($file);
+      }
+    }
+    
+    echo "REGISTRADO EN BD: Módulo '{$plural_name}' activado y guardado en la opción 'modules'.\n";
+  }
+}
+
 echo "--------------------------------------------------------\n";
 echo "[OK] Módulo '{$plural_name}' creado con éxito.\n\n";
 
