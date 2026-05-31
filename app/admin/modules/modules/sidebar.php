@@ -1,5 +1,5 @@
 <?php
 
 Sidebar::item("Módulos", admin_route("modules"))
-  ->icon("box")
-  ->can("access.admin");
+  ->icon("layers")
+  ->can("modules.admin");
