@@ -100,8 +100,26 @@ function load_core_files(string $type) {
  * Carga dinámicamente las rutas del frontend.
  */
 function load_routes_front() {
-  $cacheFile = BASE_DIR . '/storage/caches/routes.home.php';
-  $modules   = require BASE_DIR . '/app/front/modules.php';
+  $cacheFile = BASE_DIR . "/storage/caches/routes.home.php";
+  
+  // Obtener los módulos unificados de base de datos
+  $modules_setting = site_config()->get("modules");
+  $front_modules_setting = ($modules_setting && isset($modules_setting->front)) ? $modules_setting->front : null;
+  
+  $modules = [];
+  if ($front_modules_setting && is_object($front_modules_setting)) {
+    $modules_order = [];
+    foreach ($front_modules_setting as $module_name => $setting) {
+      if (isset($setting->active) && $setting->active) {
+        $order = isset($setting->order) ? (int)$setting->order : 999;
+        $modules_order[$module_name] = $order;
+      }
+    }
+    asort($modules_order);
+    $modules = array_fill_keys(array_keys($modules_order), true);
+  } else {
+    $modules = require BASE_DIR . "/app/front/modules.php";
+  }
 
   if (CACHE_ROTE === true) {
     if (!is_file($cacheFile)) {
@@ -112,9 +130,14 @@ function load_routes_front() {
           continue;
         }
 
-        $router = BASE_DIR . "/app/front/modules/{$module}/router.php";
-        if (is_file($router)) {
-          $buffer .= "require_once BASE_DIR . '/app/front/modules/{$module}/router.php';\n";
+        $functions = BASE_DIR . "/app/front/modules/{$module}/functions.php";
+        if (is_file($functions)) {
+          $buffer .= "require_once BASE_DIR . '/app/front/modules/{$module}/functions.php';\n";
+        } else {
+          $router = BASE_DIR . "/app/front/modules/{$module}/router.php";
+          if (is_file($router)) {
+            $buffer .= "require_once BASE_DIR . '/app/front/modules/{$module}/router.php';\n";
+          }
         }
       }
 
@@ -131,9 +154,14 @@ function load_routes_front() {
       continue;
     }
 
-    $router = BASE_DIR . "/app/front/modules/{$module}/router.php";
-    if (is_file($router)) {
-      require_once $router;
+    $functions = BASE_DIR . "/app/front/modules/{$module}/functions.php";
+    if (is_file($functions)) {
+      require_once $functions;
+    } else {
+      $router = BASE_DIR . "/app/front/modules/{$module}/router.php";
+      if (is_file($router)) {
+        require_once $router;
+      }
     }
   }
 
@@ -145,8 +173,26 @@ function load_routes_front() {
  */
 function load_routes_admin() {
   Router::prefix(PATH_ADMIN, CTX_ADMIN, function () {
-    $cacheFile = BASE_DIR . '/storage/caches/routes.admin.php';
-    $modules   = require BASE_DIR . '/app/admin/modules.php';
+    $cacheFile = BASE_DIR . "/storage/caches/routes.admin.php";
+    
+    // Obtener los módulos unificados de base de datos
+    $modules_setting = site_config()->get("modules");
+    $admin_modules_setting = ($modules_setting && isset($modules_setting->admin)) ? $modules_setting->admin : null;
+    
+    $modules = [];
+    if ($admin_modules_setting && is_object($admin_modules_setting)) {
+      $modules_order = [];
+      foreach ($admin_modules_setting as $module_name => $setting) {
+        if (isset($setting->active) && $setting->active) {
+          $order = isset($setting->order) ? (int)$setting->order : 999;
+          $modules_order[$module_name] = $order;
+        }
+      }
+      asort($modules_order);
+      $modules = array_fill_keys(array_keys($modules_order), true);
+    } else {
+      $modules = require BASE_DIR . "/app/admin/modules.php";
+    }
 
     if (CACHE_ROTE === true) {
       if (!is_file($cacheFile)) {
@@ -154,9 +200,15 @@ function load_routes_admin() {
         foreach ($modules as $module => $enabled) {
           if (!$enabled)
             continue;
-          $router = BASE_DIR . "/app/admin/modules/{$module}/router.php";
-          if (is_file($router)) {
-            $buffer .= "require_once BASE_DIR . '/app/admin/modules/{$module}/router.php';\n";
+          
+          $functions = BASE_DIR . "/app/admin/modules/{$module}/functions.php";
+          if (is_file($functions)) {
+            $buffer .= "require_once BASE_DIR . '/app/admin/modules/{$module}/functions.php';\n";
+          } else {
+            $router = BASE_DIR . "/app/admin/modules/{$module}/router.php";
+            if (is_file($router)) {
+              $buffer .= "require_once BASE_DIR . '/app/admin/modules/{$module}/router.php';\n";
+            }
           }
         }
         file_put_contents($cacheFile, $buffer);
@@ -168,9 +220,16 @@ function load_routes_admin() {
     foreach ($modules as $module => $enabled) {
       if (!$enabled)
         continue;
-      $router = BASE_DIR . "/app/admin/modules/{$module}/router.php";
-      if (is_file($router))
-        require_once $router;
+      
+      $functions = BASE_DIR . "/app/admin/modules/{$module}/functions.php";
+      if (is_file($functions)) {
+        require_once $functions;
+      } else {
+        $router = BASE_DIR . "/app/admin/modules/{$module}/router.php";
+        if (is_file($router)) {
+          require_once $router;
+        }
+      }
     }
   });
 
@@ -182,32 +241,69 @@ function load_routes_admin() {
  */
 function load_routes_api() {
   Router::prefix(PATH_API, CTX_API, function () {
-    $cacheFile = BASE_DIR . '/storage/caches/routes.api.php';
-    $modules   = require BASE_DIR . '/app/api/modules.php';
+    $cacheFile = BASE_DIR . "/storage/caches/routes.api.php";
+    
+    // Obtener los módulos unificados de base de datos
+    $modules_setting = site_config()->get("modules");
+    $api_modules_setting = ($modules_setting && isset($modules_setting->api)) ? $modules_setting->api : null;
+    
+    $modules = [];
+    if ($api_modules_setting && is_object($api_modules_setting)) {
+      $modules_order = [];
+      foreach ($api_modules_setting as $module_name => $setting) {
+        if (isset($setting->active) && $setting->active) {
+          $order = isset($setting->order) ? (int)$setting->order : 999;
+          $modules_order[$module_name] = $order;
+        }
+      }
+      asort($modules_order);
+      $modules = array_fill_keys(array_keys($modules_order), true);
+    } else {
+      $modules = require BASE_DIR . "/app/api/modules.php";
+    }
 
     if (CACHE_ROTE === true) {
       if (!is_file($cacheFile)) {
         $buffer = "<?php\n\n";
+
         foreach ($modules as $module => $enabled) {
-          if (!$enabled)
+          if (!$enabled) {
             continue;
-          $router = BASE_DIR . "/app/api/{$module}/router.php";
-          if (is_file($router)) {
-            $buffer .= "require_once BASE_DIR . '/app/api/{$module}/router.php';\n";
+          }
+
+          $functions = BASE_DIR . "/app/api/{$module}/functions.php";
+          if (is_file($functions)) {
+            $buffer .= "require_once BASE_DIR . '/app/api/{$module}/functions.php';\n";
+          } else {
+            $router = BASE_DIR . "/app/api/{$module}/router.php";
+            if (is_file($router)) {
+              $buffer .= "require_once BASE_DIR . '/app/api/{$module}/router.php';\n";
+            }
           }
         }
+
         file_put_contents($cacheFile, $buffer);
       }
+
       require $cacheFile;
       return;
     }
 
+    // sin cache
     foreach ($modules as $module => $enabled) {
-      if (!$enabled)
+      if (!$enabled) {
         continue;
-      $router = BASE_DIR . "/app/api/{$module}/router.php";
-      if (is_file($router))
-        require_once $router;
+      }
+
+      $functions = BASE_DIR . "/app/api/{$module}/functions.php";
+      if (is_file($functions)) {
+        require_once $functions;
+      } else {
+        $router = BASE_DIR . "/app/api/{$module}/router.php";
+        if (is_file($router)) {
+          require_once $router;
+        }
+      }
     }
   });
 
@@ -252,22 +348,48 @@ function load_routes_services() {
  * Carga los archivos sidebar.php de cada módulo activo para construir el menú.
  */
 function load_admin_sidebar() {
-  $menuCacheFile = BASE_DIR . '/storage/caches/sidebar.admin.php';
-  $adminModules  = require BASE_DIR . '/app/admin/modules.php';
+  $menuCacheFile = BASE_DIR . "/storage/caches/sidebar.admin.php";
+  
+  // Obtener los módulos y su orden de base de datos
+  $modules_setting = site_config()->get("modules");
+  $admin_modules_setting = ($modules_setting && isset($modules_setting->admin)) ? $modules_setting->admin : null;
+  
+  $modules = [];
+  if ($admin_modules_setting && is_object($admin_modules_setting)) {
+    $modules_order = [];
+    foreach ($admin_modules_setting as $module_name => $setting) {
+      $active = isset($setting->active) && $setting->active;
+      $show_sidebar = !isset($setting->sidebar) || (bool)$setting->sidebar;
+      
+      if ($active && $show_sidebar) {
+        $order = isset($setting->order) ? (int)$setting->order : 999;
+        $modules_order[$module_name] = $order;
+      }
+    }
+    // Ordenar por valor de order (ascendente)
+    asort($modules_order);
+    $modules = array_fill_keys(array_keys($modules_order), true);
+  } else {
+    $modules = require BASE_DIR . "/app/admin/modules.php";
+  }
 
   if (CACHE_ROTE === true) {
     if (!is_file($menuCacheFile)) {
       $cacheBuffer = "<?php\n\n";
 
-      foreach ($adminModules as $moduleName => $isEnabled) {
+      foreach ($modules as $moduleName => $isEnabled) {
         if (!$isEnabled) {
           continue;
         }
 
-        $menuFilePath = BASE_DIR . "/app/admin/modules/{$moduleName}/sidebar.php";
-
-        if (is_file($menuFilePath)) {
-          $cacheBuffer .= "require_once BASE_DIR . '/app/admin/modules/{$moduleName}/sidebar.php';\nSidebar::resetGroup();\n";
+        $functions = BASE_DIR . "/app/admin/modules/{$moduleName}/functions.php";
+        if (is_file($functions)) {
+          $cacheBuffer .= "require_once BASE_DIR . '/app/admin/modules/{$moduleName}/functions.php';\nSidebar::resetGroup();\n";
+        } else {
+          $menuFilePath = BASE_DIR . "/app/admin/modules/{$moduleName}/sidebar.php";
+          if (is_file($menuFilePath)) {
+            $cacheBuffer .= "require_once BASE_DIR . '/app/admin/modules/{$moduleName}/sidebar.php';\nSidebar::resetGroup();\n";
+          }
         }
       }
 
@@ -279,16 +401,21 @@ function load_admin_sidebar() {
   }
 
   // sin cache
-  foreach ($adminModules as $moduleName => $isEnabled) {
+  foreach ($modules as $moduleName => $isEnabled) {
     if (!$isEnabled) {
       continue;
     }
 
-    $menuFilePath = BASE_DIR . "/app/admin/modules/{$moduleName}/sidebar.php";
-
-    if (is_file($menuFilePath)) {
-      require_once $menuFilePath;
+    $functions = BASE_DIR . "/app/admin/modules/{$moduleName}/functions.php";
+    if (is_file($functions)) {
+      require_once $functions;
       Sidebar::resetGroup();
+    } else {
+      $menuFilePath = BASE_DIR . "/app/admin/modules/{$moduleName}/sidebar.php";
+      if (is_file($menuFilePath)) {
+        require_once $menuFilePath;
+        Sidebar::resetGroup();
+      }
     }
   }
 }
