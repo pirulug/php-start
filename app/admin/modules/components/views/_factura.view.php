@@ -11,7 +11,7 @@
         ?>
             <img src="<?= APP_URL . $logoImg ?>" alt="<?= clear_html($config->siteName()) ?>" style="margin-bottom: 10px;">
           <?php else: ?>
-            <h1 style="margin:0; color:#ff0055;"><?= clear_html($config->siteName()) ?></h1>
+            <h2 class="h1" style="margin:0; color:#ff0055;"><?= clear_html($config->siteName()) ?></h2>
           <?php endif; ?>
         <?php elseif ($logoType == 'text'): ?>
           <div style="margin-bottom: 10px; line-height: 24px;">
@@ -22,7 +22,7 @@
               <img src="<?= storage_uploads($config->get('logo_icon_file'), "site") ?>" alt="Icon"
                 style="height: 24px; width: auto; vertical-align: middle; margin-right: 8px; display: inline-block;">
             <?php endif; ?>
-            <h1 style="margin:0; color:#ff0055; font-size: 24px; display: inline-block; vertical-align: middle;"><?= clear_html($config->siteName()) ?></h1>
+            <h2 class="h1" style="margin:0; color:#ff0055; font-size: 24px; display: inline-block; vertical-align: middle;"><?= clear_html($config->siteName()) ?></h2>
           </div>
         <?php endif; ?>
         <div class="company-details">

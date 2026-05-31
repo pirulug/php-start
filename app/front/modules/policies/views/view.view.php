@@ -37,8 +37,8 @@ if ($is_faq) {
             style="width: 60px; height: 60px;">
             <i class="fa-solid <?= $is_faq ? 'fa-circle-question' : 'fa-file-shield' ?> text-white fs-2"></i>
           </div>
-          <h1 class="fw-bold text-white mb-1 text-uppercase small" style="letter-spacing: 2px;">
-            <?= $is_faq ? 'Preguntas Frecuentes' : 'Legal / Políticas' ?></h1>
+          <h2 class="fw-bold text-white mb-1 text-uppercase small" style="letter-spacing: 2px;">
+            <?= $is_faq ? 'Preguntas Frecuentes' : 'Legal / Políticas' ?></h2>
           <h2 class="display-6 fw-bold text-white mb-0"><?= $policy->post_title ?></h2>
         </div>
       </div>

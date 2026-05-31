@@ -205,7 +205,7 @@ class Osamu {
 
     const formats = [
       { value: "P", text: "Párrafo" },
-      { value: "H1", text: "Título 1" },
+      { value: "H2-SIMULATED-H1", text: "Título 1" },
       { value: "H2", text: "Título 2" },
       { value: "H3", text: "Título 3" },
       { value: "BLOCKQUOTE", text: "Cita" }
@@ -219,7 +219,35 @@ class Osamu {
     });
 
     select.addEventListener("change", (e) => {
-      this._exec("formatBlock", `<${e.target.value}>`);
+      const val = e.target.value;
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        let node = sel.getRangeAt(0).commonAncestorContainer;
+        if (node.nodeType === Node.TEXT_NODE) {
+          node = node.parentNode;
+        }
+        const h2 = node.closest("h2");
+        if (h2) {
+          h2.classList.remove("h1", "osamu-h1-mock");
+        }
+      }
+
+      if (val === "H2-SIMULATED-H1") {
+        this._exec("formatBlock", "<h2>");
+        const sel2 = window.getSelection();
+        if (sel2 && sel2.rangeCount > 0) {
+          let node2 = sel2.getRangeAt(0).commonAncestorContainer;
+          if (node2.nodeType === Node.TEXT_NODE) {
+            node2 = node2.parentNode;
+          }
+          const h2New = node2.closest("h2");
+          if (h2New) {
+            h2New.classList.add("h1", "osamu-h1-mock");
+          }
+        }
+      } else {
+        this._exec("formatBlock", `<${val}>`);
+      }
     });
 
     return select;
@@ -250,8 +278,23 @@ class Osamu {
       codeBlock: {
         icon: "fa-terminal", title: "Insertar Código", action: () => {
           this._exitCurrentBlock();
-          const codeHtml = "<pre class='language-javascript'><code class='language-javascript'><br></code></pre><p><br></p>";
+          const tempId = "osamu-temp-code-" + Date.now();
+          const codeHtml = `<pre class="language-javascript"><code id="${tempId}" class="language-javascript"><br></code></pre><p><br></p>`;
           this._exec("insertHTML", codeHtml);
+          const codeEl = this.editorBody.querySelector("#" + tempId);
+          if (codeEl) {
+            codeEl.removeAttribute("id");
+            const range = document.createRange();
+            range.setStart(codeEl, 0);
+            range.collapse(true);
+            const sel = window.getSelection();
+            if (sel) {
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+            this.editorBody.focus();
+            this._updatePlaceholder();
+          }
         }
       },
       foreColor: { icon: "fa-font", title: "Color de Texto" },
@@ -336,11 +379,16 @@ class Osamu {
     });
 
     picker.addEventListener("input", (e) => {
-      // Restaurar selección antes de aplicar el comando de color
       this._restoreSelection();
       const cmd = name === "foreColor" ? "foreColor" : "backColor";
       this._exec(cmd, e.target.value);
       colorBar.style.backgroundColor = e.target.value;
+      this._saveSelection();
+    });
+
+    picker.addEventListener("change", () => {
+      this._restoreSelection();
+      this.editorBody.focus();
     });
 
     // Guardar referencia a la barra para actualizarla desde _updateToolbarStates
@@ -630,7 +678,9 @@ class Osamu {
 
     // Mostrar solo el diálogo solicitado
     Object.keys(dialogs).forEach(key => {
-      dialogs[key].classList.toggle("d-none", key !== type);
+      if (dialogs[key]) {
+        dialogs[key].classList.toggle("d-none", key !== type);
+      }
     });
 
     // Enfocar el primer input según el tipo
@@ -645,7 +695,7 @@ class Osamu {
       const input = this.youtubeDialog.querySelector(".osamu-yt-url");
       input.value = "";
       input.focus();
-    } else if (type === "code") {
+    } else if (type === "code" && this.codeDialog) {
       const text = this.codeDialog.querySelector(".osamu-code-text");
       text.value = "";
       text.focus();
@@ -658,7 +708,9 @@ class Osamu {
   _hideDialog() {
     this.overlay.classList.add("d-none");
     [this.linkDialog, this.imageDialog, this.youtubeDialog, this.codeDialog].forEach(d => {
-      d.classList.add("d-none");
+      if (d) {
+        d.classList.add("d-none");
+      }
     });
   }
 
@@ -1038,6 +1090,9 @@ class Osamu {
       this._ensureValidContent();
       this._syncTextareaDebounced();
       this._updatePlaceholder();
+      if (this.selectedImage) {
+        this._updateResizerPosition();
+      }
     });
 
     // Actualizar estados de toolbar en keyup sin re-serializar el DOM
@@ -1045,6 +1100,9 @@ class Osamu {
       this._ensureValidContent();
       this._updatePlaceholder();
       this._updateToolbarStates();
+      if (this.selectedImage) {
+        this._updateResizerPosition();
+      }
     });
 
     this.editorBody.addEventListener("mouseup", () => {
@@ -1579,7 +1637,20 @@ class Osamu {
       if (blockVal) {
         const select = this.toolbar.querySelector(".osamu-select");
         if (select) {
-          const upper = blockVal.toUpperCase();
+          let upper = blockVal.toUpperCase();
+          if (upper === "H2") {
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0) {
+              let node = sel.getRangeAt(0).commonAncestorContainer;
+              if (node.nodeType === Node.TEXT_NODE) {
+                node = node.parentNode;
+              }
+              const h2 = node.closest("h2");
+              if (h2 && (h2.classList.contains("h1") || h2.classList.contains("osamu-h1-mock"))) {
+                upper = "H2-SIMULATED-H1";
+              }
+            }
+          }
           if (Array.from(select.options).some(o => o.value === upper)) {
             select.value = upper;
           }
@@ -1792,6 +1863,17 @@ class Osamu {
     temp.innerHTML = html;
     let changed = false;
 
+    // Convertir h1 a h2 simulados
+    temp.querySelectorAll("h1").forEach(h1 => {
+      const h2 = document.createElement("h2");
+      h2.className = "h1 osamu-h1-mock";
+      while (h1.firstChild) {
+        h2.appendChild(h1.firstChild);
+      }
+      h1.parentNode.replaceChild(h2, h1);
+      changed = true;
+    });
+
     // Normalizar pre sin code al convertir
     temp.querySelectorAll("pre").forEach(pre => {
       let code = pre.querySelector("code");
@@ -1945,7 +2027,7 @@ class Osamu {
    */
   _updatePlaceholder() {
     const hasContent = this.editorBody.textContent.trim() ||
-      this.editorBody.querySelector("img, iframe, .osamu-video-wrapper");
+      this.editorBody.querySelector("img, iframe, .osamu-video-wrapper, pre, code");
     this.editorBody.classList.toggle("empty", !hasContent);
   }
 
@@ -1971,6 +2053,40 @@ class Osamu {
       sel.removeAllRanges();
       sel.addRange(this.savedRange);
     }
+  }
+
+  /**
+   * Obtiene el color de la selección actual en formato HEX.
+   *
+   * @return {string|null} Color en formato hexadecimal o null si no se detecta.
+   */
+  _getSelectionColor() {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      let node = sel.getRangeAt(0).commonAncestorContainer;
+      if (node.nodeType === Node.TEXT_NODE) {
+        node = node.parentNode;
+      }
+      const color = window.getComputedStyle(node).color;
+      return this._rgbToHex(color);
+    }
+    return null;
+  }
+
+  /**
+   * Convierte una cadena de color RGB/RGBA a su valor hexadecimal.
+   *
+   * @param {string} rgb Cadena de color.
+   * @return {string|null} Color en formato hexadecimal.
+   */
+  _rgbToHex(rgb) {
+    const match = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    if (!match) return null;
+    const r = parseInt(match[1]);
+    const g = parseInt(match[2]);
+    const b = parseInt(match[3]);
+    const hex = (r << 16) | (g << 8) | b;
+    return "#" + hex.toString(16).padStart(6, "0");
   }
 
   /**

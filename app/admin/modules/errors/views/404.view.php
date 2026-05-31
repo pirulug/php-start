@@ -17,7 +17,7 @@
     <div class="mb-4">
       <i class="fa-solid fa-triangle-exclamation text-primary fa-5x"></i>
     </div>
-    <h1 class="error-code text-body m-0">404</h1>
+    <h2 class="error-code text-body m-0 h1">404</h2>
     <h2 class="display-5 fw-bold mb-3">¡Vaya! Página no encontrada</h2>
     <p class="lead text-body mb-4 opacity-75">
       Lo sentimos, el recurso que buscas no existe o ha sido movido a otra ubicación.

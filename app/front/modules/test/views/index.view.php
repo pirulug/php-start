@@ -15,7 +15,7 @@
 <div class="container py-3">
   <div class="card bg-body">
     <div class="card-body">
-      <h1>Index Test</h1>
+      <h2 class="h1">Index Test</h2>
       <p>Bienvenido a la sección index del módulo test.</p>
     </div>
   </div>

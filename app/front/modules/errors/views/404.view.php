@@ -12,7 +12,7 @@ Página no encontrada (404)
         </div>
       </div>
 
-      <h1 class="display-1 fw-bold text-primary mb-2">404</h1>
+      <h2 class="display-1 fw-bold text-primary mb-2">404</h2>
       <h2 class="fw-bold text-uppercase mb-3">¡Vaya! Parece que te has perdido</h2>
       <p class="text-body-secondary mb-5 fs-5">
         La página que estás buscando no existe o ha sido movida a una nueva ubicación. 

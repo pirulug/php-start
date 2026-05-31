@@ -89,18 +89,21 @@
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
                 <li>
                   <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="light"
-                    aria-pressed="false"><i class="fa fa-sun opacity-50 me-2"></i>Light<i
-                      class="pr-check fa fa-check ms-auto d-none"></i></button>
+                    aria-pressed="false">
+                    <i class="fa fa-sun opacity-50 me-2"></i>
+                    Light
+                    <i class="pr-check"></i>
+                  </button>
                 </li>
                 <li>
                   <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="dark"
                     aria-pressed="false"><i class="fa fa-moon opacity-50 me-2"></i>Dark<i
-                      class="pr-check fa fa-check ms-auto d-none"></i></button>
+                      class="pr-check"></i></button>
                 </li>
                 <li>
                   <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="auto"
                     aria-pressed="true"><i class="fa fa-circle-half-stroke opacity-50 me-2"></i>Auto<i
-                      class="pr-check fa fa-check ms-auto d-none"></i></button>
+                      class="pr-check"></i></button>
                 </li>
               </ul>
             </li>
@@ -140,9 +143,9 @@
         <?php if (has_block('title')): ?>
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center">
-              <h1 class="h3 d-inline align-middle">
+              <h2 class="h3 d-inline align-middle">
                 <?= get_block('title'); ?>
-              </h1>
+              </h2>
               <?php if (has_block('breadcrumb')): ?>
                 <?= get_block('breadcrumb'); ?>
               <?php endif; ?>

@@ -10,7 +10,7 @@
           <div class="mb-4">
             <i class="fa-solid fa-bug text-danger fa-4x"></i>
           </div>
-          <h1 class="display-4 fw-bold">404</h1>
+          <h2 class="display-4 fw-bold">404</h2>
           <h3 class="mb-3">Algo salió mal</h3>
           <p class="text-body opacity-75 mb-4">
             No pudimos encontrar la página que estabas buscando. Por favor, verifica la URL o intenta navegar desde el menú principal.

@@ -182,6 +182,13 @@
   line-height: 1.3;
 }
 
+.osamu-body h2.h1,
+.osamu-body h2.osamu-h1-mock {
+  font-size: 2.25rem !important;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
 .osamu-body a {
   color: var(--bs-link-color, #0d6efd);
   text-decoration: underline;
@@ -252,15 +259,16 @@
    OVERLAY Y DIÁLOGOS
 ----------------------------------------------------------------------------- */
 .osamu-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
+  z-index: 9999;
   backdrop-filter: blur(3px);
 }
+
 
 .osamu-dialog {
   background-color: var(--osamu-bg);

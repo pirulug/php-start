@@ -79,8 +79,8 @@ php, framework, php-start, backend, mvc
           style="letter-spacing: 1px; font-size: 0.7rem;">
           <i class="fa-solid fa-sparkles me-2"></i> Framework PHP Minimalista
         </span>
-        <h1 class="display-2 fw-bold mb-4">Potencia tu proyecto con <span
-            class="text-primary"><?= $config->get('site_name', 'PHP-Start') ?></span></h1>
+        <h2 class="display-2 fw-bold mb-4">Potencia tu proyecto con <span
+            class="text-primary"><?= $config->get("site_name", "PHP-Start") ?></span></h2>
         <p class="lead text-body-secondary mb-5 px-lg-5">
           Un framework diseñado para que te enfoques en crear, no en configurar.
           Rápido, seguro y con una arquitectura limpia para tu próxima gran idea.
